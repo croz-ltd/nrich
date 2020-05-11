@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
+// TODO decide url format (like this or maybe form-configuration in either case all urls should follow same format?)
 @RequiredArgsConstructor
 @RequestMapping("formConfiguration")
 @RestController
