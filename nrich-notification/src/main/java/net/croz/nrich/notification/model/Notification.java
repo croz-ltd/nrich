@@ -18,6 +18,6 @@ public class Notification {
 
     private final NotificationSeverity severity;
 
-    private final Map<String, ?> additionalNotificationData;
+    private final Map<String, ?> additionalData;
 
 }

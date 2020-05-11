@@ -233,7 +233,7 @@ public class NotificationResolverServiceImplTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalNotificationData()).isNotNull();
+        assertThat(notification.getAdditionalData()).isNotNull();
     }
 
     @Test
@@ -246,7 +246,7 @@ public class NotificationResolverServiceImplTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalNotificationData()).isNotNull();
+        assertThat(notification.getAdditionalData()).isNotNull();
     }
 
     @Test
@@ -259,7 +259,7 @@ public class NotificationResolverServiceImplTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalNotificationData()).isNotNull();
+        assertThat(notification.getAdditionalData()).isNotNull();
     }
 
     private BindingResult validate(final Object objectToValidate, final Map<String, Object> valueMap) {
