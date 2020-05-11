@@ -1,0 +1,9 @@
+dependencies {
+  annotationProcessor "org.projectlombok:lombok"
+
+  compileOnly "org.projectlombok:lombok"
+
+  implementation "org.springframework:spring-context"
+  implementation "org.springframework:spring-web"
+
+}

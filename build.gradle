@@ -1,0 +1,63 @@
+allprojects {
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repository.lan.croz.net/repository/releases/" }
+    maven { url "https://repository.lan.croz.net/repository/snapshots/" }
+  }
+
+  configurations {
+    springBom
+    compileOnly.extendsFrom(springBom)
+    annotationProcessor.extendsFrom(springBom)
+    implementation.extendsFrom(springBom)
+    testAnnotationProcessor.extendsFrom(springBom)
+  }
+}
+
+subprojects {
+  apply plugin: "jacoco"
+  apply plugin: "java"
+  apply plugin: "java-library"
+  apply plugin: "maven-publish"
+
+  group = "net.croz.nrich"
+  version = "0.0.1-SNAPSHOT"
+
+  sourceCompatibility = "1.8"
+
+  java {
+    registerFeature("web") {
+      usingSourceSet(sourceSets.main)
+    }
+    withSourcesJar()
+  }
+
+  dependencies {
+    springBom platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+  }
+
+  test {
+    useJUnitPlatform()
+    jvmArgs = ["-noverify", "-XX:TieredStopAtLevel=1"]
+  }
+
+  publishing {
+    repositories {
+      maven {
+        credentials {
+          username nexusUsername
+          password nexusPassword
+        }
+        url nexusUrl as String
+      }
+    }
+
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
+        suppressAllPomMetadataWarnings()
+      }
+    }
+  }
+}

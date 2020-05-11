@@ -1,0 +1,21 @@
+dependencies {
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation "org.springframework:spring-context"
+
+  webImplementation "jakarta.servlet:jakarta.servlet-api"
+  webImplementation "org.springframework:spring-web"
+
+  testAnnotationProcessor "org.projectlombok:lombok"
+  testCompileOnly "org.projectlombok:lombok"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "jakarta.validation:jakarta.validation-api"
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.glassfish:jakarta.el"
+  testImplementation "org.hibernate.validator:hibernate-validator"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework:spring-test"
+}

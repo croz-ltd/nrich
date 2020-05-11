@@ -1,0 +1,3 @@
+rootProject.name = "nrich"
+
+include("nrich-core-api", "nrich-form-configuration", "nrich-notification", "nrich-spring-util", "nrich-validation-api",  "nrich-validation", "nrich-webmvc")
