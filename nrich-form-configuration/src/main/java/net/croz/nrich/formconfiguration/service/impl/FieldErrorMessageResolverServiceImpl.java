@@ -15,13 +15,13 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageResolverService {
 
-    private static final String CONSTRAINT_FULL_CLIENT_MESSAGE_TEMPLATE = "%s.%s.client.%s.invalid";
+    private static final String CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT = "%s.%s.client.%s.invalid";
 
-    private static final String CONSTRAINT_FULL_MESSAGE_TEMPLATE = "%s.%s.%s.invalid";
+    private static final String CONSTRAINT_FULL_MESSAGE_FORMAT = "%s.%s.%s.invalid";
 
-    private static final String CONSTRAINT_SHORT_CLIENT_MESSAGE_TEMPLATE = "client.%s.invalid";
+    private static final String CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT = "client.%s.invalid";
 
-    private static final String CONSTRAINT_SHORT_MESSAGE_TEMPLATE = "%s.invalid";
+    private static final String CONSTRAINT_SHORT_MESSAGE_FORMAT = "%s.invalid";
 
     private final MessageSource messageSource;
 
@@ -42,24 +42,24 @@ public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageRe
 
         final List<String> codeList = new ArrayList<>();
 
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_TEMPLATE, constraintOwningClassName, constraintPropertyName, constraintName));
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_TEMPLATE, constraintOwningClassShortName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
 
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_TEMPLATE, constraintOwningClassName, constraintPropertyName, constraintName));
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_TEMPLATE, constraintOwningClassShortName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
 
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_TEMPLATE, constraintName));
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_TEMPLATE, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
 
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_TEMPLATE, constraintName));
-        codeList.addAll(resolveMessageCodeListFromTemplate(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_TEMPLATE, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
 
         return codeList;
     }
 
-    private List<String> resolveMessageCodeListFromTemplate(final DefaultMessageCodesResolver messageCodesResolver, final String constraintPropertyName, final String messageTemplate, final String... templateArgumentList) {
+    private List<String> resolveMessageCodeList(final DefaultMessageCodesResolver messageCodesResolver, final String constraintPropertyName, final String messageFormat, final String... argumentList) {
         @SuppressWarnings("RedundantCast")
-        final String messageCode = String.format(messageTemplate, (Object[]) templateArgumentList);
+        final String messageCode = String.format(messageFormat, (Object[]) argumentList);
 
         return Arrays.asList(messageCodesResolver.resolveMessageCodes(messageCode, constraintPropertyName));
     }
