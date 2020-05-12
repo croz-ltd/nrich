@@ -1,12 +1,10 @@
 package net.croz.nrich.notification.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 import java.util.Map;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class ValidationFailureNotification extends Notification {
 
