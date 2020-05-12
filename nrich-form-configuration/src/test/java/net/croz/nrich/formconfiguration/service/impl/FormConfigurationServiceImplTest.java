@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.fetchFormConfigurationRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -25,8 +25,7 @@ public class FormConfigurationServiceImplTest {
     @Test
     void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId(){
         // given
-        final FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
-        request.setFormIdList(Collections.singletonList("invalidFormId"));
+        final FetchFormConfigurationRequest request = fetchFormConfigurationRequest("invalidFormId");
 
         // when
         final Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(request));
@@ -39,8 +38,7 @@ public class FormConfigurationServiceImplTest {
     @Test
     void shouldResolveSimpleFormFieldConfiguration(){
         // given
-        final FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
-        request.setFormIdList(Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID));
+        final FetchFormConfigurationRequest request = fetchFormConfigurationRequest(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
 
         // when
         final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(request);
@@ -74,8 +72,7 @@ public class FormConfigurationServiceImplTest {
     @Test
     void shouldResolveNestedFormConfiguration(){
         // given
-        final FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
-        request.setFormIdList(Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID));
+        final FetchFormConfigurationRequest request = fetchFormConfigurationRequest(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
 
         // when
         final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(request);
@@ -109,8 +106,7 @@ public class FormConfigurationServiceImplTest {
     @Test
     void shouldIgnoreNestedFieldConfigurationWhenFieldIsNotValidated(){
         // given
-        final FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
-        request.setFormIdList(Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID));
+        final FetchFormConfigurationRequest request = fetchFormConfigurationRequest(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
 
         // when
         final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(request);
