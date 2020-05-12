@@ -8,6 +8,7 @@ import net.croz.nrich.formconfiguration.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.request.FetchFormConfigurationRequest;
 import net.croz.nrich.formconfiguration.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.service.FormConfigurationService;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.Validator;
 import javax.validation.metadata.BeanDescriptor;
@@ -32,6 +33,7 @@ public class FormConfigurationServiceImpl implements FormConfigurationService {
 
     private final List<ConstrainedPropertyValidatorConverterService> constraintConverterServiceList;
 
+    @Cacheable(value = "nrich.formConfiguration.cache", key = "#request.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
     public List<FormConfiguration> fetchFormConfigurationList(final FetchFormConfigurationRequest request) {
         return request.getFormIdList().stream().map(formId -> {
