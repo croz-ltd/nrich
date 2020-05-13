@@ -1,11 +1,11 @@
 package net.croz.nrich.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.notification.constant.NotificationResolverConstants;
 import net.croz.nrich.notification.model.Notification;
 import net.croz.nrich.notification.model.NotificationSeverity;
 import net.croz.nrich.notification.model.ValidationError;
 import net.croz.nrich.notification.model.ValidationFailureNotification;
-import net.croz.nrich.notification.service.NotificationResolverConstants;
 import net.croz.nrich.notification.service.NotificationResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class NotificationResolverServiceImpl implements NotificationResolverService {
@@ -46,10 +47,14 @@ public class NotificationResolverServiceImpl implements NotificationResolverServ
             title = resolveMessageOrDefault(titleCode, NotificationResolverConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE, NotificationResolverConstants.VALIDATION_FAILED_DEFAULT_TITLE);
         }
 
+        final String contentText = getMessage(NotificationResolverConstants.VALIDATION_FAILED_CONTENT_CODE, null);
         final List<ValidationError> validationErrorList = convertValidationErrorsToMessageList(errors, validationFailedOwningType);
-        final List<String> messageList = validationErrorList.stream().flatMap(value -> value.getErrorMessageList().stream()).collect(Collectors.toList());
+        final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData);
+        final List<String> validationMessageList = validationErrorList.stream().flatMap(value -> value.getErrorMessageList().stream()).collect(Collectors.toList());
 
-        return new ValidationFailureNotification(title, messageList, NotificationSeverity.WARN, additionalNotificationData, validationErrorList);
+        final List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).collect(Collectors.toList());
+
+        return new ValidationFailureNotification(title, contentText, messageList, NotificationSeverity.WARN, validationErrorList);
     }
 
     @Override
@@ -69,7 +74,7 @@ public class NotificationResolverServiceImpl implements NotificationResolverServ
         final String message = resolveMessageOrDefault(messageCode, NotificationResolverConstants.ERROR_OCCURRED_DEFAULT_CODE, null, additionalMessageArgumentList);
         final NotificationSeverity severity = resolveExceptionSeverity(severityCode);
 
-        return new Notification(title, Collections.singletonList(message), severity, additionalNotificationData);
+        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData), severity);
     }
 
     @Override
@@ -85,7 +90,7 @@ public class NotificationResolverServiceImpl implements NotificationResolverServ
         final String title = resolveMessageOrDefault(titleCode, NotificationResolverConstants.SUCCESS_MESSAGE_TITLE_CODE, NotificationResolverConstants.SUCCESS_DEFAULT_TITLE);
         final String message = resolveMessageOrDefault(messageCode, NotificationResolverConstants.SUCCESS_DEFAULT_CODE, null);
 
-        return new Notification(title, Collections.singletonList(message), NotificationSeverity.INFO, additionalNotificationData);
+        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData), NotificationSeverity.INFO);
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(final Errors errors, final Class<?> validationFailedOwningType) {
@@ -151,12 +156,7 @@ public class NotificationResolverServiceImpl implements NotificationResolverServ
     }
 
     private NotificationSeverity resolveExceptionSeverity(final String messageCode) {
-        try {
-            return NotificationSeverity.valueOf(getMessage(messageCode, null));
-        }
-        catch (final NoSuchMessageException ignore) {
-            return NotificationSeverity.ERROR;
-        }
+        return NotificationSeverity.valueOf(getMessage(messageCode, NotificationSeverity.ERROR.name()));
     }
 
     private String resolveMessageOrDefault(final String messageCode, final String defaultMessageCode, final String defaultMessage, final Object... arguments) {
@@ -172,5 +172,22 @@ public class NotificationResolverServiceImpl implements NotificationResolverServ
         final DefaultMessageSourceResolvable messageCodeResolvable = new DefaultMessageSourceResolvable(new String[] { messageCode }, arguments, defaultMessage);
 
         return messageSource.getMessage(messageCodeResolvable, LocaleContextHolder.getLocale());
+    }
+
+    private List<String> resolveMessageListFromNotificationData(final Map<String, ?> additionalNotificationData) {
+        if (additionalNotificationData == null) {
+            return Collections.emptyList();
+        }
+
+        return additionalNotificationData.entrySet().stream()
+                .map(this::resolveMessageForAdditionalData)
+                .filter(message -> !NotificationResolverConstants.UNDEFINED_MESSAGE_VALUE.equals(message))
+                .collect(Collectors.toList());
+    }
+
+    private String resolveMessageForAdditionalData(final Map.Entry<String, ?> additionalDataEntry) {
+        final String messageCode = String.format(NotificationResolverConstants.ADDITIONAL_EXCEPTION_DATA_MESSAGE_CODE_FORMAT, additionalDataEntry.getKey());
+
+        return getMessage(messageCode, NotificationResolverConstants.UNDEFINED_MESSAGE_VALUE, additionalDataEntry.getValue());
     }
 }

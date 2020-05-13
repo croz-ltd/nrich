@@ -1,4 +1,4 @@
-package net.croz.nrich.notification.service;
+package net.croz.nrich.notification.constant;
 
 public final class NotificationResolverConstants {
 
@@ -18,6 +18,8 @@ public final class NotificationResolverConstants {
 
     public static final String VALIDATION_FAILED_MESSAGE_TITLE_CODE = "notification.validation-failed.title";
 
+    public static final String VALIDATION_FAILED_CONTENT_CODE = "notification.validation-failed.content-text";
+
     public static final String VALIDATION_FAILED_DEFAULT_TITLE = "Validation failed";
 
     public static final String ERROR_OCCURRED_MESSAGE_TITLE_CODE = "notification.error-occurred.title";
@@ -25,6 +27,10 @@ public final class NotificationResolverConstants {
     public static final String ERROR_OCCURRED_DEFAULT_TITLE = "Error occurred";
 
     public static final String ERROR_OCCURRED_DEFAULT_CODE = "notification.error-occurred.default-message";
+
+    public static final String ADDITIONAL_EXCEPTION_DATA_MESSAGE_CODE_FORMAT = "notification.additional-data.%s.message";
+
+    public static final String UNDEFINED_MESSAGE_VALUE = "UNDEFINED";
 
     private NotificationResolverConstants() {
     }

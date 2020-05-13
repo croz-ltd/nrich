@@ -20,11 +20,11 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.additionalDataMap;
+import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceRequestBindingMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(classes = NotificationTestConfiguration.class)
@@ -39,11 +39,7 @@ public class NotificationResolverServiceImplTest {
     @Test
     void shouldConvertValidationFailureToNotificationErrorResponse() {
         // given
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
-        invalidBindingMap.put("lastName", "too long last name");
-        invalidBindingMap.put("timestamp", Instant.now().minus(1, ChronoUnit.DAYS));
-        invalidBindingMap.put("value", 5);
-
+        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
@@ -130,8 +126,8 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isNotBlank();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
-        assertThat(notification.getMessageList()).isNotEmpty();
-        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("Error message");
+        assertThat(notification.getContentText()).isEqualTo("Error message");
+        assertThat(notification.getMessageList()).isEmpty();
     }
 
     @Test
@@ -144,7 +140,7 @@ public class NotificationResolverServiceImplTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("Error message with arguments: 1");
+        assertThat(notification.getContentText()).isEqualTo("Error message with arguments: 1");
     }
 
     @Test
@@ -158,7 +154,7 @@ public class NotificationResolverServiceImplTest {
         // then
         assertThat(notification).isNotNull();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.ERROR);
-        assertThat(notification.getMessageList()).isNotEmpty();
+        assertThat(notification.getContentText()).isNotEmpty();
     }
 
     @Test
@@ -173,13 +169,12 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isNotBlank();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("Upload finished");
+        assertThat(notification.getContentText()).isEqualTo("Upload finished");
     }
 
     @Test
     void shouldCreateValidationFailureNotificationWithCustomTitle() {
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
-        invalidBindingMap.put("lastName", "too long last name");
+        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
         final BindingResult result = validate(new NotificationResolverServiceTestRequestWithCustomTitle(), invalidBindingMap);
 
@@ -217,49 +212,51 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isEqualTo("Custom title");
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("Upload finished");
+        assertThat(notification.getContentText()).isEqualTo("Upload finished");
     }
 
     @Test
     void shouldAddAdditionalDataToValidationFailureNotification() {
         // given
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
-        invalidBindingMap.put("value", 5);
+        final Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
+        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = notificationResolverServiceImpl.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, new HashMap<>());
+        final ValidationFailureNotification notification = notificationResolverServiceImpl.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, additionalDataMap);
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalData()).isNotNull();
+        assertThat(notification.getMessageList()).contains("Data: 1");
     }
 
     @Test
     void shouldAddAdditionalDataToExceptionNotification() {
         // given
+        final Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
         final Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
-        final Notification notification = notificationResolverServiceImpl.createNotificationForException(exception, new HashMap<>());
+        final Notification notification = notificationResolverServiceImpl.createNotificationForException(exception, additionalDataMap);
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalData()).isNotNull();
+        assertThat(notification.getMessageList()).containsExactly("Data: 1");
     }
 
     @Test
     void shouldAddAdditionalDataToSuccessNotification() {
         // given
+        final Map<String, Object> additionalDataMap = additionalDataMap("success", "ok");
         final String actionName = "upload.finished";
 
         // when
-        final Notification notification = notificationResolverServiceImpl.createNotificationForSuccessfulAction(actionName, new HashMap<>());
+        final Notification notification = notificationResolverServiceImpl.createNotificationForSuccessfulAction(actionName, additionalDataMap);
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getAdditionalData()).isNotNull();
+        assertThat(notification.getMessageList()).containsExactly("Success: ok");
     }
 
     private BindingResult validate(final Object objectToValidate, final Map<String, Object> valueMap) {

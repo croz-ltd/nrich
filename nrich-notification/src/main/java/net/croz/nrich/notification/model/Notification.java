@@ -14,10 +14,10 @@ public class Notification {
 
     private final String title;
 
+    private final String contentText;
+
     private final List<String> messageList;
 
     private final NotificationSeverity severity;
-
-    private final Map<String, ?> additionalData;
 
 }
