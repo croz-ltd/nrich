@@ -67,7 +67,7 @@ public class LoggingServiceImpl implements LoggingService {
     private LoggingVerbosityLevel fetchConfiguredLoggingVerbosityLevelForException(final Exception exception) {
         final MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
 
-        final String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchConfiguredLoggingVerbosityLevelForException(exception));
+        final String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchClassNameForException(exception));
         final String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingConstants.UNDEFINED_MESSAGE_VALUE)).toUpperCase();
 
         try {
