@@ -56,9 +56,9 @@ public class LoggingServiceImpl implements LoggingService {
             return;
         }
 
+        final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
         final String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, exceptionClassName, exceptionMessage);
 
-        final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
         final String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
         log.error(exceptionLogMessage);
@@ -68,12 +68,10 @@ public class LoggingServiceImpl implements LoggingService {
         final MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
 
         final String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchClassNameForException(exception));
-        final String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingConstants.UNDEFINED_MESSAGE_VALUE)).toUpperCase();
+        final String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingVerbosityLevel.FULL.name())).toUpperCase();
 
         try {
-            if (!LoggingConstants.UNDEFINED_MESSAGE_VALUE.equals(configuredLoggingVerbosityLevel)) {
-                return LoggingVerbosityLevel.valueOf(configuredLoggingVerbosityLevel);
-            }
+            return LoggingVerbosityLevel.valueOf(configuredLoggingVerbosityLevel);
         }
         catch (final IllegalArgumentException ignored) {
             log.warn("Unrecognized verbosity level {}", configuredLoggingVerbosityLevel);

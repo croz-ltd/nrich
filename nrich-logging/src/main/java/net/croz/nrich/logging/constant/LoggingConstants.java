@@ -12,8 +12,6 @@ public final class LoggingConstants {
 
     public static final String LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT = "%s.loggingVerbosityLevel";
 
-    public static final String UNDEFINED_MESSAGE_VALUE = "UNDEFINED";
-
     private LoggingConstants() {
     }
 
