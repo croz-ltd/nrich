@@ -2,6 +2,7 @@ package net.croz.nrich.logging.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.croz.nrich.logging.constant.LoggingConstants;
 import net.croz.nrich.logging.model.LoggingVerbosityLevel;
 import net.croz.nrich.logging.service.LoggingService;
 import org.springframework.context.MessageSource;
@@ -14,18 +15,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class LoggingServiceImpl implements LoggingService {
-
-    private static final String EXCEPTION_COMPACT_LEVEL_LOG_FORMAT = "Exception occurred: [className: %s], message: %s, additionalInfoData: %s";
-
-    private static final String EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT = "Exception occurred: [className: %s], message: %s";
-
-    private static final String EXCEPTION_FULL_LEVEL_LOG_FORMAT = "---------------- Information about above exception %s: %s ----------------";
-
-    private static final String AUXILIARY_DATA_FORMAT = "%s: %s";
-
-    private static final String LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT = "%s.loggingVerbosityLevel";
-
-    private static final String UNKNOWN_VALUE_MESSAGE = "UNKNOWN";
 
     private final MessageSource messageSource;
 
@@ -44,19 +33,19 @@ public class LoggingServiceImpl implements LoggingService {
     @Override
     public void logInternalExceptionAtCompactVerbosityLevel(final Exception exception, final Map<String, ?> exceptionAuxiliaryData) {
         final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, ", ");
-        final String logMessage = String.format(EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception), exceptionAuxiliaryDataMessage);
+        final String logMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception), exceptionAuxiliaryDataMessage);
 
         log.error(logMessage);
     }
 
     @Override
     public void logInternalExceptionAtFullVerbosityLevel(final Exception exception, final Map<String, ?> exceptionAuxiliaryData) {
-        final String exceptionInfoString = String.format(EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception));
+        final String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception));
 
         log.error("Exception occurred", exception);
 
         final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
-        final String exceptionLogMessage = String.format(EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
+        final String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
         log.error(exceptionLogMessage);
     }
@@ -67,10 +56,10 @@ public class LoggingServiceImpl implements LoggingService {
             return;
         }
 
-        final String exceptionInfoString = String.format(EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, exceptionClassName, exceptionMessage);
+        final String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, exceptionClassName, exceptionMessage);
 
         final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
-        final String exceptionLogMessage = String.format(EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
+        final String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
         log.error(exceptionLogMessage);
     }
@@ -78,11 +67,11 @@ public class LoggingServiceImpl implements LoggingService {
     private LoggingVerbosityLevel fetchConfiguredLoggingVerbosityLevelForException(final Exception exception) {
         final MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
 
-        final String messageCode = String.format(LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchConfiguredLoggingVerbosityLevelForException(exception));
-        final String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, UNKNOWN_VALUE_MESSAGE)).toUpperCase();
+        final String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchConfiguredLoggingVerbosityLevelForException(exception));
+        final String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingConstants.UNDEFINED_MESSAGE_VALUE)).toUpperCase();
 
         try {
-            if (!UNKNOWN_VALUE_MESSAGE.equals(configuredLoggingVerbosityLevel)) {
+            if (!LoggingConstants.UNDEFINED_MESSAGE_VALUE.equals(configuredLoggingVerbosityLevel)) {
                 return LoggingVerbosityLevel.valueOf(configuredLoggingVerbosityLevel);
             }
         }
@@ -114,6 +103,6 @@ public class LoggingServiceImpl implements LoggingService {
             return "";
         }
 
-        return exceptionAuxiliaryData.entrySet().stream().map(entry -> String.format(AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue())).collect(Collectors.joining(separator));
+        return exceptionAuxiliaryData.entrySet().stream().map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue())).collect(Collectors.joining(separator));
     }
 }
