@@ -60,7 +60,6 @@ public class ValidRangeValidatorTest {
         final ValidRangeValidatorInclusiveTestRequest request = new ValidRangeValidatorInclusiveTestRequest(1, 1);
 
         // when
-        // when
         final Set<ConstraintViolation<ValidRangeValidatorInclusiveTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
