@@ -1,9 +1,27 @@
 dependencies {
   annotationProcessor "org.projectlombok:lombok"
-
   compileOnly "org.projectlombok:lombok"
 
+  implementation project(":nrich-core-api")
+  implementation project(":nrich-logging")
+  implementation project(":nrich-notification")
+
+  implementation "jakarta.servlet:jakarta.servlet-api"
   implementation "org.springframework:spring-context"
   implementation "org.springframework:spring-web"
 
+  testAnnotationProcessor "org.projectlombok:lombok"
+  testCompileOnly "org.projectlombok:lombok"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "com.fasterxml.jackson.core:jackson-core"
+  testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.glassfish:jakarta.el"
+  testImplementation "org.hibernate.validator:hibernate-validator"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.mockito:mockito-core"
+  testImplementation "org.springframework:spring-test"
+  testImplementation "org.springframework:spring-webmvc"
 }
