@@ -81,6 +81,7 @@ public class ValidRangeValidatorTest {
 
     private static Stream<Arguments> shouldReturnIsValidForRangeValuesMethodSource() {
         final Instant now = Instant.now();
+
         return Stream.of(
                 Arguments.of(null, null, true),
                 Arguments.of(now, null, true),
