@@ -101,6 +101,8 @@ public class LoggingServiceImpl implements LoggingService {
             return "";
         }
 
-        return exceptionAuxiliaryData.entrySet().stream().map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue())).collect(Collectors.joining(separator));
+        return exceptionAuxiliaryData.entrySet().stream()
+                .map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue()))
+                .collect(Collectors.joining(separator));
     }
 }
