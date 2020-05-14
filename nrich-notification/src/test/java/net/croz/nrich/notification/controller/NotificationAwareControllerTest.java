@@ -34,7 +34,6 @@ public class NotificationAwareControllerTest {
         assertThat(responseWithNotification.getData()).isEqualTo(data);
         assertThat(responseWithNotification.getNotification()).isNotNull();
         assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getMessageList()).hasSize(1);
-        assertThat(responseWithNotification.getNotification().getMessageList().get(0)).isEqualTo("Action success");
+        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
     }
 }

@@ -126,7 +126,7 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isNotBlank();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
-        assertThat(notification.getContentText()).isEqualTo("Error message");
+        assertThat(notification.getContent()).isEqualTo("Error message");
         assertThat(notification.getMessageList()).isEmpty();
     }
 
@@ -140,7 +140,7 @@ public class NotificationResolverServiceImplTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getContentText()).isEqualTo("Error message with arguments: 1");
+        assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
     }
 
     @Test
@@ -154,7 +154,7 @@ public class NotificationResolverServiceImplTest {
         // then
         assertThat(notification).isNotNull();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.ERROR);
-        assertThat(notification.getContentText()).isNotEmpty();
+        assertThat(notification.getContent()).isNotEmpty();
     }
 
     @Test
@@ -169,7 +169,7 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isNotBlank();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(notification.getContentText()).isEqualTo("Upload finished");
+        assertThat(notification.getContent()).isEqualTo("Upload finished");
     }
 
     @Test
@@ -212,7 +212,7 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isEqualTo("Custom title");
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(notification.getContentText()).isEqualTo("Upload finished");
+        assertThat(notification.getContent()).isEqualTo("Upload finished");
     }
 
     @Test

@@ -1,6 +1,6 @@
 package net.croz.nrich.notification.constant;
 
-public final class NotificationResolverConstants {
+public final class NotificationConstants {
 
     public static final String PREFIX_MESSAGE_FORMAT = "%s.%s";
 
@@ -32,6 +32,6 @@ public final class NotificationResolverConstants {
 
     public static final String UNDEFINED_MESSAGE_VALUE = "UNDEFINED";
 
-    private NotificationResolverConstants() {
+    private NotificationConstants() {
     }
 }
