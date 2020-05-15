@@ -1,3 +1,14 @@
 rootProject.name = "nrich"
 
-include("nrich-core-api", "nrich-logging", "nrich-form-configuration", "nrich-notification", "nrich-spring-util", "nrich-validation-api",  "nrich-validation", "nrich-webmvc")
+include(
+  "nrich-core-api",
+  "nrich-form-configuration",
+  "nrich-logging",
+  "nrich-notification",
+  "nrich-search-api",
+  "nrich-search",
+  "nrich-spring-util",
+  "nrich-validation-api",
+  "nrich-validation",
+  "nrich-webmvc"
+)

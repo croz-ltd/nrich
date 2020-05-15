@@ -1,0 +1,9 @@
+dependencies {
+  api project(":nrich-search-api")
+
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation "org.springframework.data:spring-data-jpa"
+  implementation "jakarta.persistence:jakarta.persistence-api"
+}
