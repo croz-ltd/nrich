@@ -11,7 +11,7 @@ import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
-import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
+import net.croz.nrich.search.repository.stub.TestEntitySearchRepositoryImpl;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ import static net.croz.nrich.search.repository.testutil.SearchRepositoryGenerati
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-public class SearchRepositoryTest {
+public class SearchRepositoryImplTest {
 
     @Autowired
-    private TestEntitySearchRepository testEntitySearchRepository;
+    private TestEntitySearchRepositoryImpl testEntitySearchRepository;
 
     @PersistenceContext
     private EntityManager entityManager;

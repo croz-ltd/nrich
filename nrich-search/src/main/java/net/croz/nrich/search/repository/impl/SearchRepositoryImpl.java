@@ -1,4 +1,4 @@
-package net.croz.nrich.search.repository;
+package net.croz.nrich.search.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SearchRepository<T, S extends SearchRequest<T, S>> {
+public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
 
     private final EntityManager entityManager;
 
