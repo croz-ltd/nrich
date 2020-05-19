@@ -1,7 +1,7 @@
 package net.croz.nrich.search.support;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.util.Assert;
 
 import javax.persistence.metamodel.Attribute;
@@ -10,7 +10,7 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.Arrays;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class JpaEntityAttributeResolver {
 
     private final ManagedType<?> managedType;
