@@ -6,4 +6,14 @@ dependencies {
 
   implementation "org.springframework.data:spring-data-jpa"
   implementation "jakarta.persistence:jakarta.persistence-api"
+
+  testAnnotationProcessor "org.projectlombok:lombok"
+  testCompileOnly "org.projectlombok:lombok"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.mockito:mockito-core"
+  testImplementation "org.springframework:spring-test"
 }
