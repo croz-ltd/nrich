@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+// TODO move to search configuration and have a default value
 @Data
 public class SearchProperties {
 
