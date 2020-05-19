@@ -19,9 +19,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -53,12 +53,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-@Repository
 public class SearchRepositoryImpl<T> implements SearchRepository<T> {
 
     private final EntityManager entityManager;
 
     private final SearchProperties searchProperties;
+
+//    private final JpaEntityInformation<T, ?> entityInformation;
 
     @Override
     public <R, P> Optional<P> findOne(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
@@ -129,9 +130,13 @@ public class SearchRepositoryImpl<T> implements SearchRepository<T> {
     private <R, P> CriteriaQuery<P> prepareQuery(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
         Assert.notNull(searchConfiguration, "Search configuration is not defined for request!");
 
-        Assert.notNull(searchConfiguration.getRootEntityResolver(), "Root entity resolver is not defined!");
-
-        final Class<T> rootEntity = searchConfiguration.getRootEntityResolver().apply(request);
+        final Class<T> rootEntity;
+        if (searchConfiguration.getRootEntityResolver() == null) {
+            rootEntity = null; //entityInformation.getJavaType();
+        }
+        else {
+            rootEntity = searchConfiguration.getRootEntityResolver().apply(request);
+        }
 
         Assert.notNull(rootEntity, "Root entity for search is not defined!");
 
