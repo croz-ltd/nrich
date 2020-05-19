@@ -11,12 +11,12 @@ import java.util.function.Function;
 @Builder
 @AllArgsConstructor
 @Getter
-public class SearchProjection<S> {
+public class SearchProjection<R> {
 
     private final String path;
 
     private String alias;
 
-    private Function<S, Boolean> condition;
+    private Function<R, Boolean> condition;
 
 }

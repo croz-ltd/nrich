@@ -10,7 +10,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Getter
-public class SearchJoin<S> {
+public class SearchJoin<R> {
 
     private final String path;
 
@@ -18,9 +18,9 @@ public class SearchJoin<S> {
 
     private JoinType joinType;
 
-    private Function<S, Boolean> condition;
+    private Function<R, Boolean> condition;
 
-    public static <S> SearchJoin<S> innerJoin(final String path) {
+    public static <R> SearchJoin<R> innerJoin(final String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null);
     }
 }

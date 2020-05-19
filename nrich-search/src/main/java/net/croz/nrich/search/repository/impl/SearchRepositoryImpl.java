@@ -12,14 +12,24 @@ import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
 import net.croz.nrich.search.properties.SearchProperties;
-import net.croz.nrich.search.request.SearchRequest;
+import net.croz.nrich.search.repository.SearchRepository;
 import net.croz.nrich.search.support.PathResolvingUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
@@ -36,26 +46,87 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
+@Transactional(readOnly = true)
+@Repository
+public class SearchRepositoryImpl<T> implements SearchRepository<T> {
 
     private final EntityManager entityManager;
 
     private final SearchProperties searchProperties;
 
-    public List<?> findAll(final S request) {
-        final CriteriaQuery<?> query = prepareQuery(request);
+    @Override
+    public <R, P> Optional<P> findOne(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        final CriteriaQuery<P> query = prepareQuery(request, searchConfiguration, Sort.unsorted());
+
+        try {
+            return Optional.of(entityManager.createQuery(query).getSingleResult());
+        }
+        catch (final NoResultException ignored) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public <R, P> long count(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        return executeCountQuery(prepareQuery(request, searchConfiguration, Sort.unsorted()));
+    }
+
+    @Override
+    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        final CriteriaQuery<P> query = prepareQuery(request, searchConfiguration, Sort.unsorted());
 
         return entityManager.createQuery(query).getResultList();
     }
 
-    private CriteriaQuery<?> prepareQuery(final S request) {
-        final SearchConfiguration<T, S> searchConfiguration = request.getSearchConfiguration();
+    @Override
+    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
+        final CriteriaQuery<P> query = prepareQuery(request, searchConfiguration, sort);
 
+        return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public <R, P> Page<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Pageable pageable) {
+        final CriteriaQuery<P> query = prepareQuery(request, searchConfiguration, pageable.getSort());
+
+        if (pageable.isPaged()) {
+            final TypedQuery<P> typedQuery = entityManager.createQuery(query).setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
+
+            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(query));
+        }
+
+        return new PageImpl<>(entityManager.createQuery(query).getResultList());
+    }
+
+    private long executeCountQuery(final CriteriaQuery<?> query) {
+
+        @SuppressWarnings("unchecked")
+        final CriteriaQuery<Long> countQuery = (CriteriaQuery<Long>) query;
+
+        query.orderBy(Collections.emptyList());
+
+        final Root<?> root = query.getRoots().iterator().next();
+        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        if (countQuery.isDistinct()) {
+            countQuery.select(builder.countDistinct(root));
+        }
+        else {
+            countQuery.select(builder.count(root));
+        }
+
+        final List<Long> totals = entityManager.createQuery(countQuery).getResultList();
+
+        return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
+    }
+
+    private <R, P> CriteriaQuery<P> prepareQuery(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
         Assert.notNull(searchConfiguration, "Search configuration is not defined for request!");
 
         Assert.notNull(searchConfiguration.getRootEntityResolver(), "Root entity resolver is not defined!");
@@ -66,11 +137,11 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
 
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
-        final Class<?> resultClass = resolveResultClass(searchConfiguration, rootEntity);
+        final Class<P> resultClass = resolveResultClass(searchConfiguration, rootEntity);
 
-        final CriteriaQuery<?> query = criteriaBuilder.createQuery(resultClass);
+        final CriteriaQuery<P> query = criteriaBuilder.createQuery(resultClass);
 
-        final Root<?> root = query.from(rootEntity);
+        final Root<T> root = query.from(rootEntity);
 
         applyJoinsToQuery(request, root, searchConfiguration.getJoinList());
 
@@ -86,22 +157,27 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
             query.where(predicateList.toArray(new Predicate[0]));
         }
 
+        if (sort.isSorted()) {
+            query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
+        }
+
         return query;
     }
 
     // TODO try to use result set mapper, jpa projections require constructors with all parameters
-    private Class<?> resolveResultClass(final SearchConfiguration<T, S> searchConfiguration, final Class<T> rootEntity) {
-        return searchConfiguration.getResultClass() == null ? rootEntity : searchConfiguration.getResultClass();
+    @SuppressWarnings("unchecked")
+    private <R, P> Class<P> resolveResultClass(final SearchConfiguration<T, P, R> searchConfiguration, final Class<T> rootEntity) {
+        return searchConfiguration.getResultClass() == null ? (Class<P>) rootEntity : searchConfiguration.getResultClass();
     }
 
-    private List<Selection<Object>> applyJoinsToQuery(final S request, final Root<?> root, final List<SearchJoin<S>> joinList) {
+    private <R> List<Selection<Object>> applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList) {
         if (CollectionUtils.isEmpty(joinList)) {
             return Collections.emptyList();
         }
         return joinList.stream().filter(join -> shouldApplyJoin(join, request)).map(searchJoin -> root.join(searchJoin.getPath(), searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType()).alias(searchJoin.getAlias())).collect(Collectors.toList());
     }
 
-    private List<Selection<?>> resolveQueryProjectionList(final Root<?> root, final List<SearchProjection<S>> projectionList, final S request) {
+    private <R> List<Selection<?>> resolveQueryProjectionList(final Root<?> root, final List<SearchProjection<R>> projectionList, final R request) {
         if (CollectionUtils.isEmpty(projectionList)) {
             return Collections.emptyList();
         }
@@ -118,15 +194,15 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
         }).collect(Collectors.toList());
     }
 
-    private boolean shouldApplyJoin(final SearchJoin<S> join, final S request) {
+    private <R> boolean shouldApplyJoin(final SearchJoin<R> join, final R request) {
         return join.getCondition() == null || join.getCondition().apply(request);
     }
 
-    private boolean shouldApplyProjection(final SearchProjection<S> projection, final S request) {
+    private <R> boolean shouldApplyProjection(final SearchProjection<R> projection, final R request) {
         return projection.getCondition() == null || projection.getCondition().apply(request);
     }
 
-    private List<Predicate> resolveQueryPredicateList(final S request, final SearchConfiguration<T, S> searchConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+    private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
         final Set<Restriction> restrictionList = new SearchDataParser(searchProperties, root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
 
         final Map<Boolean, List<Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(Restriction::isPluralAttribute));
@@ -135,7 +211,7 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
 
         if (!CollectionUtils.isEmpty(restrictionsByType.get(true))) {
 
-            if (request.getSearchConfiguration().getPluralAssociationRestrictionType() == PluralAssociationRestrictionType.JOIN) {
+            if (searchConfiguration.getPluralAssociationRestrictionType() == PluralAssociationRestrictionType.JOIN) {
                 mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(restrictionsByType.get(true), root, criteriaBuilder));
             }
             else {
@@ -196,7 +272,7 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
     }
 
     // TODO enable join usage or subquery?
-    private List<Subquery<?>> resolveSubqueryList(final S request, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+    private <R> List<Subquery<?>> resolveSubqueryList(final R request, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
         if (CollectionUtils.isEmpty(subqueryConfigurationList)) {
             return Collections.emptyList();
         }
@@ -228,5 +304,4 @@ public class SearchRepositoryImpl<T, S extends SearchRequest<T, S>> {
     private ManagedType<?> resolveManagedTypeByClass(final Class<?> type) {
         return entityManager.getEntityManagerFactory().getMetamodel().getManagedTypes().stream().filter(managedType -> managedType.getJavaType().equals(type)).findFirst().orElse(null);
     }
-
 }

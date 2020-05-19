@@ -1,17 +1,16 @@
 package net.croz.nrich.search.model;
 
 import lombok.Data;
-import net.croz.nrich.search.request.SearchRequest;
 
 import java.util.function.Function;
 
 @Data
-public final class DefaultRootEntityResolver<T, S extends SearchRequest<T, S>> implements Function<S, Class<T>> {
+public final class DefaultRootEntityResolver<T, R> implements Function<R, Class<T>> {
 
     private final Class<T> rootEntity;
 
     @Override
-    public Class<T> apply(S data) {
+    public Class<T> apply(R data) {
         return rootEntity;
     }
 }

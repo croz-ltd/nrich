@@ -3,24 +3,24 @@ package net.croz.nrich.search.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import net.croz.nrich.search.request.SearchRequest;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+// T -> root persistent entity, P -> projection class, R -> search request instance
 @Builder
 @Getter
 @Setter
-public class SearchConfiguration<T, S extends SearchRequest<T, S>> {
+public class SearchConfiguration<T, P, R> {
 
-    private Function<S, Class<T>> rootEntityResolver;
+    private Function<R, Class<T>> rootEntityResolver;
 
-    private List<SearchJoin<S>> joinList;
+    private List<SearchJoin<R>> joinList;
 
-    private List<SearchProjection<S>> projectionList;
+    private List<SearchProjection<R>> projectionList;
 
-    private Class<?> resultClass;
+    private Class<P> resultClass;
 
     private boolean resolveFieldMappingUsingPrefix;
 

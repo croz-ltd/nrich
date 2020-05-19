@@ -1,5 +1,6 @@
-package net.croz.nrich.search.repository;
+package net.croz.nrich.search.repository.impl;
 
+import net.croz.nrich.search.SearchConfigurationTestConfiguration;
 import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
@@ -11,10 +12,11 @@ import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
-import net.croz.nrich.search.repository.stub.TestEntitySearchRepositoryImpl;
+import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -27,11 +29,12 @@ import java.util.List;
 import static net.croz.nrich.search.repository.testutil.SearchRepositoryGeneratingUtil.generateListForSearch;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
 @Transactional
 public class SearchRepositoryImplTest {
 
     @Autowired
-    private TestEntitySearchRepositoryImpl testEntitySearchRepository;
+    private TestEntitySearchRepository testEntitySearchRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -45,13 +48,15 @@ public class SearchRepositoryImplTest {
     void shouldSearchByRootEntityStringAttributes() {
         // given
         generateListForSearch(entityManager);
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(searchConfiguration, "FIRst0");
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
@@ -62,13 +67,15 @@ public class SearchRepositoryImplTest {
     void shouldSearchByRootEntityNumberRangeIncluding() {
         // given
         generateListForSearch(entityManager);
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
-        final TestEntitySearchRequest request = TestEntitySearchRequest.builder().searchConfiguration(searchConfiguration).ageFromIncluding(20).ageToIncluding(25).build();
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFromIncluding(20).ageToIncluding(25).build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
@@ -79,13 +86,15 @@ public class SearchRepositoryImplTest {
     void shouldSearchByRootEntityNumberRange() {
         // given
         generateListForSearch(entityManager);
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
-        final TestEntitySearchRequest request = TestEntitySearchRequest.builder().searchConfiguration(searchConfiguration).ageFrom(20).ageTo(25).build();
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFrom(20).ageTo(25).build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
@@ -97,13 +106,16 @@ public class SearchRepositoryImplTest {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
-        final TestEntitySearchRequest request = TestEntitySearchRequest.builder().searchConfiguration(searchConfiguration).nestedEntity(new TestEntitySearchRequest.TestNestedEntitySearchRequest("nested0")).build();
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+                .nestedEntity(new TestEntitySearchRequest.TestNestedEntitySearchRequest("nested0"))
+                .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
@@ -115,23 +127,23 @@ public class SearchRepositoryImplTest {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.EXISTS)
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList()).isNotEmpty();
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
+        assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
+        assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
 
     @Test
@@ -139,23 +151,23 @@ public class SearchRepositoryImplTest {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList()).isNotEmpty();
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
+        assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
+        assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
 
     @Test
@@ -163,50 +175,49 @@ public class SearchRepositoryImplTest {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
                 .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .collectionName("collection2")
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList()).isNotEmpty();
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
+        assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
+        assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
-
 
     @Test
     void shouldSearchByCollectionAssociationValuesByUsingFieldPrefix() {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
                 .resolveFieldMappingUsingPrefix(true)
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .collectionEntityListName("collection2")
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList()).isNotEmpty();
-        assertThat(((TestEntity)results.get(0)).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
+        assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
+        assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
 
     @Test
@@ -219,17 +230,17 @@ public class SearchRepositoryImplTest {
                 .propertyPrefix("subqueryRestriction")
                 .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .subqueryRestrictionName("first0-association-1")
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
@@ -246,44 +257,43 @@ public class SearchRepositoryImplTest {
                 .restrictionPropertyHolder("subqueryRestrictionHolder")
                 .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .subqueryRestrictionHolder(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("first0-association-1"))
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
     }
 
-
     @Test
     void shouldSearchByEnumValues() {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .searchConfiguration(searchConfiguration)
                 .testEntityEnum(TestEntityEnum.SECOND)
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getTestEntityEnum()).isEqualTo(TestEntityEnum.SECOND);
+        assertThat(results.get(0).getTestEntityEnum()).isEqualTo(TestEntityEnum.SECOND);
     }
 
     @Test
@@ -291,39 +301,40 @@ public class SearchRepositoryImplTest {
         // given
         generateListForSearch(entityManager);
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
                 .testEntityEmbedded(new TestEntitySearchRequest.TestEntityEmbeddedSearchRequest("embedded3"))
-                .searchConfiguration(searchConfiguration)
                 .build();
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
-        assertThat(((TestEntity)results.get(0)).getTestEntityEmbedded().getEmbeddedName()).isEqualTo("embedded3");
+        assertThat(results.get(0).getTestEntityEmbedded().getEmbeddedName()).isEqualTo("embedded3");
     }
 
     @Test
     void shouldReturnEntityListWhenNoProjectionHasBeenDefined() {
         // given
         generateListForSearch(entityManager);
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(searchConfiguration, null);
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.get(0)).isInstanceOf(TestEntity.class);
-        assertThat(((TestEntity) results.get(0)).getName()).isEqualTo("first0");
+        assertThat(results.get(0).getName()).isEqualTo("first0");
     }
 
     @Test
@@ -334,20 +345,21 @@ public class SearchRepositoryImplTest {
         final SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
         final SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, Tuple, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, Tuple, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class)).resultClass(Tuple.class)
                 .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
                 .build();
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(searchConfiguration, null);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<Tuple> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.get(0)).isInstanceOf(Tuple.class);
-        assertThat(((Tuple) results.get(0)).get("name")).isEqualTo("first0");
-        assertThat(((Tuple) results.get(0)).get("nestedName")).isEqualTo("nested0");
+        assertThat(results.get(0).get("name")).isEqualTo("first0");
+        assertThat(results.get(0).get("nestedName")).isEqualTo("nested0");
     }
 
     @Test
@@ -358,14 +370,15 @@ public class SearchRepositoryImplTest {
         final SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
         final SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
-        final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntitySearchRequest>builder()
+        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class)).resultClass(TestEntityDto.class)
                 .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
                 .build();
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(searchConfiguration, null);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final List results = testEntitySearchRepository.findAll(request);
+        final List<TestEntityDto> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
         assertThat(results).isNotEmpty();

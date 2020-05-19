@@ -5,16 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.croz.nrich.search.model.SearchConfiguration;
-import net.croz.nrich.search.request.SearchRequest;
 
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class TestEntitySearchRequest implements SearchRequest<TestEntity, TestEntitySearchRequest> {
-
-    private SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration;
+public class TestEntitySearchRequest {
 
     private String name;
 
@@ -42,8 +38,7 @@ public class TestEntitySearchRequest implements SearchRequest<TestEntity, TestEn
 
     private TestCollectionEntitySearchRequest subqueryRestrictionHolder;
 
-    public TestEntitySearchRequest(final SearchConfiguration<TestEntity, TestEntitySearchRequest> searchConfiguration, final String name) {
-        this.searchConfiguration = searchConfiguration;
+    public TestEntitySearchRequest(final String name) {
         this.name = name;
     }
 
@@ -73,5 +68,4 @@ public class TestEntitySearchRequest implements SearchRequest<TestEntity, TestEn
         private String embeddedName;
 
     }
-
 }
