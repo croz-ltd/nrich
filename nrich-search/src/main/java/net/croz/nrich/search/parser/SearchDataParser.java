@@ -1,6 +1,6 @@
 package net.croz.nrich.search.parser;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 // TODO decide what should be used as constructor and what should be used as method arguments
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class SearchDataParser {
 
@@ -125,11 +125,9 @@ public class SearchDataParser {
 
     private Restriction createAttributeRestriction(final Class<?> attributeType, final String attributeName, final String path, final Object value, final boolean isPluralAttribute) {
         final boolean isRangeSearchSupported = isRangeSearchSupported(attributeType);
-
-        SearchOperator operator = SearchOperatorImpl.EQ;
-
         final SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
 
+        SearchOperator operator = SearchOperatorImpl.EQ;
         if (resolvedOperator != null) {
             operator = resolvedOperator;
         }
@@ -165,7 +163,10 @@ public class SearchDataParser {
         String foundPath = null;
 
         for (final String attribute : attributeNameList) {
-            final String foundFieldName = fieldNameList.stream().filter(field -> field.startsWith(attribute) && field.length() > attribute.length()).findAny().orElse(null);
+            final String foundFieldName = fieldNameList.stream()
+                    .filter(field -> field.startsWith(attribute) && field.length() > attribute.length())
+                    .findAny().orElse(null);
+
             if (foundFieldName != null) {
                 foundPath = attribute + "." + StringUtils.uncapitalize(foundFieldName.substring(attribute.length()));
                 break;

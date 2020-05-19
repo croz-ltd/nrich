@@ -20,7 +20,7 @@ public class SearchJoin<S> {
 
     private Function<S, Boolean> condition;
 
-    public static <S> SearchJoin<S> innerJoin(String path) {
+    public static <S> SearchJoin<S> innerJoin(final String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null);
     }
 }

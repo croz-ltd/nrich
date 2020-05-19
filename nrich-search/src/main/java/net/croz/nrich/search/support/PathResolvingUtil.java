@@ -1,6 +1,6 @@
 package net.croz.nrich.search.support;
 
-final public class PathResolvingUtil {
+public final class PathResolvingUtil {
 
     private PathResolvingUtil() {
     }

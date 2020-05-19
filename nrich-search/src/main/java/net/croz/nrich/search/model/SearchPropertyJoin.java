@@ -1,15 +1,13 @@
 package net.croz.nrich.search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class SearchPropertyJoin {
 
-    private String parentProperty;
+    private final String parentProperty;
 
-    private String childProperty;
+    private final String childProperty;
 
     public static SearchPropertyJoin defaultJoinById() {
         return new SearchPropertyJoin("id", "id");

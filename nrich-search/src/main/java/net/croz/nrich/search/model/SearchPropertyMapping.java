@@ -1,14 +1,12 @@
 package net.croz.nrich.search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
+@Data
 public class SearchPropertyMapping {
 
-    private String name;
+    private final String name;
 
-    private String path;
+    private final String path;
 
 }
