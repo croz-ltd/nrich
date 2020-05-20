@@ -1,7 +1,6 @@
 package net.croz.nrich.search.repository.impl;
 
 import net.croz.nrich.search.SearchConfigurationTestConfiguration;
-import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
 import net.croz.nrich.search.model.SearchProjection;
@@ -50,7 +49,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
@@ -69,7 +67,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFromIncluding(20).ageToIncluding(25).build();
@@ -88,7 +85,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFrom(20).ageTo(25).build();
@@ -107,7 +103,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -129,7 +124,6 @@ public class SearchRepositoryExecutorTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.EXISTS)
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -153,7 +147,6 @@ public class SearchRepositoryExecutorTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -178,7 +171,6 @@ public class SearchRepositoryExecutorTest {
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
                 .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -203,7 +195,6 @@ public class SearchRepositoryExecutorTest {
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
                 .resolveFieldMappingUsingPrefix(true)
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -232,7 +223,6 @@ public class SearchRepositoryExecutorTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -259,7 +249,6 @@ public class SearchRepositoryExecutorTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -280,7 +269,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -302,7 +290,6 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -324,8 +311,8 @@ public class SearchRepositoryExecutorTest {
         generateListForSearch(entityManager);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
                 .build();
+
         final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -346,7 +333,7 @@ public class SearchRepositoryExecutorTest {
         final SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
         final SearchConfiguration<TestEntity, Tuple, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, Tuple, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class)).resultClass(Tuple.class)
+                .resultClass(Tuple.class)
                 .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
                 .build();
 
@@ -371,7 +358,7 @@ public class SearchRepositoryExecutorTest {
         final SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
         final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class)).resultClass(TestEntityDto.class)
+                .resultClass(TestEntityDto.class)
                 .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
                 .build();
 
