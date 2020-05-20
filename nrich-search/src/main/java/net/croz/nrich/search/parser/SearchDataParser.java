@@ -7,6 +7,7 @@ import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.model.SearchFieldConfiguration;
 import net.croz.nrich.search.model.SearchOperator;
 import net.croz.nrich.search.model.SearchOperatorImpl;
+import net.croz.nrich.search.model.SearchOperatorOverride;
 import net.croz.nrich.search.model.SearchPropertyMapping;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
@@ -20,7 +21,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -185,14 +188,25 @@ public class SearchDataParser {
 
     private SearchOperator resolveFromSearchConfiguration(final SearchDataParserConfiguration searchConfiguration, final String path, final Class<?> attributeType) {
         SearchOperator operator = null;
+        SearchOperatorOverride operatorOverride = resolveOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
 
-        if (searchConfiguration.getPathSearchOperatorMap() != null && searchConfiguration.getPathSearchOperatorMap().containsKey(path)) {
-            operator = searchConfiguration.getPathSearchOperatorMap().get(path);
+        if (operatorOverride == null) {
+            operatorOverride = resolveOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> attributeType.isAssignableFrom(value.getPropertyType()));
         }
-        else if (searchConfiguration.getTypeSearchOperatorMap() != null && searchConfiguration.getTypeSearchOperatorMap().containsKey(attributeType)) {
-            operator = searchConfiguration.getTypeSearchOperatorMap().get(attributeType);
+
+        if (operatorOverride != null) {
+            operator = operatorOverride.getSearchOperator();
         }
 
         return operator;
+    }
+
+    private SearchOperatorOverride resolveOperatorOverride(final List<SearchOperatorOverride> searchOperatorOverrideList, final Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
+        return Optional.ofNullable(searchOperatorOverrideList)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(searchOperatorOverridePredicate)
+                .findFirst()
+                .orElse(null);
     }
 }

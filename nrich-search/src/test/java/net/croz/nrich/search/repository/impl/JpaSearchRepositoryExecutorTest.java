@@ -5,6 +5,8 @@ import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
 import net.croz.nrich.search.model.SearchJoin;
+import net.croz.nrich.search.model.SearchOperatorImpl;
+import net.croz.nrich.search.model.SearchOperatorOverride;
 import net.croz.nrich.search.model.SearchProjection;
 import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SearchPropertyMapping;
@@ -533,7 +535,7 @@ public class JpaSearchRepositoryExecutorTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest("first1");
 
         // when
-        final boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfiguration());
+        final boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
 
         // then
         assertThat(result).isTrue();
@@ -592,5 +594,32 @@ public class JpaSearchRepositoryExecutorTest {
         // then
         assertThat(results).isNotEmpty();
         assertThat(results.size()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldOverrideOperatorByTypeAndPath() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+                .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", SearchOperatorImpl.LIKE)))
+                .build();
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(results).isEmpty();
+
+        // and when
+        final TestEntitySearchRequest requestWithSameName = TestEntitySearchRequest.builder().name("first1").collectionName("collection").build();
+
+        final List<TestEntity> resultsWithSameName = testEntitySearchRepository.findAll(requestWithSameName, searchConfiguration);
+
+        // then
+        assertThat(resultsWithSameName).hasSize(1);
     }
 }

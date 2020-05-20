@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,14 +17,12 @@ public class SearchDataParserConfiguration {
 
     private List<SearchPropertyMapping> propertyMappingList;
 
-    private Map<String, SearchOperator> pathSearchOperatorMap;
-
-    private Map<Class<?>, SearchOperator> typeSearchOperatorMap;
+    private List<SearchOperatorOverride> searchOperatorOverrideList;
 
     private SearchFieldConfiguration searchFieldConfiguration;
 
     public static SearchDataParserConfiguration fromSearchConfiguration(final SearchConfiguration<?, ?, ?> searchConfiguration) {
-        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getPathSearchOperatorMap(), searchConfiguration.getTypeSearchOperatorMap(), searchConfiguration.getSearchFieldConfiguration());
+        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchFieldConfiguration());
     }
 
 }

@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
+// TODO allow for easier initialization of search configuration and sync all classes (static vs builder etc)
 // T -> root persistent entity, P -> projection class (can be same as root), R -> search request instance
 @Builder
 @Getter
@@ -26,9 +26,7 @@ public class SearchConfiguration<T, P, R> {
 
     private List<SearchPropertyMapping> propertyMappingList;
 
-    private Map<String, SearchOperator> pathSearchOperatorMap;
-
-    private Map<Class<?>, SearchOperator> typeSearchOperatorMap;
+    private List<SearchOperatorOverride> searchOperatorOverrideList;
 
     // TODO enable restriction type by association name
     private PluralAssociationRestrictionType pluralAssociationRestrictionType;
