@@ -57,6 +57,20 @@ public enum SearchOperatorImpl implements SearchOperator {
         public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
             return criteriaBuilder.lessThan((Expression<Comparable<Object>>) path, (Comparable<Object>) value);
         }
+    },
+
+    IS_NULL {
+        @Override
+        public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
+            return criteriaBuilder.isNull(path);
+        }
+    },
+
+    IS_NOT_NULL {
+        @Override
+        public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
+            return criteriaBuilder.isNotNull(path);
+        }
     }
 
 }
