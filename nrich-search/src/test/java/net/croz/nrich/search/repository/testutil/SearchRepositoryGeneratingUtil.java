@@ -8,7 +8,6 @@ import net.croz.nrich.search.repository.stub.TestEntityEnum;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 
 import javax.persistence.EntityManager;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,9 +18,13 @@ public final class SearchRepositoryGeneratingUtil {
     }
 
     public static List<TestEntity> generateListForSearch(final EntityManager entityManager) {
+        return generateListForSearch(entityManager, 1);
+    }
+
+    public static List<TestEntity> generateListForSearch(final EntityManager entityManager, final int numberOfCollectionEntities) {
         final List<TestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> {
             final TestNestedEntity nestedEntity = new TestNestedEntity(null, "nested" + value);
-            final List<TestCollectionEntity> collectionEntityList = Collections.singletonList(new TestCollectionEntity(null, "collection" + value));
+            final List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities).mapToObj(counter -> new TestCollectionEntity(null, "collection" + (value + counter))).collect(Collectors.toList());
             final TestEntityEmbedded testEntityEmbedded = new TestEntityEmbedded("embedded" + value);
 
             return new TestEntity(null, "first" + value, 24 + value, nestedEntity, collectionEntityList, TestEntityEnum.FIRST, testEntityEmbedded);

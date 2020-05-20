@@ -388,6 +388,28 @@ public class JpaSearchRepositoryExecutorTest {
     }
 
     @Test
+    void shouldCountDistinctEntities() {
+        // given
+        generateListForSearch(entityManager, 2);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        final SearchJoin<TestEntitySearchRequest> collectionJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("collectionEntityList").path("collectionEntityList").joinType(JoinType.LEFT).build();
+
+        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+                .resultClass(TestEntityDto.class)
+                .distinct(true)
+                .joinList(Collections.singletonList(collectionJoin))
+                .build();
+
+        // when
+        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+
+        // then
+        assertThat(result).isEqualTo(5L);
+    }
+
+    @Test
     void shouldCountWhenUsingSearchingSubEntity() {
         // given
         generateListForSearch(entityManager);

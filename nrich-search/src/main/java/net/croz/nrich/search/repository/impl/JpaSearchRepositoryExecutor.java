@@ -160,6 +160,10 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             query.multiselect(projectionList);
         }
 
+        if (searchConfiguration.isDistinct()) {
+            query.distinct(true);
+        }
+
         final List<Predicate> predicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
 
         if (!CollectionUtils.isEmpty(predicateList)) {
