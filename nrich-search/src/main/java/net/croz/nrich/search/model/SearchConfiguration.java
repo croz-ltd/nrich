@@ -35,4 +35,7 @@ public class SearchConfiguration<T, P, R> {
 
     private List<SubqueryConfiguration> subqueryConfigurationList;
 
+    @Builder.Default
+    private SearchFieldConfiguration searchFieldConfiguration = SearchFieldConfiguration.defaultSearchFieldConfiguration();
+
 }

@@ -1,6 +1,5 @@
 package net.croz.nrich.search.factory;
 
-import net.croz.nrich.search.properties.SearchProperties;
 import net.croz.nrich.search.repository.SearchExecutor;
 import net.croz.nrich.search.repository.impl.JpaSearchRepositoryExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -17,28 +16,22 @@ import java.io.Serializable;
 
 public class SearchRepositoryJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID> {
 
-    private final SearchProperties searchProperties;
-
-    public SearchRepositoryJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final SearchProperties searchProperties) {
+    public SearchRepositoryJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
-        this.searchProperties = searchProperties;
     }
 
     @Override
     protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
-        return new SearchRepositoryJpaRepositoryFactory(entityManager, searchProperties);
+        return new SearchRepositoryJpaRepositoryFactory(entityManager);
     }
 
     private static class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
 
         private final EntityManager entityManager;
 
-        private final SearchProperties searchProperties;
-
-        public SearchRepositoryJpaRepositoryFactory(final EntityManager entityManager, final SearchProperties searchProperties) {
+        public SearchRepositoryJpaRepositoryFactory(final EntityManager entityManager) {
             super(entityManager);
             this.entityManager = entityManager;
-            this.searchProperties = searchProperties;
         }
 
         @Override
@@ -48,7 +41,7 @@ public class SearchRepositoryJpaRepositoryFactoryBean<T extends Repository<S, ID
             if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchRepositoryExecutor.class, entityManager, searchProperties, entityInformation);
+                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchRepositoryExecutor.class, entityManager, entityInformation);
 
                 fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
             }

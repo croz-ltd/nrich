@@ -22,8 +22,10 @@ public class SearchDataParserConfiguration {
 
     private Map<Class<?>, SearchOperator> typeSearchOperatorMap;
 
+    private SearchFieldConfiguration searchFieldConfiguration;
+
     public static SearchDataParserConfiguration fromSearchConfiguration(final SearchConfiguration<?, ?, ?> searchConfiguration) {
-        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getPathSearchOperatorMap(), searchConfiguration.getTypeSearchOperatorMap());
+        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getPathSearchOperatorMap(), searchConfiguration.getTypeSearchOperatorMap(), searchConfiguration.getSearchFieldConfiguration());
     }
 
 }

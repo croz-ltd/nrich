@@ -1,7 +1,6 @@
 package net.croz.nrich.search;
 
 import net.croz.nrich.search.factory.SearchRepositoryJpaRepositoryFactoryBean;
-import net.croz.nrich.search.properties.SearchProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -47,10 +46,5 @@ public class SearchConfigurationTestConfiguration {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
 
         return transactionManager;
-    }
-
-    @Bean
-    public SearchProperties searchProperties() {
-        return new SearchProperties();
     }
 }

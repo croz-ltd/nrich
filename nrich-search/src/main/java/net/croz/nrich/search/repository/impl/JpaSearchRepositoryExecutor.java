@@ -6,12 +6,12 @@ import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchConfiguration;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
+import net.croz.nrich.search.model.SearchFieldConfiguration;
 import net.croz.nrich.search.model.SearchJoin;
 import net.croz.nrich.search.model.SearchProjection;
 import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
-import net.croz.nrich.search.properties.SearchProperties;
 import net.croz.nrich.search.repository.SearchExecutor;
 import net.croz.nrich.search.support.PathResolvingUtil;
 import org.springframework.data.domain.Page;
@@ -57,8 +57,6 @@ import java.util.stream.Collectors;
 public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
 
     private final EntityManager entityManager;
-
-    private final SearchProperties searchProperties;
 
     private final JpaEntityInformation<T, ?> entityInformation;
 
@@ -214,7 +212,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
     }
 
     private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
-        final Set<Restriction> restrictionList = new SearchDataParser(searchProperties, root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
+        final Set<Restriction> restrictionList = new SearchDataParser(root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
 
         final Map<Boolean, List<Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(Restriction::isPluralAttribute));
 
@@ -232,7 +230,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             }
         }
 
-        final List<Subquery<?>> subqueryList = resolveSubqueryList(request, searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder);
+        final List<Subquery<?>> subqueryList = resolveSubqueryList(request, searchConfiguration.getSearchFieldConfiguration(), searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder);
 
         subqueryList.forEach(subquery -> mainQueryPredicateList.add(criteriaBuilder.exists(subquery)));
 
@@ -283,7 +281,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
     }
 
     // TODO enable join usage or subquery?
-    private <R> List<Subquery<?>> resolveSubqueryList(final R request, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+    private <R> List<Subquery<?>> resolveSubqueryList(final R request, final SearchFieldConfiguration searchFieldConfiguration, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
         if (CollectionUtils.isEmpty(subqueryConfigurationList)) {
             return Collections.emptyList();
         }
@@ -296,11 +294,11 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
                 final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
 
-                subqueryRestrictionList = new SearchDataParser(searchProperties, subqueryType, request, new SearchDataParserConfiguration()).resolveRestrictionList(propertyPrefix);
+                subqueryRestrictionList = new SearchDataParser(subqueryType, request, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).build()).resolveRestrictionList(propertyPrefix);
             }
             else {
                 final Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
-                subqueryRestrictionList = new SearchDataParser(searchProperties, subqueryType, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
+                subqueryRestrictionList = new SearchDataParser(subqueryType, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
             }
 
             if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
