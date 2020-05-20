@@ -15,6 +15,9 @@ import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -414,4 +417,59 @@ public class SearchRepositoryExecutorTest {
         assertThat(result).isEqualTo(1L);
     }
 
+    @Test
+    void shouldSortEntities() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration, Sort.by(Sort.Order.desc("age")));
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getAge()).isEqualTo(28);
+    }
+
+    @Test
+    void shouldFetchOnlySubsetOfResult() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration, PageRequest.of(0, 1));
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.getTotalPages()).isEqualTo(5);
+        assertThat(results.getContent()).hasSize(1);
+    }
+
+    @Test
+    void shouldNotFailWhenThereIsNoContent() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
+
+        // when
+        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration, PageRequest.of(0, 1));
+
+        // then
+        assertThat(results).isEmpty();
+        assertThat(results.getTotalPages()).isEqualTo(0);
+        assertThat(results.getContent()).hasSize(0);
+    }
 }
