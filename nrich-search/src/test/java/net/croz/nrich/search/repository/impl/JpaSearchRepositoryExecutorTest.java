@@ -482,4 +482,18 @@ public class JpaSearchRepositoryExecutorTest {
         // then
         assertThat(result).isTrue();
     }
+
+    @Test
+    void shouldSortByJoinedEntity() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("nestedEntity.nestedEntityName")));
+
+        // then
+        assertThat(results).isNotEmpty();
+    }
 }
