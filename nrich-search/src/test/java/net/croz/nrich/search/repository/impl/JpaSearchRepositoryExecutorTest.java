@@ -1,6 +1,7 @@
 package net.croz.nrich.search.repository.impl;
 
 import net.croz.nrich.search.SearchConfigurationTestConfiguration;
+import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
 import net.croz.nrich.search.model.SearchProjection;
@@ -495,5 +496,24 @@ public class JpaSearchRepositoryExecutorTest {
 
         // then
         assertThat(results).isNotEmpty();
+    }
+
+    @Test
+    void shouldResolveRootEntityFromRootEntityResolver() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
+                .build();
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.size()).isEqualTo(1);
     }
 }
