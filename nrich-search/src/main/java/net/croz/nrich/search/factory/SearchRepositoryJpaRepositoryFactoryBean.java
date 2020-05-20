@@ -1,8 +1,8 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.properties.SearchProperties;
-import net.croz.nrich.search.repository.SearchRepository;
-import net.croz.nrich.search.repository.impl.SearchRepositoryExecutor;
+import net.croz.nrich.search.repository.SearchExecutor;
+import net.croz.nrich.search.repository.impl.JpaSearchRepositoryExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
@@ -45,12 +45,12 @@ public class SearchRepositoryJpaRepositoryFactoryBean<T extends Repository<S, ID
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(final RepositoryMetadata metadata) {
             RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
 
-            if (SearchRepository.class.isAssignableFrom(metadata.getRepositoryInterface())) {
+            if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-                final SearchRepository<?> searchRepositoryFragment = getTargetRepositoryViaReflection(SearchRepositoryExecutor.class, entityManager, searchProperties, entityInformation);
+                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchRepositoryExecutor.class, entityManager, searchProperties, entityInformation);
 
-                fragments = fragments.append(RepositoryFragment.implemented(SearchRepository.class, searchRepositoryFragment));
+                fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
             }
 
             return fragments;

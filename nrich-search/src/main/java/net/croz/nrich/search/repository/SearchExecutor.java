@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 import java.util.Optional;
 
-public interface SearchRepository<T> {
+public interface SearchExecutor<T> {
 
     <R, P> Optional<P> findOne(R request, SearchConfiguration<T, P, R> configuration);
 

@@ -12,7 +12,7 @@ import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
 import net.croz.nrich.search.properties.SearchProperties;
-import net.croz.nrich.search.repository.SearchRepository;
+import net.croz.nrich.search.repository.SearchExecutor;
 import net.croz.nrich.search.support.PathResolvingUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,7 +54,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class SearchRepositoryExecutor<T> implements SearchRepository<T> {
+public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
 
     private final EntityManager entityManager;
 
