@@ -75,11 +75,6 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
-    public <R, P> long count(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
-        return executeCountQuery(prepareQuery(request, searchConfiguration, Sort.unsorted()));
-    }
-
-    @Override
     public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
         final CriteriaQuery<P> query = prepareQuery(request, searchConfiguration, Sort.unsorted());
 
@@ -104,6 +99,16 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
         }
 
         return new PageImpl<>(entityManager.createQuery(query).getResultList());
+    }
+
+    @Override
+    public <R, P> long count(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        return executeCountQuery(prepareQuery(request, searchConfiguration, Sort.unsorted()));
+    }
+
+    @Override
+    public <R, P> boolean exists(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        return executeCountQuery(prepareQuery(request, searchConfiguration, Sort.unsorted())) > 0;
     }
 
     private long executeCountQuery(final CriteriaQuery<?> query) {

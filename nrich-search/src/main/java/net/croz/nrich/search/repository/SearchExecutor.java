@@ -12,12 +12,13 @@ public interface SearchExecutor<T> {
 
     <R, P> Optional<P> findOne(R request, SearchConfiguration<T, P, R> configuration);
 
-    <R, P> long count(R request, SearchConfiguration<T, P, R> configuration);
-
     <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> configuration);
 
     <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> configuration, Sort sort);
 
     <R, P> Page<P> findAll(R request, SearchConfiguration<T, P, R> configuration, Pageable pageable);
 
+    <R, P> long count(R request, SearchConfiguration<T, P, R> configuration);
+
+    <R, P> boolean exists(R request, SearchConfiguration<T, P, R> configuration);
 }
