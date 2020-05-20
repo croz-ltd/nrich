@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO decide what should be used as constructor and what should be used as method arguments
 @RequiredArgsConstructor
 @Slf4j
 public class SearchDataParser {
