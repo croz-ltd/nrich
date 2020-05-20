@@ -372,4 +372,46 @@ public class SearchRepositoryExecutorTest {
         assertThat(results.get(0)).isInstanceOf(TestEntityDto.class);
     }
 
+    @Test
+    void shouldCountByRootEntityStringAttributes() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
+
+        // when
+        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+
+        // then
+        assertThat(result).isEqualTo(1L);
+    }
+
+    @Test
+    void shouldCountWhenUsingSearchingSubEntity() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
+                .rootEntity(TestEntityCollectionWithReverseAssociation.class)
+                .propertyPrefix("subqueryRestriction")
+                .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+                .build();
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+                .subqueryRestrictionName("first0-association-1")
+                .build();
+
+        // when
+        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+
+        // then
+        assertThat(result).isEqualTo(1L);
+    }
+
 }
