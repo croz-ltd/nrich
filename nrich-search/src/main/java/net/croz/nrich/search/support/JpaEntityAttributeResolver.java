@@ -55,7 +55,10 @@ public class JpaEntityAttributeResolver {
     }
 
     private Attribute<?, ?> resolveAttributeByName(final ManagedType<?> managedType, final String attributeName) {
-        return managedType.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeName)).findFirst().orElse(null);
+        return managedType.getAttributes().stream()
+                .filter(attribute -> attribute.getName().equals(attributeName))
+                .findFirst()
+                .orElse(null);
     }
 
     @Data

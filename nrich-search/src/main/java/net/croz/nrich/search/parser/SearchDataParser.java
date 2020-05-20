@@ -75,7 +75,11 @@ public class SearchDataParser {
             else if (searchUsingPropertyMapping(searchConfiguration)) {
                 String mappedPath = null;
                 if (searchConfiguration.getPropertyMappingList() != null) {
-                    mappedPath = searchConfiguration.getPropertyMappingList().stream().filter(mapping -> originalFieldName.equals(mapping.getName())).map(SearchPropertyMapping::getPath).findAny().orElse(null);
+                    mappedPath = searchConfiguration.getPropertyMappingList().stream()
+                            .filter(mapping -> originalFieldName.equals(mapping.getName()))
+                            .map(SearchPropertyMapping::getPath)
+                            .findAny()
+                            .orElse(null);
                 }
 
                 if (mappedPath == null) {
