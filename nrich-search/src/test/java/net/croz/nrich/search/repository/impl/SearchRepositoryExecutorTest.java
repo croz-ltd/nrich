@@ -27,6 +27,7 @@ import javax.persistence.Tuple;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static net.croz.nrich.search.repository.testutil.SearchRepositoryGeneratingUtil.generateListForSearch;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -471,5 +472,39 @@ public class SearchRepositoryExecutorTest {
         assertThat(results).isEmpty();
         assertThat(results.getTotalPages()).isEqualTo(0);
         assertThat(results.getContent()).hasSize(0);
+    }
+
+    @Test
+    void shouldFindOneElement() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("first0");
+
+        // when
+        final Optional<TestEntity> result = testEntitySearchRepository.findOne(request, searchConfiguration);
+
+        // then
+        assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyOptionalWhenNoResultsHaveBeenFound() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
+
+        // when
+        final Optional<TestEntity> result = testEntitySearchRepository.findOne(request, searchConfiguration);
+
+        // then
+        assertThat(result).isEmpty();
     }
 }
