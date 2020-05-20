@@ -1,6 +1,7 @@
 package net.croz.nrich.search.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,6 +10,7 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class SearchJoin<R> {
 

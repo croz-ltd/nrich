@@ -4,6 +4,7 @@ import net.croz.nrich.search.SearchConfigurationTestConfiguration;
 import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.model.SearchJoin;
 import net.croz.nrich.search.model.SearchProjection;
 import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SearchPropertyMapping;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
+import javax.persistence.criteria.JoinType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -507,6 +509,28 @@ public class JpaSearchRepositoryExecutorTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
+                .build();
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.size()).isEqualTo(1);
+    }
+
+    @Test
+    void shouldApplyJoinsToQuery() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchJoin<TestEntitySearchRequest> nestedEntityJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("nestedJoinAlias").path("nestedEntity").joinType(JoinType.LEFT).build();
+        final SearchJoin<TestEntitySearchRequest> nonAppliedJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("nestedJoinAlias").path("nonExistingPath").condition(value -> false).joinType(JoinType.LEFT).build();
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .joinList(Arrays.asList(nestedEntityJoin, nonAppliedJoin))
                 .build();
 
         // when
