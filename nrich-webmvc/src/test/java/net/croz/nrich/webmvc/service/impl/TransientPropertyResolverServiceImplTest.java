@@ -27,13 +27,13 @@ public class TransientPropertyResolverServiceImplTest {
         final List<String> resultList = transientPropertyResolverService.resolveTransientPropertyList(type);
 
         // then
-        assertThat(resultList).containsExactlyInAnyOrder("value", "anotherValue");
+        assertThat(resultList).contains("value", "anotherValue");
 
         // and when
         final List<String> cachedResultList = transientPropertyResolverService.resolveTransientPropertyList(type);
 
         // then
-        assertThat(cachedResultList).containsExactlyInAnyOrder("value", "anotherValue");
+        assertThat(cachedResultList).contains("value", "anotherValue");
 
     }
 }
