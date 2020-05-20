@@ -106,9 +106,9 @@ public class SearchDataParser {
     }
 
     private String fieldNameWithoutRangeSuffixAndPrefix(final String originalFieldName, final String prefix) {
-        String fieldName = originalFieldName;
         final String[] suffixListToRemove = new String[]{searchProperties.getRangeQueryFromIncludingSuffix(), searchProperties.getRangeQueryFromSuffix(), searchProperties.getRangeQueryToIncludingSuffix(), searchProperties.getRangeQueryToSuffix()};
 
+        String fieldName = originalFieldName;
         for (final String suffix : suffixListToRemove) {
             if (originalFieldName.endsWith(suffix)) {
                 fieldName = originalFieldName.substring(0, originalFieldName.lastIndexOf(suffix));
@@ -171,7 +171,6 @@ public class SearchDataParser {
                 foundPath = attribute + "." + StringUtils.uncapitalize(foundFieldName.substring(attribute.length()));
                 break;
             }
-
         }
 
         return foundPath;
