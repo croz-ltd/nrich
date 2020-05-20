@@ -7,6 +7,7 @@ import lombok.Setter;
 import java.util.List;
 import java.util.function.Function;
 
+// TODO add additional restriction list (for example for security restrictions)
 // TODO allow for easier initialization of search configuration and sync all classes (static vs builder etc)
 // T -> root persistent entity, P -> projection class (can be same as root), R -> search request instance
 @Builder
