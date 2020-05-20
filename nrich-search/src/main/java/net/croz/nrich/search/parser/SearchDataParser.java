@@ -68,21 +68,14 @@ public class SearchDataParser {
                 }
 
                 if (!attributeHolder.getAttribute().getJavaType().isAssignableFrom(field.getType())) {
-                    log.info("Skipping searching by attribute {} class doesn't match with expected and no converter has been found", field.getName());
+                    log.info("Skipping searching by attribute {} class doesn't match with expected type", field.getName());
                     return;
                 }
 
                 restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isPluralAttribute));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
-                String mappedPath = null;
-                if (searchConfiguration.getPropertyMappingList() != null) {
-                    mappedPath = searchConfiguration.getPropertyMappingList().stream()
-                            .filter(mapping -> originalFieldName.equals(mapping.getName()))
-                            .map(SearchPropertyMapping::getPath)
-                            .findAny()
-                            .orElse(null);
-                }
+                String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
 
                 if (mappedPath == null) {
                     mappedPath = findPathUsingAttributePrefix(fieldList, managedType);
@@ -162,6 +155,16 @@ public class SearchDataParser {
         return searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
+    private String findPathUsingMapping(final List<SearchPropertyMapping> propertyMappingList, final String fieldName) {
+        return Optional.ofNullable(propertyMappingList)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(mapping -> fieldName.equals(mapping.getName()))
+                .map(SearchPropertyMapping::getPath)
+                .findAny()
+                .orElse(null);
+    }
+
     private String findPathUsingAttributePrefix(final List<Field> fieldList, final ManagedType<?> managedType) {
         final List<String> attributeNameList = managedType.getAttributes().stream().filter(Attribute::isAssociation).map(Attribute::getName).collect(Collectors.toList());
         final List<String> fieldNameList = fieldList.stream().map(Field::getName).collect(Collectors.toList());
@@ -188,10 +191,10 @@ public class SearchDataParser {
 
     private SearchOperator resolveFromSearchConfiguration(final SearchDataParserConfiguration searchConfiguration, final String path, final Class<?> attributeType) {
         SearchOperator operator = null;
-        SearchOperatorOverride operatorOverride = resolveOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
+        SearchOperatorOverride operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
 
         if (operatorOverride == null) {
-            operatorOverride = resolveOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> attributeType.isAssignableFrom(value.getPropertyType()));
+            operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> attributeType.isAssignableFrom(value.getPropertyType()));
         }
 
         if (operatorOverride != null) {
@@ -201,7 +204,7 @@ public class SearchDataParser {
         return operator;
     }
 
-    private SearchOperatorOverride resolveOperatorOverride(final List<SearchOperatorOverride> searchOperatorOverrideList, final Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
+    private SearchOperatorOverride findOperatorOverride(final List<SearchOperatorOverride> searchOperatorOverrideList, final Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
         return Optional.ofNullable(searchOperatorOverrideList)
                 .orElse(Collections.emptyList())
                 .stream()
