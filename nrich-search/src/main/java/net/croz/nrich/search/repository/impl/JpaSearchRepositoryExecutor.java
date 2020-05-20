@@ -134,7 +134,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
     }
 
     private <R, P> CriteriaQuery<P> prepareQuery(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
-        Assert.notNull(searchConfiguration, "Search configuration is not defined for request!");
+        Assert.notNull(searchConfiguration, "Search configuration is not defined!");
 
         final Class<T> rootEntity;
         if (searchConfiguration.getRootEntityResolver() == null) {
@@ -144,7 +144,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             rootEntity = searchConfiguration.getRootEntityResolver().apply(request);
         }
 
-        Assert.notNull(rootEntity, "Root entity for search is not defined!");
+        Assert.notNull(rootEntity, "Root entity returned by resolver is not defined!");
 
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 

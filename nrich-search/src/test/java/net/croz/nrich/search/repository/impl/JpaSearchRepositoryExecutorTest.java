@@ -475,7 +475,7 @@ public class JpaSearchRepositoryExecutorTest {
     }
 
     @Test
-    void shouldFindOneElement() {
+    void shouldFindOneEntity() {
         // given
         generateListForSearch(entityManager);
 
@@ -506,5 +506,22 @@ public class JpaSearchRepositoryExecutorTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldReturnTrueWhenEntityExists() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("first1");
+
+        // when
+        final boolean result = testEntitySearchRepository.exists(request, searchConfiguration);
+
+        // then
+        assertThat(result).isTrue();
     }
 }
