@@ -183,7 +183,11 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
         if (CollectionUtils.isEmpty(joinList)) {
             return Collections.emptyList();
         }
-        return joinList.stream().filter(join -> shouldApplyJoin(join, request)).map(searchJoin -> root.join(searchJoin.getPath(), searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType()).alias(searchJoin.getAlias())).collect(Collectors.toList());
+
+        return joinList.stream()
+                .filter(join -> shouldApplyJoin(join, request))
+                .map(searchJoin -> root.join(searchJoin.getPath(), searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType()).alias(searchJoin.getAlias()))
+                .collect(Collectors.toList());
     }
 
     private <R> List<Selection<?>> resolveQueryProjectionList(final Root<?> root, final List<SearchProjection<R>> projectionList, final R request) {
@@ -191,16 +195,10 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             return Collections.emptyList();
         }
 
-        return projectionList.stream().filter(projection -> shouldApplyProjection(projection, request)).map(projection -> {
-            final String[] pathList = PathResolvingUtil.convertToPathList(projection.getPath());
-
-            final Path<?> path = calculateFullPath(root, pathList);
-
-            final String alias = projection.getAlias() == null ? pathList[pathList.length - 1] : projection.getAlias();
-
-            return path.alias(alias);
-
-        }).collect(Collectors.toList());
+        return projectionList.stream()
+                .filter(projection -> shouldApplyProjection(projection, request))
+                .map(projection -> convertToSelectionExpression(root, projection))
+                .collect(Collectors.toList());
     }
 
     private <R> boolean shouldApplyJoin(final SearchJoin<R> join, final R request) {
@@ -258,6 +256,7 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
         restrictionList.forEach(restriction -> {
             if (restriction.getValue() != null) {
                 final String[] pathList = PathResolvingUtil.convertToPathList(restriction.getPath());
+
                 if (restriction.isPluralAttribute()) {
                     final String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
                     predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList), restriction.getValue()));
@@ -286,31 +285,48 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
             return Collections.emptyList();
         }
 
-        return subqueryConfigurationList.stream().map(subqueryConfiguration -> {
-            final ManagedType<?> subqueryType = resolveManagedTypeByClass(subqueryConfiguration.getRootEntity());
+        return subqueryConfigurationList.stream()
+                .map(subqueryConfiguration -> buildSubQuery(request, searchFieldConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
-            Subquery<?> subquery = null;
-            final Set<Restriction> subqueryRestrictionList;
-            if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
-                final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
+    private <R> Subquery<?> buildSubQuery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
+        final ManagedType<?> subqueryRoot = resolveManagedTypeByClass(subqueryConfiguration.getRootEntity());
 
-                subqueryRestrictionList = new SearchDataParser(subqueryType, request, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).build()).resolveRestrictionList(propertyPrefix);
-            }
-            else {
-                final Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
-                subqueryRestrictionList = new SearchDataParser(subqueryType, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
-            }
+        Subquery<?> subquery = null;
+        final Set<Restriction> subqueryRestrictionList;
+        if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
+            final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
 
-            if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
-                subquery = createSubqueryRestriction(subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy());
-            }
+            subqueryRestrictionList = new SearchDataParser(subqueryRoot, request, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).build()).resolveRestrictionList(propertyPrefix);
+        }
+        else {
+            final Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
+            subqueryRestrictionList = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
+        }
 
-            return subquery;
+        if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
+            subquery = createSubqueryRestriction(subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy());
+        }
 
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        return subquery;
     }
 
     private ManagedType<?> resolveManagedTypeByClass(final Class<?> type) {
-        return entityManager.getEntityManagerFactory().getMetamodel().getManagedTypes().stream().filter(managedType -> managedType.getJavaType().equals(type)).findFirst().orElse(null);
+        return entityManager.getEntityManagerFactory().getMetamodel().getManagedTypes().stream()
+                .filter(managedType -> managedType.getJavaType().equals(type))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private <R> Selection<?> convertToSelectionExpression(final Path<?> root, final SearchProjection<R> projection) {
+        final String[] pathList = PathResolvingUtil.convertToPathList(projection.getPath());
+
+        final Path<?> path = calculateFullPath(root, pathList);
+
+        final String alias = projection.getAlias() == null ? pathList[pathList.length - 1] : projection.getAlias();
+
+        return path.alias(alias);
     }
 }
