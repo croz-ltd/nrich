@@ -1,5 +1,6 @@
 package net.croz.nrich.search;
 
+import net.croz.nrich.search.factory.SearchRepositoryJpaRepositoryFactoryBean;
 import net.croz.nrich.search.properties.SearchProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-@EnableJpaRepositories
+@EnableJpaRepositories(repositoryFactoryBeanClass = SearchRepositoryJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
 public class SearchConfigurationTestConfiguration {
 

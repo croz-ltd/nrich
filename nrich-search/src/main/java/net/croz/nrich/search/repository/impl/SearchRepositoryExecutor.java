@@ -50,16 +50,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+// named like this so it is not picked up automatically by jpa auto configuration (executor suffix is from QueryDsl integration)
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class SearchRepositoryImpl<T> implements SearchRepository<T> {
+public class SearchRepositoryExecutor<T> implements SearchRepository<T> {
 
     private final EntityManager entityManager;
 
     private final SearchProperties searchProperties;
 
-//    private final JpaEntityInformation<T, ?> entityInformation;
+    private final JpaEntityInformation<T, ?> entityInformation;
 
     @Override
     public <R, P> Optional<P> findOne(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
@@ -132,7 +133,7 @@ public class SearchRepositoryImpl<T> implements SearchRepository<T> {
 
         final Class<T> rootEntity;
         if (searchConfiguration.getRootEntityResolver() == null) {
-            rootEntity = null; //entityInformation.getJavaType();
+            rootEntity = entityInformation.getJavaType();
         }
         else {
             rootEntity = searchConfiguration.getRootEntityResolver().apply(request);

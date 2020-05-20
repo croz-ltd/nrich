@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
 @Transactional
-public class SearchRepositoryImplTest {
+public class SearchRepositoryExecutorTest {
 
     @Autowired
     private TestEntitySearchRepository testEntitySearchRepository;
