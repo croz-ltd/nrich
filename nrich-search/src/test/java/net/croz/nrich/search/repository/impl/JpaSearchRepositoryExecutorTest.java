@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -373,6 +374,20 @@ public class JpaSearchRepositoryExecutorTest {
     }
 
     @Test
+    void shouldReturnZeroWhenThereAreNoResults() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("second non existing name");
+
+        // when
+        final long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(result).isEqualTo(0L);
+    }
+
+    @Test
     void shouldCountWhenUsingSearchingSubEntity() {
         // given
         generateListForSearch(entityManager);
@@ -426,6 +441,22 @@ public class JpaSearchRepositoryExecutorTest {
         assertThat(results).isNotEmpty();
         assertThat(results.getTotalPages()).isEqualTo(5);
         assertThat(results.getContent()).hasSize(1);
+    }
+
+    @Test
+    void shouldReturnWholeResultListWhenRequestIsUnpaged() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.getTotalPages()).isEqualTo(1);
+        assertThat(results.getContent()).hasSize(5);
     }
 
     @Test
