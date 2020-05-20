@@ -64,7 +64,7 @@ public class SearchDataParser {
                     resolveRestrictionListInternal(new DirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
                     return;
                 }
-                // TODO add support for conversion of properties (converter classes)
+
                 if (!attributeHolder.getAttribute().getJavaType().isAssignableFrom(field.getType())) {
                     log.info("Skipping searching by attribute {} class doesn't match with expected and no converter has been found", field.getName());
                     return;
