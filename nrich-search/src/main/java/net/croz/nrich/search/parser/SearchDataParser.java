@@ -172,9 +172,7 @@ public class SearchDataParser {
         String foundPath = null;
 
         for (final String attribute : attributeNameList) {
-            final String foundFieldName = fieldNameList.stream()
-                    .filter(field -> field.startsWith(attribute) && field.length() > attribute.length())
-                    .findAny().orElse(null);
+            final String foundFieldName = findFieldName(fieldNameList, attribute);
 
             if (foundFieldName != null) {
                 foundPath = attribute + "." + StringUtils.uncapitalize(foundFieldName.substring(attribute.length()));
@@ -209,6 +207,13 @@ public class SearchDataParser {
                 .orElse(Collections.emptyList())
                 .stream()
                 .filter(searchOperatorOverridePredicate)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String findFieldName(final List<String> fieldNameList, final String attribute) {
+        return fieldNameList.stream()
+                .filter(field -> field.startsWith(attribute) && field.length() > attribute.length())
                 .findFirst()
                 .orElse(null);
     }
