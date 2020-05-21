@@ -1,12 +1,10 @@
 package net.croz.nrich.search.model;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @Builder
-@Getter
-@Setter
+@Data
 public class SubqueryConfiguration {
 
     private Class<?> rootEntity;
