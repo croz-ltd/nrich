@@ -1,7 +1,6 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.model.SearchFieldConfiguration;
@@ -26,7 +25,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RequiredArgsConstructor
 public class SearchDataParser {
 
@@ -45,11 +43,10 @@ public class SearchDataParser {
     }
 
     private Set<Restriction> resolveRestrictionListInternal(final DirectFieldAccessFallbackBeanWrapper wrapper, final String propertyPrefix, final String path, final ManagedType<?> managedType, final Set<Restriction> restrictionList, final boolean isPluralAttribute) {
-        final List<Field> fieldList = resolveFieldList(wrapper);
+        final List<String> fieldNameList = resolveFieldNameList(wrapper);
         final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
-        fieldList.forEach(field -> {
-            final String originalFieldName = field.getName();
+        fieldNameList.forEach(originalFieldName -> {
             final String fieldNameWithoutPrefixAndRangeSuffix = fieldNameWithoutRangeSuffixAndPrefix(originalFieldName, propertyPrefix);
             final Object value = wrapper.getPropertyValue(originalFieldName);
 
@@ -67,18 +64,13 @@ public class SearchDataParser {
                     return;
                 }
 
-                if (!attributeHolder.getAttribute().getJavaType().isAssignableFrom(field.getType())) {
-                    log.info("Skipping searching by attribute {} class doesn't match with expected type", field.getName());
-                    return;
-                }
-
                 restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isPluralAttribute));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
                 String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
 
                 if (mappedPath == null) {
-                    mappedPath = findPathUsingAttributePrefix(fieldList, managedType);
+                    mappedPath = findPathUsingAttributePrefix(fieldNameList, managedType);
                 }
 
                 if (mappedPath != null) {
@@ -94,12 +86,13 @@ public class SearchDataParser {
         return restrictionList;
     }
 
-    private List<Field> resolveFieldList(final DirectFieldAccessFallbackBeanWrapper wrapper) {
+    private List<String> resolveFieldNameList(final DirectFieldAccessFallbackBeanWrapper wrapper) {
         final List<String> ignoredFieldList = searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList();
         final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
                 .filter(shouldIncludeField)
+                .map(Field::getName)
                 .collect(Collectors.toList());
     }
 
@@ -166,9 +159,8 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private String findPathUsingAttributePrefix(final List<Field> fieldList, final ManagedType<?> managedType) {
+    private String findPathUsingAttributePrefix(final List<String> fieldNameList, final ManagedType<?> managedType) {
         final List<String> attributeNameList = managedType.getAttributes().stream().filter(Attribute::isAssociation).map(Attribute::getName).collect(Collectors.toList());
-        final List<String> fieldNameList = fieldList.stream().map(Field::getName).collect(Collectors.toList());
 
         String foundPath = null;
 
