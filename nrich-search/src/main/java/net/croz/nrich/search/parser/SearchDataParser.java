@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class SearchDataParser {
 
     private final ManagedType<?> managedType;
