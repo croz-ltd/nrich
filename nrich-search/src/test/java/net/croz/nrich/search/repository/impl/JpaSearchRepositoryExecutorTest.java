@@ -65,8 +65,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -80,8 +79,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(2);
+        assertThat(results).hasSize(2);
     }
 
     @Test
@@ -95,8 +93,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -112,8 +109,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -133,8 +129,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
         assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
@@ -156,8 +151,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
         assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
@@ -180,8 +174,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
         assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
@@ -204,8 +197,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
         assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
     }
@@ -232,8 +224,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -258,8 +249,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -275,8 +265,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getTestEntityEnum()).isEqualTo(TestEntityEnum.SECOND);
     }
 
@@ -293,8 +282,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
         assertThat(results.get(0).getTestEntityEmbedded().getEmbeddedName()).isEqualTo("embedded3");
     }
 
@@ -571,8 +559,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
@@ -593,8 +580,7 @@ public class JpaSearchRepositoryExecutorTest {
         final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.size()).isEqualTo(1);
+        assertThat(results).hasSize(1);
     }
 
     @Test
