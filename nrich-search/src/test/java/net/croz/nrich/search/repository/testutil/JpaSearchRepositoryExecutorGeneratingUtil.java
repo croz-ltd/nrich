@@ -35,15 +35,11 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
         testEntityList.forEach(entityManager::persist);
 
-        testEntityList.forEach(testEntity -> {
+        testEntityList.forEach(testEntity -> IntStream.range(0, 2).forEach(value -> {
+            final TestEntityCollectionWithReverseAssociation association = new TestEntityCollectionWithReverseAssociation(null, testEntity.getName() + "-association-" + value, testEntity);
 
-            IntStream.range(0, 2).forEach(value -> {
-                final TestEntityCollectionWithReverseAssociation association = new TestEntityCollectionWithReverseAssociation(null, testEntity.getName() + "-association-" + value, testEntity);
-                entityManager.persist(association);
-
-            });
-
-        });
+            entityManager.persist(association);
+        }));
 
         return testEntityList;
     }
