@@ -1,7 +1,6 @@
 package net.croz.nrich.search.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.search.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.Restriction;
@@ -54,7 +53,6 @@ import java.util.stream.Stream;
 
 // named like this so it is not picked up automatically by jpa auto configuration (executor suffix is from QueryDsl integration)
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
