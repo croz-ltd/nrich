@@ -133,7 +133,7 @@ public class SearchDataParser {
         else if (String.class.isAssignableFrom(attributeType)) {
             operator = SearchOperatorImpl.ILIKE;
         }
-        if (isRangeSearchSupported) {
+        else if (isRangeSearchSupported) {
             if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryFromIncludingSuffix())) {
                 operator = SearchOperatorImpl.GE;
             }
