@@ -38,12 +38,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.croz.nrich.search.repository.testutil.SearchRepositoryGeneratingUtil.generateListForSearch;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
 @Transactional
-public class JpaSearchRepositoryExecutorTest {
+public class JpaSearchExecutorTest {
 
     @Autowired
     private TestEntitySearchRepository testEntitySearchRepository;

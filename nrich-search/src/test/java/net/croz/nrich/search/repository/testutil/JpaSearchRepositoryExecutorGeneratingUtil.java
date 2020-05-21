@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class SearchRepositoryGeneratingUtil {
+public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
-    private SearchRepositoryGeneratingUtil() {
+    private JpaSearchRepositoryExecutorGeneratingUtil() {
     }
 
     public static List<TestEntity> generateListForSearch(final EntityManager entityManager) {

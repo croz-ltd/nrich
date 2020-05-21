@@ -1,7 +1,7 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.repository.SearchExecutor;
-import net.croz.nrich.search.repository.impl.JpaSearchRepositoryExecutor;
+import net.croz.nrich.search.repository.impl.JpaSearchExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
@@ -41,7 +41,7 @@ public class SearchRepositoryJpaRepositoryFactoryBean<T extends Repository<S, ID
             if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchRepositoryExecutor.class, entityManager, entityInformation);
+                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, entityInformation);
 
                 fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
             }

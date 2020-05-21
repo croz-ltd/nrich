@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
+public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     private final EntityManager entityManager;
 
