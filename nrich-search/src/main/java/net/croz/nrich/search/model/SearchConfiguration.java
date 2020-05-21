@@ -34,6 +34,8 @@ public class SearchConfiguration<T, P, R> {
 
     private List<SubqueryConfiguration> subqueryConfigurationList;
 
+    private List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList;
+
     private boolean distinct;
 
     @Builder.Default

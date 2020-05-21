@@ -2,6 +2,7 @@ package net.croz.nrich.search.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.croz.nrich.search.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchConfiguration;
@@ -49,6 +50,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // named like this so it is not picked up automatically by jpa auto configuration (executor suffix is from QueryDsl integration)
 @RequiredArgsConstructor
@@ -165,9 +167,11 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
         }
 
         final List<Predicate> predicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
+        final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, query, root, request);
 
-        if (!CollectionUtils.isEmpty(predicateList)) {
-            query.where(predicateList.toArray(new Predicate[0]));
+        final List<Predicate> fullPredicateList = Stream.of(predicateList, interceptorPredicateList).flatMap(Collection::stream).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(fullPredicateList)) {
+            query.where(fullPredicateList.toArray(new Predicate[0]));
         }
 
         if (sort.isSorted()) {
@@ -333,4 +337,13 @@ public class JpaSearchRepositoryExecutor<T> implements SearchExecutor<T> {
 
         return path.alias(alias);
     }
+
+    private <R, P> List<Predicate> resolveInterceptorPredicateList(final List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList, final CriteriaBuilder criteriaBuilder, final CriteriaQuery<P> query, final Root<T> root, final R request) {
+        return Optional.ofNullable(additionalRestrictionResolverList).orElse(Collections.emptyList()).stream()
+                .map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request))
+                .filter(Objects::nonNull)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+    }
+
 }

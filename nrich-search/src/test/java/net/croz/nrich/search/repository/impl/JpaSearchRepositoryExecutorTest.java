@@ -12,6 +12,7 @@ import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SearchPropertyMapping;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntity;
+import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionResolver;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
@@ -621,5 +622,30 @@ public class JpaSearchRepositoryExecutorTest {
 
         // then
         assertThat(resultsWithSameName).hasSize(1);
+    }
+
+    @Test
+    void shouldApplyAdditionalRestrictionsToQuery() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .additionalRestrictionResolverList(Collections.singletonList(new TestEntityAdditionalRestrictionResolver(true)))
+                .build();
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(results).isEmpty();
+
+        // and when
+        searchConfiguration.setAdditionalRestrictionResolverList(Collections.singletonList(new TestEntityAdditionalRestrictionResolver(false)));
+        final List<TestEntity> resultsWithoutRestriction = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(resultsWithoutRestriction).hasSize(1);
     }
 }
