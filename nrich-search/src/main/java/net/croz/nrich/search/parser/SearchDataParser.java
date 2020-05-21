@@ -9,7 +9,7 @@ import net.croz.nrich.search.model.SearchOperatorImpl;
 import net.croz.nrich.search.model.SearchOperatorOverride;
 import net.croz.nrich.search.model.SearchPropertyMapping;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
-import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
+import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
@@ -39,10 +39,10 @@ public class SearchDataParser {
     }
 
     public Set<Restriction> resolveRestrictionList(final String propertyPrefix) {
-        return resolveRestrictionListInternal(new DirectFieldAccessFallbackBeanWrapper(searchData), propertyPrefix, null, managedType, new HashSet<>(), false);
+        return resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(searchData), propertyPrefix, null, managedType, new HashSet<>(), false);
     }
 
-    private Set<Restriction> resolveRestrictionListInternal(final DirectFieldAccessFallbackBeanWrapper wrapper, final String propertyPrefix, final String path, final ManagedType<?> managedType, final Set<Restriction> restrictionList, final boolean isPluralAttribute) {
+    private Set<Restriction> resolveRestrictionListInternal(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper, final String propertyPrefix, final String path, final ManagedType<?> managedType, final Set<Restriction> restrictionList, final boolean isPluralAttribute) {
         final List<String> fieldNameList = resolveFieldNameList(wrapper);
         final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
@@ -60,7 +60,7 @@ public class SearchDataParser {
                 final String currentPath = path == null ? fieldNameWithoutPrefixAndRangeSuffix : path + "." + fieldNameWithoutPrefixAndRangeSuffix;
 
                 if (attributeHolder.getManagedType() != null) {
-                    resolveRestrictionListInternal(new DirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
+                    resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
                     return;
                 }
 
@@ -86,8 +86,15 @@ public class SearchDataParser {
         return restrictionList;
     }
 
-    private List<String> resolveFieldNameList(final DirectFieldAccessFallbackBeanWrapper wrapper) {
+    private List<String> resolveFieldNameList(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
         final List<String> ignoredFieldList = searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList();
+
+        if (wrapper.getEntityAsMap() != null) {
+            return wrapper.getEntityAsMap().keySet().stream()
+                    .filter(key -> !ignoredFieldList.contains(key))
+                    .collect(Collectors.toList());
+        }
+
         final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())

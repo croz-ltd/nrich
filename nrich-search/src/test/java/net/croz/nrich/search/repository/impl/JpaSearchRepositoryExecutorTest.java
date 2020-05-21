@@ -33,7 +33,9 @@ import javax.persistence.Tuple;
 import javax.persistence.criteria.JoinType;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static net.croz.nrich.search.repository.testutil.SearchRepositoryGeneratingUtil.generateListForSearch;
@@ -633,5 +635,20 @@ public class JpaSearchRepositoryExecutorTest {
 
         // then
         assertThat(resultsWithoutRestriction).hasSize(1);
+    }
+
+    @Test
+    void shouldSupportSearchingByMap() {
+        // given
+        generateListForSearch(entityManager);
+
+        final Map<String, Object> mapSearchRequest = new HashMap<>();
+        mapSearchRequest.put("name", "FIRst0");
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(mapSearchRequest, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSize(1);
     }
 }
