@@ -533,6 +533,20 @@ public class JpaSearchExecutorTest {
     }
 
     @Test
+    void shouldReturnFalseWhenEntityDoesntExist() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("first non existing entity");
+
+        // when
+        final boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    @Test
     void shouldSortByJoinedEntity() {
         // given
         generateListForSearch(entityManager);
