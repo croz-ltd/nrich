@@ -222,13 +222,14 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
         final List<Predicate> mainQueryPredicateList = convertRestrictionListToPredicateList(restrictionsByType.get(false), root, criteriaBuilder);
 
-        if (!CollectionUtils.isEmpty(restrictionsByType.get(true))) {
+        final List<Restriction> pluralRestrictionList = restrictionsByType.get(true);
+        if (!CollectionUtils.isEmpty(pluralRestrictionList)) {
 
             if (searchConfiguration.getPluralAssociationRestrictionType() == PluralAssociationRestrictionType.JOIN) {
-                mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(restrictionsByType.get(true), root, criteriaBuilder));
+                mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(pluralRestrictionList, root, criteriaBuilder));
             }
             else {
-                final Subquery<?> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, restrictionsByType.get(true), SearchPropertyJoin.defaultJoinById());
+                final Subquery<?> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, SearchPropertyJoin.defaultJoinById());
 
                 mainQueryPredicateList.add(criteriaBuilder.exists(subquery));
             }
