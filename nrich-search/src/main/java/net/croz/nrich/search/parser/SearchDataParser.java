@@ -96,9 +96,10 @@ public class SearchDataParser {
 
     private List<Field> resolveFieldList(final DirectFieldAccessFallbackBeanWrapper wrapper) {
         final List<String> ignoredFieldList = searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList();
+        final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
-                .filter(field -> !ignoredFieldList.contains(field.getName()) && !Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers()))
+                .filter(shouldIncludeField)
                 .collect(Collectors.toList());
     }
 
