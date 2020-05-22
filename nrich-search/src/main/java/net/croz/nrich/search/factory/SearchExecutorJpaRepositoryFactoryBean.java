@@ -47,20 +47,17 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(final RepositoryMetadata metadata) {
             RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
 
-            SearchExecutor<?> searchExecutorFragment = null;
+
             if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-                searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
+                final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
 
                 fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
             }
             if (StringSearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-                if (searchExecutorFragment == null) {
-                    searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, entityInformation);
-                }
 
-                final StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, searchExecutorFragment, entityInformation);
+                final StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
 
                 fragments = fragments.append(RepositoryFragment.implemented(StringSearchExecutor.class, stringSearchExecutorFragment));
             }

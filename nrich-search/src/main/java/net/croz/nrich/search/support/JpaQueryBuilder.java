@@ -97,6 +97,25 @@ public class JpaQueryBuilder<T> {
         return query;
     }
 
+    public CriteriaQuery<Long> convertToCountQuery(final CriteriaQuery<?> query) {
+        @SuppressWarnings("unchecked")
+        final CriteriaQuery<Long> countQuery = (CriteriaQuery<Long>) query;
+
+        query.orderBy(Collections.emptyList());
+
+        final Root<?> root = query.getRoots().iterator().next();
+        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        if (countQuery.isDistinct()) {
+            countQuery.select(builder.countDistinct(root));
+        }
+        else {
+            countQuery.select(builder.count(root));
+        }
+
+        return countQuery;
+    }
+
     // TODO try to use result set mapper, jpa projections require constructors with all parameters
     @SuppressWarnings("unchecked")
     private <R, P> Class<P> resolveResultClass(final SearchConfiguration<T, P, R> searchConfiguration, final Class<T> rootEntity) {

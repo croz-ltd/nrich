@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,14 +60,15 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     @Override
     public <R, P> Page<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Pageable pageable) {
         final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, pageable.getSort());
+        final TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         if (pageable.isPaged()) {
-            final TypedQuery<P> typedQuery = entityManager.createQuery(query).setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
+            typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
             return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(query));
         }
 
-        return new PageImpl<>(entityManager.createQuery(query).getResultList());
+        return new PageImpl<>(typedQuery.getResultList());
     }
 
     @Override
@@ -84,25 +82,10 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     private long executeCountQuery(final CriteriaQuery<?> query) {
-
-        @SuppressWarnings("unchecked")
-        final CriteriaQuery<Long> countQuery = (CriteriaQuery<Long>) query;
-
-        query.orderBy(Collections.emptyList());
-
-        final Root<?> root = query.getRoots().iterator().next();
-        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        if (countQuery.isDistinct()) {
-            countQuery.select(builder.countDistinct(root));
-        }
-        else {
-            countQuery.select(builder.count(root));
-        }
+        final CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
 
         final List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }
-
 }
