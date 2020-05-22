@@ -26,6 +26,8 @@ public class SearchFieldConfiguration {
 
     private String rangeQueryToSuffix;
 
+    private String collectionSuffix;
+
     public static SearchFieldConfiguration defaultSearchFieldConfiguration() {
         return new SearchFieldConfigurationBuilder()
                 .rangeQuerySupportedClassList(Arrays.asList(Date.class, java.util.Date.class, Temporal.class, Number.class))
@@ -34,6 +36,7 @@ public class SearchFieldConfiguration {
                 .rangeQueryFromSuffix("From")
                 .rangeQueryToIncludingSuffix("ToIncluding")
                 .rangeQueryToSuffix("To")
+                .collectionSuffix("List")
                 .build();
     }
 }

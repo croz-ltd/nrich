@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -13,6 +15,8 @@ import lombok.Setter;
 public class TestEntitySearchRequest {
 
     private String name;
+
+    private List<String> nameList;
 
     private Integer ageFrom;
 

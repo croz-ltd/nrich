@@ -665,4 +665,19 @@ public class JpaSearchExecutorTest {
         // then
         assertThat(results).hasSize(1);
     }
+
+    @Test
+    void shouldSupportSearchingByPropertyList() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        request.setNameList(Arrays.asList("first1", "first2"));
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSize(2);
+    }
 }

@@ -4,6 +4,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
+import java.util.Collection;
 import java.util.Objects;
 
 // TODO check if other operators are required
@@ -59,17 +60,14 @@ public enum SearchOperatorImpl implements SearchOperator {
         }
     },
 
-    IS_NULL {
+    IN {
         @Override
         public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
-            return criteriaBuilder.isNull(path);
-        }
-    },
+            final CriteriaBuilder.In<Object> inClause = criteriaBuilder.in(path);
 
-    IS_NOT_NULL {
-        @Override
-        public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
-            return criteriaBuilder.isNotNull(path);
+            ((Collection<?>) value).forEach(inClause::value);
+
+            return inClause;
         }
     }
 

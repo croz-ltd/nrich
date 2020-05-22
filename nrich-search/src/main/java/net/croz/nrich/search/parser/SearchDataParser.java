@@ -17,6 +17,7 @@ import javax.persistence.metamodel.ManagedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +48,7 @@ public class SearchDataParser {
         final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
         fieldNameList.forEach(originalFieldName -> {
-            final String fieldNameWithoutPrefixAndRangeSuffix = fieldNameWithoutRangeSuffixAndPrefix(originalFieldName, propertyPrefix);
+            final String fieldNameWithoutPrefixAndRangeSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
             final Object value = wrapper.getPropertyValue(originalFieldName);
 
             if (value == null) {
@@ -103,9 +104,9 @@ public class SearchDataParser {
                 .collect(Collectors.toList());
     }
 
-    private String fieldNameWithoutRangeSuffixAndPrefix(final String originalFieldName, final String prefix) {
+    private String fieldNameWithoutSuffixAndPrefix(final String originalFieldName, final String prefix) {
         final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
-        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix() };
+        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix(), searchFieldConfiguration.getCollectionSuffix() };
 
         String fieldName = originalFieldName;
         for (final String suffix : suffixListToRemove) {
@@ -130,6 +131,9 @@ public class SearchDataParser {
         SearchOperator operator = SearchOperatorImpl.EQ;
         if (resolvedOperator != null) {
             operator = resolvedOperator;
+        }
+        else if (Collection.class.isAssignableFrom(value.getClass())) {
+            operator = SearchOperatorImpl.IN;
         }
         else if (String.class.isAssignableFrom(attributeType)) {
             operator = SearchOperatorImpl.ILIKE;
