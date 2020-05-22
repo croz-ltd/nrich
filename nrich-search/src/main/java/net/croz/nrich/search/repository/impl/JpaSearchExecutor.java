@@ -167,10 +167,17 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         final List<Predicate> predicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
         final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, query, root, request);
 
-        final List<Predicate> fullPredicateList = Stream.of(predicateList, interceptorPredicateList).flatMap(Collection::stream).collect(Collectors.toList());
-        if (!CollectionUtils.isEmpty(fullPredicateList)) {
-            query.where(fullPredicateList.toArray(new Predicate[0]));
+        final Predicate restrictionPredicate;
+        if (searchConfiguration.isAnyMatch()) {
+            restrictionPredicate = criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
         }
+        else {
+            restrictionPredicate = criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
+
+        }
+        final Predicate interceptorPredicate = criteriaBuilder.and(interceptorPredicateList.toArray(new Predicate[0]));
+
+        query.where(restrictionPredicate, interceptorPredicate);
 
         if (sort.isSorted()) {
             query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));

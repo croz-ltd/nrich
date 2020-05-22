@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,18 @@ public class JpaStringSearchExecutorTest {
 
         // when
         final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    void shouldFindOneMatchingAnyProperty() {
+        // given
+        generateListForStringSearch(entityManager);
+
+        // when
+        final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Arrays.asList("age", "localDate", "name"), SearchConfiguration.emptyConfigurationMatchingAny());
 
         // then
         assertThat(result).isNotEmpty();
