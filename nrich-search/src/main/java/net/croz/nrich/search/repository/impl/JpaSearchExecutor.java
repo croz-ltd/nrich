@@ -292,13 +292,13 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         }
 
         return subqueryConfigurationList.stream()
-                .map(subqueryConfiguration -> buildSubQuery(request, searchFieldConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
+                .map(subqueryConfiguration -> buildSubquery(request, searchFieldConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private <R> Subquery<?> buildSubQuery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
-        final ManagedType<?> subqueryRoot = resolveManagedTypeByClass(subqueryConfiguration.getRootEntity());
+    private <R> Subquery<?> buildSubquery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
+        final ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
         Subquery<?> subquery = null;
         final Set<Restriction> subqueryRestrictionList;
@@ -317,13 +317,6 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         }
 
         return subquery;
-    }
-
-    private ManagedType<?> resolveManagedTypeByClass(final Class<?> type) {
-        return entityManager.getEntityManagerFactory().getMetamodel().getManagedTypes().stream()
-                .filter(managedType -> managedType.getJavaType().equals(type))
-                .findFirst()
-                .orElse(null);
     }
 
     private <R> Selection<?> convertToSelectionExpression(final Path<?> root, final SearchProjection<R> projection) {
