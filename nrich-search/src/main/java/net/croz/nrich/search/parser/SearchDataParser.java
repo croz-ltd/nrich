@@ -1,7 +1,7 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.model.Restriction;
+import lombok.Value;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.model.SearchFieldConfiguration;
 import net.croz.nrich.search.model.SearchOperator;
@@ -220,5 +220,19 @@ public class SearchDataParser {
                 .filter(field -> field.startsWith(attribute) && field.length() > attribute.length())
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Value
+    public static class Restriction {
+
+        // TODO every aspect of path should have a marker if it is plural
+        String path;
+
+        SearchOperator searchOperator;
+
+        Object value;
+
+        boolean isPluralAttribute;
+
     }
 }
