@@ -6,7 +6,6 @@ import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import org.springframework.util.Assert;
 
-import javax.persistence.EntityManager;
 import javax.persistence.metamodel.ManagedType;
 import java.util.HashMap;
 import java.util.List;
@@ -15,13 +14,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StringToEntityPropertyMapConverterImpl implements StringToEntityPropertyMapConverter {
 
-    private final EntityManager entityManager;
-
     private final List<StringToTypeConverter<?>> converterList;
 
     @Override
-    public Map<String, Object> convert(final String value, final List<String> propertyToSearchList, final Class<?> entityType) {
-        final ManagedType<?> managedType = entityManager.getMetamodel().managedType(entityType);
+    public Map<String, Object> convert(final String value, final List<String> propertyToSearchList, final ManagedType<?> managedType) {
 
         Assert.notNull(managedType, "Managed type not found for type!");
         Assert.notEmpty(propertyToSearchList, "Property to search cannot be empty!");
