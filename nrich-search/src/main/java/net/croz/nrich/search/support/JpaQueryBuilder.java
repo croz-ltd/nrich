@@ -211,7 +211,6 @@ public class JpaQueryBuilder<T> {
     private <R> Subquery<?> buildSubquery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
         final ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
-        Subquery<?> subquery = null;
         final Set<Restriction> subqueryRestrictionList;
         if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
             final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
@@ -220,9 +219,11 @@ public class JpaQueryBuilder<T> {
         }
         else {
             final Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
+
             subqueryRestrictionList = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
         }
 
+        Subquery<?> subquery = null;
         if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
             subquery = createSubqueryRestriction(subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy());
         }
