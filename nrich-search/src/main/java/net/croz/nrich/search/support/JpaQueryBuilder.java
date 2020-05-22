@@ -48,7 +48,9 @@ public class JpaQueryBuilder<T> {
     private final Class<T> entityType;
 
     public <R, P> CriteriaQuery<P> buildQuery(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
+        Assert.notNull(request, "Search request is not defined!");
         Assert.notNull(searchConfiguration, "Search configuration is not defined!");
+        Assert.notNull(sort, "Sort configuration is not defined!");
 
         final Class<T> rootEntity;
         if (searchConfiguration.getRootEntityResolver() == null) {
