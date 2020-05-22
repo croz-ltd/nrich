@@ -185,6 +185,7 @@ public class JpaQueryBuilder<T> {
 
                 if (restriction.isPluralAttribute()) {
                     final String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
+
                     predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, PathResolvingUtil.calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList), restriction.getValue()));
                 }
                 else {
