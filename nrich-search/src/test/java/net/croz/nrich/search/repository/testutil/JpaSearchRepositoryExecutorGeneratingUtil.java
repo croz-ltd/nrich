@@ -6,8 +6,12 @@ import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAsso
 import net.croz.nrich.search.repository.stub.TestEntityEmbedded;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
+import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -40,6 +44,15 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
             entityManager.persist(association);
         }));
+
+        return testEntityList;
+    }
+
+    public static List<TestStringSearchEntity> generateListForStringSearch(final EntityManager entityManager) {
+        final LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        final List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new TestStringSearchEntity(null, "name " + value, 50 + value, TestEntityEnum.SECOND, date.plus(value, ChronoUnit.DAYS))).collect(Collectors.toList());
+
+        testEntityList.forEach(entityManager::persist);
 
         return testEntityList;
     }
