@@ -2,6 +2,7 @@ package net.croz.nrich.search.support;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.util.Assert;
 
 import javax.persistence.metamodel.Attribute;
@@ -61,14 +62,14 @@ public class JpaEntityAttributeResolver {
                 .orElse(null);
     }
 
-    @Data
+    @Value
     public static class AttributeHolder {
 
-        private final Attribute<?, ?> attribute;
+        Attribute<?, ?> attribute;
 
-        private final ManagedType<?> managedType;
+        ManagedType<?> managedType;
 
-        private final boolean isPlural;
+        boolean isPlural;
 
     }
 }
