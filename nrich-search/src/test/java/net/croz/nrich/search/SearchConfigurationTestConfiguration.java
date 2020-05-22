@@ -15,15 +15,19 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 @EnableJpaRepositories(repositoryFactoryBeanClass = SearchRepositoryJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
 public class SearchConfigurationTestConfiguration {
+
+    static {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
 
     @Bean(destroyMethod = "shutdown")
     public EmbeddedDatabase dataSource() {
@@ -61,7 +65,7 @@ public class SearchConfigurationTestConfiguration {
     }
 
     @Bean
-    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final EntityManager entityManager, final List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new StringToEntityPropertyMapConverterImpl(entityManager, stringToTypeConverterList);
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+        return new StringToEntityPropertyMapConverterImpl(stringToTypeConverterList);
     }
 }

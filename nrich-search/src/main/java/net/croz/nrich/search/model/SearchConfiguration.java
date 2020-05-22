@@ -36,11 +36,17 @@ public class SearchConfiguration<T, P, R> {
 
     private boolean distinct;
 
+    private boolean anyMatch;
+
     @Builder.Default
     private SearchFieldConfiguration searchFieldConfiguration = SearchFieldConfiguration.defaultSearchFieldConfiguration();
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfiguration() {
         return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).build();
+    }
+
+    public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationMatchingAny() {
+        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).anyMatch(true).build();
     }
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationWithDefaultMappingResolve() {
