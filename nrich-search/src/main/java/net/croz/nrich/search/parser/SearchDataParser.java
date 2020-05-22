@@ -48,17 +48,17 @@ public class SearchDataParser {
         final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
         fieldNameList.forEach(originalFieldName -> {
-            final String fieldNameWithoutPrefixAndRangeSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
+            final String fieldNameWithoutPrefixAndSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
             final Object value = wrapper.getPropertyValue(originalFieldName);
 
             if (value == null) {
                 return;
             }
 
-            JpaEntityAttributeResolver.AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndRangeSuffix);
+            JpaEntityAttributeResolver.AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
 
             if (attributeHolder.getAttribute() != null) {
-                final String currentPath = path == null ? fieldNameWithoutPrefixAndRangeSuffix : path + "." + fieldNameWithoutPrefixAndRangeSuffix;
+                final String currentPath = path == null ? fieldNameWithoutPrefixAndSuffix : path + "." + fieldNameWithoutPrefixAndSuffix;
 
                 if (attributeHolder.getManagedType() != null) {
                     resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
