@@ -168,7 +168,10 @@ public class JpaQueryBuilder<T> {
 
         final List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder);
 
-        subQueryPredicateList.add(criteriaBuilder.equal(calculateFullPath(parent, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty())), calculateFullPath(subqueryRoot, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()))));
+        final Path<?> parentPath = PathResolvingUtil.calculateFullPath(parent, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
+        final Path<?> subqueryPath = PathResolvingUtil.calculateFullPath(subqueryRoot, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
+
+        subQueryPredicateList.add(criteriaBuilder.equal(parentPath, subqueryPath));
 
         return subquery.where(subQueryPredicateList.toArray(new Predicate[0]));
     }
@@ -182,24 +185,15 @@ public class JpaQueryBuilder<T> {
 
                 if (restriction.isPluralAttribute()) {
                     final String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
-                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList), restriction.getValue()));
+                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, PathResolvingUtil.calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList), restriction.getValue()));
                 }
                 else {
-                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, calculateFullPath(rootPath, pathList), restriction.getValue()));
+                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, PathResolvingUtil.calculateFullPath(rootPath, pathList), restriction.getValue()));
                 }
             }
         });
 
         return predicateList;
-    }
-
-    private Path<?> calculateFullPath(final Path<?> rootPath, final String[] pathList) {
-        Path<?> calculatedPath = rootPath;
-        for (final String currentPath : pathList) {
-            calculatedPath = calculatedPath.get(currentPath);
-        }
-
-        return calculatedPath;
     }
 
     // TODO enable join usage or subquery?
@@ -239,7 +233,7 @@ public class JpaQueryBuilder<T> {
     private <R> Selection<?> convertToSelectionExpression(final Path<?> root, final SearchProjection<R> projection) {
         final String[] pathList = PathResolvingUtil.convertToPathList(projection.getPath());
 
-        final Path<?> path = calculateFullPath(root, pathList);
+        final Path<?> path = PathResolvingUtil.calculateFullPath(root, pathList);
 
         final String alias = projection.getAlias() == null ? pathList[pathList.length - 1] : projection.getAlias();
 
