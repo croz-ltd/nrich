@@ -1,5 +1,9 @@
 package net.croz.nrich.search;
 
+import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.converter.StringToTypeConverter;
+import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
+import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
 import net.croz.nrich.search.factory.SearchRepositoryJpaRepositoryFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +15,11 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 
 @EnableJpaRepositories(repositoryFactoryBeanClass = SearchRepositoryJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
@@ -46,5 +53,15 @@ public class SearchConfigurationTestConfiguration {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
 
         return transactionManager;
+    }
+
+    @Bean
+    public StringToTypeConverter<?> defaultStringToTypeConverter() {
+        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"));
+    }
+
+    @Bean
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final EntityManager entityManager, final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+        return new StringToEntityPropertyMapConverterImpl(entityManager, stringToTypeConverterList);
     }
 }

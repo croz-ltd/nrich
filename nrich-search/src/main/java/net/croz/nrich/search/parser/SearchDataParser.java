@@ -106,7 +106,7 @@ public class SearchDataParser {
 
     private String fieldNameWithoutSuffixAndPrefix(final String originalFieldName, final String prefix) {
         final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
-        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix(), searchFieldConfiguration.getCollectionSuffix() };
+        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix(), searchFieldConfiguration.getCollectionQuerySuffix() };
 
         String fieldName = originalFieldName;
         for (final String suffix : suffixListToRemove) {

@@ -16,7 +16,7 @@ public class TestEntitySearchRequest {
 
     private String name;
 
-    private List<String> nameList;
+    private List<String> nameSearchList;
 
     private Integer ageFrom;
 

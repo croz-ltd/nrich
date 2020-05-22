@@ -26,7 +26,7 @@ public class SearchFieldConfiguration {
 
     private String rangeQueryToSuffix;
 
-    private String collectionSuffix;
+    private String collectionQuerySuffix;
 
     public static SearchFieldConfiguration defaultSearchFieldConfiguration() {
         return new SearchFieldConfigurationBuilder()
@@ -36,7 +36,7 @@ public class SearchFieldConfiguration {
                 .rangeQueryFromSuffix("From")
                 .rangeQueryToIncludingSuffix("ToIncluding")
                 .rangeQueryToSuffix("To")
-                .collectionSuffix("List")
+                .collectionQuerySuffix("SearchList")
                 .build();
     }
 }
