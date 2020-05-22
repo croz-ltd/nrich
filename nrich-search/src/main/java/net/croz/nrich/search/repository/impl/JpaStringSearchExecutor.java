@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+// TODO remove dependency on JpaSearchExecutor, see what to do about shared code, maybe just cp?
 @RequiredArgsConstructor
 public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
