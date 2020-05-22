@@ -1,8 +1,8 @@
 package net.croz.nrich.search.repository.stub;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
 
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
