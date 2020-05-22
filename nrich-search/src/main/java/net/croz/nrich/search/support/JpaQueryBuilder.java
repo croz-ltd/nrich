@@ -80,8 +80,8 @@ public class JpaQueryBuilder<T> {
             query.distinct(true);
         }
 
-        final List<Predicate> requestPredicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
-        final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, query, root, request);
+        final List<Predicate> requestPredicateList = resolveQueryPredicateList(request, searchConfiguration, criteriaBuilder, root, query);
+        final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(request, searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, root, query);
 
         final Predicate requestPredicate = searchConfiguration.isAnyMatch() ? criteriaBuilder.or(requestPredicateList.toArray(new Predicate[0])) : criteriaBuilder.and(requestPredicateList.toArray(new Predicate[0]));
         final Predicate interceptorPredicate = criteriaBuilder.and(interceptorPredicateList.toArray(new Predicate[0]));
@@ -131,7 +131,7 @@ public class JpaQueryBuilder<T> {
         return projection.getCondition() == null || projection.getCondition().apply(request);
     }
 
-    private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+    private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final CriteriaBuilder criteriaBuilder, final Root<?> root, final CriteriaQuery<?> query) {
         final Set<Restriction> restrictionList = new SearchDataParser(root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
 
         final Map<Boolean, List<Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(Restriction::isPluralAttribute));
@@ -240,7 +240,7 @@ public class JpaQueryBuilder<T> {
         return path.alias(alias);
     }
 
-    private <R, P> List<Predicate> resolveInterceptorPredicateList(final List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList, final CriteriaBuilder criteriaBuilder, final CriteriaQuery<P> query, final Root<T> root, final R request) {
+    private <R, P> List<Predicate> resolveInterceptorPredicateList(final R request, final List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList, final CriteriaBuilder criteriaBuilder, final Root<T> root, final CriteriaQuery<P> query) {
         return Optional.ofNullable(additionalRestrictionResolverList).orElse(Collections.emptyList()).stream()
                 .map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request))
                 .filter(Objects::nonNull)
