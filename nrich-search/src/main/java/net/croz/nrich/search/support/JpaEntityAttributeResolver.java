@@ -1,6 +1,5 @@
 package net.croz.nrich.search.support;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.util.Assert;
