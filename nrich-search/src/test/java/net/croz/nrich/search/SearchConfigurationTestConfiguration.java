@@ -4,7 +4,7 @@ import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
-import net.croz.nrich.search.factory.SearchRepositoryJpaRepositoryFactoryBean;
+import net.croz.nrich.search.factory.SearchExecutorJpaRepositoryFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
-@EnableJpaRepositories(repositoryFactoryBeanClass = SearchRepositoryJpaRepositoryFactoryBean.class)
+@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
 public class SearchConfigurationTestConfiguration {
 

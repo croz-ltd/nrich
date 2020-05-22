@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SearchRepositoryJpaRepositoryFactoryBeanTestSearchExecutor extends JpaRepository<SearchRepositoryJpaRepositoryFactoryBeanTestEntity, Long>, SearchExecutor<SearchRepositoryJpaRepositoryFactoryBeanTestEntity> {
+public interface SearchExecutorJpaRepositoryFactoryBeanTestSearchExecutor extends JpaRepository<SearchExecutorJpaRepositoryFactoryBeanTestEntity, Long>, SearchExecutor<SearchExecutorJpaRepositoryFactoryBeanTestEntity> {
 }

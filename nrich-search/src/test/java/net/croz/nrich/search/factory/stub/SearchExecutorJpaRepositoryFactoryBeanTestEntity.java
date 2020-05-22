@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Entity
-public class SearchRepositoryJpaRepositoryFactoryBeanTestEntity {
+public class SearchExecutorJpaRepositoryFactoryBeanTestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
