@@ -2,6 +2,7 @@ package net.croz.nrich.search.support;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.util.Assert;
 
 import javax.persistence.metamodel.Attribute;

@@ -11,6 +11,7 @@ import net.croz.nrich.search.model.SearchProjection;
 import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
+import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
