@@ -49,7 +49,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // named like this so it is not picked up automatically by jpa auto configuration (executor suffix is from QueryDsl integration)
 @RequiredArgsConstructor
@@ -164,20 +163,13 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
             query.distinct(true);
         }
 
-        final List<Predicate> predicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
+        final List<Predicate> requestPredicateList = resolveQueryPredicateList(request, searchConfiguration, root, query, criteriaBuilder);
         final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, query, root, request);
 
-        final Predicate restrictionPredicate;
-        if (searchConfiguration.isAnyMatch()) {
-            restrictionPredicate = criteriaBuilder.or(predicateList.toArray(new Predicate[0]));
-        }
-        else {
-            restrictionPredicate = criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
-
-        }
+        final Predicate requestPredicate = searchConfiguration.isAnyMatch() ? criteriaBuilder.or(requestPredicateList.toArray(new Predicate[0])) : criteriaBuilder.and(requestPredicateList.toArray(new Predicate[0]));
         final Predicate interceptorPredicate = criteriaBuilder.and(interceptorPredicateList.toArray(new Predicate[0]));
 
-        query.where(restrictionPredicate, interceptorPredicate);
+        query.where(requestPredicate, interceptorPredicate);
 
         if (sort.isSorted()) {
             query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
