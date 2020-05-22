@@ -1,6 +1,7 @@
 package net.croz.nrich.validation.constraint.util;
 
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public final class ValidationReflectionUtil {
     }
 
     public static Method findGetterMethod(final Class<?> type, final String fieldName) {
-        final String capitalizedFieldName = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        final String capitalizedFieldName = StringUtils.capitalize(fieldName);
 
         return Arrays.stream(METHOD_PATTERN_LIST)
                 .map(value -> String.format(value, capitalizedFieldName))

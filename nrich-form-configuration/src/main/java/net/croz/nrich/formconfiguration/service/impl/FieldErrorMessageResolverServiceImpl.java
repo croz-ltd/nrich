@@ -5,6 +5,7 @@ import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.DefaultMessageCodesResolver;
 
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageRe
 
     private List<String> resolveConstraintMessageCodeList(final ConstrainedProperty request) {
         final DefaultMessageCodesResolver messageCodesResolver = new DefaultMessageCodesResolver();
-        final String constraintOwningClassName = unCapitalize(request.getParentType().getName());
-        final String constraintOwningClassShortName = unCapitalize(request.getParentType().getSimpleName());
+        final String constraintOwningClassName = StringUtils.uncapitalize(request.getParentType().getName());
+        final String constraintOwningClassShortName = StringUtils.uncapitalize(request.getParentType().getSimpleName());
         final String constraintPropertyName = request.getName();
         final String constraintName = request.getConstraintName();
 
@@ -62,9 +63,5 @@ public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageRe
         final String messageCode = String.format(messageFormat, (Object[]) argumentList);
 
         return Arrays.asList(messageCodesResolver.resolveMessageCodes(messageCode, constraintPropertyName));
-    }
-
-    private String unCapitalize(final String name) {
-        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 }
