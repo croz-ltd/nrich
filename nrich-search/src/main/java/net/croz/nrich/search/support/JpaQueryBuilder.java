@@ -78,9 +78,7 @@ public class JpaQueryBuilder<T> {
             query.multiselect(projectionList);
         }
 
-        if (searchConfiguration.isDistinct()) {
-            query.distinct(true);
-        }
+        query.distinct(searchConfiguration.isDistinct());
 
         final List<Predicate> requestPredicateList = resolveQueryPredicateList(request, searchConfiguration, criteriaBuilder, root, query);
         final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(request, searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, root, query);
