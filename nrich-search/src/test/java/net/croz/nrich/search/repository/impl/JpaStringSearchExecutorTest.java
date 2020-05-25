@@ -22,8 +22,8 @@ import java.util.Optional;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForStringSearch;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
 @Transactional
+@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
 public class JpaStringSearchExecutorTest {
 
     @Autowired
