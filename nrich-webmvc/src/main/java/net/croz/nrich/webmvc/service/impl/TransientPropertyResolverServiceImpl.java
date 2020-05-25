@@ -23,7 +23,7 @@ public class TransientPropertyResolverServiceImpl implements TransientPropertyRe
 
             while (currentType != Object.class) {
                 final List<String> currentTransientFIeldList = Arrays.stream(currentType.getDeclaredFields())
-                        .filter(field -> Modifier.isTransient(field.getModifiers()))
+                        .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
                         .map(Field::getName)
                         .collect(Collectors.toList());
 

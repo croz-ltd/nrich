@@ -19,7 +19,7 @@ public final class ProjectionListResolverUtil {
     }
 
     public static <R> List<SearchProjection<R>> resolveSearchProjectionList(final Class<?> projectionType) {
-        final Predicate<Field> shouldIncludeField = field -> !(field.getName().startsWith("$") || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
+        final Predicate<Field> shouldIncludeField = field -> !(field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(projectionType.getDeclaredFields())
                 .filter(shouldIncludeField)

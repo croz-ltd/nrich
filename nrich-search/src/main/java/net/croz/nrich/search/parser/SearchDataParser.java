@@ -96,7 +96,7 @@ public class SearchDataParser {
                     .collect(Collectors.toList());
         }
 
-        final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
+        final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
                 .filter(shouldIncludeField)
