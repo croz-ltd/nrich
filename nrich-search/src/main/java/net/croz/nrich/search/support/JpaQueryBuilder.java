@@ -12,6 +12,7 @@ import net.croz.nrich.search.model.SearchPropertyJoin;
 import net.croz.nrich.search.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
 import net.croz.nrich.search.util.PathResolvingUtil;
+import net.croz.nrich.search.util.ProjectionListResolverUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
@@ -72,7 +73,12 @@ public class JpaQueryBuilder<T> {
 
         applyJoinsToQuery(request, root, searchConfiguration.getJoinList());
 
-        final List<Selection<?>> projectionList = resolveQueryProjectionList(root, searchConfiguration.getProjectionList(), request);
+        List<SearchProjection<R>> searchProjectionList = searchConfiguration.getProjectionList();
+        if (!resultClass.equals(entityType) && CollectionUtils.isEmpty(searchProjectionList)) {
+            searchProjectionList = ProjectionListResolverUtil.resolveSearchProjectionList(resultClass);
+        }
+
+        final List<Selection<?>> projectionList = resolveQueryProjectionList(root, searchProjectionList, request);
 
         if (!CollectionUtils.isEmpty(projectionList)) {
             query.multiselect(projectionList);

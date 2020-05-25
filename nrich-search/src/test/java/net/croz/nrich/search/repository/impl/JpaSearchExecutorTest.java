@@ -16,6 +16,7 @@ import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionReso
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
+import net.croz.nrich.search.repository.stub.TestEntityProjectionDto;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import org.junit.jupiter.api.Test;
@@ -390,7 +391,6 @@ public class JpaSearchExecutorTest {
         final SearchJoin<TestEntitySearchRequest> collectionJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("collectionEntityList").path("collectionEntityList").joinType(JoinType.LEFT).build();
 
         final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .resultClass(TestEntityDto.class)
                 .distinct(true)
                 .joinList(Collections.singletonList(collectionJoin))
                 .build();
@@ -679,5 +679,25 @@ public class JpaSearchExecutorTest {
 
         // then
         assertThat(results).hasSize(2);
+    }
+
+    @Test
+    void shouldResolveProjectionsFromClass() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        final SearchConfiguration<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest>builder()
+                .resultClass(TestEntityProjectionDto.class)
+                .build();
+
+        // when
+        final List<TestEntityProjectionDto> results = testEntitySearchRepository.findAll(request, searchConfiguration);
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getName()).isEqualTo("first0");
+        assertThat(results.get(0).getNestedName()).isEqualTo("nested0");
+        assertThat(results.get(0).getNestedId()).isNotNull();
     }
 }
