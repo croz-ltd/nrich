@@ -44,22 +44,9 @@ public class JpaSearchExecutorTest {
         assertThat(testEntitySearchRepository).isNotNull();
     }
 
-    @Test
-    void shouldSearchByRootEntityStringAttributes() {
-        // given
-        generateListForSearch(entityManager);
-
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
-
-        // when
-        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
-
-        // then
-        assertThat(results).hasSize(1);
-    }
 
     @Test
-    void shouldFindOneEntity() {
+    void shouldFindOne() {
         // given
         generateListForSearch(entityManager);
 
@@ -87,7 +74,21 @@ public class JpaSearchExecutorTest {
     }
 
     @Test
-    void shouldSortEntities() {
+    void shouldFindAll() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldFindAllWithSort() {
         // given
         generateListForSearch(entityManager);
 
@@ -134,7 +135,7 @@ public class JpaSearchExecutorTest {
     }
 
     @Test
-    void shouldCountByRootEntityStringAttributes() {
+    void shouldCount() {
         // given
         generateListForSearch(entityManager);
 

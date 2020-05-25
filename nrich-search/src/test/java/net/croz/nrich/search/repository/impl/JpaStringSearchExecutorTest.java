@@ -45,6 +45,18 @@ public class JpaStringSearchExecutorTest {
     }
 
     @Test
+    void shouldReturnEmptyOptionalWhenNoResultsHaveBeenFound() {
+        // given
+        generateListForStringSearch(entityManager);
+
+        // when
+        final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
     void shouldFindOneMatchingAnyProperty() {
         // given
         generateListForStringSearch(entityManager);
@@ -103,6 +115,19 @@ public class JpaStringSearchExecutorTest {
 
         // then
         assertThat(result).isEqualTo(1);
+    }
+
+
+    @Test
+    void shouldReturnZeroWhenThereAreNoResults() {
+        // given
+        generateListForStringSearch(entityManager);
+
+        // when
+        final long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(result).isEqualTo(0);
     }
 
     @Test
