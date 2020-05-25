@@ -116,4 +116,16 @@ public class JpaStringSearchExecutorTest {
         // then
         assertThat(result).isTrue();
     }
+
+    @Test
+    void shouldReturnFalseWhenEntityDoesntExist() {
+        // given
+        generateListForStringSearch(entityManager);
+
+        // when
+        final boolean result = testEntityStringSearchRepository.exists("51111", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(result).isFalse();
+    }
 }
