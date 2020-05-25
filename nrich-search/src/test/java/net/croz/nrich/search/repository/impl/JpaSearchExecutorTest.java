@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -83,6 +84,21 @@ public class JpaSearchExecutorTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldSortEntities() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("age")));
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getAge()).isEqualTo(28);
     }
 
     @Test
