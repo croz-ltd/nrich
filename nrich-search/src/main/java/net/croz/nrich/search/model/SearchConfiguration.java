@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 import java.util.function.Function;
 
-// TODO resolve projected fields from projection class
 // TODO allow for easier initialization of search configuration and sync all classes (static vs builder etc)
 // T -> root persistent entity, P -> projection class (can be same as root), R -> search request instance
 @Builder
