@@ -143,11 +143,11 @@ public class JpaQueryBuilder<T> {
     }
 
     private <R> boolean shouldApplyJoin(final SearchJoin<R> join, final R request) {
-        return join.getCondition() == null || join.getCondition().apply(request);
+        return join.getCondition() == null || join.getCondition().test(request);
     }
 
     private <R> boolean shouldApplyProjection(final SearchProjection<R> projection, final R request) {
-        return projection.getCondition() == null || projection.getCondition().apply(request);
+        return projection.getCondition() == null || projection.getCondition().test(request);
     }
 
     private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final CriteriaBuilder criteriaBuilder, final Root<?> root, final CriteriaQuery<?> query) {

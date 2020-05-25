@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.criteria.JoinType;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class SearchJoin<R> {
 
     private JoinType joinType;
 
-    private Function<R, Boolean> condition;
+    private Predicate<R> condition;
 
     public static <R> SearchJoin<R> innerJoin(final String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null);

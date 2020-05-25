@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @Builder
@@ -17,6 +17,6 @@ public class SearchProjection<R> {
 
     private String alias;
 
-    private Function<R, Boolean> condition;
+    private Predicate<R> condition;
 
 }
