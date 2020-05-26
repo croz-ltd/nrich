@@ -17,8 +17,8 @@ public class SearchDataParserConfiguration {
 
     private final SearchFieldConfiguration searchFieldConfiguration;
 
-    public static SearchDataParserConfiguration fromSearchConfiguration(final SearchConfiguration<?, ?, ?> searchConfiguration) {
-        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchFieldConfiguration());
+    public static SearchDataParserConfiguration fromSearchConfiguration(final SearchSpecification<?, ?, ?> searchSpecification) {
+        return new SearchDataParserConfiguration(searchSpecification.isResolveFieldMappingUsingPrefix(), searchSpecification.getPropertyMappingList(), searchSpecification.getSearchOperatorOverrideList(), searchSpecification.getSearchFieldConfiguration());
     }
 
 }

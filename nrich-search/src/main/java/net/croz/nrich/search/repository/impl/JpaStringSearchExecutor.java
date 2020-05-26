@@ -1,7 +1,7 @@
 package net.croz.nrich.search.repository.impl;
 
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.model.SearchSpecification;
 import net.croz.nrich.search.repository.StringSearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.springframework.data.domain.Page;
@@ -37,10 +37,10 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     }
 
     @Override
-    public <P> Optional<P> findOne(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+    public <P> Optional<P> findOne(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchSpecification, Sort.unsorted());
 
         try {
             return Optional.of(entityManager.createQuery(query).getSingleResult());
@@ -51,28 +51,28 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     }
 
     @Override
-    public <P> List<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+    public <P> List<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchSpecification, Sort.unsorted());
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <P> List<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, final Sort sort) {
+    public <P> List<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification, final Sort sort) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, sort);
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchSpecification, sort);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <P> Page<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, final Pageable pageable) {
+    public <P> Page<P> findAll(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification, final Pageable pageable) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, pageable.getSort());
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchSpecification, pageable.getSort());
         final TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         if (pageable.isPaged()) {
@@ -85,17 +85,17 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     }
 
     @Override
-    public <P> long count(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+    public <P> long count(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted()));
+        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchSpecification, Sort.unsorted()));
     }
 
     @Override
-    public <P> boolean exists(final String searchTerm, final List<String> propertyToSearchList, final SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+    public <P> boolean exists(final String searchTerm, final List<String> propertyToSearchList, final SearchSpecification<T, P, Map<String, Object>> searchSpecification) {
         final Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
 
-        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted())) > 0;
+        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchSpecification, Sort.unsorted())) > 0;
     }
 
     private Map<String, Object> convertToMap(final String searchTerm, final List<String> propertyToSearchList) {
