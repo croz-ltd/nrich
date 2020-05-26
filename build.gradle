@@ -37,6 +37,11 @@ subprojects {
 
   dependencies {
     springBom platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+
+    constraints {
+      implementation "org.apache.poi:poi:$apachePoiVersion"
+      implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
+    }
   }
 
   test {
