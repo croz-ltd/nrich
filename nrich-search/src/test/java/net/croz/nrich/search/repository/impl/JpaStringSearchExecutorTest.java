@@ -23,7 +23,7 @@ import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecu
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-@SpringJUnitConfig(classes = SearchTestConfiguration.class)
+@SpringJUnitConfig(SearchTestConfiguration.class)
 public class JpaStringSearchExecutorTest {
 
     @Autowired

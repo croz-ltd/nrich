@@ -12,7 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WebAppConfiguration
-@SpringJUnitConfig(classes = WebmvcTestConfiguration.class)
+@SpringJUnitConfig(WebmvcTestConfiguration.class)
 public class TransientPropertyResolverServiceImplTest {
 
     @Autowired

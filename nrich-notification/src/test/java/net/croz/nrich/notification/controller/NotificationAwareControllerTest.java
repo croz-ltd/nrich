@@ -13,7 +13,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = NotificationTestConfiguration.class)
+@SpringJUnitConfig(NotificationTestConfiguration.class)
 public class NotificationAwareControllerTest {
 
     @Autowired

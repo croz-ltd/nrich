@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @WebAppConfiguration
-@SpringJUnitConfig(classes = WebmvcTestConfiguration.class)
+@SpringJUnitConfig(WebmvcTestConfiguration.class)
 public abstract class BaseWebTest {
 
     @Autowired

@@ -15,7 +15,7 @@ import java.util.Map;
 import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.dateOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchTestConfiguration.class)
+@SpringJUnitConfig(SearchTestConfiguration.class)
 public class StringToEntityPropertyMapConverterImplTest {
 
     @Autowired

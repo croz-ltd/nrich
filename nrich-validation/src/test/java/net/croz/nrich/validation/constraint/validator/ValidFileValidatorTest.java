@@ -18,7 +18,7 @@ import static net.croz.nrich.validation.constraint.testutil.ValidationConstraint
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-@SpringJUnitConfig(classes = ValidationTestConfiguration.class)
+@SpringJUnitConfig(ValidationTestConfiguration.class)
 public class ValidFileValidatorTest {
 
     @Autowired

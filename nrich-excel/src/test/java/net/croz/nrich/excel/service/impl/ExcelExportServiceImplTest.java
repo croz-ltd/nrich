@@ -19,7 +19,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueL
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-@SpringJUnitConfig(classes = ExcelTestConfiguration.class)
+@SpringJUnitConfig(ExcelTestConfiguration.class)
 public class ExcelExportServiceImplTest {
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;

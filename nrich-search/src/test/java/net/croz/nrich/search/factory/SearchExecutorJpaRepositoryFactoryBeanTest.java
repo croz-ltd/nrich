@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchTestConfiguration.class)
+@SpringJUnitConfig(SearchTestConfiguration.class)
 public class SearchExecutorJpaRepositoryFactoryBeanTest {
 
     @Autowired

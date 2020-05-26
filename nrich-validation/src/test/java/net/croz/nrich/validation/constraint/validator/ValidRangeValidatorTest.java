@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-@SpringJUnitConfig(classes = ValidationTestConfiguration.class)
+@SpringJUnitConfig(ValidationTestConfiguration.class)
 public class ValidRangeValidatorTest {
 
     @Autowired

@@ -18,7 +18,7 @@ import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.l
 import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.localDateTimeOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchTestConfiguration.class)
+@SpringJUnitConfig(SearchTestConfiguration.class)
 public class DefaultStringToTypeConverterTest {
 
     @Autowired

@@ -16,7 +16,7 @@ import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGenerat
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-@SpringJUnitConfig(classes = FormConfigurationTestConfiguration.class)
+@SpringJUnitConfig(FormConfigurationTestConfiguration.class)
 public class FormConfigurationServiceImplTest {
 
     @Autowired

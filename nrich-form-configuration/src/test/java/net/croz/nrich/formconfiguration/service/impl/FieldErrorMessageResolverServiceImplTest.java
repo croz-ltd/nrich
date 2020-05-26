@@ -12,7 +12,7 @@ import java.util.Locale;
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createConstrainedProperty;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = FormConfigurationTestConfiguration.class)
+@SpringJUnitConfig(FormConfigurationTestConfiguration.class)
 public class FieldErrorMessageResolverServiceImplTest {
 
     @Autowired

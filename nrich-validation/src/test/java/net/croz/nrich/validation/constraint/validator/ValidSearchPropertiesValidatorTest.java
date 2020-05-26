@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = ValidationTestConfiguration.class)
+@SpringJUnitConfig(ValidationTestConfiguration.class)
 public class ValidSearchPropertiesValidatorTest {
 
     @Autowired

@@ -27,7 +27,7 @@ import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.ad
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceRequestBindingMap;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = NotificationTestConfiguration.class)
+@SpringJUnitConfig(NotificationTestConfiguration.class)
 public class NotificationResolverServiceImplTest {
 
     @Autowired
