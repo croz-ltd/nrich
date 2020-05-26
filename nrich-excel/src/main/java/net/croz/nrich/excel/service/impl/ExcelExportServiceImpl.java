@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.model.RowDataProvider;
+import net.croz.nrich.excel.request.CreateExcelReportRequest;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
 import net.croz.nrich.excel.service.ExcelExportService;
 import org.springframework.util.Assert;
@@ -18,12 +19,13 @@ public class ExcelExportServiceImpl implements ExcelExportService {
     private final ExcelExportGeneratorFactory excelExportGeneratorFactory;
 
     @Override
-    public File createExcelReport(final CreateReportGeneratorRequest request) {
+    public File createExcelReport(final CreateExcelReportRequest request) {
 
         Assert.notNull(request.getRowDataProvider(), "Row data provider cannot be null!");
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
-        final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(request);
+        final CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
+        final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
         final RowDataProvider rowDataProvider = request.getRowDataProvider();
         int limit = request.getBatchSize();
@@ -42,5 +44,15 @@ public class ExcelExportServiceImpl implements ExcelExportService {
         excelExportGenerator.flushAndClose();
 
         return request.getOutputFile();
+    }
+
+    private CreateReportGeneratorRequest toCreateReportGeneratorRequest(final CreateExcelReportRequest reportRequest) {
+        return CreateReportGeneratorRequest.builder()
+                .cellDataFormatList(reportRequest.getCellDataFormatList())
+                .firstRowIndex(reportRequest.getFirstRowIndex())
+                .outputFile(reportRequest.getOutputFile())
+                .templatePath(reportRequest.getTemplatePath())
+                .templateVariableList(reportRequest.getTemplateVariableList())
+                .build();
     }
 }

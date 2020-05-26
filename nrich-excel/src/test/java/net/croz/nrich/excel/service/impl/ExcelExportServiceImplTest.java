@@ -3,7 +3,7 @@ package net.croz.nrich.excel.service.impl;
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.ExcelTestConfiguration;
 import net.croz.nrich.excel.model.RowDataProvider;
-import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
+import net.croz.nrich.excel.request.CreateExcelReportRequest;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -38,7 +38,7 @@ public class ExcelExportServiceImplTest {
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };
         final RowDataProvider rowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().rowDataProvider(rowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().rowDataProvider(rowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
         final File result = excelExportService.createExcelReport(request);
@@ -61,7 +61,7 @@ public class ExcelExportServiceImplTest {
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };
         final RowDataProvider rowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().rowDataProvider(rowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().rowDataProvider(rowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
         final Throwable thrown = catchThrowable(() -> excelExportService.createExcelReport(request));
@@ -75,7 +75,7 @@ public class ExcelExportServiceImplTest {
         // given
         final File file = createFileInTemporaryDirectory();
 
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
         final Throwable thrown = catchThrowable(() -> excelExportService.createExcelReport(request));
