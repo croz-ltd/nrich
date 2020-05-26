@@ -18,9 +18,12 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -61,9 +64,9 @@ public class DefaultExcelExportGeneratorTest {
     void shouldExportDataToExcel() {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        final Object[] rowData = new Object[] { 1.1, "value", now, now, 1, 1.5F, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null };
+        final Object[] rowData = new Object[] { 1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null };
         // when resolving data from cells all dates are converted to instant, all decimal numbers are converted to double and all whole numbers are converted to integer
-        final Object[] expectedRowData = new Object[] { 1.1, "value", now, now, 1, 1.5, 1, now, now, 1.5, 10, null };
+        final Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, null };
 
         // when
         excelExportGenerator.writeRowData(rowData);
