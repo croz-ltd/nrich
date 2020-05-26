@@ -70,8 +70,9 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             final Object value = reportDataList[index];
             final Cell cell = row.createCell(index);
             final CellStyle defaultStyle = Optional.ofNullable(value).map(Object::getClass).map(defaultStyleMap::get).orElse(null);
+            final CellStyle cellStyle = Optional.ofNullable(cellStyleMap.get(index)).orElse(defaultStyle);
 
-            setCellValue(cell, value, Optional.ofNullable(cellStyleMap.get(index)).orElse(defaultStyle));
+            setCellValue(cell, value, cellStyle);
         });
     }
 
