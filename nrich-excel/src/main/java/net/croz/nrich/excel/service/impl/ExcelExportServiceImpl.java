@@ -6,6 +6,7 @@ import net.croz.nrich.excel.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.model.RowDataProvider;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
 import net.croz.nrich.excel.service.ExcelExportService;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.util.Arrays;
@@ -18,6 +19,10 @@ public class ExcelExportServiceImpl implements ExcelExportService {
 
     @Override
     public File createExcelReport(final CreateReportGeneratorRequest request) {
+
+        Assert.notNull(request.getRowDataProvider(), "Row data provider cannot be null!");
+        Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
+
         final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(request);
 
         final RowDataProvider rowDataProvider = request.getRowDataProvider();
