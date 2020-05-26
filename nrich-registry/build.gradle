@@ -1,4 +1,5 @@
 dependencies {
+  api "jakarta.validation:jakarta.validation-api"
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"

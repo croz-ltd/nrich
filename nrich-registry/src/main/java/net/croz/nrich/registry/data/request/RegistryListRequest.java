@@ -1,10 +1,10 @@
 package net.croz.nrich.registry.data.request;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import net.croz.nrich.registry.data.model.SearchParameter;
 import net.croz.nrich.search.api.model.SortProperty;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -14,10 +14,10 @@ public class RegistryListRequest  {
     private String classFullName;
 
     @NotNull
-    private Integer start;
+    private Integer pageNumber;
 
     @NotNull
-    private Integer limit;
+    private Integer pageSize;
 
     @NotNull
     private SearchParameter searchParameter;
