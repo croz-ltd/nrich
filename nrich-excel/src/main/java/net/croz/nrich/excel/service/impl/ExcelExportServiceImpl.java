@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class ExcelExportServiceImpl implements ExcelExportService{
+public class ExcelExportServiceImpl implements ExcelExportService {
 
     private final ExcelExportGeneratorFactory excelExportGeneratorFactory;
 
