@@ -94,7 +94,11 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
 
             if (matcher.find()) {
                 final String matchedExpression = matcher.group(1);
-                final String variableValue = templateVariableList.stream().filter(variable -> matchedExpression.equals(variable.getName())).map(TemplateVariable::getValue).findFirst().orElse("");
+                final String variableValue = templateVariableList.stream()
+                        .filter(variable -> matchedExpression.equals(variable.getName()))
+                        .map(TemplateVariable::getValue)
+                        .findFirst()
+                        .orElse("");
 
                 final String updatedValue = matcher.replaceFirst(variableValue);
 
@@ -108,7 +112,11 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             return;
         }
 
-        final CellValueConverter converter = cellValueConverterList.stream().filter(cellValueConverter -> cellValueConverter.supports(cell, value)).findFirst().orElse(null);
+        final CellValueConverter converter = cellValueConverterList.stream()
+                .filter(cellValueConverter -> cellValueConverter.supports(cell, value))
+                .findFirst()
+                .orElse(null);
+
         if (converter == null) {
             cell.setCellValue(value.toString());
         }
@@ -126,7 +134,8 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             return new HashMap<>();
         }
 
-        return cellDataFormatList.stream().collect(Collectors.toMap(CellDataFormat::getCellIndex, entry -> createCellStyle(entry.getDataFormat())));
+        return cellDataFormatList.stream()
+                .collect(Collectors.toMap(CellDataFormat::getCellIndex, entry -> createCellStyle(entry.getDataFormat())));
     }
 
     private CellStyle createCellStyle(final String dataFormat) {
