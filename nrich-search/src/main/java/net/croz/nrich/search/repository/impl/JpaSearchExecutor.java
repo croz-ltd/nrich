@@ -1,6 +1,6 @@
 package net.croz.nrich.search.repository.impl;
 
-import net.croz.nrich.search.model.SearchSpecification;
+import net.croz.nrich.search.model.SearchConfiguration;
 import net.croz.nrich.search.repository.SearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.springframework.data.domain.Page;
@@ -32,8 +32,8 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
-    public <R, P> Optional<P> findOne(final R request, final SearchSpecification<T, P, R> searchSpecification) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchSpecification, Sort.unsorted());
+    public <R, P> Optional<P> findOne(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         try {
             return Optional.of(entityManager.createQuery(query).getSingleResult());
@@ -44,22 +44,22 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
-    public <R, P> List<P> findAll(final R request, final SearchSpecification<T, P, R> searchSpecification) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchSpecification, Sort.unsorted());
+    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <R, P> List<P> findAll(final R request, final SearchSpecification<T, P, R> searchSpecification, final Sort sort) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchSpecification, sort);
+    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, sort);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <R, P> Page<P> findAll(final R request, final SearchSpecification<T, P, R> searchSpecification, final Pageable pageable) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchSpecification, pageable.getSort());
+    public <R, P> Page<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Pageable pageable) {
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, pageable.getSort());
         final TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         if (pageable.isPaged()) {
@@ -72,13 +72,13 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
-    public <R, P> long count(final R request, final SearchSpecification<T, P, R> searchSpecification) {
-        return executeCountQuery(queryBuilder.buildQuery(request, searchSpecification, Sort.unsorted()));
+    public <R, P> long count(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted()));
     }
 
     @Override
-    public <R, P> boolean exists(final R request, final SearchSpecification<T, P, R> searchSpecification) {
-        return executeCountQuery(queryBuilder.buildQuery(request, searchSpecification, Sort.unsorted())) > 0;
+    public <R, P> boolean exists(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+        return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted())) > 0;
     }
 
     private long executeCountQuery(final CriteriaQuery<?> query) {

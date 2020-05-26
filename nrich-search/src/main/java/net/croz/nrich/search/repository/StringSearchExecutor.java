@@ -1,6 +1,6 @@
 package net.croz.nrich.search.repository;
 
-import net.croz.nrich.search.model.SearchSpecification;
+import net.croz.nrich.search.model.SearchConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,15 +11,15 @@ import java.util.Optional;
 
 public interface StringSearchExecutor<T> {
 
-    <P> Optional<P> findOne(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification);
+    <P> Optional<P> findOne(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
 
-    <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification);
+    <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
 
-    <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification, Sort sort);
+    <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Sort sort);
 
-    <P> Page<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification, Pageable pageable);
+    <P> Page<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Pageable pageable);
 
-    <P> long count(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification);
+    <P> long count(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
 
-    <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchSpecification<T, P, Map<String, Object>> searchSpecification);
+    <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
 }

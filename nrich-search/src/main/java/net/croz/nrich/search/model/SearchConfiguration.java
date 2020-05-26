@@ -10,7 +10,7 @@ import java.util.function.Function;
 // T -> root persistent entity, P -> projection class (can be same as root), R -> search request instance
 @Builder
 @Data
-public class SearchSpecification<T, P, R> {
+public class SearchConfiguration<T, P, R> {
 
     private Function<R, Class<T>> rootEntityResolver;
 
@@ -40,15 +40,15 @@ public class SearchSpecification<T, P, R> {
     @Builder.Default
     private SearchFieldConfiguration searchFieldConfiguration = SearchFieldConfiguration.defaultSearchFieldConfiguration();
 
-    public static <T, P, R> SearchSpecification<T, P, R> emptySpecification() {
-        return SearchSpecification.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).build();
+    public static <T, P, R> SearchConfiguration<T, P, R> emptyConfiguration() {
+        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).build();
     }
 
-    public static <T, P, R> SearchSpecification<T, P, R> emptySpecificationMatchingAny() {
-        return SearchSpecification.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).anyMatch(true).build();
+    public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationMatchingAny() {
+        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).anyMatch(true).build();
     }
 
-    public static <T, P, R> SearchSpecification<T, P, R> emptySpecificationWithDefaultMappingResolve() {
-        return SearchSpecification.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).resolveFieldMappingUsingPrefix(true).build();
+    public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationWithDefaultMappingResolve() {
+        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).resolveFieldMappingUsingPrefix(true).build();
     }
 }
