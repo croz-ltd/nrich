@@ -1,168 +1,103 @@
 package net.croz.nrich.excel.converter.impl;
 
-import lombok.Getter;
-import net.croz.nrich.excel.ExcelExportConstants;
+import lombok.Value;
 import net.croz.nrich.excel.converter.CellValueConverter;
+import net.croz.nrich.excel.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
-@Getter
-public enum DefaultCellValueConverter implements CellValueConverter {
+@Order
+public class DefaultCellValueConverter implements CellValueConverter {
 
-    DATE(Date.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue((Date) value);
-        }
+    private final String dateFormat;
 
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DATE_FORMAT;
-        }
-    },
+    private final String dateTimeFormat;
 
-    INSTANT(Instant.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(new Date(((Instant) value).toEpochMilli()));
-        }
+    private final String integerNumberFormat;
 
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DATE_FORMAT;
-        }
-    },
+    private final String decimalNumberFormat;
 
-    LOCAL_DATE(LocalDate.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue((LocalDate) value);
-        }
+    private final boolean writeDateWithTime;
 
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DATE_FORMAT;
-        }
-    },
+    private final List<ConverterHolder> converterHolderList;
 
-    LOCAL_DATE_TIME(LocalDateTime.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue((LocalDateTime) value);
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DATE_TIME_FORMAT;
-        }
-    },
-
-    ZONED_DATE_TIME(ZonedDateTime.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((ZonedDateTime) value).toLocalDateTime());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DATE_TIME_FORMAT;
-        }
-    },
-
-    BIG_DECIMAL(BigDecimal.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).doubleValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DECIMAL_NUMBER_FORMAT;
-        }
-    },
-    FLOAT(Float.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).doubleValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DECIMAL_NUMBER_FORMAT;
-        }
-    },
-    DOUBLE(Double.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).doubleValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.DECIMAL_NUMBER_FORMAT;
-        }
-    },
-
-    SHORT(Short.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).longValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.INTEGER_NUMBER_FORMAT;
-        }
-    },
-
-    INTEGER(Integer.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).longValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.INTEGER_NUMBER_FORMAT;
-        }
-    },
-
-    LONG(Long.class) {
-        @Override
-        public void setCellValue(final Cell cell, final Object value) {
-            cell.setCellValue(((Number) value).longValue());
-        }
-
-        @Override
-        public String getDataFormat() {
-            return ExcelExportConstants.INTEGER_NUMBER_FORMAT;
-        }
-    };
-
-    private final Class<?> type;
-
-    DefaultCellValueConverter(final Class<?> type) {
-        this.type = type;
+    public DefaultCellValueConverter(final String dateFormat, final String dateTimeFormat, final String integerNumberFormat, final String decimalNumberFormat, final boolean writeDateWithTime) {
+        this.dateFormat = dateFormat;
+        this.dateTimeFormat = dateTimeFormat;
+        this.integerNumberFormat = integerNumberFormat;
+        this.decimalNumberFormat = decimalNumberFormat;
+        this.writeDateWithTime = writeDateWithTime;
+        this.converterHolderList = initializeConverterList();
     }
 
-    public static DefaultCellValueConverter forType(final Class<?> type) {
-        return Arrays.stream(values()).filter(value -> value.getType().equals(type)).findFirst().orElse(null);
+    @Override
+    public void setCellValue(final Cell cell, final Object value) {
+        Optional.ofNullable(findConverter(value)).ifPresent(converterHolder -> converterHolder.setCellValueFunction.accept(cell, value));
     }
-
-
-    public abstract void setCellValue(final Cell cell, final Object value);
-
-    public abstract String getDataFormat();
 
     @Override
     public boolean supports(final Cell cell, final Object value) {
-        return true;
+        return findConverter(value) != null;
+    }
+
+    @Override
+    public List<TypeDataFormat> typeDataFormatList() {
+        return converterHolderList.stream()
+                .map(converterHolder -> new TypeDataFormat(converterHolder.type, converterHolder.dataFormat))
+                .collect(Collectors.toList());
+    }
+
+    private List<ConverterHolder> initializeConverterList() {
+        final String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat:  dateFormat;
+
+        return Arrays.asList(
+                new ConverterHolder(Date.class, dateFormat, (cell, value) -> cell.setCellValue((Date) value)),
+                new ConverterHolder(Instant.class, dateFormat, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
+                new ConverterHolder(LocalDate.class, dateFormat, (cell, value) -> cell.setCellValue((LocalDate) value)),
+                new ConverterHolder(LocalDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue((LocalDateTime) value)),
+                new ConverterHolder(ZonedDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue(((ZonedDateTime) value).toLocalDateTime())),
+                new ConverterHolder(OffsetDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue(((OffsetDateTime) value).toLocalDateTime())),
+                new ConverterHolder(Short.class, integerNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+                new ConverterHolder(Integer.class, integerNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+                new ConverterHolder(Long.class, integerNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+                new ConverterHolder(BigDecimal.class, decimalNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
+                new ConverterHolder(Float.class, decimalNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
+                new ConverterHolder(Double.class, decimalNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).doubleValue()))
+        );
+    }
+
+    private ConverterHolder findConverter(final Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        return converterHolderList.stream()
+                .filter(converterHolder -> converterHolder.getType().isAssignableFrom(value.getClass()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Value
+    public static class ConverterHolder {
+
+        Class<?> type;
+
+        String dataFormat;
+
+        BiConsumer<Cell, Object> setCellValueFunction;
+
     }
 }

@@ -2,9 +2,9 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.converter.CellValueConverter;
-import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.model.CellDataFormat;
 import net.croz.nrich.excel.model.TemplateVariable;
+import net.croz.nrich.excel.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -17,7 +17,6 @@ import org.springframework.util.Assert;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +149,10 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
     }
 
     private Map<Class<?>, CellStyle> createDefaultStyleMap() {
-        return Arrays.stream(DefaultCellValueConverter.values())
-                .collect(Collectors.toMap(DefaultCellValueConverter::getType, value -> createCellStyle(value.getDataFormat())));
+        return cellValueConverterList.stream()
+                .map(CellValueConverter::typeDataFormatList)
+                .flatMap(List::stream)
+                .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
+                .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
     }
 }
