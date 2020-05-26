@@ -71,12 +71,20 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     private List<ConverterHolder> initializeConverterList() {
 
         return Arrays.asList(
-                new ConverterHolder(Boolean.class, (value, type) -> Boolean.valueOf(value)), new ConverterHolder(Long.class, (value, type) -> Long.valueOf(value)), new ConverterHolder(Integer.class, (value, type) -> Integer.valueOf(value)),
-                new ConverterHolder(Short.class, (value, type) -> Short.valueOf(value)), new ConverterHolder(Enum.class, this::convertEnum), new ConverterHolder(Date.class, (value, type) -> dateConverter(value)),
-                new ConverterHolder(Instant.class, (value, type) -> temporalConverter(value, Instant::from)), new ConverterHolder(LocalDate.class, (value, type) -> temporalConverter(value, LocalDate::from)),
-                new ConverterHolder(LocalDateTime.class, (value, type) -> temporalConverter(value, LocalDateTime::from)), new ConverterHolder(OffsetTime.class, (value, type) -> temporalConverter(value, OffsetTime::from)),
-                new ConverterHolder(OffsetDateTime.class, (value, type) -> temporalConverter(value, OffsetDateTime::from)), new ConverterHolder(ZonedDateTime.class, (value, type) -> temporalConverter(value, ZonedDateTime::from)),
-                new ConverterHolder(Float.class, (value, type) -> numberConverter(value, false)), new ConverterHolder(Double.class, (value, type) -> numberConverter(value, false)),
+                new ConverterHolder(Boolean.class, (value, type) -> Boolean.valueOf(value)),
+                new ConverterHolder(Long.class, (value, type) -> Long.valueOf(value)),
+                new ConverterHolder(Integer.class, (value, type) -> Integer.valueOf(value)),
+                new ConverterHolder(Short.class, (value, type) -> Short.valueOf(value)),
+                new ConverterHolder(Enum.class, this::convertEnum),
+                new ConverterHolder(Date.class, (value, type) -> dateConverter(value)),
+                new ConverterHolder(Instant.class, (value, type) -> temporalConverter(value, Instant::from)),
+                new ConverterHolder(LocalDate.class, (value, type) -> temporalConverter(value, LocalDate::from)),
+                new ConverterHolder(LocalDateTime.class, (value, type) -> temporalConverter(value, LocalDateTime::from)),
+                new ConverterHolder(OffsetTime.class, (value, type) -> temporalConverter(value, OffsetTime::from)),
+                new ConverterHolder(OffsetDateTime.class, (value, type) -> temporalConverter(value, OffsetDateTime::from)),
+                new ConverterHolder(ZonedDateTime.class, (value, type) -> temporalConverter(value, ZonedDateTime::from)),
+                new ConverterHolder(Float.class, (value, type) -> numberConverter(value, false)),
+                new ConverterHolder(Double.class, (value, type) -> numberConverter(value, false)),
                 new ConverterHolder(BigDecimal.class, (value, type) -> numberConverter(value, true))
         );
     }
