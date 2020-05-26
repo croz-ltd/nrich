@@ -2,7 +2,7 @@ package net.croz.nrich.excel.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import net.croz.nrich.excel.model.CellDataFormat;
+import net.croz.nrich.excel.model.ColumnDataFormat;
 import net.croz.nrich.excel.model.TemplateVariable;
 
 import java.io.File;
@@ -18,7 +18,7 @@ public class CreateReportGeneratorRequest {
 
     private final List<TemplateVariable> templateVariableList;
 
-    private final List<CellDataFormat> cellDataFormatList;
+    private final List<ColumnDataFormat> columnDataFormatList;
 
     private final int firstRowIndex;
 

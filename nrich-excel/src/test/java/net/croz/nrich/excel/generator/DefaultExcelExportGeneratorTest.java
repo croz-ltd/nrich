@@ -3,7 +3,7 @@ package net.croz.nrich.excel.generator;
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.converter.CellValueConverter;
 import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
-import net.croz.nrich.excel.model.CellDataFormat;
+import net.croz.nrich.excel.model.ColumnDataFormat;
 import net.croz.nrich.excel.model.TemplateVariable;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -54,9 +54,9 @@ public class DefaultExcelExportGeneratorTest {
         final CellValueConverter cellValueConverter = new DefaultCellValueConverter("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true);
         final InputStream template = this.getClass().getResourceAsStream("/excel/template.xlsx");
         final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
-        final List<CellDataFormat> cellDataFormatList = Arrays.asList(new CellDataFormat(2, "dd-MM-yyyy"), new CellDataFormat(3, "dd-MM-yyyy HH:mm"));
+        final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
-        excelExportGenerator = new DefaultExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, cellDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        excelExportGenerator = new DefaultExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @SneakyThrows

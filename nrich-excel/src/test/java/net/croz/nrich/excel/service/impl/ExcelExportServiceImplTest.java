@@ -2,7 +2,7 @@ package net.croz.nrich.excel.service.impl;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.ExcelTestConfiguration;
-import net.croz.nrich.excel.model.RowDataProvider;
+import net.croz.nrich.excel.model.MultiRowDataProvider;
 import net.croz.nrich.excel.request.CreateExcelReportRequest;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -36,9 +36,9 @@ public class ExcelExportServiceImplTest {
         // given
         final File file = createFileInTemporaryDirectory();
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };
-        final RowDataProvider rowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+        final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().rowDataProvider(rowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
         final File result = excelExportService.createExcelReport(request);
@@ -59,9 +59,9 @@ public class ExcelExportServiceImplTest {
         // given
         final File file = createFileInTemporaryDirectory();
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };
-        final RowDataProvider rowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+        final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().rowDataProvider(rowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
         final Throwable thrown = catchThrowable(() -> excelExportService.createExcelReport(request));

@@ -7,6 +7,6 @@ public class TemplateVariable {
 
     private final String name;
 
-    private final  String value;
+    private final String value;
 
 }

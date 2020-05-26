@@ -3,9 +3,9 @@ package net.croz.nrich.excel.model;
 import lombok.Data;
 
 @Data
-public class CellDataFormat {
+public class ColumnDataFormat {
 
-    private final int cellIndex;
+    private final int columnIndex;
 
     private final String dataFormat;
 

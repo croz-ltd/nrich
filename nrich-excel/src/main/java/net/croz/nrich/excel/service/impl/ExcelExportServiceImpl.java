@@ -3,7 +3,7 @@ package net.croz.nrich.excel.service.impl;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
-import net.croz.nrich.excel.model.RowDataProvider;
+import net.croz.nrich.excel.model.MultiRowDataProvider;
 import net.croz.nrich.excel.request.CreateExcelReportRequest;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
 import net.croz.nrich.excel.service.ExcelExportService;
@@ -21,18 +21,18 @@ public class ExcelExportServiceImpl implements ExcelExportService {
     @Override
     public File createExcelReport(final CreateExcelReportRequest request) {
 
-        Assert.notNull(request.getRowDataProvider(), "Row data provider cannot be null!");
+        Assert.notNull(request.getMultiRowDataProvider(), "Row data provider cannot be null!");
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
         final CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
         final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
-        final RowDataProvider rowDataProvider = request.getRowDataProvider();
+        final MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
         int limit = request.getBatchSize();
         int start = 0;
 
         Object[][] rowBatchData;
-        while ((rowBatchData = rowDataProvider.resolveRowData(start, limit)) != null) {
+        while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
 
             Arrays.stream(rowBatchData)
                     .filter(Objects::nonNull)
@@ -48,7 +48,7 @@ public class ExcelExportServiceImpl implements ExcelExportService {
 
     private CreateReportGeneratorRequest toCreateReportGeneratorRequest(final CreateExcelReportRequest reportRequest) {
         return CreateReportGeneratorRequest.builder()
-                .cellDataFormatList(reportRequest.getCellDataFormatList())
+                .columnDataFormatList(reportRequest.getColumnDataFormatList())
                 .firstRowIndex(reportRequest.getFirstRowIndex())
                 .outputFile(reportRequest.getOutputFile())
                 .templatePath(reportRequest.getTemplatePath())

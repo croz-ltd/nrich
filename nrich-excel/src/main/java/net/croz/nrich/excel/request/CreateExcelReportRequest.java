@@ -2,8 +2,8 @@ package net.croz.nrich.excel.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import net.croz.nrich.excel.model.CellDataFormat;
-import net.croz.nrich.excel.model.RowDataProvider;
+import net.croz.nrich.excel.model.ColumnDataFormat;
+import net.croz.nrich.excel.model.MultiRowDataProvider;
 import net.croz.nrich.excel.model.TemplateVariable;
 
 import java.io.File;
@@ -19,12 +19,12 @@ public class CreateExcelReportRequest {
 
     private final List<TemplateVariable> templateVariableList;
 
-    private final List<CellDataFormat> cellDataFormatList;
+    private final List<ColumnDataFormat> columnDataFormatList;
 
     private final int firstRowIndex;
 
     private final int batchSize;
 
-    private final RowDataProvider rowDataProvider;
+    private final MultiRowDataProvider multiRowDataProvider;
 
 }

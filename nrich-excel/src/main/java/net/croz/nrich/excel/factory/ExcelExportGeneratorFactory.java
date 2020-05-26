@@ -26,7 +26,7 @@ public class ExcelExportGeneratorFactory {
 
         final InputStream template = resolveTemplate(request.getTemplatePath());
 
-        return new DefaultExcelExportGenerator(cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), request.getCellDataFormatList(), request.getFirstRowIndex());
+        return new DefaultExcelExportGenerator(cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), request.getColumnDataFormatList(), request.getFirstRowIndex());
     }
 
     @SneakyThrows

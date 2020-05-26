@@ -2,7 +2,7 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.converter.CellValueConverter;
-import net.croz.nrich.excel.model.CellDataFormat;
+import net.croz.nrich.excel.model.ColumnDataFormat;
 import net.croz.nrich.excel.model.TemplateVariable;
 import net.croz.nrich.excel.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
@@ -48,13 +48,13 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
 
     private boolean templateOpen = true;
 
-    public DefaultExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<CellDataFormat> cellDataFormatList, final int startIndex) {
+    public DefaultExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
         this.sheet = workbook.getSheetAt(0);
         this.creationHelper = workbook.getCreationHelper();
-        this.cellStyleMap = createStyleMap(cellDataFormatList);
+        this.cellStyleMap = createStyleMap(columnDataFormatList);
         this.defaultStyleMap = createDefaultStyleMap();
 
         this.currentRowNumber = startIndex;
@@ -130,13 +130,13 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
         }
     }
 
-    private Map<Integer, CellStyle> createStyleMap(final List<CellDataFormat> cellDataFormatList) {
-        if (cellDataFormatList == null) {
+    private Map<Integer, CellStyle> createStyleMap(final List<ColumnDataFormat> columnDataFormatList) {
+        if (columnDataFormatList == null) {
             return new HashMap<>();
         }
 
-        return cellDataFormatList.stream()
-                .collect(Collectors.toMap(CellDataFormat::getCellIndex, entry -> createCellStyle(entry.getDataFormat())));
+        return columnDataFormatList.stream()
+                .collect(Collectors.toMap(ColumnDataFormat::getColumnIndex, entry -> createCellStyle(entry.getDataFormat())));
     }
 
     private CellStyle createCellStyle(final String dataFormat) {
