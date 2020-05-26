@@ -2,9 +2,12 @@ package net.croz.nrich.excel.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import net.croz.nrich.excel.model.CellDataFormat;
+import net.croz.nrich.excel.model.RowDataProvider;
+import net.croz.nrich.excel.model.TemplateVariable;
 
 import java.io.File;
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Builder
@@ -14,10 +17,14 @@ public class CreateReportGeneratorRequest {
 
     private final String templatePath;
 
-    private final Map<String, String> templateVariableMap;
+    private final List<TemplateVariable> templateVariableList;
 
-    private final Map<Integer, String> cellDataFormatMap;
+    private final List<CellDataFormat> cellDataFormatList;
 
-    private final int rowIndex;
+    private final int firstRowIndex;
+
+    private final int batchSize;
+
+    private final RowDataProvider rowDataProvider;
 
 }

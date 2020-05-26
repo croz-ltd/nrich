@@ -2,6 +2,9 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.converter.CellValueConverter;
+import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
+import net.croz.nrich.excel.model.CellDataFormat;
+import net.croz.nrich.excel.model.TemplateVariable;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -16,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -26,6 +30,8 @@ import java.util.stream.IntStream;
 public class DefaultExcelExportGenerator implements ExcelExportGenerator {
 
     private static final Pattern TEMPLATE_VARIABLE_PATTERN = Pattern.compile("\\$\\{(.*?)}");
+
+    private final List<CellValueConverter> cellValueConverterList;
 
     private final File outputFile;
 
@@ -43,19 +49,20 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
 
     private boolean templateOpen = true;
 
-    public DefaultExcelExportGenerator(final File outputFile, final InputStream template, final Map<String, String> templateVariableMap, final Map<Integer, String> dataFormatMap, final int startIndex) {
+    public DefaultExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<CellDataFormat> cellDataFormatList, final int startIndex) {
+        this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
-        this.workbook = initializeWorkBookWithTemplate(template, templateVariableMap);
+        this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
         this.sheet = workbook.getSheetAt(0);
         this.creationHelper = workbook.getCreationHelper();
-        this.cellStyleMap = createStyleMap(dataFormatMap);
+        this.cellStyleMap = createStyleMap(cellDataFormatList);
         this.defaultStyleMap = createDefaultStyleMap();
 
         this.currentRowNumber = startIndex;
     }
 
     @Override
-    public void writeRowData(final Object...reportDataList) {
+    public void writeRowData(final Object... reportDataList) {
         Assert.isTrue(templateOpen, "Template has benn closed and cannot be written anymore");
 
         final Row row = sheet.createRow(currentRowNumber++);
@@ -78,8 +85,8 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
         this.templateOpen = false;
     }
 
-    private void processTemplateVariableMap(final Sheet sheet, final Map<String, String> templateVariableMap) {
-        if (templateVariableMap == null) {
+    private void processTemplateVariableMap(final Sheet sheet, final List<TemplateVariable> templateVariableList) {
+        if (templateVariableList == null) {
             return;
         }
 
@@ -88,9 +95,9 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
 
             if (matcher.find()) {
                 final String matchedExpression = matcher.group(1);
-                final String variableValue = templateVariableMap.getOrDefault(matchedExpression, "");
+                final String variableValue = templateVariableList.stream().filter(variable -> matchedExpression.equals(variable.getName())).map(TemplateVariable::getValue).findFirst().orElse("");
 
-                final String updatedValue = matcher.replaceFirst(variableValue == null ? "" : variableValue);
+                final String updatedValue = matcher.replaceFirst(variableValue);
 
                 setCellValue(cell, updatedValue, cell.getCellStyle());
             }
@@ -102,7 +109,7 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             return;
         }
 
-        final CellValueConverter converter =  CellValueConverter.forType(value.getClass());
+        final CellValueConverter converter = cellValueConverterList.stream().filter(cellValueConverter -> cellValueConverter.supports(cell, value)).findFirst().orElse(null);
         if (converter == null) {
             cell.setCellValue(value.toString());
         }
@@ -115,12 +122,12 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
         }
     }
 
-    private Map<Integer, CellStyle> createStyleMap(final Map<Integer, String> dateFormatMap) {
-        if (dateFormatMap == null) {
+    private Map<Integer, CellStyle> createStyleMap(final List<CellDataFormat> cellDataFormatList) {
+        if (cellDataFormatList == null) {
             return new HashMap<>();
         }
 
-        return dateFormatMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> createCellStyle(entry.getValue())));
+        return cellDataFormatList.stream().collect(Collectors.toMap(CellDataFormat::getCellIndex, entry -> createCellStyle(entry.getDataFormat())));
     }
 
     private CellStyle createCellStyle(final String dataFormat) {
@@ -134,15 +141,16 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
     }
 
     @SneakyThrows
-    private SXSSFWorkbook initializeWorkBookWithTemplate(final InputStream template, final Map<String, String> templateVariableMap) {
+    private SXSSFWorkbook initializeWorkBookWithTemplate(final InputStream template, final List<TemplateVariable> templateVariableList) {
         final XSSFWorkbook xssfWorkbook = new XSSFWorkbook(template);
 
-        processTemplateVariableMap(xssfWorkbook.getSheetAt(0), templateVariableMap);
+        processTemplateVariableMap(xssfWorkbook.getSheetAt(0), templateVariableList);
 
         return new SXSSFWorkbook(xssfWorkbook);
     }
 
     private Map<Class<?>, CellStyle> createDefaultStyleMap() {
-        return Arrays.stream(CellValueConverter.values()).collect(Collectors.toMap(CellValueConverter::getType, value -> createCellStyle(value.getDataFormat())));
+        return Arrays.stream(DefaultCellValueConverter.values())
+                .collect(Collectors.toMap(DefaultCellValueConverter::getType, value -> createCellStyle(value.getDataFormat())));
     }
 }
