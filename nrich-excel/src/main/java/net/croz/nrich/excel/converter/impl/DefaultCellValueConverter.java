@@ -61,7 +61,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
     }
 
     private List<ConverterHolder> initializeConverterList() {
-        final String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat:  dateFormat;
+        final String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
 
         return Arrays.asList(
                 new ConverterHolder(Date.class, dateFormat, (cell, value) -> cell.setCellValue((Date) value)),
