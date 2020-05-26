@@ -1,20 +1,22 @@
-package net.croz.nrich.excel.service;
+package net.croz.nrich.excel.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.model.RowDataProvider;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
+import net.croz.nrich.excel.service.ExcelExportService;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class ExcelReportService {
+public class ExcelExportServiceImpl implements ExcelExportService{
 
     private final ExcelExportGeneratorFactory excelExportGeneratorFactory;
 
+    @Override
     public File createExcelReport(final CreateReportGeneratorRequest request) {
         final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(request);
 
