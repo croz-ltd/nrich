@@ -10,6 +10,6 @@ public interface BaseSortablePageableRequest {
 
     Integer getPageSize();
 
-    List<SortProperty> getSortFieldList();
+    List<SortProperty> getSortPropertyList();
 
 }
