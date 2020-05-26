@@ -10,14 +10,14 @@ import java.util.Map;
 @Builder
 public class CreateReportGeneratorRequest {
 
-    private File outputFile;
+    private final File outputFile;
 
-    private String templatePath;
+    private final String templatePath;
 
-    private  Map<String, String> templateVariableMap;
+    private final Map<String, String> templateVariableMap;
 
-    private Map<Integer, String> cellDataFormatMap;
+    private final Map<Integer, String> cellDataFormatMap;
 
-    private int rowIndex;
+    private final int rowIndex;
 
 }

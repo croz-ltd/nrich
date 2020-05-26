@@ -1,10 +1,10 @@
 package net.croz.nrich.excel.factory;
 
-import hr.apis.m19.jlprs.infrastructure.excel.generator.DefaultExcelExportGenerator;
-import hr.apis.m19.jlprs.infrastructure.excel.generator.ExcelExportGenerator;
-import hr.apis.m19.jlprs.infrastructure.excel.request.CreateReportGeneratorRequest;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import net.croz.nrich.excel.generator.DefaultExcelExportGenerator;
+import net.croz.nrich.excel.generator.ExcelExportGenerator;
+import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;

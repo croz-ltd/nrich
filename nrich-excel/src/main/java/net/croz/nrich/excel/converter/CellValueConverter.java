@@ -1,7 +1,7 @@
 package net.croz.nrich.excel.converter;
 
-import hr.apis.m19.jlprs.infrastructure.excel.ExcelExportConstants;
 import lombok.Getter;
+import net.croz.nrich.excel.ExcelExportConstants;
 import org.apache.poi.ss.usermodel.Cell;
 
 import java.math.BigDecimal;

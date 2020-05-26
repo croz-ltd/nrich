@@ -1,7 +1,7 @@
 package net.croz.nrich.excel.generator;
 
-import hr.apis.m19.jlprs.infrastructure.excel.converter.CellValueConverter;
 import lombok.SneakyThrows;
+import net.croz.nrich.excel.converter.CellValueConverter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.modelmapper.internal.util.Assert;
+import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.FileOutputStream;
