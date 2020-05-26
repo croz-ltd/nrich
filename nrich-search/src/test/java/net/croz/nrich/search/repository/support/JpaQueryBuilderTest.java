@@ -1,6 +1,6 @@
 package net.croz.nrich.search.repository.support;
 
-import net.croz.nrich.search.SearchConfigurationTestConfiguration;
+import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.model.SearchConfiguration;
@@ -39,7 +39,7 @@ import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecu
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
+@SpringJUnitConfig(classes = SearchTestConfiguration.class)
 public class JpaQueryBuilderTest {
 
     @PersistenceContext

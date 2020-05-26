@@ -23,7 +23,7 @@ import java.util.TimeZone;
 
 @EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
-public class SearchConfigurationTestConfiguration {
+public class SearchTestConfiguration {
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));

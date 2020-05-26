@@ -1,6 +1,6 @@
 package net.croz.nrich.search.factory;
 
-import net.croz.nrich.search.SearchConfigurationTestConfiguration;
+import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.factory.stub.SearchExecutorJpaRepositoryFactoryBeanTestRepository;
 import net.croz.nrich.search.factory.stub.SearchExecutorJpaRepositoryFactoryBeanTestSearchExecutor;
 import net.croz.nrich.search.factory.stub.SearchExecutorJpaRepositoryFactoryBeanTestStringAndSearchExecutor;
@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
+@SpringJUnitConfig(classes = SearchTestConfiguration.class)
 public class SearchExecutorJpaRepositoryFactoryBeanTest {
 
     @Autowired

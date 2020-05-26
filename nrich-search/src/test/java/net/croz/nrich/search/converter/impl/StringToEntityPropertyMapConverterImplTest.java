@@ -1,6 +1,6 @@
 package net.croz.nrich.search.converter.impl;
 
-import net.croz.nrich.search.SearchConfigurationTestConfiguration;
+import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.converter.stub.StringToEntityPropertyMapConverterImplTestEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Map;
 import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.dateOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringJUnitConfig(classes = SearchConfigurationTestConfiguration.class)
+@SpringJUnitConfig(classes = SearchTestConfiguration.class)
 public class StringToEntityPropertyMapConverterImplTest {
 
     @Autowired
