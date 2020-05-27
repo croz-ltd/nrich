@@ -2,7 +2,7 @@ package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
-import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
+import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -42,16 +42,16 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
-    private final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList;
+    private final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList;
 
     private final Map<String, JpaQueryBuilder<?>> classNameQueryBuilderMap;
 
-    public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList) {
+    public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
-        this.registrySearchConfigurationList = registrySearchConfigurationList;
-        this.classNameQueryBuilderMap = initializeQueryBuilderMap(registrySearchConfigurationList);
+        this.registryDataConfigurationList = registryDataConfigurationList;
+        this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationList);
     }
 
     @Transactional(readOnly = true)
@@ -64,9 +64,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Override
     public <T> T registryCreate(@Valid final CreateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
-        final T instance = resolveEntityInstance(registrySearchConfiguration.getRegistryType(), request.getEntityData());
+        final T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), request.getEntityData());
 
         modelMapper.map(request.getEntityData(), instance);
 
@@ -79,9 +79,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Override
     public <T> T registryUpdate(@Valid final UpdateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
-        final T instance = entityManager.find(registrySearchConfiguration.getRegistryType(), request.getId());
+        final T instance = entityManager.find(registryDataConfiguration.getRegistryType(), request.getId());
 
         modelMapper.map(request.getEntityData(), instance);
 
@@ -93,7 +93,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Transactional
     @Override
     public boolean registryDelete(@Valid final DeleteRegistryRequest request) {
-        RegistrySearchConfigurationUtil.verifyConfigurationExists(registrySearchConfigurationList, request.getClassFullName());
+        RegistrySearchConfigurationUtil.verifyConfigurationExists(registryDataConfigurationList, request.getClassFullName());
 
         final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());
 
@@ -104,12 +104,12 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
+        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedType<?> managedType = resolveManagedType(registrySearchConfiguration);
+        final ManagedType<?> managedType = resolveManagedType(registryDataConfiguration);
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
@@ -118,7 +118,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
             searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
         }
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registrySearchConfiguration.getSearchConfiguration(), pageable.getSort());
+        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registryDataConfiguration.getSearchConfiguration(), pageable.getSort());
 
         final TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
@@ -139,17 +139,17 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }
 
-    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList) {
-        if (registrySearchConfigurationList == null) {
+    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList) {
+        if (registryDataConfigurationList == null) {
             return Collections.emptyMap();
         }
 
-        return registrySearchConfigurationList.stream()
-                .collect(Collectors.toMap(registrySearchConfiguration -> registrySearchConfiguration.getRegistryType().getName(), registrySearchConfiguration -> new JpaQueryBuilder<>(entityManager, registrySearchConfiguration.getRegistryType())));
+        return registryDataConfigurationList.stream()
+                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
 
-    private ManagedType<?> resolveManagedType(final RegistrySearchConfiguration<?, ?> registrySearchConfiguration) {
-        return entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
+    private ManagedType<?> resolveManagedType(final RegistryDataConfiguration<?, ?> registryDataConfiguration) {
+        return entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType());
     }
 
     @SuppressWarnings("unchecked")

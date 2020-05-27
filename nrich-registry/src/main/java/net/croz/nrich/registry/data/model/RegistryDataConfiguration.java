@@ -6,7 +6,7 @@ import net.croz.nrich.search.model.SearchConfiguration;
 import java.util.Map;
 
 @Data
-public class RegistrySearchConfiguration<T, P> {
+public class RegistryDataConfiguration<T, P> {
 
     private final Class<T> registryType;
 

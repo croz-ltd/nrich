@@ -3,7 +3,7 @@ package net.croz.nrich.registry;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
-import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
+import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
@@ -111,16 +111,16 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
-        final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = new RegistrySearchConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+        final RegistryDataConfiguration<?, ?> registryDataConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
-        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, Collections.singletonList(registrySearchConfiguration));
+        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, Collections.singletonList(registryDataConfiguration));
     }
 
     @Bean
     public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper) {
-        final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = new RegistrySearchConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+        final RegistryDataConfiguration<?, ?> registryDataConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
-        return new RegistryDataRequestConversionServiceImpl(objectMapper, Collections.singletonList(registrySearchConfiguration));
+        return new RegistryDataRequestConversionServiceImpl(objectMapper, Collections.singletonList(registryDataConfiguration));
     }
 
     @Bean
