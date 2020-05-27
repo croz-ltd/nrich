@@ -5,8 +5,10 @@ import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.metamodel.ManagedType;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +20,11 @@ public class StringToEntityPropertyMapConverterImpl implements StringToEntityPro
 
     @Override
     public Map<String, Object> convert(final String value, final List<String> propertyToSearchList, final ManagedType<?> managedType) {
+        if (value == null || CollectionUtils.isEmpty(propertyToSearchList)) {
+            return Collections.emptyMap();
+        }
 
-        Assert.notNull(managedType, "Managed type not found for type!");
-        Assert.notEmpty(propertyToSearchList, "Property to search cannot be empty!");
+        Assert.notNull(managedType, "Managed type cannot be null!");
 
         final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 

@@ -51,6 +51,30 @@ public class StringToEntityPropertyMapConverterImplTest {
         assertThat(result.get("nonExisting")).isNull();
     }
 
+    @Test
+    void shouldReturnEmptyMapWhenValueIsNull() {
+        // given
+        final String value = null;
+
+        // when
+        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldReturnEmptyMapWhenPropertyListIsEmpty() {
+        // given
+        final String value = "value";
+
+        // when
+        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, null, managedTypeOfTestEntity());
+
+        // then
+        assertThat(result).isEmpty();
+    }
+
     private ManagedType<?> managedTypeOfTestEntity() {
         return entityManager.getMetamodel().managedType((Class<?>) StringToEntityPropertyMapConverterImplTestEntity.class);
     }
