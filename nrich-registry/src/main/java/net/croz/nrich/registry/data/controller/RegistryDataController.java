@@ -19,7 +19,7 @@ public class RegistryDataController {
     private final RegistryDataService registryDataService;
 
     @PostMapping("registryList")
-    public Page<?> registryList(@RequestBody @Valid ListRegistryRequest request) {
+    public Page<?> registryList(@RequestBody @Valid final ListRegistryRequest request) {
         return registryDataService.registryList(request);
     }
 }
