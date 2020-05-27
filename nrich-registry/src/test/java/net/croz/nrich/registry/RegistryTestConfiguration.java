@@ -9,6 +9,8 @@ import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
 import net.croz.nrich.search.model.SearchConfiguration;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -25,15 +27,10 @@ import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.TimeZone;
 
 @EnableJpaRepositories
 @Configuration(proxyBeanMethods = false)
 public class RegistryTestConfiguration {
-
-    static {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-    }
 
     @Bean(destroyMethod = "shutdown")
     public EmbeddedDatabase dataSource() {
@@ -76,9 +73,18 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public ModelMapper modelMapper() {
+        final ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return modelMapper;
+    }
+
+    @Bean
+    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = new RegistrySearchConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
-        return new RegistryDataServiceImpl(entityManager, stringToEntityPropertyMapConverter, Collections.singletonList(registrySearchConfiguration));
+        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, Collections.singletonList(registrySearchConfiguration));
     }
 }

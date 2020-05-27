@@ -41,6 +41,7 @@ subprojects {
     constraints {
       implementation "org.apache.poi:poi:$apachePoiVersion"
       implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
+      implementation "org.modelmapper:modelmapper:$modelMapperVersion"
     }
   }
 

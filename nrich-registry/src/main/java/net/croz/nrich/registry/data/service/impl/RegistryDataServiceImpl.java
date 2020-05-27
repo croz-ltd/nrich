@@ -1,8 +1,10 @@
 package net.croz.nrich.registry.data.service.impl;
 
+import lombok.SneakyThrows;
 import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
+import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
@@ -11,6 +13,7 @@ import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import net.croz.nrich.search.util.PageableUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,10 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Transactional(readOnly = true)
 public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final EntityManager entityManager;
+
+    private final ModelMapper modelMapper;
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
@@ -37,18 +41,37 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final Map<String, JpaQueryBuilder<?>> classNameQueryBuilderMap;
 
-    public RegistryDataServiceImpl(final EntityManager entityManager, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList) {
+    public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList) {
         this.entityManager = entityManager;
+        this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.registrySearchConfigurationList = registrySearchConfigurationList;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registrySearchConfigurationList);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <P> Page<P> registryList(final ListRegistryRequest request) {
         return registryListInternal(request);
     }
 
+    @SneakyThrows
+    @Transactional
+    @Override
+    public <T> T registryCreate(final CreateRegistryServiceRequest request) {
+        @SuppressWarnings("unchecked")
+        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) findRegistryConfiguration(request.getClassFullName());
+
+        final T instance = registrySearchConfiguration.getRegistryType().newInstance();
+
+        modelMapper.map(request.getCreateData(), instance);
+
+        entityManager.persist(instance);
+
+        return instance;
+    }
+
+    @Transactional
     @Override
     public boolean registryDelete(final DeleteRegistryRequest request) {
         final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = findRegistryConfiguration(request.getClassFullName());

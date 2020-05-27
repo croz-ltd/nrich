@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
+import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
@@ -15,8 +16,10 @@ import javax.persistence.PersistenceContext;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryServiceRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.testutil.EntityManagerTestUtil.flushEntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -55,6 +58,26 @@ public class RegistryDataServiceImplTest {
 
         // then
         assertThat(result).hasSize(5);
+    }
+
+    @Test
+    void shouldCreateRegistryEntity() {
+        // given
+        final CreateRegistryServiceRequest request= createRegistryServiceRequest(RegistryTestEntity.class.getName());
+
+        // when
+        final RegistryTestEntity registryTestEntity = registryDataService.registryCreate(request);
+
+        // then
+        assertThat(registryTestEntity).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        final RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
+
+        // then
+        assertThat(loaded.getAge()).isEqualTo(50);
+        assertThat(loaded.getName()).isEqualTo("name 1");
     }
 
     @Test
