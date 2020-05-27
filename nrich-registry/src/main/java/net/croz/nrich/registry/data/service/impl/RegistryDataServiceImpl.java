@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
@@ -106,13 +105,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(resolveManagedType(registrySearchConfiguration));
+        final ManagedType<?> managedType = resolveManagedType(registrySearchConfiguration);
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
-            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType());
+            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
         }
 
         final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registrySearchConfiguration.getSearchConfiguration(), pageable.getSort());
