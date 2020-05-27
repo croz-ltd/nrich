@@ -67,11 +67,11 @@ public final class RegistryDataGeneratingUtil {
     }
 
     @SneakyThrows
-    public static CreateRegistryRequest createRegistryRequest(final ObjectMapper objectMapper, final String classFullName) {
+    public static CreateRegistryRequest createRegistryRequest(final ObjectMapper objectMapper, final String classFullName, final String name) {
         final CreateRegistryRequest request = new CreateRegistryRequest();
 
         request.setClassFullName(classFullName);
-        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest("name 1", 50)));
+        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
 
         return request;
     }

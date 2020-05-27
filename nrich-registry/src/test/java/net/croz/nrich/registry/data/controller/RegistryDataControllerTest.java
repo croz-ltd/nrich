@@ -18,6 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
@@ -27,6 +28,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class RegistryDataControllerTest extends BaseWebTest {
@@ -61,9 +63,10 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
     @SneakyThrows
     @Test
-    void shouldCreateInRegistry() {
+    void shouldCreateRegistryEntity() {
         // given
-        final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName());
+        final String entityName = "name for creating";
+        final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), entityName);
 
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
@@ -76,11 +79,25 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
         // then
         assertThat(convertedResponse).isNotNull();
+        assertThat(convertedResponse.getName()).isEqualTo(entityName);
     }
 
     @SneakyThrows
     @Test
-    void shouldDeleteFromRegistry() {
+    void shouldReturnErrorWhenCreateInputDataIsNotValid() {
+        // given
+        final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), null);
+
+        // when
+        final Throwable thrown = catchThrowable(() ->mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
+
+        // then
+        assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldDeleteRegistryEntity() {
         // given
         final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
