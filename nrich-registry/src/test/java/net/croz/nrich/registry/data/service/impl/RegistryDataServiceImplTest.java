@@ -21,7 +21,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
-import static net.croz.nrich.registry.testutil.EntityManagerTestUtil.flushEntityManager;
+import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
