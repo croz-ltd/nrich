@@ -5,11 +5,12 @@ import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -25,11 +26,11 @@ import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityMa
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
-@SpringJUnitConfig(RegistryTestConfiguration.class)
+@SpringJUnitWebConfig(RegistryTestConfiguration.class)
 public class RegistryDataServiceImplTest {
 
     @Autowired
-    private RegistryDataServiceImpl registryDataService;
+    private RegistryDataService registryDataService;
 
     @PersistenceContext
     private EntityManager entityManager;
