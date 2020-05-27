@@ -518,11 +518,25 @@ public class JpaQueryBuilderTest {
         assertThat(results.get(0).getNestedId()).isNotNull();
     }
 
-    private <T, P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration) {
+    @Test
+    void shouldSupportSearchingByEmptyMapMatchingAny() {
+        // given
+        generateListForSearch(entityManager);
+
+        final Map<String, Object> mapSearchRequest = new HashMap<>();
+
+        // when
+        final List<TestEntity> results = executeQuery(mapSearchRequest, SearchConfiguration.emptyConfigurationMatchingAny());
+
+        // then
+        assertThat(results).hasSize(5);
+    }
+
+    private <P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }
 
-    private <T, P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration, final Sort sort) {
+    private <P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration, final Sort sort) {
         return entityManager.createQuery(jpaQueryBuilder.buildQuery(request, searchConfiguration, sort)).getResultList();
     }
 }

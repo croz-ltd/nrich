@@ -89,10 +89,7 @@ public class JpaQueryBuilder<T> {
         final List<Predicate> requestPredicateList = resolveQueryPredicateList(request, searchConfiguration, criteriaBuilder, root, query);
         final List<Predicate> interceptorPredicateList = resolveInterceptorPredicateList(request, searchConfiguration.getAdditionalRestrictionResolverList(), criteriaBuilder, root, query);
 
-        final Predicate requestPredicate = searchConfiguration.isAnyMatch() ? criteriaBuilder.or(requestPredicateList.toArray(new Predicate[0])) : criteriaBuilder.and(requestPredicateList.toArray(new Predicate[0]));
-        final Predicate interceptorPredicate = criteriaBuilder.and(interceptorPredicateList.toArray(new Predicate[0]));
-
-        query.where(requestPredicate, interceptorPredicate);
+        applyPredicatesToQuery(criteriaBuilder, query, searchConfiguration.isAnyMatch(), requestPredicateList, interceptorPredicateList);
 
         if (sort.isSorted()) {
             query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
@@ -273,5 +270,23 @@ public class JpaQueryBuilder<T> {
                 .filter(Objects::nonNull)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    private void applyPredicatesToQuery(final CriteriaBuilder criteriaBuilder, final CriteriaQuery<?> query, final boolean anyMatch, final List<Predicate> requestPredicateList, final List<Predicate> interceptorPredicateList) {
+        final List<Predicate> fullPredicateList = new ArrayList<>();
+
+        if (!CollectionUtils.isEmpty(requestPredicateList)) {
+            final Predicate requestPredicate = anyMatch ? criteriaBuilder.or(requestPredicateList.toArray(new Predicate[0])) : criteriaBuilder.and(requestPredicateList.toArray(new Predicate[0]));
+
+            fullPredicateList.add(requestPredicate);
+        }
+
+        if (!CollectionUtils.isEmpty(interceptorPredicateList)) {
+            final Predicate interceptorPredicate = criteriaBuilder.and(interceptorPredicateList.toArray(new Predicate[0]));
+
+            fullPredicateList.add(interceptorPredicate);
+        }
+
+        query.where(fullPredicateList.toArray(new Predicate[0]));
     }
 }
