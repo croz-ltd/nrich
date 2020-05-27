@@ -4,8 +4,10 @@ import net.croz.nrich.registry.data.model.SearchParameter;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -66,6 +68,16 @@ public final class RegistryDataGeneratingUtil {
 
         request.setClassFullName(classFullName);
         request.setCreateData(new CreateRegistryTestEntityRequest("name 1", 50));
+
+        return request;
+    }
+
+    public static UpdateRegistryServiceRequest updateRegistryServiceRequest(final String classFullName, final Long id) {
+        final UpdateRegistryServiceRequest request = new UpdateRegistryServiceRequest();
+
+        request.setClassFullName(classFullName);
+        request.setId(id);
+        request.setUpdateData(new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
 
         return request;
     }

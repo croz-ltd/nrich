@@ -7,6 +7,7 @@ import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
@@ -55,16 +56,30 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return registryListInternal(request);
     }
 
-    @SneakyThrows
     @Transactional
     @Override
     public <T> T registryCreate(final CreateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
         final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) findRegistryConfiguration(request.getClassFullName());
 
-        final T instance = registrySearchConfiguration.getRegistryType().newInstance();
+        final T instance = instantiate(registrySearchConfiguration.getRegistryType());
 
         modelMapper.map(request.getCreateData(), instance);
+
+        entityManager.persist(instance);
+
+        return instance;
+    }
+
+    @Transactional
+    @Override
+    public <T> T registryUpdate(final UpdateRegistryServiceRequest request) {
+        @SuppressWarnings("unchecked")
+        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) findRegistryConfiguration(request.getClassFullName());
+
+        final T instance = entityManager.find(registrySearchConfiguration.getRegistryType(), request.getId());
+
+        modelMapper.map(request.getUpdateData(), instance);
 
         entityManager.persist(instance);
 
@@ -142,4 +157,8 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
     }
 
+    @SneakyThrows
+    private <T> T instantiate(final Class<T> type) {
+        return type.newInstance();
+    }
 }
