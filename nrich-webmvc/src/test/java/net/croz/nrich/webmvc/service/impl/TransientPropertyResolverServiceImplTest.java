@@ -4,15 +4,13 @@ import net.croz.nrich.webmvc.WebmvcTestConfiguration;
 import net.croz.nrich.webmvc.service.stub.TransientPropertyResolverServiceImplTestRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WebAppConfiguration
-@SpringJUnitConfig(WebmvcTestConfiguration.class)
+@SpringJUnitWebConfig(WebmvcTestConfiguration.class)
 public class TransientPropertyResolverServiceImplTest {
 
     @Autowired

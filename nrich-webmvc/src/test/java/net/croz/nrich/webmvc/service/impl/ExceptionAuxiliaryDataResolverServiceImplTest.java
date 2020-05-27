@@ -4,15 +4,13 @@ import net.croz.nrich.webmvc.WebmvcTestConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WebAppConfiguration
-@SpringJUnitConfig(WebmvcTestConfiguration.class)
+@SpringJUnitWebConfig(WebmvcTestConfiguration.class)
 public class ExceptionAuxiliaryDataResolverServiceImplTest {
 
     @Autowired
