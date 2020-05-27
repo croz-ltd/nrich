@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.data.request.RegistryListRequest;
+import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class RegistryDataServiceImplTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final RegistryListRequest request = createRegistryListRequest(RegistryTestEntity.class.getName(), "name%");
+        final ListRegistryRequest request = createRegistryListRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
         final Page<RegistryTestEntity> result = registryDataService.registryList(request);

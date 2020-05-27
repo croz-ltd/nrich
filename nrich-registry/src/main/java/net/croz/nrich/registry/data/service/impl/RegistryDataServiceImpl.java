@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
-import net.croz.nrich.registry.data.request.RegistryListRequest;
+import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
@@ -42,11 +42,11 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     }
 
     @Override
-    public <P> Page<P> registryList(final RegistryListRequest request) {
+    public <P> Page<P> registryList(final ListRegistryRequest request) {
         return registryListInternal(request);
     }
 
-    private <T, P> Page<P> registryListInternal(final RegistryListRequest request) {
+    private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
         final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) findRegistryConfiguration(request.getClassFullName());
 

@@ -5,15 +5,9 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class RegistryDataRegistryDeleteRequest {
+public class CreateRegistryRequest {
 
     @NotNull
     private String classFullName;
-
-    @NotNull
-    private Long id;
-
-    @NotNull
-    private Long version;
 
 }

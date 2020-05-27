@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.data.testutil;
 
 import net.croz.nrich.registry.data.model.SearchParameter;
-import net.croz.nrich.registry.data.request.RegistryListRequest;
+import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 
 import javax.persistence.EntityManager;
@@ -23,19 +23,19 @@ public final class RegistryDataGeneratingUtil {
         return testEntityList;
     }
 
-    public static RegistryListRequest createRegistryListRequest(final String classFullName, final String query) {
+    public static ListRegistryRequest createRegistryListRequest(final String classFullName, final String query) {
         final SearchParameter searchParameter = new SearchParameter();
 
         searchParameter.setPropertyNameList(Arrays.asList("age", "name"));
         searchParameter.setQuery(query);
 
-        final RegistryListRequest registryListRequest = new RegistryListRequest();
+        final ListRegistryRequest listRegistryRequest = new ListRegistryRequest();
 
-        registryListRequest.setClassFullName(classFullName);
-        registryListRequest.setPageNumber(0);
-        registryListRequest.setPageSize(10);
-        registryListRequest.setSearchParameter(searchParameter);
+        listRegistryRequest.setClassFullName(classFullName);
+        listRegistryRequest.setPageNumber(0);
+        listRegistryRequest.setPageSize(10);
+        listRegistryRequest.setSearchParameter(searchParameter);
 
-        return registryListRequest;
+        return listRegistryRequest;
     }
 }
