@@ -148,7 +148,6 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                 .collect(Collectors.toMap(registrySearchConfiguration -> registrySearchConfiguration.getRegistryType().getName(), registrySearchConfiguration -> new JpaQueryBuilder<>(entityManager, registrySearchConfiguration.getRegistryType())));
     }
 
-
     private ManagedType<?> resolveManagedType(final RegistrySearchConfiguration<?, ?> registrySearchConfiguration) {
         return entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
     }
