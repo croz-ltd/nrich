@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,13 @@ public class RegistryDataController {
 
     private final RegistryDataService registryDataService;
 
-    @PostMapping("registryList")
-    public Page<?> registryList(@RequestBody @Valid final ListRegistryRequest request) {
+    @PostMapping("list")
+    public Page<?> list(@RequestBody @Valid final ListRegistryRequest request) {
         return registryDataService.registryList(request);
+    }
+
+    @PostMapping("delete")
+    public boolean delete(@RequestBody @Valid final DeleteRegistryRequest request) {
+        return registryDataService.registryDelete(request);
     }
 }

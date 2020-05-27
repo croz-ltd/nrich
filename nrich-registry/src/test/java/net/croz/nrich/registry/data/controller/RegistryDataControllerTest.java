@@ -3,6 +3,7 @@ package net.croz.nrich.registry.data.controller;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.test.BaseWebTest;
@@ -18,7 +19,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,14 +37,14 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
     @SneakyThrows
     @Test
-    void shouldResolveRegistryList() {
+    void shouldListRegistry() {
         // given
         executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
 
         final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/registryList").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -52,7 +55,27 @@ public class RegistryDataControllerTest extends BaseWebTest {
         // then
         assertThat(convertedResponse).isNotNull();
         assertThat(convertedResponse.getContent()).hasSize(5);
+    }
 
+    @SneakyThrows
+    @Test
+    void shouldDeleteFromRegistry() {
+        // given
+        final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+
+        final DeleteRegistryRequest request = createDeleteRegistryRequest(RegistryTestEntity.class.getName(), registryTestEntity.getId());
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/delete").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final boolean convertedResponse = objectMapper.readValue(response.getContentAsString(), Boolean.class);
+
+        // then
+        assertThat(convertedResponse).isTrue();
     }
 
     @AfterEach
