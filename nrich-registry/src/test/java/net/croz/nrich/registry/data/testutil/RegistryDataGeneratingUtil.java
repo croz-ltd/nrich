@@ -1,6 +1,9 @@
 package net.croz.nrich.registry.data.testutil;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.model.SearchParameter;
+import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -63,11 +66,21 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
+    @SneakyThrows
+    public static CreateRegistryRequest createRegistryRequest(final ObjectMapper objectMapper, final String classFullName) {
+        final CreateRegistryRequest request = new CreateRegistryRequest();
+
+        request.setClassFullName(classFullName);
+        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest("name 1", 50)));
+
+        return request;
+    }
+
     public static CreateRegistryServiceRequest createRegistryServiceRequest(final String classFullName) {
         final CreateRegistryServiceRequest request = new CreateRegistryServiceRequest();
 
         request.setClassFullName(classFullName);
-        request.setCreateData(new CreateRegistryTestEntityRequest("name 1", 50));
+        request.setEntityData(new CreateRegistryTestEntityRequest("name 1", 50));
 
         return request;
     }
@@ -77,7 +90,7 @@ public final class RegistryDataGeneratingUtil {
 
         request.setClassFullName(classFullName);
         request.setId(id);
-        request.setUpdateData(new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
+        request.setEntityData(new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
 
         return request;
     }

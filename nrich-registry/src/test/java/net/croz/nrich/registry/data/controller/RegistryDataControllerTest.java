@@ -3,6 +3,7 @@ package net.croz.nrich.registry.data.controller;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
@@ -55,6 +57,25 @@ public class RegistryDataControllerTest extends BaseWebTest {
         // then
         assertThat(convertedResponse).isNotNull();
         assertThat(convertedResponse.getContent()).hasSize(5);
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldCreateInRegistry() {
+        // given
+        final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName());
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final RegistryTestEntity convertedResponse = objectMapper.readValue(response.getContentAsString(), RegistryTestEntity.class);
+
+        // then
+        assertThat(convertedResponse).isNotNull();
     }
 
     @SneakyThrows

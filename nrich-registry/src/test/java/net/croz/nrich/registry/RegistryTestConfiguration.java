@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
+import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
@@ -109,7 +111,14 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataController registryDataController(final RegistryDataService registryDataService) {
-        return new RegistryDataController(registryDataService);
+    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper) {
+        final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = new RegistrySearchConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+
+        return new RegistryDataRequestConversionServiceImpl(objectMapper, Collections.singletonList(registrySearchConfiguration));
+    }
+
+    @Bean
+    public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService) {
+        return new RegistryDataController(registryDataService, registryDataRequestConversionService);
     }
 }

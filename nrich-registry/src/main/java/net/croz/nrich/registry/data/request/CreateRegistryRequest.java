@@ -10,4 +10,7 @@ public class CreateRegistryRequest {
     @NotNull
     private String classFullName;
 
+    @NotNull
+    private String entityData;
+
 }

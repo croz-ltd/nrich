@@ -8,6 +8,7 @@ import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.data.util.RegistrySearchConfigurationUtil;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
@@ -19,17 +20,20 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.ManagedType;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 // TODO handling of composite id attributes, better error handling and maybe versioning
+@Validated
 public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final EntityManager entityManager;
@@ -52,19 +56,19 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public <P> Page<P> registryList(final ListRegistryRequest request) {
+    public <P> Page<P> registryList(@Valid final ListRegistryRequest request) {
         return registryListInternal(request);
     }
 
     @Transactional
     @Override
-    public <T> T registryCreate(final CreateRegistryServiceRequest request) {
+    public <T> T registryCreate(@Valid final CreateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) findRegistryConfiguration(request.getClassFullName());
+        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
 
-        final T instance = instantiate(registrySearchConfiguration.getRegistryType());
+        final T instance = resolveEntityInstance(registrySearchConfiguration.getRegistryType(), request.getEntityData());
 
-        modelMapper.map(request.getCreateData(), instance);
+        modelMapper.map(request.getEntityData(), instance);
 
         entityManager.persist(instance);
 
@@ -73,13 +77,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T registryUpdate(final UpdateRegistryServiceRequest request) {
+    public <T> T registryUpdate(@Valid final UpdateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) findRegistryConfiguration(request.getClassFullName());
+        final RegistrySearchConfiguration<T, ?> registrySearchConfiguration = (RegistrySearchConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
 
         final T instance = entityManager.find(registrySearchConfiguration.getRegistryType(), request.getId());
 
-        modelMapper.map(request.getUpdateData(), instance);
+        modelMapper.map(request.getEntityData(), instance);
 
         entityManager.persist(instance);
 
@@ -88,8 +92,8 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public boolean registryDelete(final DeleteRegistryRequest request) {
-        findRegistryConfiguration(request.getClassFullName());
+    public boolean registryDelete(@Valid final DeleteRegistryRequest request) {
+        RegistrySearchConfigurationUtil.verifyConfigurationExists(registrySearchConfigurationList, request.getClassFullName());
 
         final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());
 
@@ -100,7 +104,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) findRegistryConfiguration(request.getClassFullName());
+        final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registrySearchConfigurationList, request.getClassFullName());
 
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
@@ -144,19 +148,17 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                 .collect(Collectors.toMap(registrySearchConfiguration -> registrySearchConfiguration.getRegistryType().getName(), registrySearchConfiguration -> new JpaQueryBuilder<>(entityManager, registrySearchConfiguration.getRegistryType())));
     }
 
-    private RegistrySearchConfiguration<?, ?> findRegistryConfiguration(final String classFullName) {
-        return registrySearchConfigurationList.stream()
-                .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
-    }
 
     private ManagedType<?> resolveManagedType(final RegistrySearchConfiguration<?, ?> registrySearchConfiguration) {
         return entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
     }
 
+    @SuppressWarnings("unchecked")
     @SneakyThrows
-    private <T> T instantiate(final Class<T> type) {
+    private <T> T resolveEntityInstance(final Class<T> type, final Object entityData) {
+        if (type.equals(entityData)) {
+            return (T) entityData;
+        }
         return type.newInstance();
     }
 }
