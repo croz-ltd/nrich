@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// TODO handling of composite id attributes, better error handling and maybe versioning
 public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final EntityManager entityManager;
@@ -89,13 +90,11 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Transactional
     @Override
     public boolean registryDelete(final DeleteRegistryRequest request) {
-        final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = findRegistryConfiguration(request.getClassFullName());
+        findRegistryConfiguration(request.getClassFullName());
 
-        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(resolveManagedType(registrySearchConfiguration));
+        final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());
 
-        final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName(), managedTypeWrapper.idAttributeName());
-
-        final int updateCount = entityManager.createQuery(fullQuery).setParameter(RegistryDataConstants.ID_PARAM, request.getId()).executeUpdate();
+        final int updateCount = entityManager.createQuery(fullQuery).setParameter(RegistryDataConstants.ID_ATTRIBUTE, request.getId()).executeUpdate();
 
         return updateCount > 0;
     }
@@ -109,7 +108,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(resolveManagedType(registrySearchConfiguration));
 
-        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(managedTypeWrapper.idAttributeName(), SortDirection.ASC), request.getSortPropertyList());
+        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
