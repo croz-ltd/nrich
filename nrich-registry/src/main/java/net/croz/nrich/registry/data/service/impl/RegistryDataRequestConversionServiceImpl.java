@@ -21,7 +21,6 @@ public class RegistryDataRequestConversionServiceImpl implements RegistryDataReq
 
     private final List<RegistrySearchConfiguration<?, ?>> registrySearchConfigurationList;
 
-    @SneakyThrows
     @Override
     public CreateRegistryServiceRequest convertToServiceRequest(final CreateRegistryRequest request) {
         final String classFullName = request.getClassFullName();
@@ -34,9 +33,14 @@ public class RegistryDataRequestConversionServiceImpl implements RegistryDataReq
 
         final CreateRegistryServiceRequest serviceRequest = new CreateRegistryServiceRequest();
 
-        serviceRequest.setEntityData(objectMapper.readValue(request.getEntityData(), type));
+        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
         serviceRequest.setClassFullName(classFullName);
 
         return serviceRequest;
+    }
+
+    @SneakyThrows
+    private Object convertStringToInstance(final String entityData, final Class<?> entityType) {
+        return objectMapper.readValue(entityData, entityType);
     }
 }
