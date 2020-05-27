@@ -19,7 +19,6 @@ public class ListRegistryRequest {
     @NotNull
     private Integer pageSize;
 
-    @NotNull
     private SearchParameter searchParameter;
 
     private List<SortProperty> sortPropertyList;

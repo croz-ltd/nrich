@@ -39,4 +39,18 @@ public class RegistryDataServiceImplTest {
         // then
         assertThat(result).hasSize(5);
     }
+
+    @Test
+    void shouldReturnAllElementsOnEmptySearchParameters() {
+        // given
+        createRegistryTestEntityList(entityManager);
+
+        final ListRegistryRequest request = createRegistryListRequest(RegistryTestEntity.class.getName(), null);
+
+        // when
+        final Page<RegistryTestEntity> result = registryDataService.registryList(request);
+
+        // then
+        assertThat(result).hasSize(5);
+    }
 }

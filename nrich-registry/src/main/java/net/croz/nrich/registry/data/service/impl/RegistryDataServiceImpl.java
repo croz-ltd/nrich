@@ -57,7 +57,10 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty("id", SortDirection.ASC), request.getSortPropertyList());
 
-        final Map<String, Object> searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
+        Map<String, Object> searchRequestMap = Collections.emptyMap();
+        if (request.getSearchParameter() != null) {
+            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
+        }
 
         final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registrySearchConfiguration.getSearchConfiguration(), pageable.getSort());
 

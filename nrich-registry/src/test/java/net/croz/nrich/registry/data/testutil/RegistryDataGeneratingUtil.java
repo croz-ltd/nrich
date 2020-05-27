@@ -24,10 +24,12 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static ListRegistryRequest createRegistryListRequest(final String classFullName, final String query) {
-        final SearchParameter searchParameter = new SearchParameter();
-
-        searchParameter.setPropertyNameList(Arrays.asList("age", "name"));
-        searchParameter.setQuery(query);
+        SearchParameter searchParameter = null;
+        if (query != null) {
+            searchParameter = new SearchParameter();
+            searchParameter.setPropertyNameList(Arrays.asList("age", "name"));
+            searchParameter.setQuery(query);
+        }
 
         final ListRegistryRequest listRegistryRequest = new ListRegistryRequest();
 
