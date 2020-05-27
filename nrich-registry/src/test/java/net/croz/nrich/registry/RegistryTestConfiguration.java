@@ -1,5 +1,8 @@
 package net.croz.nrich.registry;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
@@ -12,7 +15,6 @@ import net.croz.nrich.search.model.SearchConfiguration;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -22,6 +24,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -30,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@EnableWebMvc
 @EnableJpaRepositories
 @Configuration(proxyBeanMethods = false)
 public class RegistryTestConfiguration {
@@ -65,16 +69,6 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public StringToTypeConverter<?> defaultStringToTypeConverter() {
-        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"));
-    }
-
-    @Bean
-    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new StringToEntityPropertyMapConverterImpl(stringToTypeConverterList);
-    }
-
-    @Bean
     public ModelMapper modelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
         final Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
@@ -86,9 +80,34 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
+    public ObjectMapper objectMapper() {
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.findAndRegisterModules();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        return objectMapper;
+    }
+
+    @Bean
+    public StringToTypeConverter<?> defaultStringToTypeConverter() {
+        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"));
+    }
+
+    @Bean
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+        return new StringToEntityPropertyMapConverterImpl(stringToTypeConverterList);
+    }
+
+    @Bean
     public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = new RegistrySearchConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
         return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, Collections.singletonList(registrySearchConfiguration));
+    }
+
+    @Bean
+    public RegistryDataController registryDataController(final RegistryDataService registryDataService) {
+        return new RegistryDataController(registryDataService);
     }
 }

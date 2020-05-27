@@ -1,0 +1,70 @@
+package net.croz.nrich.registry.data.controller;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.SneakyThrows;
+import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.test.BaseWebTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
+
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+public class RegistryDataControllerTest extends BaseWebTest {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private PlatformTransactionManager platformTransactionManager;
+
+    @SneakyThrows
+    @Test
+    void shouldResolveRegistryList() {
+        // given
+        executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
+
+        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/registryList").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final PageHolder convertedResponse = objectMapper.readValue(response.getContentAsString(), PageHolder.class);
+
+        // then
+        assertThat(convertedResponse).isNotNull();
+        assertThat(convertedResponse.getContent()).hasSize(5);
+
+    }
+
+    @AfterEach
+    void cleanup() {
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryTestEntity.class.getName()).executeUpdate());
+    }
+
+    @Setter
+    @Getter
+    static class PageHolder {
+
+        private List<RegistryTestEntity> content;
+
+    }
+}
