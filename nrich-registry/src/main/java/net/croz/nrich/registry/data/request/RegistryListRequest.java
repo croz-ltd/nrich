@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class RegistryListRequest  {
+public class RegistryListRequest {
 
     @NotNull
     private String classFullName;

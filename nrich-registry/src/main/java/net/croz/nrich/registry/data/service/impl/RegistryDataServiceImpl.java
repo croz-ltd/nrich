@@ -3,6 +3,8 @@ package net.croz.nrich.registry.data.service.impl;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
 import net.croz.nrich.registry.data.request.RegistryListRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.search.api.model.SortDirection;
+import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import net.croz.nrich.search.util.PageableUtil;
@@ -39,7 +41,12 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registrySearchConfigurationList);
     }
 
-    public <T, P> Page<P> registryList(final RegistryListRequest request) {
+    @Override
+    public <P> Page<P> registryList(final RegistryListRequest request) {
+        return registryListInternal(request);
+    }
+
+    private <T, P> Page<P> registryListInternal(final RegistryListRequest request) {
         @SuppressWarnings("unchecked")
         final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) findRegistryConfiguration(request.getClassFullName());
 
@@ -48,7 +55,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         final ManagedType<?> managedType = entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
 
-        final Pageable pageable = PageableUtil.convertToPageable(request.getStart(), request.getLimit(), request.getSortPropertyList());
+        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty("id", SortDirection.ASC), request.getSortPropertyList());
 
         final Map<String, Object> searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
 

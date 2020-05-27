@@ -10,6 +10,8 @@ import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
 import net.croz.nrich.search.model.SearchConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -25,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
+@EnableJpaRepositories
+@Configuration(proxyBeanMethods = false)
 public class RegistryTestConfiguration {
 
     static {
@@ -46,7 +50,7 @@ public class RegistryTestConfiguration {
         final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactoryBean.setDataSource(dataSource);
-        entityManagerFactoryBean.setPackagesToScan("net.croz.nrich.search");
+        entityManagerFactoryBean.setPackagesToScan("net.croz.nrich.registry");
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
 
         return entityManagerFactoryBean;
