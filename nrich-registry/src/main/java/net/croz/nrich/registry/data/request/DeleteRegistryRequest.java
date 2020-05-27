@@ -13,7 +13,4 @@ public class DeleteRegistryRequest {
     @NotNull
     private Long id;
 
-    @NotNull
-    private Long version;
-
 }

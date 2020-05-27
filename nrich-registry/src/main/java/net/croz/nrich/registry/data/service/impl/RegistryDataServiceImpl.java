@@ -1,6 +1,9 @@
 package net.croz.nrich.registry.data.service.impl;
 
+import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
+import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistrySearchConfiguration;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.search.api.model.SortDirection;
@@ -46,6 +49,19 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return registryListInternal(request);
     }
 
+    @Override
+    public boolean registryDelete(final DeleteRegistryRequest request) {
+        final RegistrySearchConfiguration<?, ?> registrySearchConfiguration = findRegistryConfiguration(request.getClassFullName());
+
+        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(resolveManagedType(registrySearchConfiguration));
+
+        final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName(), managedTypeWrapper.idAttributeName());
+
+        final int updateCount = entityManager.createQuery(fullQuery).setParameter(RegistryDataConstants.ID_PARAM, request.getId()).executeUpdate();
+
+        return updateCount > 0;
+    }
+
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
         final RegistrySearchConfiguration<T, P> registrySearchConfiguration = (RegistrySearchConfiguration<T, P>) findRegistryConfiguration(request.getClassFullName());
@@ -53,13 +69,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedType<?> managedType = entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
+        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(resolveManagedType(registrySearchConfiguration));
 
-        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty("id", SortDirection.ASC), request.getSortPropertyList());
+        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(managedTypeWrapper.idAttributeName(), SortDirection.ASC), request.getSortPropertyList());
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
-            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedType);
+            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType());
         }
 
         final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registrySearchConfiguration.getSearchConfiguration(), pageable.getSort());
@@ -98,4 +114,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
     }
+
+    private ManagedType<?> resolveManagedType(final RegistrySearchConfiguration<?, ?> registrySearchConfiguration) {
+        return entityManager.getMetamodel().managedType(registrySearchConfiguration.getRegistryType());
+    }
+
 }

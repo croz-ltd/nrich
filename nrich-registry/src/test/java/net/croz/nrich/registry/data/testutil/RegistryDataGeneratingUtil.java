@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.testutil;
 
 import net.croz.nrich.registry.data.model.SearchParameter;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 
@@ -15,6 +16,14 @@ public final class RegistryDataGeneratingUtil {
     private RegistryDataGeneratingUtil() {
     }
 
+    public static RegistryTestEntity createRegistryTestEntity(final EntityManager entityManager) {
+        final RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50);
+
+        entityManager.persist(registryTestEntity);
+
+        return registryTestEntity;
+    }
+
     public static List<RegistryTestEntity> createRegistryTestEntityList(final EntityManager entityManager) {
         final List<RegistryTestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntity(null, "name " + value, 50 + value)).collect(Collectors.toList());
 
@@ -23,7 +32,7 @@ public final class RegistryDataGeneratingUtil {
         return testEntityList;
     }
 
-    public static ListRegistryRequest createRegistryListRequest(final String classFullName, final String query) {
+    public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query) {
         SearchParameter searchParameter = null;
         if (query != null) {
             searchParameter = new SearchParameter();
@@ -31,13 +40,22 @@ public final class RegistryDataGeneratingUtil {
             searchParameter.setQuery(query);
         }
 
-        final ListRegistryRequest listRegistryRequest = new ListRegistryRequest();
+        final ListRegistryRequest request = new ListRegistryRequest();
 
-        listRegistryRequest.setClassFullName(classFullName);
-        listRegistryRequest.setPageNumber(0);
-        listRegistryRequest.setPageSize(10);
-        listRegistryRequest.setSearchParameter(searchParameter);
+        request.setClassFullName(classFullName);
+        request.setPageNumber(0);
+        request.setPageSize(10);
+        request.setSearchParameter(searchParameter);
 
-        return listRegistryRequest;
+        return request;
+    }
+
+    public static DeleteRegistryRequest createDeleteRegistryRequest(final String classFullName, final Long id) {
+        final DeleteRegistryRequest request = new DeleteRegistryRequest();
+
+        request.setClassFullName(classFullName);
+        request.setId(id);
+
+        return request;
     }
 }

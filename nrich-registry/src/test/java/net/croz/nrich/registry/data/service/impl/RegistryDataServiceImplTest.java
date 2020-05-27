@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryListRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +34,7 @@ public class RegistryDataServiceImplTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListRegistryRequest request = createRegistryListRequest(RegistryTestEntity.class.getName(), "name%");
+        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
         final Page<RegistryTestEntity> result = registryDataService.registryList(request);
@@ -45,12 +48,26 @@ public class RegistryDataServiceImplTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListRegistryRequest request = createRegistryListRequest(RegistryTestEntity.class.getName(), null);
+        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), null);
 
         // when
         final Page<RegistryTestEntity> result = registryDataService.registryList(request);
 
         // then
         assertThat(result).hasSize(5);
+    }
+
+    @Test
+    void shouldDeleteRegistryEntity() {
+        // given
+        final RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+
+        final DeleteRegistryRequest request = createDeleteRegistryRequest(RegistryTestEntity.class.getName(), registryTestEntity.getId());
+
+        // when
+        final boolean result = registryDataService.registryDelete(request);
+
+        // then
+        assertThat(result).isTrue();
     }
 }
