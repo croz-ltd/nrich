@@ -89,7 +89,7 @@ public class RegistryDataControllerTest extends BaseWebTest {
         final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), null);
 
         // when
-        final Throwable thrown = catchThrowable(() ->mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
+        final Throwable thrown = catchThrowable(() -> mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
 
         // then
         assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);
