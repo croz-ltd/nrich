@@ -3,6 +3,7 @@ package net.croz.nrich.registry.data.service.impl;
 import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
+import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -49,6 +50,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.registryDataConfigurationList = registryDataConfigurationList;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationList);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public <P> Map<String, Page<P>> bulkList(final BulkListRegistryRequest request) {
+        return request.getRegistryRequestList().stream()
+                .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
     }
 
     @Transactional(readOnly = true)

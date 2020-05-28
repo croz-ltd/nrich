@@ -3,6 +3,7 @@ package net.croz.nrich.registry.data.testutil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.model.SearchParameter;
+import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -15,6 +16,7 @@ import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -38,6 +40,14 @@ public final class RegistryDataGeneratingUtil {
         testEntityList.forEach(entityManager::persist);
 
         return testEntityList;
+    }
+
+    public static BulkListRegistryRequest createBulkListRegistryRequest(final String classFullName, final String query) {
+        final BulkListRegistryRequest bulkListRegistryRequest = new BulkListRegistryRequest();
+
+        bulkListRegistryRequest.setRegistryRequestList(Collections.singletonList(createListRegistryRequest(classFullName, query)));
+
+        return bulkListRegistryRequest;
     }
 
     public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query) {

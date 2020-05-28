@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
+import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -16,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.util.Map;
+
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryServiceRequest;
@@ -36,7 +40,22 @@ public class RegistryDataServiceImplTest {
     private EntityManager entityManager;
 
     @Test
-    void shouldSearchRegistry() {
+    void shouldBulkListRegistry() {
+        // given
+        createRegistryTestEntityList(entityManager);
+
+        final BulkListRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+
+        // when
+        final Map<String, Page<RegistryTestEntity>> result = registryDataService.bulkList(request);
+
+        // then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(RegistryTestEntity.class.getName())).hasSize(5);
+    }
+
+    @Test
+    void shouldListRegistry() {
         // given
         createRegistryTestEntityList(entityManager);
 
