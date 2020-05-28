@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
+import net.croz.nrich.registry.data.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
@@ -105,17 +106,20 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public RegistryDataConfigurationHolder registryDataConfigurationHolder() {
         final RegistryDataConfiguration<?, ?> registryDataConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
-        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, Collections.singletonList(registryDataConfiguration));
+        return new RegistryDataConfigurationHolder(Collections.singletonList(registryDataConfiguration));
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper) {
-        final RegistryDataConfiguration<?, ?> registryDataConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryDataConfigurationHolder);
+    }
 
-        return new RegistryDataRequestConversionServiceImpl(objectMapper, Collections.singletonList(registryDataConfiguration));
+    @Bean
+    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        return new RegistryDataRequestConversionServiceImpl(objectMapper, registryDataConfigurationHolder);
     }
 
     @Bean
