@@ -20,20 +20,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.ManagedType;
-import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 // TODO handling of composite id attributes, better error handling and maybe versioning
-@Validated
 public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final EntityManager entityManager;
@@ -56,13 +53,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public <P> Page<P> registryList(@Valid final ListRegistryRequest request) {
+    public <P> Page<P> registryList(final ListRegistryRequest request) {
         return registryListInternal(request);
     }
 
     @Transactional
     @Override
-    public <T> T registryCreate(@Valid final CreateRegistryServiceRequest request) {
+    public <T> T registryCreate(final CreateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
@@ -77,7 +74,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T registryUpdate(@Valid final UpdateRegistryServiceRequest request) {
+    public <T> T registryUpdate(final UpdateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
@@ -92,7 +89,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public boolean registryDelete(@Valid final DeleteRegistryRequest request) {
+    public boolean registryDelete(final DeleteRegistryRequest request) {
         RegistrySearchConfigurationUtil.verifyConfigurationExists(registryDataConfigurationList, request.getClassFullName());
 
         final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());

@@ -91,10 +91,10 @@ public class RegistryDataControllerTest extends BaseWebTest {
         final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), null);
 
         // when
-        final Throwable thrown = catchThrowable(() -> mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
-        assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @SneakyThrows
@@ -127,10 +127,10 @@ public class RegistryDataControllerTest extends BaseWebTest {
         final UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), null);
 
         // when
-        final Throwable thrown = catchThrowable(() -> mockMvc.perform(post("/nrichRegistryData/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
-        assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @SneakyThrows

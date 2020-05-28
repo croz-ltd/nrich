@@ -27,7 +27,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.persistence.EntityManager;
@@ -95,11 +95,6 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public MethodValidationPostProcessor methodValidationPostProcessor() {
-        return new MethodValidationPostProcessor();
-    }
-
-    @Bean
     public StringToTypeConverter<?> defaultStringToTypeConverter() {
         return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"));
     }
@@ -124,7 +119,7 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService) {
-        return new RegistryDataController(registryDataService, registryDataRequestConversionService);
+    public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService, final Validator validator) {
+        return new RegistryDataController(registryDataService, registryDataRequestConversionService, validator);
     }
 }

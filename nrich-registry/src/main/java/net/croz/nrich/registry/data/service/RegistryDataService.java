@@ -6,16 +6,14 @@ import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import org.springframework.data.domain.Page;
 
-import javax.validation.Valid;
-
 public interface RegistryDataService {
 
-    <P> Page<P> registryList(@Valid ListRegistryRequest request);
+    <P> Page<P> registryList(ListRegistryRequest request);
 
-    <T> T registryCreate(@Valid CreateRegistryServiceRequest request);
+    <T> T registryCreate(CreateRegistryServiceRequest request);
 
-    <T> T registryUpdate(@Valid UpdateRegistryServiceRequest request);
+    <T> T registryUpdate(UpdateRegistryServiceRequest request);
 
-    boolean registryDelete(@Valid DeleteRegistryRequest request);
+    boolean registryDelete(DeleteRegistryRequest request);
 
 }

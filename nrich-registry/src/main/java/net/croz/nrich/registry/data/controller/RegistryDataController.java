@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -10,6 +11,10 @@ import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +31,8 @@ public class RegistryDataController {
 
     private final RegistryDataRequestConversionService registryDataRequestConversionService;
 
+    private final Validator validator;
+
     @PostMapping("list")
     public <T> Page<T> list(@RequestBody @Valid final ListRegistryRequest request) {
         return registryDataService.registryList(request);
@@ -40,6 +47,8 @@ public class RegistryDataController {
     public <T> T create(@RequestBody @Valid final CreateRegistryRequest request) {
         final CreateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
 
+        validateServiceRequest(serviceRequest);
+
         return registryDataService.registryCreate(serviceRequest);
     }
 
@@ -47,6 +56,19 @@ public class RegistryDataController {
     public <T> T update(@RequestBody @Valid final UpdateRegistryRequest request) {
         final UpdateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
 
+        validateServiceRequest(serviceRequest);
+
         return registryDataService.registryUpdate(serviceRequest);
+    }
+
+    @SneakyThrows
+    private void validateServiceRequest(final Object serviceRequest) {
+        final BindingResult errors = new BeanPropertyBindingResult(serviceRequest, "serviceRequest");
+
+        validator.validate(serviceRequest, errors);
+
+        if (errors.hasErrors()) {
+            throw new BindException(errors);
+        }
     }
 }
