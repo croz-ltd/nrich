@@ -7,6 +7,7 @@ import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
@@ -94,4 +95,16 @@ public final class RegistryDataGeneratingUtil {
 
         return request;
     }
+
+    @SneakyThrows
+    public static UpdateRegistryRequest updateRegistryRequest(final ObjectMapper objectMapper, final String classFullName, final Long id, final String name) {
+        final UpdateRegistryRequest request = new UpdateRegistryRequest();
+
+        request.setClassFullName(classFullName);
+        request.setId(id);
+        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+
+        return request;
+    }
+
 }

@@ -8,6 +8,8 @@ public final class RegistryDataConstants {
 
     public static final String CREATE_REQUEST_SUFFIX = "%sCreateRequest";
 
+    public static final String UPDATE_REQUEST_SUFFIX = "%sUpdateRequest";
+
     public static final String REQUEST_SUFFIX = "%sRequest";
 
     private RegistryDataConstants() {

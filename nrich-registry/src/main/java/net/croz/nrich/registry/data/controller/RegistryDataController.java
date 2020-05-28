@@ -5,6 +5,8 @@ import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import org.springframework.data.domain.Page;
@@ -39,5 +41,12 @@ public class RegistryDataController {
         final CreateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
 
         return registryDataService.registryCreate(serviceRequest);
+    }
+
+    @PostMapping("update")
+    public <T> T update(@RequestBody @Valid final UpdateRegistryRequest request) {
+        final UpdateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
+
+        return registryDataService.registryUpdate(serviceRequest);
     }
 }

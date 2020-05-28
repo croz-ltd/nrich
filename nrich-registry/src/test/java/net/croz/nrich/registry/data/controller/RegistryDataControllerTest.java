@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.test.BaseWebTest;
 import org.junit.jupiter.api.AfterEach;
@@ -26,6 +27,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryRequest;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -90,6 +92,42 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
         // when
         final Throwable thrown = catchThrowable(() -> mockMvc.perform(post("/nrichRegistryData/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
+
+        // then
+        assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldUpdateRegistryEntity() {
+        // given
+        final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+        final String entityName = "name for creating update";
+        final UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), entityName);
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrichRegistryData/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final RegistryTestEntity convertedResponse = objectMapper.readValue(response.getContentAsString(), RegistryTestEntity.class);
+
+        // then
+        assertThat(convertedResponse).isNotNull();
+        assertThat(convertedResponse.getName()).isEqualTo(entityName);
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldReturnErrorWhenUpdatingWithInvalidData() {
+        // given
+        final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+        final UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), null);
+
+        // when
+        final Throwable thrown = catchThrowable(() -> mockMvc.perform(post("/nrichRegistryData/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse());
 
         // then
         assertThat(thrown.getCause()).isInstanceOf(ConstraintViolationException.class);

@@ -7,6 +7,8 @@ import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 import net.croz.nrich.registry.data.util.RegistrySearchConfigurationUtil;
@@ -23,20 +25,35 @@ public class RegistryDataRequestConversionServiceImpl implements RegistryDataReq
 
     @Override
     public CreateRegistryServiceRequest convertToServiceRequest(final CreateRegistryRequest request) {
-        final String classFullName = request.getClassFullName();
-
-        RegistrySearchConfigurationUtil.verifyConfigurationExists(registryDataConfigurationList, classFullName);
-
-        final List<String> classNameList = Arrays.asList(String.format(RegistryDataConstants.CREATE_REQUEST_SUFFIX, classFullName), String.format(RegistryDataConstants.REQUEST_SUFFIX, classFullName), classFullName);
-
-        final Class<?> type = ClassLoadingUtil.loadClassFromList(classNameList);
+        final Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.CREATE_REQUEST_SUFFIX);
 
         final CreateRegistryServiceRequest serviceRequest = new CreateRegistryServiceRequest();
 
+        serviceRequest.setClassFullName(request.getClassFullName());
         serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
-        serviceRequest.setClassFullName(classFullName);
 
         return serviceRequest;
+    }
+
+    @Override
+    public UpdateRegistryServiceRequest convertToServiceRequest(final UpdateRegistryRequest request) {
+        final Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.UPDATE_REQUEST_SUFFIX);
+
+        final UpdateRegistryServiceRequest serviceRequest = new UpdateRegistryServiceRequest();
+
+        serviceRequest.setId(request.getId());
+        serviceRequest.setClassFullName(request.getClassFullName());
+        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
+
+        return serviceRequest;
+    }
+
+    private Class<?> resolveClassWithConfigurationVerification(final String classFullName, final String classLoadingInitialPrefix) {
+        RegistrySearchConfigurationUtil.verifyConfigurationExists(registryDataConfigurationList, classFullName);
+
+        final List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_SUFFIX, classFullName), classFullName);
+
+        return ClassLoadingUtil.loadClassFromList(classNameList);
     }
 
     @SneakyThrows
