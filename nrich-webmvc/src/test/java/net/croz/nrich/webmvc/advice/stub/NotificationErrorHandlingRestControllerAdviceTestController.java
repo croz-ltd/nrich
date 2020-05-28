@@ -1,5 +1,6 @@
 package net.croz.nrich.webmvc.advice.stub;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.BindException;
@@ -15,9 +16,12 @@ import java.util.concurrent.ExecutionException;
 
 import static org.mockito.Mockito.mock;
 
-@RequestMapping("NotificationErrorHandlingRestControllerAdviceTest")
+@RequiredArgsConstructor
+@RequestMapping("notificationErrorHandlingRestControllerAdviceTest")
 @RestController
 public class NotificationErrorHandlingRestControllerAdviceTestController {
+
+    private final NotificationErrorHandlingRestControllerAdviceTestService notificationErrorHandlingRestControllerAdviceTestService;
 
     @PostMapping("exceptionResolving")
     public void exceptionResolving() {
@@ -67,4 +71,8 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
         throw new ExecutionException(exception);
     }
 
+    @PostMapping("constraintViolationExceptionResolving")
+    public void constraintViolationExceptionResolving() {
+        notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
+    }
 }

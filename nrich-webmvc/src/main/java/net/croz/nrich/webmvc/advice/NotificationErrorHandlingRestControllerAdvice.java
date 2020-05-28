@@ -5,19 +5,24 @@ import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.service.LoggingService;
 import net.croz.nrich.notification.model.Notification;
 import net.croz.nrich.notification.service.NotificationResolverService;
+import net.croz.nrich.webmvc.service.ConstraintConversionService;
 import net.croz.nrich.webmvc.service.ExceptionAuxiliaryDataResolverService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // TODO enable resolving of http status for each exception
@@ -37,11 +42,27 @@ public class NotificationErrorHandlingRestControllerAdvice {
 
     private final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService;
 
+    private final ConstraintConversionService constraintConversionService;
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Notification>> handleValidationException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
+    public ResponseEntity<Map<String, Notification>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception.getBindingResult(), exception.getParameter().getParameterType());
+
+        return notificationResponse(notification, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Notification>> handleConstraintViolationException(final ConstraintViolationException exception, final HttpServletRequest request) {
+        logExceptionWithResolvedAuxiliaryData(exception, request);
+
+        final Object target = constraintConversionService.resolveTarget(exception.getConstraintViolations());
+        final Errors errors = constraintConversionService.convertConstraintViolationsToErrors(exception.getConstraintViolations(), target, "");
+
+        final Class<?> targetClass = Optional.ofNullable(target).map(Object::getClass).orElse(null);
+
+        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(errors, targetClass);
 
         return notificationResponse(notification, HttpStatus.BAD_REQUEST);
     }
@@ -51,6 +72,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         final Class<?> targetClass = Optional.ofNullable(exception.getTarget()).map(Object::getClass).orElse(null);
+
         final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception.getBindingResult(), targetClass);
 
         return notificationResponse(notification, HttpStatus.BAD_REQUEST);
@@ -61,7 +83,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
         final Exception unwrappedException = unwrapException(exception);
 
         if (unwrappedException instanceof MethodArgumentNotValidException) {
-            return handleValidationException((MethodArgumentNotValidException) unwrappedException, request);
+            return handleMethodArgumentNotValidException((MethodArgumentNotValidException) unwrappedException, request);
         }
         else if (unwrappedException instanceof BindException) {
             return handleBindException((BindException) unwrappedException, request);
@@ -107,6 +129,5 @@ public class NotificationErrorHandlingRestControllerAdvice {
         final Map<String, ?> exceptionAuxiliaryData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
-
     }
 }

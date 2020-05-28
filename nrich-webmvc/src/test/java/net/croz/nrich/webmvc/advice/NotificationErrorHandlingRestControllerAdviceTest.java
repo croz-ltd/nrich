@@ -23,7 +23,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldResolveExceptionNotification() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
@@ -50,7 +50,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldResolveExceptionWithArgumentsNotification() {
         // when
-        final String responseString = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
+        final String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
 
         // then
         assertThat(responseString).isNotNull();
@@ -73,7 +73,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldResolveValidationNotification() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
@@ -100,7 +100,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldResolveValidationBindFailedNotification() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
@@ -127,7 +127,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldUnwrapException() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
@@ -152,7 +152,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldUnwrapValidationException() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
@@ -164,11 +164,39 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
     @Test
     void shouldUnwrapBindException() {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/NotificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(responseString).isNotEmpty();
     }
+
+    @SneakyThrows
+    @Test
+    void shouldResolveConstraintExceptionNotification() {
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        final String responseString = response.getContentAsString();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(responseString).isNotEmpty();
+
+        // and when
+        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() { });
+
+        // then
+        assertThat(convertedResponse).isNotNull();
+        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+
+        // and when
+        final ValidationFailureNotification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+
+        // then
+        assertThat(notification.getContent()).isEqualTo("Found validation errors:");
+        assertThat(notification.getMessageList()).contains("Name really cannot be null");
+        assertThat(notification.getValidationErrorList()).isNotEmpty();
+    }
+
 }
