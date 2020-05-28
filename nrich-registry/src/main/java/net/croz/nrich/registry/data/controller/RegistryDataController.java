@@ -35,12 +35,12 @@ public class RegistryDataController {
 
     @PostMapping("list")
     public <T> Page<T> list(@RequestBody @Valid final ListRegistryRequest request) {
-        return registryDataService.registryList(request);
+        return registryDataService.list(request);
     }
 
     @PostMapping("delete")
     public boolean delete(@RequestBody @Valid final DeleteRegistryRequest request) {
-        return registryDataService.registryDelete(request);
+        return registryDataService.delete(request);
     }
 
     @PostMapping("create")
@@ -49,7 +49,7 @@ public class RegistryDataController {
 
         validateServiceRequest(serviceRequest);
 
-        return registryDataService.registryCreate(serviceRequest);
+        return registryDataService.create(serviceRequest);
     }
 
     @PostMapping("update")
@@ -58,7 +58,7 @@ public class RegistryDataController {
 
         validateServiceRequest(serviceRequest);
 
-        return registryDataService.registryUpdate(serviceRequest);
+        return registryDataService.update(serviceRequest);
     }
 
     @SneakyThrows

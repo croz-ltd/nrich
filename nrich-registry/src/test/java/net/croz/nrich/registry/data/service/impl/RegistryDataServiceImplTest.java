@@ -43,7 +43,7 @@ public class RegistryDataServiceImplTest {
         final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.registryList(request);
+        final Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(5);
@@ -57,7 +57,7 @@ public class RegistryDataServiceImplTest {
         final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), null);
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.registryList(request);
+        final Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(5);
@@ -69,7 +69,7 @@ public class RegistryDataServiceImplTest {
         final CreateRegistryServiceRequest request = createRegistryServiceRequest(RegistryTestEntity.class.getName());
 
         // when
-        final RegistryTestEntity registryTestEntity = registryDataService.registryCreate(request);
+        final RegistryTestEntity registryTestEntity = registryDataService.create(request);
 
         // then
         assertThat(registryTestEntity).isNotNull();
@@ -91,7 +91,7 @@ public class RegistryDataServiceImplTest {
         final UpdateRegistryServiceRequest request = updateRegistryServiceRequest(RegistryTestEntity.class.getName(), registryTestEntity.getId());
 
         // when
-        final RegistryTestEntity updatedEntity = registryDataService.registryUpdate(request);
+        final RegistryTestEntity updatedEntity = registryDataService.update(request);
 
         // then
         assertThat(updatedEntity).isNotNull();
@@ -113,7 +113,7 @@ public class RegistryDataServiceImplTest {
         final DeleteRegistryRequest request = createDeleteRegistryRequest(RegistryTestEntity.class.getName(), registryTestEntity.getId());
 
         // when
-        final boolean result = registryDataService.registryDelete(request);
+        final boolean result = registryDataService.delete(request);
 
         // then
         assertThat(result).isTrue();

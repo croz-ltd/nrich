@@ -53,13 +53,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public <P> Page<P> registryList(final ListRegistryRequest request) {
+    public <P> Page<P> list(final ListRegistryRequest request) {
         return registryListInternal(request);
     }
 
     @Transactional
     @Override
-    public <T> T registryCreate(final CreateRegistryServiceRequest request) {
+    public <T> T create(final CreateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
@@ -74,7 +74,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T registryUpdate(final UpdateRegistryServiceRequest request) {
+    public <T> T update(final UpdateRegistryServiceRequest request) {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) RegistrySearchConfigurationUtil.findRegistryConfigurationForClass(registryDataConfigurationList, request.getClassFullName());
 
@@ -89,7 +89,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public boolean registryDelete(final DeleteRegistryRequest request) {
+    public boolean delete(final DeleteRegistryRequest request) {
         RegistrySearchConfigurationUtil.verifyConfigurationExists(registryDataConfigurationList, request.getClassFullName());
 
         final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());

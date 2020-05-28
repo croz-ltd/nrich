@@ -8,12 +8,12 @@ import org.springframework.data.domain.Page;
 
 public interface RegistryDataService {
 
-    <P> Page<P> registryList(ListRegistryRequest request);
+    <P> Page<P> list(ListRegistryRequest request);
 
-    <T> T registryCreate(CreateRegistryServiceRequest request);
+    <T> T create(CreateRegistryServiceRequest request);
 
-    <T> T registryUpdate(UpdateRegistryServiceRequest request);
+    <T> T update(UpdateRegistryServiceRequest request);
 
-    boolean registryDelete(DeleteRegistryRequest request);
+    boolean delete(DeleteRegistryRequest request);
 
 }
