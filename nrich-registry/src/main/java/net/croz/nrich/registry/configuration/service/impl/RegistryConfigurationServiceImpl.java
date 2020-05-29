@@ -5,6 +5,7 @@ import net.croz.nrich.registry.configuration.constants.RegistryConfigurationCons
 import net.croz.nrich.registry.configuration.model.ColumnPropertyDisplayConfiguration;
 import net.croz.nrich.registry.configuration.model.FormPropertyDisplayConfiguration;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
+import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryProperty;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
@@ -30,6 +31,11 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
     private final MessageSource messageSource;
 
     private final List<String> readOnlyPropertyList;
+
+    @Override
+    public List<RegistryGroupConfiguration> readRegistryGroupConfigurationList() {
+        return null;
+    }
 
     private List<RegistryProperty> resolveRegistryFieldListForType(final ManagedType<?> managedType) {
         final Class<?> entityType = managedType.getJavaType();
