@@ -5,10 +5,12 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FormFieldDisplayConfiguration {
+public class FormPropertyDisplayConfiguration {
 
     private final String label;
 
     private final boolean editable;
+
+    private final String componentType;
 
 }

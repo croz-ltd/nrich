@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ColumnFieldDisplayConfiguration {
+public class ColumnPropertyDisplayConfiguration {
 
     private final String header;
 

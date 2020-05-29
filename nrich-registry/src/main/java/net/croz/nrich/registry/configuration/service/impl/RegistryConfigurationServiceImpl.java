@@ -2,10 +2,10 @@ package net.croz.nrich.registry.configuration.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
-import net.croz.nrich.registry.configuration.model.ColumnFieldDisplayConfiguration;
-import net.croz.nrich.registry.configuration.model.FormFieldDisplayConfiguration;
+import net.croz.nrich.registry.configuration.model.ColumnPropertyDisplayConfiguration;
+import net.croz.nrich.registry.configuration.model.FormPropertyDisplayConfiguration;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
-import net.croz.nrich.registry.configuration.model.RegistryField;
+import net.croz.nrich.registry.configuration.model.RegistryProperty;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import org.springframework.context.MessageSource;
@@ -31,15 +31,13 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     private final List<String> readOnlyPropertyList;
 
-    private final List<String> propertiesIgnoredList;
-
-    private List<RegistryField> resolveConfigurationForType(final ManagedType<?> managedType) {
+    private List<RegistryProperty> resolveRegistryFieldListForType(final ManagedType<?> managedType) {
         final Class<?> entityType = managedType.getJavaType();
 
-        final List<RegistryField> registryFieldList = new ArrayList<>();
+        final List<RegistryProperty> registryPropertyList = new ArrayList<>();
 
         managedType.getAttributes().forEach(attribute -> {
-            if (shouldSkipAttribute(propertiesIgnoredList, Collections.emptyList(), attribute)) {
+            if (shouldSkipAttribute(Collections.emptyList(), attribute)) {
                 return;
             }
 
@@ -56,30 +54,30 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final String formLabel = formLabel(entityType, attributeType, attributeName);
             final String columnHeader = columnHeader(entityType, attributeType, attributeName);
 
-            final FormFieldDisplayConfiguration formFieldDisplayConfiguration = FormFieldDisplayConfiguration.builder()
+            final FormPropertyDisplayConfiguration formPropertyDisplayConfiguration = FormPropertyDisplayConfiguration.builder()
                     .editable(!isReadOnly)
                     .label(formLabel)
                     .build();
 
-            final ColumnFieldDisplayConfiguration columnFieldDisplayConfiguration = ColumnFieldDisplayConfiguration.builder()
+            final ColumnPropertyDisplayConfiguration columnPropertyDisplayConfiguration = ColumnPropertyDisplayConfiguration.builder()
                     .header(columnHeader)
                     .build();
 
-            final RegistryField registryField = RegistryField.builder()
+            final RegistryProperty registryProperty = RegistryProperty.builder()
                     .name(attributeName)
                     .originalType(attributeType.getName())
                     .javascriptType(javascriptType)
                     .isDecimal(isDecimal)
                     .isOneToOne(isOneToOne)
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
-                    .formFieldDisplayConfiguration(formFieldDisplayConfiguration)
-                    .columnFieldDisplayConfiguration(columnFieldDisplayConfiguration)
+                    .formPropertyDisplayConfiguration(formPropertyDisplayConfiguration)
+                    .columnPropertyDisplayConfiguration(columnPropertyDisplayConfiguration)
                     .build();
 
-            registryFieldList.add(registryField);
+            registryPropertyList.add(registryProperty);
         });
 
-        return registryFieldList;
+        return registryPropertyList;
     }
 
     private Class<?> resolveOneToOneClass(final Attribute<?, ?> attribute) {
@@ -111,7 +109,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         );
     }
 
-    private boolean shouldSkipAttribute(final List<String> defaultIgnoredPropertyList, final List<String> entityIgnoredPropertyList, final Attribute<?, ?> attribute) {
-        return attribute.isCollection() || defaultIgnoredPropertyList.contains(attribute.getName()) || entityIgnoredPropertyList.contains(attribute.getName());
+    private boolean shouldSkipAttribute(final List<String> entityIgnoredPropertyList, final Attribute<?, ?> attribute) {
+        return attribute.isCollection() || entityIgnoredPropertyList.contains(attribute.getName());
     }
 }

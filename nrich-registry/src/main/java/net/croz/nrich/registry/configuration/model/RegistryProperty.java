@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class RegistryField {
+public class RegistryProperty {
 
     private final String name;
 
@@ -19,8 +19,8 @@ public class RegistryField {
 
     private final String oneToOneReferencedClass;
 
-    private final FormFieldDisplayConfiguration formFieldDisplayConfiguration;
+    private final FormPropertyDisplayConfiguration formPropertyDisplayConfiguration;
 
-    private final ColumnFieldDisplayConfiguration columnFieldDisplayConfiguration;
+    private final ColumnPropertyDisplayConfiguration columnPropertyDisplayConfiguration;
 
 }
