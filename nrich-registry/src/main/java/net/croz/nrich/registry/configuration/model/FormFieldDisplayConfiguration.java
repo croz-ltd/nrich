@@ -11,6 +11,4 @@ public class FormFieldDisplayConfiguration {
 
     private final boolean editable;
 
-    private final int width;
-
 }

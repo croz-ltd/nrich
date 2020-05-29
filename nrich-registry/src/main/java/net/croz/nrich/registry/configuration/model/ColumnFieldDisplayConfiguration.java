@@ -13,8 +13,4 @@ public class ColumnFieldDisplayConfiguration {
 
     private final boolean sortable;
 
-    private final int width;
-
-    private final int widthPercentage;
-
 }
