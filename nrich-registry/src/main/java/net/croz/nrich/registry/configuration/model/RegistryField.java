@@ -9,7 +9,7 @@ public class RegistryField {
 
     private final String name;
 
-    private final String javascriptType;
+    private final JavascriptType javascriptType;
 
     private final String originalType;
 

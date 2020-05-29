@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.model.ColumnFieldDisplayConfiguration;
 import net.croz.nrich.registry.configuration.model.FormFieldDisplayConfiguration;
+import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryField;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -36,6 +38,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         managedType.getAttributes().forEach(attribute -> {
             final String attributeName = attribute.getName();
             final Class<?> attributeType = attribute.getJavaType();
+            final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
 
             final boolean isOneToOne = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType());
             final Class<?> oneToOneReferencedClass = isOneToOne ? resolveOneToOneClass(attribute) : null;
@@ -54,10 +57,10 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                     .header(columnHeader)
                     .build();
 
-
             final RegistryField registryField = RegistryField.builder()
                     .name(attributeName)
                     .originalType(attributeType.getName())
+                    .javascriptType(javascriptType)
                     .isOneToOne(isOneToOne)
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
                     .formFieldDisplayConfiguration(formFieldDisplayConfiguration)
