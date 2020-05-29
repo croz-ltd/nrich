@@ -2,6 +2,7 @@ package net.croz.nrich.registry.configuration.util;
 
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 
+import java.math.BigDecimal;
 import java.time.temporal.Temporal;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,5 +32,9 @@ public final class JavaToJavascriptTypeConversionUtil {
                 .findFirst()
                 .map(Map.Entry::getValue)
                 .orElse(JavascriptType.OBJECT);
+    }
+
+    public static boolean isDecimal(final Class<?> type) {
+        return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
     }
 }

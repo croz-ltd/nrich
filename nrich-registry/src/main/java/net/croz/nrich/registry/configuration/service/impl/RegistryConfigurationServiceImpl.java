@@ -39,6 +39,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final String attributeName = attribute.getName();
             final Class<?> attributeType = attribute.getJavaType();
             final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
+            final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
             final boolean isOneToOne = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType());
             final Class<?> oneToOneReferencedClass = isOneToOne ? resolveOneToOneClass(attribute) : null;
@@ -61,6 +62,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                     .name(attributeName)
                     .originalType(attributeType.getName())
                     .javascriptType(javascriptType)
+                    .isDecimal(isDecimal)
                     .isOneToOne(isOneToOne)
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
                     .formFieldDisplayConfiguration(formFieldDisplayConfiguration)

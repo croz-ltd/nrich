@@ -13,6 +13,8 @@ public class RegistryField {
 
     private final String originalType;
 
+    private final boolean isDecimal;
+
     private final boolean isOneToOne;
 
     private final String oneToOneReferencedClass;
