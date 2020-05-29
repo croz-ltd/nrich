@@ -18,6 +18,7 @@ import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,12 +31,18 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     private final List<String> readOnlyPropertyList;
 
+    private final List<String> propertiesIgnoredList;
+
     private List<RegistryField> resolveConfigurationForType(final ManagedType<?> managedType) {
         final Class<?> entityType = managedType.getJavaType();
 
         final List<RegistryField> registryFieldList = new ArrayList<>();
 
         managedType.getAttributes().forEach(attribute -> {
+            if (shouldSkipAttribute(propertiesIgnoredList, Collections.emptyList(), attribute)) {
+                return;
+            }
+
             final String attributeName = attribute.getName();
             final Class<?> attributeType = attribute.getJavaType();
             final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
@@ -104,4 +111,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         );
     }
 
+    private boolean shouldSkipAttribute(final List<String> defaultIgnoredPropertyList, final List<String> entityIgnoredPropertyList, final Attribute<?, ?> attribute) {
+        return attribute.isCollection() || defaultIgnoredPropertyList.contains(attribute.getName()) || entityIgnoredPropertyList.contains(attribute.getName());
+    }
 }
