@@ -3,8 +3,8 @@ package net.croz.nrich.registry.configuration.model;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@Builder
 public class RegistryProperty {
 
     private final String name;

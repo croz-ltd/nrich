@@ -7,12 +7,12 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RegistryGroupConfiguration {
+public class RegistryGroupDefinition {
 
     private final String registryGroupId;
 
-    private final String registryGroupIdDisplay;
+    private final List<String> includeEntityPatternList;
 
-    private final List<RegistryConfiguration> registryConfigurationList;
+    private final List<String> excludeEntityPatternList;
 
 }
