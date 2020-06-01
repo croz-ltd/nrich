@@ -79,18 +79,17 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(managedType);
 
         final String registryDisplayName = registryDisplayLabel(entityType);
-        final boolean isAudited = isAudited(entityType);
+        final boolean isHistoryAvailable = Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isHistoryAvailable).orElse(isAudited(entityType));
         final List<RegistryProperty> registryPropertyList = resolveRegistryPropertyListForType(managedType, registryOverrideConfiguration);
-
 
         return RegistryConfiguration.builder()
                 .category(registryGroupId)
                 .registryId(entityType.getName())
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyList(registryPropertyList)
-                .readOnly(Optional.of(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isReadOnly).orElse(false))
-                .deletable(Optional.of(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isDeletable).orElse(true))
-                .isHistoryAvailable(isAudited)
+                .readOnly(Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isReadOnly).orElse(false))
+                .deletable(Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isDeletable).orElse(true))
+                .isHistoryAvailable(isHistoryAvailable)
                 .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
                 .isCompositeIdentity(managedTypeWrapper.isCompositeIdentity())
                 .compositeIdentityPropertyNameList(managedTypeWrapper.compositeIdentityPropertyNameList())

@@ -13,6 +13,8 @@ public class RegistryOverrideConfiguration {
 
     private boolean deletable;
 
+    private boolean isHistoryAvailable;
+
     private List<String> propertyDisplayList;
 
     private List<String> ignoredPropertyList;
