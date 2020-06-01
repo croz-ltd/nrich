@@ -7,6 +7,7 @@ import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.test.BaseWebTest;
 import org.junit.jupiter.api.AfterEach;
@@ -21,9 +22,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryRequest;
@@ -150,6 +153,28 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
         // then
         assertThat(convertedResponse.getId()).isEqualTo(registryTestEntity.getId());
+    }
+
+    @SneakyThrows
+    @Test
+    void shouldDeleteRegistryEntityWithCompositeKey() {
+        // given
+        final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+
+        final DeleteRegistryRequest request = createDeleteEmbeddedUserGroupRequest(registryTestEmbeddedUserGroup.getUserGroupId());
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrich-registry-data/delete").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final RegistryTestEmbeddedUserGroup convertedResponse = objectMapper.readValue(response.getContentAsString(), RegistryTestEmbeddedUserGroup.class);
+
+        // then
+        assertThat(convertedResponse.getUserGroupId()).isEqualTo(registryTestEmbeddedUserGroup.getUserGroupId());
     }
 
     @AfterEach
