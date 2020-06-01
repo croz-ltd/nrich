@@ -13,6 +13,8 @@ public class RegistryProperty {
 
     private final String originalType;
 
+    private final boolean isId;
+
     private final boolean isDecimal;
 
     private final boolean isOneToOne;

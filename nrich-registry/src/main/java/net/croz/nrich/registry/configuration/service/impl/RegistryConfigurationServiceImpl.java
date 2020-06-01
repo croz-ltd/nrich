@@ -2,6 +2,7 @@ package net.croz.nrich.registry.configuration.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;
+import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryConfiguration;
@@ -83,7 +84,10 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
         final String registryDisplayName = registryDisplayLabel(entityType);
         final boolean isHistoryAvailable = Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::isHistoryAvailable).orElse(isAudited(entityType));
-        final List<RegistryProperty> registryPropertyList = resolveRegistryPropertyListForType(managedType, registryOverrideConfiguration);
+        final List<RegistryProperty> registryPropertyList = resolveRegistryPropertyListForType(managedTypeWrapper, registryOverrideConfiguration);
+        final List<String> registryDisplayList = Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::getPropertyDisplayList).orElse(Collections.emptyList());
+
+        registryPropertyList.sort(new RegistryPropertyComparator(registryDisplayList));
 
         return RegistryConfiguration.builder()
                 .category(registryGroupId)
@@ -99,7 +103,8 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                 .build();
     }
 
-    private List<RegistryProperty> resolveRegistryPropertyListForType(final ManagedType<?> managedType, final RegistryOverrideConfiguration registryOverrideConfiguration) {
+    private List<RegistryProperty> resolveRegistryPropertyListForType(final ManagedTypeWrapper managedTypeWrapper, final RegistryOverrideConfiguration registryOverrideConfiguration) {
+        final ManagedType<?> managedType = managedTypeWrapper.getIdentifiableType();
         final Class<?> entityType = managedType.getJavaType();
         final List<String> ignoredPropertyList = Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::getIgnoredPropertyList).orElse(Collections.emptyList());
         final List<String> readOnlyOverridePropertyList = Optional.ofNullable(registryOverrideConfiguration).map(RegistryOverrideConfiguration::getNonEditablePropertyList).orElse(Collections.emptyList());
@@ -132,6 +137,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                     .javascriptType(javascriptType)
                     .isDecimal(isDecimal)
                     .isOneToOne(isOneToOne)
+                    .isId(managedTypeWrapper.idAttributeName().equals(attributeName))
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
                     .formLabel(formLabel)
                     .columnHeader(columnHeader)

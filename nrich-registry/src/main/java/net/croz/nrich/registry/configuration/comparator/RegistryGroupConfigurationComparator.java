@@ -21,17 +21,6 @@ public class RegistryGroupConfigurationComparator implements Comparator<Registry
             return firstGroupId.compareTo(secondGroupId);
         }
 
-        if (!groupDisplayOrderList.contains(firstGroupId)) {
-            return 1;
-        }
-
-        if (!groupDisplayOrderList.contains(secondGroupId)) {
-            return -1;
-        }
-
-        final Integer firstGroupIndex = groupDisplayOrderList.indexOf(firstGroupId);
-        final Integer secondGroupIndex = groupDisplayOrderList.indexOf(secondGroupId);
-
-        return firstGroupIndex.compareTo(secondGroupIndex);
+        return DisplayOrderComparatorUtil.comparePropertiesByDisplayList(groupDisplayOrderList, firstGroupId, secondGroupId);
     }
 }
