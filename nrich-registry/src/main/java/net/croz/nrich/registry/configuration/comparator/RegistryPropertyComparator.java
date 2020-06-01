@@ -1,23 +1,23 @@
 package net.croz.nrich.registry.configuration.comparator;
 
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.configuration.model.RegistryProperty;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
-@RequiredArgsConstructor
-public class RegistryPropertyComparator implements Comparator<RegistryProperty> {
+public class RegistryPropertyComparator extends DisplayOrderComparator implements Comparator<RegistryProperty> {
 
-    private final List<String> propertyDisplayOrderList;
+    public RegistryPropertyComparator(final List<String> propertyDisplayOrderList) {
+        super(propertyDisplayOrderList);
+    }
 
     @Override
     public int compare(final RegistryProperty firstProperty, final RegistryProperty secondProperty) {
         final String firstPropertyName = firstProperty.getName();
         final String secondPropertyName = secondProperty.getName();
 
-        if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
+        if (CollectionUtils.isEmpty(getPropertyDisplayOrderList())) {
             if (firstProperty.isId()) {
                 return  -1;
             }
@@ -28,6 +28,6 @@ public class RegistryPropertyComparator implements Comparator<RegistryProperty> 
             return firstPropertyName.compareTo(secondPropertyName);
         }
 
-        return DisplayOrderComparatorUtil.comparePropertiesByDisplayList(propertyDisplayOrderList, firstPropertyName, secondPropertyName);
+        return comparePropertiesByDisplayList(firstPropertyName, secondPropertyName);
     }
 }
