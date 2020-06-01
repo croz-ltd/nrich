@@ -190,6 +190,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         return attribute.isCollection() || entityIgnoredPropertyList.contains(attribute.getName());
     }
 
+    // TODO extract resolving of managed types or classes to separate class
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
         if (CollectionUtils.isEmpty(includeDomainPatternList)) {
             return false;
