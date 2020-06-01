@@ -194,9 +194,12 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         final Map<String, Object> parameterMap = new HashMap<>();
         if (id instanceof Map) {
             @SuppressWarnings("unchecked")
-            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
+                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
-            wherePart = idMap.keySet().stream().map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key))).collect(Collectors.joining(" and "));
+            wherePart = idMap.keySet().stream()
+                    .map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key)))
+                    .collect(Collectors.joining(" and "));
 
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), value));
         }
