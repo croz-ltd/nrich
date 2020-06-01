@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.configuration.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryConfiguration;
@@ -70,7 +71,9 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
         });
 
-        return sortGroupConfigurationList(registryGroupConfigurationList, registryGroupDefinitionHolder.getRegistryGroupDisplayOrderList());
+        registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.getRegistryGroupDisplayOrderList()));
+
+        return registryGroupConfigurationList;
     }
 
     private RegistryConfiguration createRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
@@ -217,24 +220,5 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         catch (final Exception ignored) {
             return false;
         }
-    }
-
-    private List<RegistryGroupConfiguration> sortGroupConfigurationList(final List<RegistryGroupConfiguration> registryGroupConfigurationList, final List<String> groupConfigurationOrderList) {
-        if (CollectionUtils.isEmpty(groupConfigurationOrderList)) {
-            return registryGroupConfigurationList;
-        }
-
-        final List<RegistryGroupConfiguration> sortedGroupConfigurationList = new ArrayList<>();
-
-        groupConfigurationOrderList.forEach(groupId -> {
-            final RegistryGroupConfiguration registryGroupConfiguration = registryGroupConfigurationList.stream()
-                    .filter(configuration -> groupId.equals(configuration.getRegistryGroupId()))
-                    .findFirst()
-                    .orElse(null);
-
-            sortedGroupConfigurationList.add(registryGroupConfiguration);
-        });
-
-        return sortedGroupConfigurationList;
     }
 }
