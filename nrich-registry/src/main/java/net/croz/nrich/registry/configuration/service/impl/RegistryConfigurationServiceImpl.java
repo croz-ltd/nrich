@@ -70,7 +70,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
         });
 
-        return registryGroupConfigurationList;
+        return sortGroupConfigurationList(registryGroupConfigurationList, registryGroupDefinitionHolder.getRegistryGroupDisplayOrderList());
     }
 
     private RegistryConfiguration createRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
@@ -217,5 +217,24 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         catch (final Exception ignored) {
             return false;
         }
+    }
+
+    private List<RegistryGroupConfiguration> sortGroupConfigurationList(final List<RegistryGroupConfiguration> registryGroupConfigurationList, final List<String> groupConfigurationOrderList) {
+        if (CollectionUtils.isEmpty(groupConfigurationOrderList)) {
+            return registryGroupConfigurationList;
+        }
+
+        final List<RegistryGroupConfiguration> sortedGroupConfigurationList = new ArrayList<>();
+
+        groupConfigurationOrderList.forEach(groupId -> {
+            final RegistryGroupConfiguration registryGroupConfiguration = registryGroupConfigurationList.stream()
+                    .filter(configuration -> groupId.equals(configuration.getRegistryGroupId()))
+                    .findFirst()
+                    .orElse(null);
+
+            sortedGroupConfigurationList.add(registryGroupConfiguration);
+        });
+
+        return sortedGroupConfigurationList;
     }
 }
