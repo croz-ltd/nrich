@@ -188,7 +188,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     }
 
     protected <T> T findEntityInstance(final Class<T> type, final Object id) {
-        Assert.isTrue(id instanceof Map || id instanceof Number, "Id is of not supported type!");
+        Assert.isTrue(id instanceof Map || id instanceof Number, String.format("Id: %s is of not supported type!", id));
 
         final String wherePart;
         final Map<String, Object> parameterMap = new HashMap<>();
