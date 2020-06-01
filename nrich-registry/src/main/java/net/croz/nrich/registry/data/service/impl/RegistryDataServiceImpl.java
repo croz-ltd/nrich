@@ -15,6 +15,7 @@ import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
+import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.util.PageableUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -198,10 +199,10 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                     .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
             wherePart = idMap.keySet().stream()
-                    .map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key)))
+                    .map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key + "." + RegistryDataConstants.ID_ATTRIBUTE, toParameterVariable(key)))
                     .collect(Collectors.joining(" and "));
 
-            idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), value));
+            idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
         }
         else {
             wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryDataConstants.ID_ATTRIBUTE, RegistryDataConstants.ID_ATTRIBUTE);
@@ -223,5 +224,11 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         final String[] keyList = key.toString().split("\\.");
 
         return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
+    }
+
+    private Long resolveIdValue(final Object value) {
+        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue("id");
+
+        return idValue == null ? null : Long.valueOf(idValue.toString());
     }
 }
