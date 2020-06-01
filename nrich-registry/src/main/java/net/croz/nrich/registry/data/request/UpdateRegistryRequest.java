@@ -11,7 +11,7 @@ public class UpdateRegistryRequest {
     private String classFullName;
 
     @NotNull
-    private Long id;
+    private Object id;
 
     @NotNull
     private String entityData;

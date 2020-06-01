@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.data.model.RegistryDataConfigurationHolder;
@@ -21,17 +22,21 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.ManagedType;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// TODO handling of composite id attributes, better error handling and maybe versioning
+// TODO better error handling and maybe versioning
 public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final EntityManager entityManager;
@@ -44,12 +49,15 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final Map<String, JpaQueryBuilder<?>> classNameQueryBuilderMap;
 
+    private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
+
     public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryDataConfigurationHolder registryDataConfigurationHolder) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationHolder);
+        this.classNameManagedTypeWrapperMap = initializeManagedTypeMap(registryDataConfigurationHolder);
     }
 
     @Transactional(readOnly = true)
@@ -86,7 +94,14 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
-        final T instance = entityManager.find(registryDataConfiguration.getRegistryType(), request.getId());
+        final ManagedTypeWrapper wrapper = classNameManagedTypeWrapperMap.get(request.getClassFullName());
+
+        T instance = findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
+
+        if (wrapper.isCompositeIdentity()) {
+            entityManager.remove(instance);
+            instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), request.getEntityData());
+        }
 
         modelMapper.map(request.getEntityData(), instance);
 
@@ -97,14 +112,15 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     @Transactional
     @Override
-    public boolean delete(final DeleteRegistryRequest request) {
-        registryDataConfigurationHolder.verifyConfigurationExists(request.getClassFullName());
+    public <T> T delete(final DeleteRegistryRequest request) {
+        @SuppressWarnings("unchecked")
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
-        final String fullQuery = String.format(RegistryDataConstants.DELETE_QUERY, request.getClassFullName());
+        final T instance = findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
 
-        final int updateCount = entityManager.createQuery(fullQuery).setParameter(RegistryDataConstants.ID_ATTRIBUTE, request.getId()).executeUpdate();
+        entityManager.remove(instance);
 
-        return updateCount > 0;
+        return instance;
     }
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
@@ -114,7 +130,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedType<?> managedType = resolveManagedType(registryDataConfiguration);
+        final ManagedType<?> managedType = classNameManagedTypeWrapperMap.get(request.getClassFullName()).getIdentifiableType();
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
@@ -153,8 +169,13 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                 .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
 
-    private ManagedType<?> resolveManagedType(final RegistryDataConfiguration<?, ?> registryDataConfiguration) {
-        return entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType());
+    private Map<String, ManagedTypeWrapper> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
+            return Collections.emptyMap();
+        }
+
+        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
+                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new ManagedTypeWrapper(entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType()))));
     }
 
     @SuppressWarnings("unchecked")
@@ -164,5 +185,40 @@ public class RegistryDataServiceImpl implements RegistryDataService {
             return (T) entityData;
         }
         return type.newInstance();
+    }
+
+    protected <T> T findEntityInstance(final Class<T> type, final Object id) {
+        Assert.isTrue(id instanceof Map || id instanceof Number, "Id is of not supported type!");
+
+        final String wherePart;
+        final Map<String, Object> parameterMap = new HashMap<>();
+        if (id instanceof Map) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream().collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+
+            wherePart = idMap.keySet().stream().map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key))).collect(Collectors.joining(" and "));
+
+            idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), value));
+        }
+        else {
+            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryDataConstants.ID_ATTRIBUTE, RegistryDataConstants.ID_ATTRIBUTE);
+
+            parameterMap.put(RegistryDataConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
+        }
+
+        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, type.getName(), wherePart);
+
+        @SuppressWarnings("unchecked")
+        final TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
+
+        parameterMap.forEach(query::setParameter);
+
+        return query.getSingleResult();
+    }
+
+    private String toParameterVariable(final Object key) {
+        final String[] keyList = key.toString().split("\\.");
+
+        return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
     }
 }

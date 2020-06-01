@@ -19,6 +19,6 @@ public interface RegistryDataService {
 
     <T> T update(UpdateRegistryServiceRequest request);
 
-    boolean delete(DeleteRegistryRequest request);
+    <T> T delete(DeleteRegistryRequest request);
 
 }

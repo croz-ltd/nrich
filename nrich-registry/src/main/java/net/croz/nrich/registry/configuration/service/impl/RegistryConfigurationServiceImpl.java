@@ -99,7 +99,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                 .isHistoryAvailable(isHistoryAvailable)
                 .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
                 .isCompositeIdentity(managedTypeWrapper.isCompositeIdentity())
-                .compositeIdentityPropertyNameList(managedTypeWrapper.compositeIdentityPropertyNameList())
+                .compositeIdentityPropertyNameList(managedTypeWrapper.getCompositeIdentityPropertyNameList())
                 .build();
     }
 
@@ -122,6 +122,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
             final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
+            final boolean isIdAttribute = attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getCompositeIdentityPropertyNameList().contains(attributeName);
             final boolean isOneToOne = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType());
             final Class<?> oneToOneReferencedClass = isOneToOne ? resolveOneToOneClass(attribute) : null;
 
@@ -137,7 +138,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                     .javascriptType(javascriptType)
                     .isDecimal(isDecimal)
                     .isOneToOne(isOneToOne)
-                    .isId(managedTypeWrapper.idAttributeName().equals(attributeName))
+                    .isId(isIdAttribute)
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
                     .formLabel(formLabel)
                     .columnHeader(columnHeader)

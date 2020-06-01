@@ -9,6 +9,7 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
@@ -35,7 +36,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @EnableTransactionManagement
@@ -107,9 +107,10 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryDataConfigurationHolder registryDataConfigurationHolder() {
-        final RegistryDataConfiguration<?, ?> registryDataConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+        final RegistryDataConfiguration<?, ?> firstRegistryConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
+        final RegistryDataConfiguration<?, ?> secondRegistryConfiguration = new RegistryDataConfiguration<>(RegistryTestEmbeddedUserGroup.class, SearchConfiguration.emptyConfigurationMatchingAny());
 
-        return new RegistryDataConfigurationHolder(Collections.singletonList(registryDataConfiguration));
+        return new RegistryDataConfigurationHolder(Arrays.asList(firstRegistryConfiguration, secondRegistryConfiguration));
     }
 
     @Bean

@@ -4,7 +4,9 @@ public final class RegistryDataConstants {
 
     public static final String ID_ATTRIBUTE = "id";
 
-    public static final String DELETE_QUERY = "delete from %s where " + ID_ATTRIBUTE + " = :" + ID_ATTRIBUTE;
+    public static final String QUERY_PARAMETER_FORMAT = "%s = :%s";
+
+    public static final String FIND_QUERY = "from %s where %s";
 
     public static final String CREATE_REQUEST_SUFFIX = "%sCreateRequest";
 

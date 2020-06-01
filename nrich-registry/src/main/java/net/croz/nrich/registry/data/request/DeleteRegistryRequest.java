@@ -11,6 +11,6 @@ public class DeleteRegistryRequest {
     private String classFullName;
 
     @NotNull
-    private Long id;
+    private Object id;
 
 }

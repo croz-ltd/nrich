@@ -12,7 +12,7 @@ public class UpdateRegistryServiceRequest {
     private String classFullName;
 
     @NotNull
-    private Long id;
+    private Object id;
 
     @Valid
     @NotNull

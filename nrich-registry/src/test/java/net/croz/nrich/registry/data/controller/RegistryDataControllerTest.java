@@ -146,10 +146,10 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
         // and when
-        final boolean convertedResponse = objectMapper.readValue(response.getContentAsString(), Boolean.class);
+        final RegistryTestEntity convertedResponse = objectMapper.readValue(response.getContentAsString(), RegistryTestEntity.class);
 
         // then
-        assertThat(convertedResponse).isTrue();
+        assertThat(convertedResponse.getId()).isEqualTo(registryTestEntity.getId());
     }
 
     @AfterEach

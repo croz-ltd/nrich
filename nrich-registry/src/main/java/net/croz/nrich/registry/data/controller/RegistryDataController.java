@@ -39,7 +39,7 @@ public class RegistryDataController {
     }
 
     @PostMapping("delete")
-    public boolean delete(@RequestBody @Valid final DeleteRegistryRequest request) {
+    public <T> T delete(@RequestBody @Valid final DeleteRegistryRequest request) {
         return registryDataService.delete(request);
     }
 

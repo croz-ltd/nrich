@@ -11,13 +11,19 @@ import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedGroup;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUser;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
+import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -113,6 +119,59 @@ public final class RegistryDataGeneratingUtil {
         request.setClassFullName(classFullName);
         request.setId(id);
         request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+
+        return request;
+    }
+
+    public static RegistryTestEmbeddedUserGroup createRegistryTestEmbeddedUserGroup(final EntityManager entityManager) {
+        final RegistryTestEmbeddedUser user = new RegistryTestEmbeddedUser(null, "user name");
+        final RegistryTestEmbeddedGroup group = new RegistryTestEmbeddedGroup(null, "user group");
+
+        entityManager.persist(user);
+        entityManager.persist(group);
+
+        final RegistryTestEmbeddedUserGroupId groupId = new RegistryTestEmbeddedUserGroupId(user, group);
+
+        final RegistryTestEmbeddedUserGroup userGroup = new RegistryTestEmbeddedUserGroup(groupId, "value");
+
+        entityManager.persist(userGroup);
+
+        return userGroup;
+    }
+
+    public static RegistryTestEmbeddedUserGroupId createRegistryTestEmbeddedUserGroupId(final EntityManager entityManager) {
+        final RegistryTestEmbeddedUser user = new RegistryTestEmbeddedUser(null, "user name");
+        final RegistryTestEmbeddedGroup group = new RegistryTestEmbeddedGroup(null, "user group");
+
+        entityManager.persist(user);
+        entityManager.persist(group);
+
+        return new RegistryTestEmbeddedUserGroupId(user, group);
+    }
+
+    public static DeleteRegistryRequest createDeleteEmbeddedUserGroupRequest(final RegistryTestEmbeddedUserGroupId id) {
+        final DeleteRegistryRequest request = new DeleteRegistryRequest();
+
+        final Map<String, Object> idMap = new HashMap<>();
+        idMap.put("userGroupId.user", id.getUser());
+        idMap.put("userGroupId.group", id.getGroup());
+
+        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
+        request.setId(idMap);
+
+        return request;
+    }
+
+    public static UpdateRegistryServiceRequest createUpdateEmbeddedUserGroupRequest(final RegistryTestEmbeddedUserGroupId id, final RegistryTestEmbeddedUserGroupId updateId, final String updateName) {
+        final UpdateRegistryServiceRequest request = new UpdateRegistryServiceRequest();
+
+        final Map<String, Object> idMap = new HashMap<>();
+        idMap.put("userGroupId.user", id.getUser());
+        idMap.put("userGroupId.group", id.getGroup());
+
+        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
+        request.setId(idMap);
+        request.setEntityData(new RegistryTestEmbeddedUserGroup(updateId, updateName));
 
         return request;
     }
