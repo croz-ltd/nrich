@@ -2,8 +2,6 @@ package net.croz.nrich.registry.configuration.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
-import net.croz.nrich.registry.configuration.model.ColumnPropertyDisplayConfiguration;
-import net.croz.nrich.registry.configuration.model.FormPropertyDisplayConfiguration;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
@@ -114,12 +112,6 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final String formLabel = formLabel(entityType, attributeType, attributeName);
             final String columnHeader = columnHeader(entityType, attributeType, attributeName);
 
-            final FormPropertyDisplayConfiguration formPropertyDisplayConfiguration = new FormPropertyDisplayConfiguration(formLabel, !isReadOnly);
-
-            final ColumnPropertyDisplayConfiguration columnPropertyDisplayConfiguration = ColumnPropertyDisplayConfiguration.builder()
-                    .header(columnHeader)
-                    .build();
-
             final RegistryProperty registryProperty = RegistryProperty.builder()
                     .name(attributeName)
                     .originalType(attributeType.getName())
@@ -127,8 +119,10 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                     .isDecimal(isDecimal)
                     .isOneToOne(isOneToOne)
                     .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
-                    .formPropertyDisplayConfiguration(formPropertyDisplayConfiguration)
-                    .columnPropertyDisplayConfiguration(columnPropertyDisplayConfiguration)
+                    .formLabel(formLabel)
+                    .columnHeader(columnHeader)
+                    .editable(!isReadOnly)
+                    .sortable(true)
                     .build();
 
             registryPropertyList.add(registryProperty);

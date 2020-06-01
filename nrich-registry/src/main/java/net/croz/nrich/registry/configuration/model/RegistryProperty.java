@@ -19,8 +19,12 @@ public class RegistryProperty {
 
     private final String oneToOneReferencedClass;
 
-    private final FormPropertyDisplayConfiguration formPropertyDisplayConfiguration;
+    private final String formLabel;
 
-    private final ColumnPropertyDisplayConfiguration columnPropertyDisplayConfiguration;
+    private final String columnHeader;
+
+    private final boolean editable;
+
+    private final boolean sortable;
 
 }
