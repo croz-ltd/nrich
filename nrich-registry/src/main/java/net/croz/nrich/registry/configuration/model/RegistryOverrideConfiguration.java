@@ -15,9 +15,9 @@ public class RegistryOverrideConfiguration {
 
     private boolean isHistoryAvailable;
 
-    private List<String> propertyDisplayList;
-
     private List<String> ignoredPropertyList;
+
+    private List<String> propertyDisplayList;
 
     private List<String> nonEditablePropertyList;
 
