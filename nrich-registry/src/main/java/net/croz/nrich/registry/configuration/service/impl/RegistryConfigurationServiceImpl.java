@@ -11,6 +11,7 @@ import net.croz.nrich.registry.configuration.model.RegistryGroupDefinitionHolder
 import net.croz.nrich.registry.configuration.model.RegistryProperty;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
+import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -73,6 +74,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
     private RegistryConfiguration createRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
         final List<RegistryProperty> registryPropertyList = resolveRegistryPropertyListForType(managedType);
         final Class<?> entityType = managedType.getJavaType();
+        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(managedType);
 
         final String registryDisplayName = registryDisplayLabel(entityType);
         final boolean isAudited = isAudited(entityType);
@@ -83,6 +85,9 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyList(registryPropertyList)
                 .isHistoryAvailable(isAudited)
+                .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
+                .isCompositeIdentity(managedTypeWrapper.isCompositeIdentity())
+                .compositeIdentityPropertyNameList(managedTypeWrapper.compositeIdentityPropertyNameList())
                 .build();
     }
 
