@@ -19,6 +19,10 @@ public class RegistryConfiguration {
 
     private final boolean readOnly;
 
+    private final boolean insertable;
+
+    private final boolean updateable;
+
     private final boolean deletable;
 
     private final boolean isIdentifierAssigned;
