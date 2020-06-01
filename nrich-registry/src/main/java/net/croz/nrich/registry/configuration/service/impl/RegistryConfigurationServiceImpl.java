@@ -75,12 +75,14 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         final Class<?> entityType = managedType.getJavaType();
 
         final String registryDisplayName = registryDisplayLabel(entityType);
+        final boolean isAudited = isAudited(entityType);
 
         return RegistryConfiguration.builder()
                 .category(registryGroupId)
                 .registryId(entityType.getName())
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyList(registryPropertyList)
+                .isHistoryAvailable(isAudited)
                 .build();
     }
 
