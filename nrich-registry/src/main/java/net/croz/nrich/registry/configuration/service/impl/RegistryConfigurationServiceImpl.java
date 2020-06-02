@@ -78,6 +78,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         return RegistryEntityConfiguration.builder()
                 .category(registryGroupId)
                 .registryId(entityType.getName())
+                .registryName(entityType.getSimpleName())
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyConfigurationList(registryPropertyConfigurationList)
                 .readOnly(registryOverrideConfiguration.isReadOnly())

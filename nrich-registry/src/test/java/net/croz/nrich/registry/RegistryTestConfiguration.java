@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
+import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
+import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
@@ -23,6 +25,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -39,7 +42,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -99,6 +104,15 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
+    public MessageSource messageSource() {
+        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasename("messages");
+
+        return messageSource;
+    }
+
+    @Bean
     public StringToTypeConverter<?> defaultStringToTypeConverter() {
         return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"));
     }
@@ -115,10 +129,24 @@ public class RegistryTestConfiguration {
         final RegistryGroupDefinitionConfiguration registryGroupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
 
         registryGroupDefinitionConfiguration.setRegistryGroupId("DEFAULT");
-        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Arrays.asList("^net.croz.nrich.registry.data.stub.*$", "net.croz.nrich.registry.configuration.service.stub.*$"));
         registryGroupDefinitionConfiguration.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
         registryConfiguration.setRegistryGroupDefinitionConfigurationList(Collections.singletonList(registryGroupDefinitionConfiguration));
+
+        final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+
+        registryOverrideConfiguration.setPropertyDisplayList(Arrays.asList("name", "id"));
+        registryOverrideConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
+        registryOverrideConfiguration.setNonEditablePropertyList(Collections.singletonList("nonEditableProperty"));
+        registryOverrideConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
+        registryOverrideConfiguration.setDeletable(false);
+
+        final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = new HashMap<>();
+
+        registryOverrideConfigurationMap.put(RegistryConfigurationTestEntity.class, registryOverrideConfiguration);
+
+        registryConfiguration.setEntityRegistryOverrideConfiguration(registryOverrideConfigurationMap);
 
         return registryConfiguration;
     }
