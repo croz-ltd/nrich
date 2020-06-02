@@ -2,20 +2,19 @@ package net.croz.nrich.registry;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.croz.nrich.registry.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
+import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
+import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
-import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
-import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
-import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
-import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
-import net.croz.nrich.search.model.SearchConfiguration;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -36,6 +35,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @EnableTransactionManagement
@@ -106,21 +106,33 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataConfigurationHolder registryDataConfigurationHolder() {
-        final RegistryDataConfiguration<?, ?> firstRegistryConfiguration = new RegistryDataConfiguration<>(RegistryTestEntity.class, SearchConfiguration.emptyConfigurationMatchingAny());
-        final RegistryDataConfiguration<?, ?> secondRegistryConfiguration = new RegistryDataConfiguration<>(RegistryTestEmbeddedUserGroup.class, SearchConfiguration.emptyConfigurationMatchingAny());
+    public RegistryConfiguration registryConfiguration() {
+        final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        return new RegistryDataConfigurationHolder(Arrays.asList(firstRegistryConfiguration, secondRegistryConfiguration));
+        final RegistryGroupDefinitionConfiguration registryGroupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
+
+        registryGroupDefinitionConfiguration.setRegistryGroupId("DEFAULT");
+        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryGroupDefinitionConfiguration.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+
+        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Collections.singletonList(registryGroupDefinitionConfiguration));
+
+        return registryConfiguration;
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryDataConfigurationHolder);
+    public RegistryConfigurationResolverService registryConfigurationResolverService(final EntityManager entityManager, final RegistryConfiguration registryConfiguration) {
+        return new RegistryConfigurationResolverServiceImpl(entityManager, registryConfiguration);
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        return new RegistryDataRequestConversionServiceImpl(objectMapper, registryDataConfigurationHolder);
+    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+    }
+
+    @Bean
+    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new RegistryDataRequestConversionServiceImpl(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
     }
 
     @Bean
