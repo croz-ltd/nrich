@@ -126,13 +126,19 @@ public class RegistryTestConfiguration {
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryGroupDefinitionConfiguration registryGroupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
-        registryGroupDefinitionConfiguration.setRegistryGroupId("DEFAULT");
-        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Arrays.asList("^net.croz.nrich.registry.data.stub.*$", "net.croz.nrich.registry.configuration.service.stub.*$"));
-        registryGroupDefinitionConfiguration.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+        registryDataConfigurationGroup.setRegistryGroupId("DATA");
+        registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryDataConfigurationGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
-        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Collections.singletonList(registryGroupDefinitionConfiguration));
+        final RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+
+        registryConfigurationConfigurationGroup.setRegistryGroupId("CONFIGURATION");
+        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("net.croz.nrich.registry.configuration.service.stub.*$"));
+
+        registryConfiguration.setRegistryGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA"));
+        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup));
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 

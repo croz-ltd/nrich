@@ -29,6 +29,9 @@ public class RegistryConfigurationServiceImplTest {
 
         // then
         assertThat(result).isNotEmpty();
+        assertThat(result).hasSize(2);
+        assertThat(result).extracting("registryGroupId").containsExactly("CONFIGURATION", "DATA");
+        assertThat(result).extracting("registryGroupIdDisplay").containsExactly("Configuration group", "Data group");
     }
 
     @Test
@@ -44,7 +47,7 @@ public class RegistryConfigurationServiceImplTest {
         // then
         assertThat(registryEntityConfiguration).isNotNull();
 
-        assertThat(registryEntityConfiguration.getCategory()).isEqualTo("DEFAULT");
+        assertThat(registryEntityConfiguration.getCategory()).isEqualTo("CONFIGURATION");
 
         assertThat(registryEntityConfiguration.getRegistryName()).isEqualTo(RegistryConfigurationTestEntity.class.getSimpleName());
         assertThat(registryEntityConfiguration.getRegistryDisplayName()).isEqualTo("Test entity");
@@ -144,8 +147,7 @@ public class RegistryConfigurationServiceImplTest {
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("firstId", "secondId", "name");
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isId").containsExactly(true, true, false);
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("firstId", "secondId", "name");
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isId").containsExactlyInAnyOrder(true, true, false);
     }
-
 }
