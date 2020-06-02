@@ -12,6 +12,7 @@ import net.croz.nrich.search.model.SearchConfiguration;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +76,7 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
     }
 
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
-        if (CollectionUtils.isEmpty(includeDomainPatternList)) {
+        if (CollectionUtils.isEmpty(includeDomainPatternList) || !(managedType instanceof IdentifiableType)) {
             return false;
         }
 
