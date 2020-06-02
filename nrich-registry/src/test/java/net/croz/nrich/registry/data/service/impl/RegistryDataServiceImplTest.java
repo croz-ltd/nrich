@@ -34,6 +34,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @Transactional
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
@@ -203,6 +204,21 @@ public class RegistryDataServiceImplTest {
 
         // then
         assertThat(loaded).isNull();
+    }
+
+    @Test
+    void shouldThrowExceptionOnInvalidPrimaryKey() {
+        // given
+        final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
+
+        final DeleteRegistryRequest request = createDeleteEmbeddedUserGroupRequest(registryTestEmbeddedUserGroup.getUserGroupId());
+        request.setId(new Object());
+
+        // when
+        final Throwable thrown = catchThrowable(() -> registryDataService.delete(request));
+
+        // then
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     private RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(final RegistryTestEmbeddedUserGroupId groupId) {
