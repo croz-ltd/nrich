@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.configuration.service.stub;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class RegistryConfigurationTestEntityWithAssociationAndEmbeddedId {
 
     @Setter
     @Getter
+    @EqualsAndHashCode
     @Embeddable
     static class RegistryConfigurationTestEntityPrimaryKey implements Serializable {
 
