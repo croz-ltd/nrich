@@ -56,6 +56,15 @@ public final class RegistryDataGeneratingUtil {
         return bulkListRegistryRequest;
     }
 
+    public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query, final int pageNumber, final int pageSize) {
+        final ListRegistryRequest request = createListRegistryRequest(classFullName, query);
+
+        request.setPageNumber(pageNumber);
+        request.setPageSize(pageSize);
+
+        return request;
+    }
+
     public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query) {
         SearchParameter searchParameter = null;
         if (query != null) {

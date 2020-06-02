@@ -144,13 +144,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         final TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
-        if (pageable.isPaged()) {
-            typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
+        typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
-            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(queryBuilder, query));
-        }
-
-        return new PageImpl<>(typedQuery.getResultList());
+        return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(queryBuilder, query));
     }
 
     private long executeCountQuery(final JpaQueryBuilder<?> queryBuilder, final CriteriaQuery<?> query) {

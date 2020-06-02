@@ -75,6 +75,22 @@ public class RegistryDataServiceImplTest {
     }
 
     @Test
+    void shouldListRegistryWithPaging() {
+        // given
+        createRegistryTestEntityList(entityManager);
+
+        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%", 0, 3);
+
+        // when
+        final Page<RegistryTestEntity> result = registryDataService.list(request);
+
+        // then
+        assertThat(result).hasSize(3);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.getTotalElements()).isEqualTo(5);
+    }
+
+    @Test
     void shouldReturnAllElementsOnEmptySearchParameters() {
         // given
         createRegistryTestEntityList(entityManager);
