@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.ManagedType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
 
     @Override
     public Map<Class<?>, RegistryOverrideConfiguration> resolveRegistryOverrideConfigurationMap() {
-        return registryConfiguration.getEntityRegistryOverrideConfiguration();
+        return registryConfiguration.getEntityRegistryOverrideConfiguration() == null ? Collections.emptyMap() : registryConfiguration.getEntityRegistryOverrideConfiguration();
     }
 
     @Override
