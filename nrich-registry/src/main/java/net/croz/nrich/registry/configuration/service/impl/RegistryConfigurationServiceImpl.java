@@ -43,7 +43,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     @Cacheable("nrich.registryConfiguration.cache")
     @Override
-    public List<RegistryGroupConfiguration> readRegistryGroupConfigurationList() {
+    public List<RegistryGroupConfiguration> fetchRegistryGroupConfiguration() {
         final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
 
         registryGroupDefinitionHolder.getRegistryGroupDefinitionList().forEach(registryGroupDefinition -> {

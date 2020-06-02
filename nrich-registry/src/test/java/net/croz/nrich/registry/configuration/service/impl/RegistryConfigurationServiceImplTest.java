@@ -25,7 +25,7 @@ public class RegistryConfigurationServiceImplTest {
     @Test
     void shouldResolveRegistryConfiguration() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
 
         // then
         assertThat(result).isNotEmpty();
@@ -37,7 +37,7 @@ public class RegistryConfigurationServiceImplTest {
     @Test
     void shouldResolveConfigurationWithOverrideDefined() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
         final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getRegistryId()))
@@ -97,7 +97,7 @@ public class RegistryConfigurationServiceImplTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndEmbeddedId() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
         final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getRegistryId()))
@@ -132,7 +132,7 @@ public class RegistryConfigurationServiceImplTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithIdClass() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
         final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getRegistryId()))

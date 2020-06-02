@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface RegistryConfigurationService {
 
-    List<RegistryGroupConfiguration> readRegistryGroupConfigurationList();
+    List<RegistryGroupConfiguration> fetchRegistryGroupConfiguration();
 
 }
