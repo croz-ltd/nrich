@@ -2,6 +2,7 @@ package net.croz.nrich.registry;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
 import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntity;
@@ -166,6 +167,11 @@ public class RegistryTestConfiguration {
     public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService) {
         final List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
         return new RegistryConfigurationServiceImpl(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+    }
+
+    @Bean
+    public RegistryConfigurationController registryConfigurationController(final RegistryConfigurationService registryConfigurationService) {
+        return new RegistryConfigurationController(registryConfigurationService);
     }
 
     @Bean
