@@ -7,6 +7,7 @@ import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
+import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntityWithIdClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -91,7 +92,7 @@ public class RegistryConfigurationServiceImplTest {
     }
 
     @Test
-    void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndCompositeKeys() {
+    void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndEmbeddedId() {
         // when
         final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
         final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
@@ -124,4 +125,27 @@ public class RegistryConfigurationServiceImplTest {
         assertThat(oneToOnePropertyConfiguration.isOneToOne()).isTrue();
         assertThat(oneToOnePropertyConfiguration.getOneToOneReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
     }
+
+    @Test
+    void shouldResolveRegistryConfigurationForComplexEntitiesWithIdClass() {
+        // when
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.readRegistryGroupConfigurationList();
+        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
+                .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getRegistryId()))
+                .findFirst()
+                .orElse(null);
+
+
+        // then
+        assertThat(registryEntityConfiguration).isNotNull();
+
+        assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
+        assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
+        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
+
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("firstId", "secondId", "name");
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isId").containsExactly(true, true, false);
+    }
+
 }

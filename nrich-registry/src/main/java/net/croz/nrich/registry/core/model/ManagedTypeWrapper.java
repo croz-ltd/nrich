@@ -9,6 +9,7 @@ import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EmbeddableType;
 import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -58,12 +59,11 @@ public final class ManagedTypeWrapper {
     }
 
     private boolean resolveIsIdentifierAssigned() {
-        boolean isIdentifierAssigned = false;
-
-        if (identifiableType.hasSingleIdAttribute()) {
-            isIdentifierAssigned = Arrays.stream(identifiableType.getClass().getDeclaredAnnotations()).noneMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType()));
-        }
-
-        return isIdentifierAssigned;
+        return identifiableType.getAttributes().stream()
+                .map(Attribute::getJavaMember)
+                .filter(member -> member instanceof Field)
+                .map(member -> (Field) member)
+                .map(Field::getDeclaredAnnotations)
+                .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }
 }
