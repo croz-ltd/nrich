@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.core.model;
+package net.croz.nrich.registry.core.support;
 
 import lombok.Getter;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;

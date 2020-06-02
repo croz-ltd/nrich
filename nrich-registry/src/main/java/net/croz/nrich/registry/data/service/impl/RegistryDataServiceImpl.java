@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;

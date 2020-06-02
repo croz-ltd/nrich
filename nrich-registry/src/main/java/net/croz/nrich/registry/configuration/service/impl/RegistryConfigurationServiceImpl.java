@@ -10,7 +10,7 @@ import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
-import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import org.springframework.cache.annotation.Cacheable;
