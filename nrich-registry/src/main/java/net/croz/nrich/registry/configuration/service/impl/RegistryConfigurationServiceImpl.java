@@ -13,6 +13,7 @@ import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -29,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -45,20 +45,19 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     private final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap;
 
+    @Cacheable("nrich.registryConfiguration.cache")
     @Override
     public List<RegistryGroupConfiguration> readRegistryGroupConfigurationList() {
-        final Set<ManagedType<?>> managedTypeList = entityManager.getMetamodel().getManagedTypes();
-
         final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
 
         registryGroupDefinitionHolder.getRegistryGroupDefinitionList().forEach(registryGroupDefinition -> {
-            final List<ManagedType<?>> includedManagedTypeList = managedTypeList.stream()
-                    .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
-                    .collect(Collectors.toList());
-
-            if (CollectionUtils.isEmpty(includedManagedTypeList)) {
+            if (CollectionUtils.isEmpty(registryGroupDefinition.getRegistryEntityList())) {
                 return;
             }
+
+            final List<ManagedType<?>> includedManagedTypeList = registryGroupDefinition.getRegistryEntityList().stream()
+                    .map(type -> entityManager.getMetamodel().managedType(type))
+                    .collect(Collectors.toList());
 
             final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
@@ -69,7 +68,6 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList);
 
             registryGroupConfigurationList.add(registryConfiguration);
-
         });
 
         registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.getRegistryGroupDisplayOrderList()));
@@ -198,23 +196,6 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     private boolean shouldSkipAttribute(final List<String> entityIgnoredPropertyList, final Attribute<?, ?> attribute) {
         return attribute.isCollection() || entityIgnoredPropertyList.contains(attribute.getName());
-    }
-
-    // TODO extract resolving of managed types or classes to separate class
-    private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
-        if (CollectionUtils.isEmpty(includeDomainPatternList)) {
-            return false;
-        }
-
-        final String classFullName = managedType.getJavaType().getName();
-
-        final boolean includeType = includeDomainPatternList.stream().anyMatch(classFullName::matches);
-
-        if (!includeType || CollectionUtils.isEmpty(excludeDomainPatternList)) {
-            return includeType;
-        }
-
-        return excludeDomainPatternList.stream().noneMatch(classFullName::matches);
     }
 
     private boolean isAudited(final Class<?> entityType) {

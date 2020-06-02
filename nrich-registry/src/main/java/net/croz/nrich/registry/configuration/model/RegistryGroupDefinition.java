@@ -1,18 +1,16 @@
 package net.croz.nrich.registry.configuration.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Getter
-@AllArgsConstructor
 public class RegistryGroupDefinition {
 
     private final String registryGroupId;
 
-    private final List<String> includeEntityPatternList;
-
-    private final List<String> excludeEntityPatternList;
+    private final List<Class<?>> registryEntityList;
 
 }
