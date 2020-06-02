@@ -13,7 +13,7 @@ import java.util.List;
 public class ListRegistryRequest {
 
     @NotNull
-    private String classFullName;
+    private String registryId;
 
     @Min(0)
     @NotNull

@@ -19,7 +19,6 @@ import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanW
 import net.croz.nrich.search.util.PageableUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +64,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Override
     public <P> Map<String, Page<P>> bulkList(final BulkListRegistryRequest request) {
         return request.getRegistryRequestList().stream()
-                .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
+                .collect(Collectors.toMap(ListRegistryRequest::getRegistryId, this::list));
     }
 
     @Transactional(readOnly = true)
@@ -126,12 +125,12 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getRegistryId());
 
         @SuppressWarnings("unchecked")
-        final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
+        final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getRegistryId());
 
-        final ManagedType<?> managedType = classNameManagedTypeWrapperMap.get(request.getClassFullName()).getIdentifiableType();
+        final ManagedType<?> managedType = classNameManagedTypeWrapperMap.get(request.getRegistryId()).getIdentifiableType();
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
