@@ -2,6 +2,8 @@ package net.croz.nrich.registry;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
@@ -18,6 +20,7 @@ import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterIm
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -123,6 +126,12 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryConfigurationResolverService registryConfigurationResolverService(final EntityManager entityManager, final RegistryConfiguration registryConfiguration) {
         return new RegistryConfigurationResolverServiceImpl(entityManager, registryConfiguration);
+    }
+
+    @Bean
+    public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        final List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
+        return new RegistryConfigurationServiceImpl(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
