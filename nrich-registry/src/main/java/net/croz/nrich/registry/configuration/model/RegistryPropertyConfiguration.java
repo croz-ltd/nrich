@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RegistryProperty {
+public class RegistryPropertyConfiguration {
 
     private final String name;
 

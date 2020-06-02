@@ -13,6 +13,6 @@ public class RegistryGroupConfiguration {
 
     private final String registryGroupIdDisplay;
 
-    private final List<RegistryConfiguration> registryConfigurationList;
+    private final List<RegistryEntityConfiguration> registryEntityConfigurationList;
 
 }

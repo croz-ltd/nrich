@@ -1,19 +1,19 @@
 package net.croz.nrich.registry.configuration.comparator;
 
-import net.croz.nrich.registry.configuration.model.RegistryProperty;
+import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class RegistryPropertyComparator extends DisplayOrderComparator implements Comparator<RegistryProperty> {
+public class RegistryPropertyComparator extends DisplayOrderComparator implements Comparator<RegistryPropertyConfiguration> {
 
     public RegistryPropertyComparator(final List<String> propertyDisplayOrderList) {
         super(propertyDisplayOrderList);
     }
 
     @Override
-    public int compare(final RegistryProperty firstProperty, final RegistryProperty secondProperty) {
+    public int compare(final RegistryPropertyConfiguration firstProperty, final RegistryPropertyConfiguration secondProperty) {
         final String firstPropertyName = firstProperty.getName();
         final String secondPropertyName = secondProperty.getName();
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class RegistryConfiguration {
+public class RegistryEntityConfiguration {
 
     private final String registryId;
 
@@ -29,6 +29,6 @@ public class RegistryConfiguration {
 
     private final boolean isHistoryAvailable;
 
-    private final List<RegistryProperty> registryPropertyList;
+    private final List<RegistryPropertyConfiguration> registryPropertyConfigurationList;
 
 }
