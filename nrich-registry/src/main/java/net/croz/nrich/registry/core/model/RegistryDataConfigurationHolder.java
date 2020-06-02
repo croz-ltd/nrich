@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.data.model;
+package net.croz.nrich.registry.core.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

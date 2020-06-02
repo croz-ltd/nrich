@@ -7,19 +7,17 @@ import net.croz.nrich.registry.configuration.constants.RegistryConfigurationCons
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
-import net.croz.nrich.registry.configuration.model.RegistryGroupDefinitionHolder;
-import net.croz.nrich.registry.configuration.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
+import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.model.ManagedTypeWrapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
@@ -35,8 +33,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RegistryConfigurationServiceImpl implements RegistryConfigurationService {
 
-    private final EntityManager entityManager;
-
     private final MessageSource messageSource;
 
     private final List<String> readOnlyPropertyList;
@@ -51,17 +47,9 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
 
         registryGroupDefinitionHolder.getRegistryGroupDefinitionList().forEach(registryGroupDefinition -> {
-            if (CollectionUtils.isEmpty(registryGroupDefinition.getRegistryEntityList())) {
-                return;
-            }
-
-            final List<ManagedType<?>> includedManagedTypeList = registryGroupDefinition.getRegistryEntityList().stream()
-                    .map(type -> entityManager.getMetamodel().managedType(type))
-                    .collect(Collectors.toList());
-
             final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
-            final List<RegistryEntityConfiguration> registryEntityConfigurationList = includedManagedTypeList.stream()
+            final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
                     .map(managedType -> createRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType))
                     .collect(Collectors.toList());
 

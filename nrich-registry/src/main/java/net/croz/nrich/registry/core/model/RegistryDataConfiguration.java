@@ -1,11 +1,13 @@
-package net.croz.nrich.registry.data.model;
+package net.croz.nrich.registry.core.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.model.SearchConfiguration;
 
 import java.util.Map;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class RegistryDataConfiguration<T, P> {
 
     private final Class<T> registryType;
