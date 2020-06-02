@@ -27,7 +27,6 @@ public class RegistryConfigurationTestEntityWithIdClass {
 
     private String name;
 
-
     @Getter
     @Setter
     @EqualsAndHashCode
