@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
-import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntity;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
@@ -141,9 +141,9 @@ public class RegistryTestConfiguration {
         final RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryConfigurationConfigurationGroup.setRegistryGroupId("CONFIGURATION");
-        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("net.croz.nrich.registry.configuration.service.stub.*$"));
+        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
 
-        registryConfiguration.setRegistryGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA"));
+        registryConfiguration.setRegistryGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
         registryConfiguration.setRegistryGroupDefinitionConfigurationList(Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup));
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();

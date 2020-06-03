@@ -5,9 +5,9 @@ import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
-import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntity;
-import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
-import net.croz.nrich.registry.configuration.service.stub.RegistryConfigurationTestEntityWithIdClass;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithIdClass;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -29,9 +29,9 @@ public class RegistryConfigurationServiceImplTest {
 
         // then
         assertThat(result).isNotEmpty();
-        assertThat(result).hasSize(2);
-        assertThat(result).extracting("registryGroupId").containsExactly("CONFIGURATION", "DATA");
-        assertThat(result).extracting("registryGroupIdDisplay").containsExactly("Configuration group", "Data group");
+        assertThat(result).hasSize(3);
+        assertThat(result).extracting("registryGroupId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
+        assertThat(result).extracting("registryGroupIdDisplay").containsExactly("Configuration group", "Data group", "HISTORY");
     }
 
     @Test

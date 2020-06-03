@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.configuration.service.stub;
+package net.croz.nrich.registry.configuration.stub;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
