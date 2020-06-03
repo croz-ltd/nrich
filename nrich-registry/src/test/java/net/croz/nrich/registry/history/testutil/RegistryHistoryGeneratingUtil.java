@@ -2,22 +2,32 @@ package net.croz.nrich.registry.history.testutil;
 
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
+import java.util.stream.IntStream;
+
+import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransactionWithoutResult;
 
 public final class RegistryHistoryGeneratingUtil {
 
     private RegistryHistoryGeneratingUtil() {
     }
 
-    public static RegistryHistoryTestEntity creteRevisionList(final EntityManager entityManager) {
+    public static RegistryHistoryTestEntity creteRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
         final RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first");
 
-        entityManager.persist(entity);
+        executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 
-        entity.setName("new name");
+        IntStream.range(0, 20).forEach(value -> {
+            executeInTransactionWithoutResult(platformTransactionManager, () -> {
+                final RegistryHistoryTestEntity loadedEntity = entityManager.find(RegistryHistoryTestEntity.class, entity.getId());
 
-        entityManager.persist(entity);
+                loadedEntity.setName("name " + value);
+
+                entityManager.persist(loadedEntity);
+            });
+        });
 
         return entity;
     }

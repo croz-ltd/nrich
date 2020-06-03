@@ -5,9 +5,13 @@ import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
+import net.croz.nrich.search.util.PageableUtil;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -24,7 +28,22 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
 
     @Transactional(readOnly = true)
-    public <T> List<EntityWithRevision<T>> historyList(final ListRegistryHistoryRequest request) {
+    public <T> Page<EntityWithRevision<T>> historyList(final ListRegistryHistoryRequest request) {
+
+        final AuditQuery auditQuery = createAuditQuery(request);
+
+        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), request.getSortPropertyList());
+
+        final List<?> resultList = auditQuery
+                .setFirstResult(request.getPageNumber())
+                .setMaxResults(request.getPageSize()).getResultList();
+
+        final List<EntityWithRevision<T>> entityWithRevisionList = convertToEntityRevisionList(resultList);
+
+        return PageableExecutionUtils.getPage(entityWithRevisionList, pageable, () -> executeCountQuery(createAuditQuery(request)));
+    }
+
+    private <T> AuditQuery createAuditQuery(final ListRegistryHistoryRequest request) {
         @SuppressWarnings("unchecked")
         final Class<T> type = (Class<T>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getRegistryId()).getRegistryType();
 
@@ -34,11 +53,13 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
             auditQuery.add(AuditEntity.id().eq(request.getRegistryRecordId()));
         }
 
-        final List<?> resultList = auditQuery
-                .setFirstResult(request.getPageNumber())
-                .setMaxResults(request.getPageSize()).getResultList();
+        return auditQuery;
+    }
 
-        return convertToEntityRevisionList(resultList);
+    private long executeCountQuery(final AuditQuery auditQuery) {
+        auditQuery.addProjection(AuditEntity.revisionNumber().count());
+
+        return (Long) auditQuery.getSingleResult();
     }
 
     @SuppressWarnings("unchecked")
