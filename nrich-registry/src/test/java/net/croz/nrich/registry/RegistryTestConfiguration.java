@@ -12,6 +12,7 @@ import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
+import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
@@ -23,6 +24,7 @@ import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterIm
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +48,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -175,8 +178,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
+        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
     }
 
     @Bean

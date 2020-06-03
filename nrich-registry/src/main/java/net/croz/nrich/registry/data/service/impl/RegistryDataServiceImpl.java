@@ -1,10 +1,11 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
+import net.croz.nrich.registry.data.constant.RegistryDataConstants;
+import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 // TODO better error handling and maybe versioning
@@ -47,15 +49,18 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
 
+    private final List<RegistryDataInterceptor> registryDataInterceptorList;
+
     private final Map<String, JpaQueryBuilder<?>> classNameQueryBuilderMap;
 
     private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
 
-    public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+    public RegistryDataServiceImpl(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final List<RegistryDataInterceptor> registryDataInterceptorList) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
+        this.registryDataInterceptorList = registryDataInterceptorList;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationHolder);
         this.classNameManagedTypeWrapperMap = initializeManagedTypeMap(registryDataConfigurationHolder);
     }
@@ -70,12 +75,16 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Transactional(readOnly = true)
     @Override
     public <P> Page<P> list(final ListRegistryRequest request) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryList(request));
+
         return registryListInternal(request);
     }
 
     @Transactional
     @Override
     public <T> T create(final CreateRegistryServiceRequest request) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryCreate(request));
+
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
@@ -91,6 +100,8 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Transactional
     @Override
     public <T> T update(final UpdateRegistryServiceRequest request) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryUpdate(request));
+
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
@@ -113,6 +124,8 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @Transactional
     @Override
     public <T> T delete(final DeleteRegistryRequest request) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryDelete(request));
+
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
@@ -183,7 +196,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return type.newInstance();
     }
 
-    protected <T> T findEntityInstance(final Class<T> type, final Object id) {
+    private <T> T findEntityInstance(final Class<T> type, final Object id) {
         Assert.isTrue(id instanceof Map || id instanceof Number, String.format("Id: %s is of not supported type!", id));
 
         final String wherePart;
@@ -225,5 +238,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue("id");
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
+    }
+
+    private List<RegistryDataInterceptor> interceptorList() {
+        return Optional.ofNullable(registryDataInterceptorList).orElse(Collections.emptyList());
     }
 }
