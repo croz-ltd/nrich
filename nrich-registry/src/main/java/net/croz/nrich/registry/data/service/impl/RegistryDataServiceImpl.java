@@ -135,6 +135,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         return instance;
     }
+
     private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
         if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
             return Collections.emptyMap();
@@ -189,7 +190,6 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }
-
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
