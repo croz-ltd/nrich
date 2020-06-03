@@ -135,6 +135,27 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         return instance;
     }
+    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
+            return Collections.emptyMap();
+        }
+
+        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
+                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
+    }
+
+    private Map<String, ManagedTypeWrapper> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
+            return Collections.emptyMap();
+        }
+
+        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
+                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new ManagedTypeWrapper(entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType()))));
+    }
+
+    private List<RegistryDataInterceptor> interceptorList() {
+        return Optional.ofNullable(registryDataInterceptorList).orElse(Collections.emptyList());
+    }
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
@@ -169,23 +190,6 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }
 
-    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
-            return Collections.emptyMap();
-        }
-
-        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
-    }
-
-    private Map<String, ManagedTypeWrapper> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
-            return Collections.emptyMap();
-        }
-
-        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new ManagedTypeWrapper(entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType()))));
-    }
 
     @SuppressWarnings("unchecked")
     @SneakyThrows
@@ -238,9 +242,5 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryDataConstants.ID_ATTRIBUTE);
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
-    }
-
-    private List<RegistryDataInterceptor> interceptorList() {
-        return Optional.ofNullable(registryDataInterceptorList).orElse(Collections.emptyList());
     }
 }
