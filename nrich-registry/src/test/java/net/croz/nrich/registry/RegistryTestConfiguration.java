@@ -17,6 +17,8 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.history.service.RegistryHistoryService;
+import net.croz.nrich.registry.history.service.impl.RegistryHistoryServiceImpl;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
@@ -143,8 +145,13 @@ public class RegistryTestConfiguration {
         registryConfigurationConfigurationGroup.setRegistryGroupId("CONFIGURATION");
         registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
 
+        final RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+
+        registryHistoryConfigurationGroup.setRegistryGroupId("HISTORY");
+        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
+
         registryConfiguration.setRegistryGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
-        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup));
+        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup));
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
@@ -202,5 +209,10 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService, final Validator validator) {
         return new RegistryDataController(registryDataService, registryDataRequestConversionService, validator);
+    }
+
+    @Bean
+    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration());
     }
 }

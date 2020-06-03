@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.data.request;
+package net.croz.nrich.registry.history.request;
 
 import lombok.Data;
 import net.croz.nrich.registry.core.model.SearchParameter;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class ListRegistryRequest {
+public class ListRegistryHistoryRequest {
 
     @NotNull
     private String registryId;
@@ -22,6 +22,8 @@ public class ListRegistryRequest {
     @Max(1000)
     @NotNull
     private Integer pageSize;
+
+    private Object registryRecordId;
 
     private SearchParameter searchParameter;
 

@@ -32,6 +32,11 @@ subprojects {
     registerFeature("web") {
       usingSourceSet(sourceSets.main)
     }
+
+    registerFeature("envers") {
+      usingSourceSet(sourceSets.main)
+    }
+
     withSourcesJar()
   }
 

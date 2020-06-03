@@ -2,7 +2,7 @@ package net.croz.nrich.registry.data.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.data.model.SearchParameter;
+import net.croz.nrich.registry.core.model.SearchParameter;
 import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
