@@ -17,6 +17,8 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
+import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
@@ -152,9 +154,14 @@ public class RegistryTestConfiguration {
         registryOverrideConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
         registryOverrideConfiguration.setDeletable(false);
 
+        final RegistryOverrideConfiguration registryInterceptorTestOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+
+        registryInterceptorTestOverrideConfiguration.setReadOnly(true);
+
         final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = new HashMap<>();
 
         registryOverrideConfigurationMap.put(RegistryConfigurationTestEntity.class, registryOverrideConfiguration);
+        registryOverrideConfigurationMap.put(RegistryConfigurationUpdateInterceptorTestEntity.class, registryInterceptorTestOverrideConfiguration);
 
         registryConfiguration.setEntityRegistryOverrideConfiguration(registryOverrideConfigurationMap);
 
@@ -164,6 +171,11 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryConfigurationResolverService registryConfigurationResolverService(final EntityManager entityManager, final RegistryConfiguration registryConfiguration) {
         return new RegistryConfigurationResolverServiceImpl(entityManager, registryConfiguration);
+    }
+
+    @Bean
+    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(final  RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new RegistryConfigurationUpdateInterceptor(registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
