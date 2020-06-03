@@ -211,7 +211,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
                     .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
             wherePart = idMap.keySet().stream()
-                    .map(key -> String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key + "." + RegistryDataConstants.ID_ATTRIBUTE, toParameterVariable(key)))
+                    .map(this::toParameterExpression)
                     .collect(Collectors.joining(" and "));
 
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
@@ -232,8 +232,14 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return query.getSingleResult();
     }
 
-    private String toParameterVariable(final Object key) {
-        final String[] keyList = key.toString().split("\\.");
+    private String toParameterExpression(final String key) {
+        final String keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryDataConstants.ID_ATTRIBUTE);
+
+        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
+    }
+
+    private String toParameterVariable(final String key) {
+        final String[] keyList = key.split("\\.");
 
         return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
     }
