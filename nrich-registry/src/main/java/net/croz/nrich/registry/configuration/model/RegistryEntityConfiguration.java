@@ -19,7 +19,11 @@ public class RegistryEntityConfiguration {
 
     private final boolean readOnly;
 
-    private final boolean deletable;
+    private final boolean creatable;
+
+    private final boolean updateable;
+
+    private final boolean deletable;;
 
     private final boolean isIdentifierAssigned;
 

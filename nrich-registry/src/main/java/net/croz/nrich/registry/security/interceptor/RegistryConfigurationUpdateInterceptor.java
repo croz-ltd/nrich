@@ -21,12 +21,16 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
 
     @Override
     public void beforeRegistryCreate(final CreateRegistryServiceRequest request) {
-        verifyRegistryOperation(request.getClassFullName(), resolveConfiguration(request.getClassFullName()).isReadOnly());
+        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(request.getClassFullName());
+
+        verifyRegistryOperation(request.getClassFullName(), registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isCreatable());
     }
 
     @Override
     public void beforeRegistryUpdate(final UpdateRegistryServiceRequest request) {
-        verifyRegistryOperation(request.getClassFullName(), resolveConfiguration(request.getClassFullName()).isReadOnly());
+        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(request.getClassFullName());
+
+        verifyRegistryOperation(request.getClassFullName(), registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isUpdateable());
     }
 
     @Override

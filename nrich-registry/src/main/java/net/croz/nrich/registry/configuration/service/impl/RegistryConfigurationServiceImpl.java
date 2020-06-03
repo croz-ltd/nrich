@@ -82,6 +82,8 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyConfigurationList(registryPropertyConfigurationList)
                 .readOnly(registryOverrideConfiguration.isReadOnly())
+                .creatable(registryOverrideConfiguration.isCreatable())
+                .updateable(registryOverrideConfiguration.isUpdateable())
                 .deletable(registryOverrideConfiguration.isDeletable())
                 .isHistoryAvailable(isHistoryAvailable)
                 .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())

@@ -52,6 +52,8 @@ public class RegistryConfigurationServiceImplTest {
         assertThat(registryEntityConfiguration.getRegistryName()).isEqualTo(RegistryConfigurationTestEntity.class.getSimpleName());
         assertThat(registryEntityConfiguration.getRegistryDisplayName()).isEqualTo("Test entity");
         assertThat(registryEntityConfiguration.isReadOnly()).isFalse();
+        assertThat(registryEntityConfiguration.isCreatable()).isTrue();
+        assertThat(registryEntityConfiguration.isUpdateable()).isTrue();
         assertThat(registryEntityConfiguration.isDeletable()).isFalse();
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isFalse();

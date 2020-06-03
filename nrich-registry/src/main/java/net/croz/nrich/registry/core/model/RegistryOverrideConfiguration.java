@@ -14,6 +14,10 @@ public class RegistryOverrideConfiguration {
 
     private boolean readOnly;
 
+    private boolean creatable;
+
+    private boolean updateable;
+
     private boolean deletable;
 
     private boolean isHistoryAvailable;
@@ -29,6 +33,8 @@ public class RegistryOverrideConfiguration {
     public static RegistryOverrideConfiguration defaultConfiguration() {
         return RegistryOverrideConfiguration.builder()
                 .readOnly(false)
+                .creatable(true)
+                .updateable(true)
                 .deletable(true)
                 .isHistoryAvailable(false)
                 .ignoredPropertyList(Collections.emptyList())
