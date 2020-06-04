@@ -30,7 +30,7 @@ public class RegistryConfigurationControllerTest extends BaseWebTest {
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse).hasSize(2);
+        assertThat(convertedResponse).hasSize(3);
     }
 
 }
