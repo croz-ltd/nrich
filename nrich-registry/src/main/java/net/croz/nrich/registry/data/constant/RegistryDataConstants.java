@@ -2,8 +2,6 @@ package net.croz.nrich.registry.data.constant;
 
 public final class RegistryDataConstants {
 
-    public static final String ID_ATTRIBUTE = "id";
-
     public static final String PROPERTY_PREFIX_FORMAT = "%s.%s";
 
     public static final String QUERY_PARAMETER_FORMAT = "%s = :%s";

@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.data.service.impl;
 
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
@@ -167,7 +168,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
 
         final ManagedType<?> managedType = classNameManagedTypeWrapperMap.get(request.getRegistryId()).getIdentifiableType();
 
-        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryDataConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
+        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(RegistryCoreConstants.ID_ATTRIBUTE, SortDirection.ASC), request.getSortPropertyList());
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
@@ -217,9 +218,9 @@ public class RegistryDataServiceImpl implements RegistryDataService {
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
         }
         else {
-            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryDataConstants.ID_ATTRIBUTE, RegistryDataConstants.ID_ATTRIBUTE);
+            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryCoreConstants.ID_ATTRIBUTE, RegistryCoreConstants.ID_ATTRIBUTE);
 
-            parameterMap.put(RegistryDataConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
+            parameterMap.put(RegistryCoreConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
         }
 
         final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, type.getName(), wherePart);
@@ -233,7 +234,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     }
 
     private String toParameterExpression(final String key) {
-        final String keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryDataConstants.ID_ATTRIBUTE);
+        final String keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryCoreConstants.ID_ATTRIBUTE);
 
         return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
     }
@@ -249,7 +250,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
             return Long.valueOf(value.toString());
         }
 
-        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryDataConstants.ID_ATTRIBUTE);
+        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryCoreConstants.ID_ATTRIBUTE);
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
     }
