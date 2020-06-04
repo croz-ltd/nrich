@@ -55,9 +55,12 @@ public class RegistryHistoryServiceImplTest {
         final EntityWithRevision<RegistryHistoryTestEntity> firstResult = resultList.getContent().get(0);
 
         // then
-        assertThat(firstResult.getRevisionInfo()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getRevisionTypeName()).isEqualTo(RevisionType.ADD.name());
+        assertThat(firstResult.getEntity().getParent()).isNotNull();
+        assertThat(firstResult.getEntity().getParent().getName()).isNotNull();
 
+        assertThat(firstResult.getRevisionInfo()).isNotNull();
+
+        assertThat(firstResult.getRevisionInfo().getRevisionTypeName()).isEqualTo(RevisionType.ADD.name());
         assertThat(firstResult.getRevisionInfo().getRevisionDate()).isNotNull();
         assertThat(firstResult.getRevisionInfo().getRevisionNumber()).isNotNull();
     }
@@ -73,7 +76,7 @@ public class RegistryHistoryServiceImplTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "parent");
     }
 
     @Test
@@ -88,7 +91,7 @@ public class RegistryHistoryServiceImplTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "parent");
     }
 
     @Test

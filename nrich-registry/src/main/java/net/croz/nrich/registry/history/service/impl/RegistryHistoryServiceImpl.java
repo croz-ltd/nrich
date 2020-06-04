@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.history.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
+import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.history.constants.RegistryHistoryConstants;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
@@ -27,18 +27,27 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.ManagedType;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class RegistryHistoryServiceImpl implements RegistryHistoryService {
 
     private final EntityManager entityManager;
 
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
+
+    private final Map<Class<?>, ManagedType<?>> classManagedTypeMap;
+
+    public RegistryHistoryServiceImpl(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        this.entityManager = entityManager;
+        this.registryDataConfigurationHolder = registryDataConfigurationHolder;
+        this.classManagedTypeMap = initializeManagedTypeMap(registryDataConfigurationHolder);
+    }
 
     @Transactional(readOnly = true)
     public <T> Page<EntityWithRevision<T>> historyList(final ListRegistryHistoryRequest request) {
@@ -56,6 +65,15 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize());
 
         return PageableExecutionUtils.getPage(entityWithRevisionList, pageable, () -> executeCountQuery(createAuditQuery(request)));
+    }
+
+    private Map<Class<?>, ManagedType<?>> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
+            return Collections.emptyMap();
+        }
+
+        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
+                .collect(Collectors.toMap(RegistryDataConfiguration::getRegistryType, registryDataConfiguration -> entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType())));
     }
 
     private <T> AuditQuery createAuditQuery(final ListRegistryHistoryRequest request) {
@@ -82,7 +100,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         final List<Object[]> objectResultList = (List<Object[]>) resultList;
 
         return Optional.ofNullable(objectResultList).orElse(Collections.emptyList()).stream()
-                .map(value -> new EntityWithRevision<>(initializeEntity((T) value[0]), convertToRevisionInfo((DefaultRevisionEntity) value[1], (RevisionType) value[2])))
+                .map(value -> new EntityWithRevision<>(initializeEntityOneToOneAssociations((T) value[0]), convertToRevisionInfo((DefaultRevisionEntity) value[1], (RevisionType) value[2])))
                 .collect(Collectors.toList());
     }
 
@@ -150,8 +168,21 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         return new RevisionInfo(defaultRevisionEntity.getId(), defaultRevisionEntity.getRevisionDate().toInstant(), revisionType.name());
     }
 
-    private <T> T initializeEntity(final T entity) {
+    private <T> T initializeEntityOneToOneAssociations(final T entity) {
         Hibernate.initialize(entity);
+
+        final ManagedType<?> managedType = classManagedTypeMap.get(entity.getClass());
+
+        final MapSupportingDirectFieldAccessFallbackBeanWrapper mapSupportingDirectFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entity);
+
+        managedType.getAttributes().forEach(attribute -> {
+
+            if (Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType())) {
+                final Object value = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attribute.getName());
+
+                Hibernate.initialize(value);
+            }
+        });
 
         return entity;
     }
