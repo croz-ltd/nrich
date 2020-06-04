@@ -18,7 +18,7 @@ public class ListRegistryHistoryRequest {
     @NotNull
     private Integer pageNumber;
 
-    @Max(1000)
+    @Max(100)
     @NotNull
     private Integer pageSize;
 
