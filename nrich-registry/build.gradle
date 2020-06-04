@@ -12,8 +12,9 @@ dependencies {
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
   implementation "org.springframework.data:spring-data-jpa"
   implementation "jakarta.persistence:jakarta.persistence-api"
-  implementation "org.springframework:spring-web"
+  implementation "org.hibernate:hibernate-core"
   implementation "org.modelmapper:modelmapper"
+  implementation "org.springframework:spring-web"
 
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"

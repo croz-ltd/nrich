@@ -1,3 +1,5 @@
+// TODO fix dependencies in all projects, use minimal set of dependencies etc.
+
 allprojects {
   repositories {
     mavenLocal()
