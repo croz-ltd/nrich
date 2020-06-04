@@ -2,12 +2,12 @@ package net.croz.nrich.registry.data.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.data.request.SearchParameter;
 import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.data.request.SearchParameter;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
@@ -16,6 +16,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUser;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
@@ -63,6 +64,14 @@ public final class RegistryDataGeneratingUtil {
         request.setPageSize(pageSize);
 
         return request;
+    }
+
+    public static List<RegistryTestEntityWithOverriddenSearchConfiguration> createRegistryTestEntityWithOverriddenSearchConfigurationList(final EntityManager entityManager) {
+        final List<RegistryTestEntityWithOverriddenSearchConfiguration> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntityWithOverriddenSearchConfiguration(null, "name " + value)).collect(Collectors.toList());
+
+        testEntityList.forEach(entityManager::persist);
+
+        return testEntityList;
     }
 
     public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query) {

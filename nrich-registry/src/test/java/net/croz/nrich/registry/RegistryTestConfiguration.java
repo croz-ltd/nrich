@@ -19,6 +19,7 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.history.service.impl.RegistryHistoryServiceImpl;
@@ -28,6 +29,9 @@ import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
+import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.model.SearchOperatorImpl;
+import net.croz.nrich.search.model.SearchOperatorOverride;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -184,6 +188,15 @@ public class RegistryTestConfiguration {
         registryOverrideConfigurationMap.put(RegistryConfigurationUpdateInterceptorTestEntity.class, registryInterceptorTestOverrideConfiguration);
 
         registryConfiguration.setEntityRegistryOverrideConfiguration(registryOverrideConfigurationMap);
+
+        final SearchConfiguration<?, ?, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
+        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ)));
+
+        final Map<Class<?> , SearchConfiguration<?, ?, Map<String, Object>>> searchConfigurationMap = new HashMap<>();
+
+        searchConfigurationMap.put(RegistryTestEntityWithOverriddenSearchConfiguration.class, searchConfiguration);
+
+        registryConfiguration.setEntitySearchOverrideConfigurationMap(searchConfigurationMap);
 
         return registryConfiguration;
     }

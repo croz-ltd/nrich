@@ -10,6 +10,7 @@ import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroupId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithOverriddenSearchConfigurationList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityManager;
@@ -219,6 +221,28 @@ public class RegistryDataServiceImplTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void shouldListRegistryWithOverriddenSearchConfiguration() {
+        // given
+        createRegistryTestEntityWithOverriddenSearchConfigurationList(entityManager);
+
+        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name%");
+
+        // when
+        final Page<RegistryTestEntity> result = registryDataService.list(request);
+
+        // then
+        assertThat(result).isEmpty();
+
+        // and when
+        final ListRegistryRequest requestWithEqualName = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name 0");
+
+        final Page<RegistryTestEntity> resultWithEqualName = registryDataService.list(requestWithEqualName);
+
+        // then
+        assertThat(resultWithEqualName).hasSize(1);
     }
 
     private RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(final RegistryTestEmbeddedUserGroupId groupId) {
