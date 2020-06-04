@@ -168,6 +168,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         return new RevisionInfo(defaultRevisionEntity.getId(), defaultRevisionEntity.getRevisionDate().toInstant(), revisionType.name());
     }
 
+    // TODO not happy about this solution, think of a better one, it is still required to ignore properties with object mapper since proxy properties remain
     private <T> T initializeEntityOneToOneAssociations(final T entity) {
         Hibernate.initialize(entity);
 
