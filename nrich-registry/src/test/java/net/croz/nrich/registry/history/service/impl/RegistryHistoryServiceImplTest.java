@@ -5,6 +5,9 @@ import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
+import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
+import org.hibernate.envers.RevisionType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,8 +17,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRevisionList;
+import java.math.BigDecimal;
+
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityRevisionList;
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequest;
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithSort;
+import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
@@ -33,14 +41,88 @@ public class RegistryHistoryServiceImplTest {
     @Test
     void shouldReturnAllRevisionsOfEntity() {
         // given
-        final RegistryHistoryTestEntity entity = creteRevisionList(entityManager, platformTransactionManager);
+        final RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
         final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
 
         // when
-        final Page<EntityWithRevision<RegistryHistoryTestEntity>> result = registryHistoryService.historyList(request);
+        final Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
 
         // then
-        assertThat(result).isNotEmpty();
-        assertThat(result.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+
+        // and when
+        final EntityWithRevision<RegistryHistoryTestEntity> firstResult = resultList.getContent().get(0);
+
+        // then
+        assertThat(firstResult.getRevisionInfo()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionType()).isEqualTo(RevisionType.ADD);
+
+        assertThat(firstResult.getRevisionInfo().getRevisionEntity()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionEntity().getRevisionDate()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionEntity().getTimestamp()).isNotNull();
+    }
+
+    @Test
+    void shouldReturnAllRevisionsOfEntityWithoutId() {
+        // given
+        creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), null);
+
+        // when
+        final Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+    }
+
+    @Test
+    void shouldReturnAllRevisionsOfEntityUnsorted() {
+        // given
+        creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), null);
+        request.setSortPropertyList(null);
+
+        // when
+        final Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+    }
+
+    @Test
+    void shouldSupportSortingByAllProperties() {
+        // given
+        final RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequestWithSort(RegistryHistoryTestEntity.class.getName(), entity.getId());
+
+        // when
+        final Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent().get(0).getEntity().getName()).isEqualTo("name 19");
+    }
+
+    @Test
+    void shouldSupportFetchingEntityHistoryDataByEmbeddedId() {
+        // given
+        final RegistryHistoryTestEntityWithEmbeddedId entity = creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(entityManager, platformTransactionManager);
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), entity.getId().asMap());
+
+        // when
+        final Page<EntityWithRevision<RegistryHistoryTestEntityWithEmbeddedId>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent().get(0).getEntity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
+    }
+
+    @AfterEach
+    void cleanup() {
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()).executeUpdate());
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()  + "_AUD").executeUpdate());
     }
 }
