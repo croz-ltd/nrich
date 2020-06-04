@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.core.model;
+package net.croz.nrich.registry.data.request;
 
 import lombok.Data;
 

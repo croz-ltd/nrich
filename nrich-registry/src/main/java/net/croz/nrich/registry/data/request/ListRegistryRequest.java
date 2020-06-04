@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.data.request;
 
 import lombok.Data;
-import net.croz.nrich.registry.core.model.SearchParameter;
 import net.croz.nrich.search.api.model.SortProperty;
 
 import javax.validation.constraints.Max;

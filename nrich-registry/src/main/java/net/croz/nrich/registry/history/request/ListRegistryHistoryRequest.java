@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.history.request;
 
 import lombok.Data;
-import net.croz.nrich.registry.core.model.SearchParameter;
 import net.croz.nrich.search.api.model.SortProperty;
 
 import javax.validation.constraints.Max;
@@ -24,8 +23,6 @@ public class ListRegistryHistoryRequest {
     private Integer pageSize;
 
     private Object registryRecordId;
-
-    private SearchParameter searchParameter;
 
     private List<SortProperty> sortPropertyList;
 
