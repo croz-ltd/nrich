@@ -115,7 +115,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
             idMap.forEach((key, value) -> auditQuery.add(value instanceof Number ? AuditEntity.property(key).eq(resolveIdValue(value)) : AuditEntity.relatedId(key).eq(resolveIdValue(value))));
         }
         else {
-            auditQuery.add(AuditEntity.id().eq(id));
+            auditQuery.add(AuditEntity.id().eq(Long.valueOf(id.toString())));
         }
     }
 
