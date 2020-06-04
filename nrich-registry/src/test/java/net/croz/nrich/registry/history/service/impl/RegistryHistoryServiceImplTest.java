@@ -6,6 +6,7 @@ import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
+import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObject;
 import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityRevisionList;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList;
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequest;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithSort;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
@@ -116,6 +118,20 @@ public class RegistryHistoryServiceImplTest {
 
         // when
         final Page<EntityWithRevision<RegistryHistoryTestEntityWithEmbeddedId>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList).isNotEmpty();
+        assertThat(resultList.getContent().get(0).getEntity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
+    }
+
+    @Test
+    void shouldSupportFetchingEntityHistoryDataByEmbeddedObjectId() {
+        // given
+        final RegistryHistoryTestEntityWithEmbeddedObject entity = creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(entityManager, platformTransactionManager);
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedObject.class.getName(), entity.getId().asMap());
+
+        // when
+        final Page<EntityWithRevision<RegistryHistoryTestEntityWithEmbeddedObject>> resultList = registryHistoryService.historyList(request);
 
         // then
         assertThat(resultList).isNotEmpty();

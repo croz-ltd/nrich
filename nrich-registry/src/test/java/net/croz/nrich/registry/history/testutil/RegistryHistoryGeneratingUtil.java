@@ -4,6 +4,9 @@ import net.croz.nrich.registry.history.constants.RegistryHistoryConstants;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
+import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObject;
+import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey;
+import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -49,6 +52,32 @@ public final class RegistryHistoryGeneratingUtil {
         IntStream.range(0, 20).forEach(value -> {
             executeInTransactionWithoutResult(platformTransactionManager, () -> {
                 final RegistryHistoryTestEntityWithEmbeddedId loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedId.class, entity.getId());
+
+                loadedEntity.setAmount(BigDecimal.valueOf(value));
+
+                entityManager.persist(loadedEntity);
+            });
+        });
+
+        return entity;
+    }
+
+    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
+        final RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
+        final RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
+
+        final RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId primaryKey = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId(firstKey, secondKey);
+        final RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject(primaryKey, BigDecimal.ONE);
+
+        executeInTransactionWithoutResult(platformTransactionManager, () -> {
+            entityManager.persist(firstKey);
+            entityManager.persist(secondKey);
+            entityManager.persist(entity);
+        });
+
+        IntStream.range(0, 20).forEach(value -> {
+            executeInTransactionWithoutResult(platformTransactionManager, () -> {
+                final RegistryHistoryTestEntityWithEmbeddedObject loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedObject.class, entity.getId());
 
                 loadedEntity.setAmount(BigDecimal.valueOf(value));
 
