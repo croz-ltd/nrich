@@ -10,6 +10,7 @@ import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroupId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithEmbeddedId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithOverriddenSearchConfigurationList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
@@ -150,7 +152,7 @@ public class RegistryDataServiceImplTest {
     }
 
     @Test
-    void shouldUpdateRegistryEntityWithCompositeKey() {
+    void shouldUpdateRegistryEntityWithEmbeddedObjectId() {
         // given
         final String joinedPropertyUpdateValue = "updated joined property";
         final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
@@ -188,7 +190,7 @@ public class RegistryDataServiceImplTest {
     }
 
     @Test
-    void shouldDeleteRegistryEntityWithCompositeKey() {
+    void shouldDeleteRegistryEntityWithEmbeddedObjectId() {
         // given
         final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
 
@@ -203,6 +205,27 @@ public class RegistryDataServiceImplTest {
         // and when
         flushEntityManager(entityManager);
         final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(registryTestEmbeddedUserGroup.getUserGroupId());
+
+        // then
+        assertThat(loaded).isNull();
+    }
+
+    @Test
+    void shouldDeleteRegistryEntityWithEmbeddedId() {
+        // given
+        final RegistryTestEntityWithEmbeddedId registryTestEntityWithEmbeddedId = createRegistryTestEntityWithEmbeddedId(entityManager);
+
+        final DeleteRegistryRequest request = createDeleteRegistryRequest(RegistryTestEntityWithEmbeddedId.class.getName(), registryTestEntityWithEmbeddedId.getId().asMap());
+
+        // when
+        final RegistryTestEntityWithEmbeddedId result = registryDataService.delete(request);
+
+        // then
+        assertThat(result).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        final RegistryTestEntityWithEmbeddedId loaded = entityManager.find(RegistryTestEntityWithEmbeddedId.class, registryTestEntityWithEmbeddedId.getId());
 
         // then
         assertThat(loaded).isNull();

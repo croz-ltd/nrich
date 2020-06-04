@@ -138,19 +138,11 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     }
 
     private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
-            return Collections.emptyMap();
-        }
-
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
                 .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
 
     private Map<String, ManagedTypeWrapper> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        if (registryDataConfigurationHolder.getRegistryDataConfigurationList() == null) {
-            return Collections.emptyMap();
-        }
-
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
                 .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new ManagedTypeWrapper(entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType()))));
     }
@@ -195,9 +187,10 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     @SuppressWarnings("unchecked")
     @SneakyThrows
     private <T> T resolveEntityInstance(final Class<T> type, final Object entityData) {
-        if (type.equals(entityData)) {
+        if (entityData != null && type.equals(entityData.getClass())) {
             return (T) entityData;
         }
+
         return type.newInstance();
     }
 
@@ -211,8 +204,8 @@ public class RegistryDataServiceImpl implements RegistryDataService {
             final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
                     .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
-            wherePart = idMap.keySet().stream()
-                    .map(this::toParameterExpression)
+            wherePart = idMap.entrySet().stream()
+                    .map(entry -> toParameterExpression(entry.getKey(), entry.getValue()))
                     .collect(Collectors.joining(" and "));
 
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
@@ -233,8 +226,14 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return query.getSingleResult();
     }
 
-    private String toParameterExpression(final String key) {
-        final String keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryCoreConstants.ID_ATTRIBUTE);
+    private String toParameterExpression(final String key, final Object value) {
+        final String keyWithId;
+        if (value instanceof Number) {
+            keyWithId = key;
+        }
+        else {
+            keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryCoreConstants.ID_ATTRIBUTE);
+        }
 
         return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
     }
@@ -245,7 +244,7 @@ public class RegistryDataServiceImpl implements RegistryDataService {
         return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
     }
 
-    private Long resolveIdValue(final Object value) {
+    private Object resolveIdValue(final Object value) {
         if (value instanceof Number) {
             return Long.valueOf(value.toString());
         }

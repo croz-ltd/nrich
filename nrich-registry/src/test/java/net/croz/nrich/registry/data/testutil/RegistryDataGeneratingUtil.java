@@ -16,6 +16,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUser;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
@@ -47,6 +48,15 @@ public final class RegistryDataGeneratingUtil {
         testEntityList.forEach(entityManager::persist);
 
         return testEntityList;
+    }
+
+    public static RegistryTestEntityWithEmbeddedId createRegistryTestEntityWithEmbeddedId(final EntityManager entityManager) {
+        final RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey(1L, 2L);
+        final RegistryTestEntityWithEmbeddedId registryTestEntity = new RegistryTestEntityWithEmbeddedId(primaryKey, "name 1");
+
+        entityManager.persist(registryTestEntity);
+
+        return registryTestEntity;
     }
 
     public static BulkListRegistryRequest createBulkListRegistryRequest(final String classFullName, final String query) {
@@ -92,7 +102,7 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
-    public static DeleteRegistryRequest createDeleteRegistryRequest(final String classFullName, final Long id) {
+    public static DeleteRegistryRequest createDeleteRegistryRequest(final String classFullName, final Object id) {
         final DeleteRegistryRequest request = new DeleteRegistryRequest();
 
         request.setClassFullName(classFullName);
