@@ -245,6 +245,10 @@ public class RegistryDataServiceImpl implements RegistryDataService {
     }
 
     private Long resolveIdValue(final Object value) {
+        if (value instanceof Number) {
+            return Long.valueOf(value.toString());
+        }
+
         final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryDataConstants.ID_ATTRIBUTE);
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
