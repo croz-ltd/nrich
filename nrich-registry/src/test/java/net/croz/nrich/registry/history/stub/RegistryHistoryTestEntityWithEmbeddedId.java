@@ -24,7 +24,7 @@ import java.util.Map;
 public class RegistryHistoryTestEntityWithEmbeddedId {
 
     @EmbeddedId
-    private RegistryConfigurationTestEntityPrimaryKey id;
+    private RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey id;
 
     private BigDecimal amount;
 
@@ -34,7 +34,7 @@ public class RegistryHistoryTestEntityWithEmbeddedId {
     @Getter
     @EqualsAndHashCode
     @Embeddable
-    public static class RegistryConfigurationTestEntityPrimaryKey implements Serializable {
+    public static class RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey implements Serializable {
 
         private Long firstId;
 

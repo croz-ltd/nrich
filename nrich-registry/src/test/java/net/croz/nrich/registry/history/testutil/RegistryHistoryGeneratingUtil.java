@@ -44,7 +44,7 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static RegistryHistoryTestEntityWithEmbeddedId creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
-        final RegistryHistoryTestEntityWithEmbeddedId.RegistryConfigurationTestEntityPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryConfigurationTestEntityPrimaryKey(1L, 1L);
+        final RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey(1L, 1L);
         final RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId(primaryKey, BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
