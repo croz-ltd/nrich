@@ -16,7 +16,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.math.BigDecimal;
 
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityRevisionList;
@@ -25,6 +24,7 @@ import static net.croz.nrich.registry.history.testutil.RegistryHistoryGenerating
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithSort;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
 public class RegistryHistoryServiceImplTest {
@@ -120,6 +120,18 @@ public class RegistryHistoryServiceImplTest {
         // then
         assertThat(resultList).isNotEmpty();
         assertThat(resultList.getContent().get(0).getEntity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
+    }
+
+    @Test
+    void shouldThrowExceptionOnInvalidRegistryId() {
+        // given
+        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), new Object());
+
+        // when
+        final Throwable thrown = catchThrowable(() -> registryHistoryService.historyList(request));
+
+        // then
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     @AfterEach
