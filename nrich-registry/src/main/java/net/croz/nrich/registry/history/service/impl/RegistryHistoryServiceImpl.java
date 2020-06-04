@@ -12,6 +12,7 @@ import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.util.PageableUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
@@ -81,7 +82,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         final List<Object[]> objectResultList = (List<Object[]>) resultList;
 
         return Optional.ofNullable(objectResultList).orElse(Collections.emptyList()).stream()
-                .map(value -> new EntityWithRevision<>((T) value[0], new RevisionInfo((DefaultRevisionEntity) value[1], (RevisionType) value[2])))
+                .map(value -> new EntityWithRevision<>(initializeEntity((T) value[0]), convertToRevisionInfo((DefaultRevisionEntity) value[1], (RevisionType) value[2])))
                 .collect(Collectors.toList());
     }
 
@@ -143,5 +144,15 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryCoreConstants.ID_ATTRIBUTE);
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
+    }
+
+    private RevisionInfo convertToRevisionInfo(final DefaultRevisionEntity defaultRevisionEntity, final RevisionType revisionType) {
+        return new RevisionInfo(defaultRevisionEntity.getId(), defaultRevisionEntity.getRevisionDate().toInstant(), revisionType.name());
+    }
+
+    private <T> T initializeEntity(final T entity) {
+        Hibernate.initialize(entity);
+
+        return entity;
     }
 }

@@ -56,11 +56,10 @@ public class RegistryHistoryServiceImplTest {
 
         // then
         assertThat(firstResult.getRevisionInfo()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getRevisionType()).isEqualTo(RevisionType.ADD);
+        assertThat(firstResult.getRevisionInfo().getRevisionTypeName()).isEqualTo(RevisionType.ADD.name());
 
-        assertThat(firstResult.getRevisionInfo().getRevisionEntity()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getRevisionEntity().getRevisionDate()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getRevisionEntity().getTimestamp()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionDate()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionNumber()).isNotNull();
     }
 
     @Test
