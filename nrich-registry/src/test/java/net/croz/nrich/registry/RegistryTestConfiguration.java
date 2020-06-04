@@ -2,6 +2,8 @@ package net.croz.nrich.registry;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
@@ -17,6 +19,7 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.history.service.impl.RegistryHistoryServiceImpl;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
@@ -107,6 +110,11 @@ public class RegistryTestConfiguration {
 
         objectMapper.findAndRegisterModules();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+
+        objectMapper.setDateFormat(new StdDateFormat());
 
         return objectMapper;
     }
@@ -118,6 +126,11 @@ public class RegistryTestConfiguration {
         messageSource.setBasename("messages");
 
         return messageSource;
+    }
+
+    @Bean
+    public RegistryWebMvcConfiguration registryWebMvcConfiguration(final ObjectMapper objectMapper) {
+        return new RegistryWebMvcConfiguration(objectMapper);
     }
 
     @Bean
@@ -214,5 +227,10 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+    }
+
+    @Bean
+    public RegistryHistoryController registryHistoryController(final RegistryHistoryService registryHistoryService) {
+        return new RegistryHistoryController(registryHistoryService);
     }
 }
