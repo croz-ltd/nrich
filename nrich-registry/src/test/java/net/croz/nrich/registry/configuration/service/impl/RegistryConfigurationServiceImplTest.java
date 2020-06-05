@@ -94,6 +94,15 @@ public class RegistryConfigurationServiceImplTest {
         assertThat(nameConfiguration.isOneToOne()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isEditable()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
+
+        // and when
+        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryTestEntityConfiguration.getRegistryHistoryPropertyConfigurationList();
+
+        // then
+        assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
+        assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("id", "timestamp");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp");
     }
 
     @Test

@@ -1,23 +1,30 @@
 package net.croz.nrich.registry.core.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
+import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
+import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.model.SearchConfiguration;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,6 +80,50 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
         });
 
         return new RegistryDataConfigurationHolder(registryDataConfigurationList);
+    }
+
+    @Override
+    public RegistryHistoryConfigurationHolder resolveRegistryHistoryConfiguration() {
+        final ManagedType<?> revisionEntityManagedType = entityManager.getMetamodel().getManagedTypes()
+                .stream()
+                .filter(managedType -> AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION))
+                .findFirst()
+                .orElse(null);
+
+        String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME;
+        Class<?> revisionNumberPropertyType = Integer.class;
+
+        String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME;
+        Class<?> revisionTimestampPropertyType = Long.class;
+
+        final List<PropertyWithType> additionalPropertyList = new ArrayList<>();
+        for (final Attribute<?, ?> attribute : Optional.ofNullable(revisionEntityManagedType).map(ManagedType::getAttributes).orElse(Collections.emptySet())) {
+            final String attributeName = attribute.getName();
+            final Class<?> attributeType = attribute.getJavaType();
+
+            if (!(attribute.getJavaMember() instanceof Field)) {
+                continue;
+            }
+
+            final Field attributeField = (Field) attribute.getJavaMember();
+
+            if (AnnotationUtil.isAnnotationPresent(attributeField, RegistryEnversConstants.ENVERS_REVISION_NUMBER_ANNOTATION)) {
+                revisionNumberPropertyName = attributeName;
+                revisionNumberPropertyType = attributeType;
+            }
+            else if (AnnotationUtil.isAnnotationPresent(attributeField, RegistryEnversConstants.ENVERS_REVISION_TIMESTAMP_ANNOTATION)) {
+                revisionTimestampPropertyName = attributeName;
+                revisionTimestampPropertyType = attributeType;
+            }
+            else {
+                additionalPropertyList.add(new PropertyWithType(attributeName, attributeType));
+            }
+        }
+
+        final PropertyWithType revisionNumberProperty = new PropertyWithType(revisionNumberPropertyName, revisionNumberPropertyType);
+        final PropertyWithType revisionTimestampProperty = new PropertyWithType(revisionTimestampPropertyName, revisionTimestampPropertyType);
+
+        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, additionalPropertyList, registryConfiguration.getRegistryHistoryDisplayList());
     }
 
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {

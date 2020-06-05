@@ -214,7 +214,8 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService) {
         final List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
-        return new RegistryConfigurationServiceImpl(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+
+        return new RegistryConfigurationServiceImpl(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
@@ -239,7 +240,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration());
     }
 
     @Bean

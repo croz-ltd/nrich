@@ -20,4 +20,6 @@ public class RegistryConfiguration {
 
     private List<RegistryGroupDefinitionConfiguration> registryGroupDefinitionConfigurationList;
 
+    private List<String> registryHistoryDisplayList;
+
 }

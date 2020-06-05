@@ -1,8 +1,10 @@
 package net.croz.nrich.registry.history.service.impl;
 
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
+import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
+import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.history.constants.RegistryHistoryConstants;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.model.RevisionInfo;
@@ -29,7 +31,9 @@ import org.springframework.util.CollectionUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
+import java.time.Instant;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,11 +45,14 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
 
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
 
+    private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
+
     private final Map<Class<?>, ManagedType<?>> classManagedTypeMap;
 
-    public RegistryHistoryServiceImpl(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+    public RegistryHistoryServiceImpl(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfiguration) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
+        this.registryHistoryConfiguration = registryHistoryConfiguration;
         this.classManagedTypeMap = initializeManagedTypeMap(registryDataConfigurationHolder);
     }
 
@@ -165,8 +172,21 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         return idValue == null ? null : Long.valueOf(idValue.toString());
     }
 
-    private RevisionInfo convertToRevisionInfo(final DefaultRevisionEntity defaultRevisionEntity, final RevisionType revisionType) {
-        return new RevisionInfo(defaultRevisionEntity.getId(), defaultRevisionEntity.getRevisionDate().toInstant(), revisionType.name());
+    private RevisionInfo convertToRevisionInfo(final Object revisionEntity, final RevisionType revisionType) {
+        final MapSupportingDirectFieldAccessFallbackBeanWrapper directFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(revisionEntity);
+
+        final Object revisionNumber = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfiguration.getRevisionNumberProperty().getName());
+
+        final Object revisionDate = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfiguration.getRevisionTimestampProperty().getName());
+
+        Assert.isTrue(revisionNumber != null && revisionDate != null, "Revision number or revision date are empty!");
+
+        final Instant revisionDateAsInstant = revisionDate instanceof Long ? Instant.ofEpochMilli((long) revisionDate) : ((Date) revisionDate).toInstant();
+
+        final Map<String, Object> additionalRevisionPropertyMap = registryHistoryConfiguration.getRevisionAdditionalPropertyList().stream()
+                .collect(Collectors.toMap(PropertyWithType::getName, propertyWithType -> directFieldAccessFallbackBeanWrapper.getPropertyValue(propertyWithType.getName())));
+
+        return new RevisionInfo(Long.valueOf(revisionNumber.toString()), revisionDateAsInstant, revisionType.name(), additionalRevisionPropertyMap);
     }
 
     // TODO not happy about this solution, think of a better one, it is still required to ignore properties with object mapper since proxy properties remain

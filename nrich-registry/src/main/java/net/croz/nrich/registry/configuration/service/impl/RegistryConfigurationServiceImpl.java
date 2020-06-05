@@ -10,9 +10,13 @@ import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
-import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
+import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
+import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
+import net.croz.nrich.registry.core.util.AnnotationUtil;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -21,7 +25,6 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,6 +42,8 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
     private final RegistryGroupDefinitionHolder registryGroupDefinitionHolder;
 
+    private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
+
     private final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap;
 
     @Cacheable("nrich.registryConfiguration.cache")
@@ -46,14 +51,16 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
     public List<RegistryGroupConfiguration> fetchRegistryGroupConfiguration() {
         final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
 
+        final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList = resolveHistoryPropertyList(registryHistoryConfiguration);
+
         registryGroupDefinitionHolder.getRegistryGroupDefinitionList().forEach(registryGroupDefinition -> {
             final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
             final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
-                    .map(managedType -> createRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType))
+                    .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType))
                     .collect(Collectors.toList());
 
-            final RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList);
+            final RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList, registryPropertyHistoryConfigurationList);
 
             registryGroupConfigurationList.add(registryConfiguration);
         });
@@ -63,7 +70,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         return registryGroupConfigurationList;
     }
 
-    private RegistryEntityConfiguration createRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
+    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
         final Class<?> entityType = managedType.getJavaType();
         final RegistryOverrideConfiguration registryOverrideConfiguration = resolveRegistryOverrideConfiguration(entityType, registryOverrideConfigurationMap);
         final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(managedType);
@@ -108,8 +115,6 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
 
             final String attributeName = attribute.getName();
             final Class<?> attributeType = attribute.getJavaType();
-            final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
-            final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
             final boolean isIdAttribute = attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getCompositeIdentityPropertyNameList().contains(attributeName);
             final boolean isOneToOne = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType());
@@ -118,28 +123,48 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
             final boolean isReadOnly = readOnlyPropertyList.contains(attributeName) || readOnlyOverridePropertyList.contains(attributeName);
             final boolean isSortable = !nonSortablePropertyList.contains(attributeName);
 
-            final String formLabel = formLabel(entityType, attributeType, attributeName);
-            final String columnHeader = columnHeader(entityType, attributeType, attributeName);
-
-            final RegistryPropertyConfiguration registryPropertyConfiguration = RegistryPropertyConfiguration.builder()
-                    .name(attributeName)
-                    .originalType(attributeType.getName())
-                    .javascriptType(javascriptType)
-                    .isDecimal(isDecimal)
-                    .isOneToOne(isOneToOne)
-                    .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
-                    .isId(isIdAttribute)
-                    .formLabel(formLabel)
-                    .columnHeader(columnHeader)
-                    .editable(!isReadOnly)
-                    .sortable(isSortable)
-                    .build();
+            final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isOneToOne, oneToOneReferencedClass, isReadOnly, isSortable);
 
             registryPropertyConfigurationList.add(registryPropertyConfiguration);
 
         });
 
         return registryPropertyConfigurationList;
+    }
+
+    private List<RegistryPropertyConfiguration> resolveHistoryPropertyList(final RegistryHistoryConfigurationHolder registryHistoryConfiguration) {
+        final List<PropertyWithType> historyPropertyList = new ArrayList<>();
+
+        historyPropertyList.add(registryHistoryConfiguration.getRevisionNumberProperty());
+        historyPropertyList.add(registryHistoryConfiguration.getRevisionTimestampProperty());
+        historyPropertyList.addAll(registryHistoryConfiguration.getRevisionAdditionalPropertyList());
+
+        return historyPropertyList.stream()
+                .map(propertyWithType -> resolveRegistryPropertyConfiguration(RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false, null, true, true))
+                .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.getPropertyDisplayList()))
+                .collect(Collectors.toList());
+    }
+
+    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(final String entityTypePrefix, final Class<?> attributeType, final String attributeName, final boolean isIdAttribute, final boolean isOneToOne, final Class<?> oneToOneReferencedClass, final boolean isReadOnly, final boolean isSortable) {
+        final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
+        final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
+
+        final String formLabel = formLabel(entityTypePrefix, attributeType, attributeName);
+        final String columnHeader = columnHeader(entityTypePrefix, attributeType, attributeName);
+
+        return RegistryPropertyConfiguration.builder()
+                .name(attributeName)
+                .originalType(attributeType.getName())
+                .javascriptType(javascriptType)
+                .isDecimal(isDecimal)
+                .isOneToOne(isOneToOne)
+                .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
+                .isId(isIdAttribute)
+                .formLabel(formLabel)
+                .columnHeader(columnHeader)
+                .editable(!isReadOnly)
+                .sortable(isSortable)
+                .build();
     }
 
     private Class<?> resolveOneToOneClass(final Attribute<?, ?> attribute) {
@@ -160,26 +185,26 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    private String formLabel(final Class<?> entityType, final Class<?> attributeType, final String attributeName) {
-        final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(labelMessageCodeList(entityType, attributeType, attributeName).toArray(new String[0]), attributeName);
+    private String formLabel(final String entityTypePrefix, final Class<?> attributeType, final String attributeName) {
+        final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(labelMessageCodeList(entityTypePrefix, attributeType, attributeName).toArray(new String[0]), attributeName);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    private String columnHeader(final Class<?> entityType, final Class<?> attributeType, final String attributeName) {
+    private String columnHeader(final String entityTypePrefix, final Class<?> attributeType, final String attributeName) {
         final List<String> headerMessageCodeList = new ArrayList<>();
 
-        headerMessageCodeList.add(String.format(RegistryConfigurationConstants.REGISTRY_COLUMN_HEADER_FORMAT, entityType.getName(), attributeName));
-        headerMessageCodeList.addAll(labelMessageCodeList(entityType, attributeType, attributeName));
+        headerMessageCodeList.add(String.format(RegistryConfigurationConstants.REGISTRY_COLUMN_HEADER_FORMAT, entityTypePrefix, attributeName));
+        headerMessageCodeList.addAll(labelMessageCodeList(entityTypePrefix, attributeType, attributeName));
 
         final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(headerMessageCodeList.toArray(new String[0]), attributeName);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    private List<String> labelMessageCodeList(final Class<?> entityType, final Class<?> attributeType, final String attributeName) {
+    private List<String> labelMessageCodeList(final String entityTypePrefix, final Class<?> attributeType, final String attributeName) {
         return Arrays.asList(
-                String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, entityType.getName(), attributeName),
+                String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, entityTypePrefix, attributeName),
                 String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, attributeName, attributeType.getName()),
                 String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_SHORT_FORMAT, attributeType.getName())
         );
@@ -190,15 +215,7 @@ public class RegistryConfigurationServiceImpl implements RegistryConfigurationSe
     }
 
     private boolean isAudited(final Class<?> entityType) {
-        try {
-            @SuppressWarnings("unchecked")
-            final Class<? extends Annotation> enversAnnotation = (Class<? extends Annotation>) Class.forName("org.hibernate.envers.Audited");
-
-            return entityType.isAnnotationPresent(enversAnnotation);
-        }
-        catch (final Exception ignored) {
-            return false;
-        }
+        return AnnotationUtil.isAnnotationPresent(entityType, RegistryEnversConstants.ENVERS_AUDITED_ANNOTATION);
     }
 
     private RegistryOverrideConfiguration resolveRegistryOverrideConfiguration(final Class<?> type, final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {

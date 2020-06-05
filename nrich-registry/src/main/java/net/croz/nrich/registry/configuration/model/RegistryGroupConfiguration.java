@@ -15,4 +15,6 @@ public class RegistryGroupConfiguration {
 
     private final List<RegistryEntityConfiguration> registryEntityConfigurationList;
 
+    private final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList;
+
 }
