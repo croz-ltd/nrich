@@ -6,6 +6,7 @@ include(
   "nrich-form-configuration",
   "nrich-logging",
   "nrich-notification",
+  "nrich-registry",
   "nrich-search-api",
   "nrich-search",
   "nrich-spring-util",

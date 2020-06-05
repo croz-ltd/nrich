@@ -1,3 +1,5 @@
+// TODO fix dependencies in all projects, use minimal set of dependencies etc.
+
 allprojects {
   repositories {
     mavenLocal()
@@ -32,6 +34,11 @@ subprojects {
     registerFeature("web") {
       usingSourceSet(sourceSets.main)
     }
+
+    registerFeature("envers") {
+      usingSourceSet(sourceSets.main)
+    }
+
     withSourcesJar()
   }
 
@@ -41,6 +48,7 @@ subprojects {
     constraints {
       implementation "org.apache.poi:poi:$apachePoiVersion"
       implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
+      implementation "org.modelmapper:modelmapper:$modelMapperVersion"
     }
   }
 
