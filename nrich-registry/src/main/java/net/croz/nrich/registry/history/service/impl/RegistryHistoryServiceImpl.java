@@ -138,14 +138,15 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
 
     private AuditProperty<?> resolveAuditProperty(final String sortProperty) {
         final AuditProperty<?> auditProperty;
-        if (sortProperty.startsWith(RegistryHistoryConstants.REVISION_PROPERTY_PREFIX)) {
-            auditProperty = AuditEntity.revisionProperty(sortProperty.split(RegistryHistoryConstants.REVISION_PROPERTY_PREFIX)[1]);
-        }
-        else if (RegistryHistoryConstants.REVISION_NUMBER_PROPERTY.equals(sortProperty)) {
+
+        if (RegistryHistoryConstants.REVISION_NUMBER_PROPERTY.equals(sortProperty)) {
             auditProperty = AuditEntity.revisionNumber();
         }
         else if (RegistryHistoryConstants.REVISION_TYPE_PROPERTY.equals(sortProperty)) {
             auditProperty = AuditEntity.revisionType();
+        }
+        else if (sortProperty.startsWith(RegistryHistoryConstants.REVISION_PROPERTY_PREFIX)) {
+            auditProperty = AuditEntity.revisionProperty(sortProperty);
         }
         else {
             auditProperty = AuditEntity.property(sortProperty);

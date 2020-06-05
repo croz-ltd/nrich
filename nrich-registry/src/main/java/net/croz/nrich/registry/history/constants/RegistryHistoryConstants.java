@@ -6,7 +6,7 @@ public final class RegistryHistoryConstants {
 
     public static final String REVISION_TYPE_PROPERTY = "revisionType";
 
-    public static final String REVISION_PROPERTY_PREFIX = "revisionProperty.";
+    public static final String REVISION_PROPERTY_PREFIX = "revision";
 
     private RegistryHistoryConstants() {
     }
