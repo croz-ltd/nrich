@@ -9,14 +9,17 @@ import net.croz.nrich.registry.configuration.service.RegistryConfigurationServic
 import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
+import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.data.service.impl.RegistryDataFormConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
@@ -60,6 +63,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -246,5 +250,19 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryHistoryController registryHistoryController(final RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
+    }
+
+    @Bean
+    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        final List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
+                .map(RegistryDataConfiguration::getRegistryType)
+                .collect(Collectors.toList());
+
+        final Map<String, Class<?>> formConfigurationMap = new HashMap<>();
+
+        formConfigurationMap.put("existingUpdate", Object.class);
+        formConfigurationMap.put("existingCreate", Object.class);
+
+        return new RegistryDataFormConfigurationResolverServiceImpl(registryClassList, formConfigurationMap);
     }
 }
