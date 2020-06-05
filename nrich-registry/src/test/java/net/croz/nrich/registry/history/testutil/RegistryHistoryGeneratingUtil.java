@@ -93,7 +93,7 @@ public final class RegistryHistoryGeneratingUtil {
 
         request.setSortPropertyList(Arrays.asList(
                 new SortProperty(RegistryHistoryConstants.REVISION_NUMBER_PROPERTY, SortDirection.DESC), new SortProperty(RegistryHistoryConstants.REVISION_TYPE_PROPERTY, SortDirection.DESC),
-                new SortProperty("name", SortDirection.DESC)
+                new SortProperty("name", SortDirection.DESC), new SortProperty("revisionProperty", SortDirection.ASC)
         ));
 
         return request;

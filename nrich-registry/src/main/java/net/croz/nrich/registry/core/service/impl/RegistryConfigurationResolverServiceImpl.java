@@ -127,7 +127,7 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
     }
 
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
-        if (CollectionUtils.isEmpty(includeDomainPatternList) || !(managedType instanceof IdentifiableType)) {
+        if (CollectionUtils.isEmpty(includeDomainPatternList) || !(managedType instanceof IdentifiableType) || AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION)) {
             return false;
         }
 

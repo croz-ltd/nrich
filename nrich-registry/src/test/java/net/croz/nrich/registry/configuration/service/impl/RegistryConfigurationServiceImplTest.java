@@ -100,9 +100,9 @@ public class RegistryConfigurationServiceImplTest {
 
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
-        assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("id", "timestamp");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("id", "timestamp", "revisionProperty");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision property");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision property");
     }
 
     @Test
