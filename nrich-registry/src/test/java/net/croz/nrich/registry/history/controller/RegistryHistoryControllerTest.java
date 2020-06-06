@@ -42,7 +42,7 @@ public class RegistryHistoryControllerTest extends BaseWebTest {
         final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
 
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/nrich-registry-history/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/history/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

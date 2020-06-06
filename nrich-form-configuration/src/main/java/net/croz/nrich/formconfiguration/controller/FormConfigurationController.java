@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 import java.util.List;
 
-// TODO decide url format (like this or maybe form-configuration in either case all urls should follow same format?)
 @RequiredArgsConstructor
-@RequestMapping("formConfiguration")
+@RequestMapping("nrich/form/configuration")
 public class FormConfigurationController {
 
     private final FormConfigurationService formConfigurationService;
 
     @ResponseBody
-    @PostMapping("fetchFormConfiguration")
-    public List<FormConfiguration> fetchFormConfiguration(@RequestBody @Valid final FetchFormConfigurationRequest request) {
+    @PostMapping("fetch")
+    public List<FormConfiguration> fetch(@RequestBody @Valid final FetchFormConfigurationRequest request) {
         return formConfigurationService.fetchFormConfigurationList(request);
     }
 }

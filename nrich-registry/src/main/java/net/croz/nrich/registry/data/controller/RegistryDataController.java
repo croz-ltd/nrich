@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("nrich-registry-data")
+@RequestMapping("nrich/registry/data")
 @ResponseBody
 public class RegistryDataController {
 

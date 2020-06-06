@@ -11,7 +11,7 @@ import java.util.List;
 
 // TODO what about form configuration, ideally maybe enable dynamic registration of formId class mapping instead of explicit dependency on form-configuration module?
 @RequiredArgsConstructor
-@RequestMapping("nrich-registry-configuration")
+@RequestMapping("nrich/registry/configuration")
 @ResponseBody
 public class RegistryConfigurationController {
 
