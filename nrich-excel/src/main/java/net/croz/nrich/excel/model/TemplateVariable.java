@@ -1,8 +1,10 @@
 package net.croz.nrich.excel.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class TemplateVariable {
 
     private final String name;

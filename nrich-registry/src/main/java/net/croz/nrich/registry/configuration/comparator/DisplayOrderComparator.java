@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class DisplayOrderComparator {
 
     private final List<String> propertyDisplayOrderList;

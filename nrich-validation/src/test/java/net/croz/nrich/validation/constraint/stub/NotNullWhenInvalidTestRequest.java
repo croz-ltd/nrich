@@ -1,11 +1,13 @@
 package net.croz.nrich.validation.constraint.stub;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.NotNullWhen;
 
 import java.util.function.Predicate;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 @NotNullWhen(property = "nonExistingProperty", condition = NotNullWhenInvalidTestRequest.Condition.class)
 public class NotNullWhenInvalidTestRequest {
 

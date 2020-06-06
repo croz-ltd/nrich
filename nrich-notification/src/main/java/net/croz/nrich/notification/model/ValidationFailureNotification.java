@@ -1,13 +1,13 @@
 package net.croz.nrich.notification.model;
 
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@Data
+@Getter
 public class ValidationFailureNotification extends Notification {
 
     private final List<ValidationError> validationErrorList;

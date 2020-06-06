@@ -62,7 +62,6 @@ public class ExcelExportGeneratorFactoryTest {
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @SneakyThrows
     @Test
     void shouldReturnReportGeneratorWhenDataIsValid() {
         // given

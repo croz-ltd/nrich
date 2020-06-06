@@ -1,10 +1,12 @@
 package net.croz.nrich.validation.constraint.validator;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class ValidFileValidatorProperties {
 
     private final Boolean validationEnabled;

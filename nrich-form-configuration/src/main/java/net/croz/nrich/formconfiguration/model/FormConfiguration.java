@@ -1,10 +1,12 @@
 package net.croz.nrich.formconfiguration.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class FormConfiguration {
 
     private final String formId;

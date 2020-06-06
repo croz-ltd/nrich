@@ -1,8 +1,10 @@
 package net.croz.nrich.webmvc.advice.stub;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class ControllerEditorRegistrationAdviceTestRequest {
 
     private transient String transientProperty;

@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 import java.util.function.Predicate;
 
 @RequiredArgsConstructor
-@Builder
 @AllArgsConstructor
 @Getter
+@Builder
 public class SearchProjection<R> {
 
     private final String path;

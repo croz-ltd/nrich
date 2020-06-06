@@ -3,8 +3,8 @@ package net.croz.nrich.registry.history.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class EntityWithRevision<T> {
 
     private final T entity;

@@ -5,8 +5,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Builder
 @Getter
+@Builder
 public class SearchDataParserConfiguration {
 
     private final boolean resolveFieldMappingUsingPrefix;

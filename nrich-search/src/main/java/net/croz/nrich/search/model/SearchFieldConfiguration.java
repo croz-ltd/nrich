@@ -1,15 +1,17 @@
 package net.croz.nrich.search.model;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.List;
 
+@Setter
+@Getter
 @Builder
-@Data
 public class SearchFieldConfiguration {
 
     private List<String> searchIgnoredFieldList;

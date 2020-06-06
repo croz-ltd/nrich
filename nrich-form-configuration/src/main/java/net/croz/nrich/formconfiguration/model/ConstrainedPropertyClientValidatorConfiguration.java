@@ -1,8 +1,10 @@
 package net.croz.nrich.formconfiguration.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class ConstrainedPropertyClientValidatorConfiguration {
 
   private final Class<?> propertyType;

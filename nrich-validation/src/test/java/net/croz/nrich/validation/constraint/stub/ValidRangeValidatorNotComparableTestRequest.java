@@ -1,9 +1,11 @@
 package net.croz.nrich.validation.constraint.stub;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.ValidRange;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 @ValidRange(fromPropertyName = "firstField", toPropertyName = "secondField")
 public class ValidRangeValidatorNotComparableTestRequest {
 

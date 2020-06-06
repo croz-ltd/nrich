@@ -1,11 +1,13 @@
 package net.croz.nrich.validation.constraint.stub;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.ValidSearchProperties;
 
 import java.time.Instant;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 @ValidSearchProperties(propertyGroup = { @ValidSearchProperties.PropertyGroup({ "firstGroupFieldOne", "firstGroupFieldTwo" }), @ValidSearchProperties.PropertyGroup("secondGroupFieldOne") })
 public class ValidSearchFieldsValidatorTestRequest {
 

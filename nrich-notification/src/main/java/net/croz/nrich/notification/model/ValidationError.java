@@ -1,10 +1,12 @@
 package net.croz.nrich.notification.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class ValidationError {
 
     public static final String CONTAINING_OBJECT_NAME = "CONTAINING_OBJECT";

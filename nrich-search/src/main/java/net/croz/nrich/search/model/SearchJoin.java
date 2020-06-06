@@ -10,8 +10,8 @@ import java.util.function.Predicate;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Builder
 @Getter
+@Builder
 public class SearchJoin<R> {
 
     private final String path;

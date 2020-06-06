@@ -1,9 +1,11 @@
 package net.croz.nrich.notification.response;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.notification.model.Notification;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class ResponseWithNotification<T> {
 
     private final T data;

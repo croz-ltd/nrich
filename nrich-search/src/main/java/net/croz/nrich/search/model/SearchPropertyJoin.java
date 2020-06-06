@@ -1,8 +1,10 @@
 package net.croz.nrich.search.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@Data
+@RequiredArgsConstructor
+@Getter
 public class SearchPropertyJoin {
 
     private final String parentProperty;

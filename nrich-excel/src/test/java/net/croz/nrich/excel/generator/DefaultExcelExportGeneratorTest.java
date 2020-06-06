@@ -48,7 +48,6 @@ public class DefaultExcelExportGeneratorTest {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
-    @SneakyThrows
     @BeforeEach
     void setup() {
         final CellValueConverter cellValueConverter = new DefaultCellValueConverter("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true);
@@ -84,7 +83,6 @@ public class DefaultExcelExportGeneratorTest {
         assertThat(getRowCellValueList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly(expectedRowData);
     }
 
-    @SneakyThrows
     @Test
     void shouldThrowExceptionWhenTryingToWriteToClosedGenerator() {
         // given

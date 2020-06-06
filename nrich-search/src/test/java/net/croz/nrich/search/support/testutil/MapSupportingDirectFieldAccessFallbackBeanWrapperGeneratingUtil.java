@@ -1,6 +1,7 @@
 package net.croz.nrich.search.support.testutil;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,8 @@ public final class MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUt
         return new Entity(value);
     }
 
-    @Data
+    @RequiredArgsConstructor
+    @Getter
     static class Entity {
 
         private final Object name;

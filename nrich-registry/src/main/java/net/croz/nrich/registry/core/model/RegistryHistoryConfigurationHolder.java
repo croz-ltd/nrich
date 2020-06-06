@@ -1,12 +1,12 @@
 package net.croz.nrich.registry.core.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Getter
-@AllArgsConstructor
 public class RegistryHistoryConfigurationHolder {
 
     private final PropertyWithType revisionNumberProperty;

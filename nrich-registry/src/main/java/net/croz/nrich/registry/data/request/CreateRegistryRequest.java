@@ -1,10 +1,12 @@
 package net.croz.nrich.registry.data.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Setter
+@Getter
 public class CreateRegistryRequest {
 
     @NotNull

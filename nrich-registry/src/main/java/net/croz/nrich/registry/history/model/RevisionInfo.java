@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.util.Map;
 
-@Getter
 @RequiredArgsConstructor
+@Getter
 public class RevisionInfo {
 
     private final Long revisionNumber;

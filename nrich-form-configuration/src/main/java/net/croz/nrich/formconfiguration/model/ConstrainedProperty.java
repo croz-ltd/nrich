@@ -1,15 +1,15 @@
 package net.croz.nrich.formconfiguration.model;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.metadata.ConstraintDescriptor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-@Data
 @Builder
+@Getter
 public class ConstrainedProperty {
 
     private final Class<?> parentType;

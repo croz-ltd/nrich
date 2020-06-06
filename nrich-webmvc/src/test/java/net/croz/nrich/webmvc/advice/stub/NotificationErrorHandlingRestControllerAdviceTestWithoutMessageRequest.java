@@ -1,10 +1,12 @@
 package net.croz.nrich.webmvc.advice.stub;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Data
+@Setter
+@Getter
 public class NotificationErrorHandlingRestControllerAdviceTestWithoutMessageRequest {
 
     @NotNull
