@@ -1,15 +1,13 @@
 package net.croz.nrich.registry.configuration.comparator;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
-@Getter
 public class DisplayOrderComparator {
 
-    private final List<String> propertyDisplayOrderList;
+    protected final List<String> propertyDisplayOrderList;
 
     public int comparePropertiesByDisplayList(final String firstPropertyName, final String secondPropertyName) {
         if (!propertyDisplayOrderList.contains(firstPropertyName)) {

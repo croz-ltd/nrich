@@ -17,7 +17,7 @@ public class RegistryPropertyComparator extends DisplayOrderComparator implement
         final String firstPropertyName = firstProperty.getName();
         final String secondPropertyName = secondProperty.getName();
 
-        if (CollectionUtils.isEmpty(getPropertyDisplayOrderList())) {
+        if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
             if (firstProperty.isId()) {
                 return  -1;
             }
