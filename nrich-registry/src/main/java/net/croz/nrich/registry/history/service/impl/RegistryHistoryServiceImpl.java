@@ -14,13 +14,13 @@ import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.util.PageableUtil;
-import org.hibernate.Hibernate;
 import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.hibernate.envers.query.criteria.AuditProperty;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
@@ -47,12 +47,15 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
 
     private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
 
+    private final ModelMapper modelMapper;
+
     private final Map<Class<?>, ManagedType<?>> classManagedTypeMap;
 
-    public RegistryHistoryServiceImpl(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfiguration) {
+    public RegistryHistoryServiceImpl(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfiguration, final ModelMapper modelMapper) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.registryHistoryConfiguration = registryHistoryConfiguration;
+        this.modelMapper = modelMapper;
         this.classManagedTypeMap = initializeManagedTypeMap(registryDataConfigurationHolder);
     }
 
@@ -189,10 +192,8 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         return new RevisionInfo(Long.valueOf(revisionNumber.toString()), revisionDateAsInstant, revisionType.name(), additionalRevisionPropertyMap);
     }
 
-    // TODO not happy about this solution, think of a better one, it is still required to ignore properties with object mapper since proxy properties remain + directly depending on hibernate is not good
+    // TODO not happy about this solution, think of a better one
     private <T> T initializeEntityOneToOneAssociations(final T entity) {
-        Hibernate.initialize(entity);
-
         final ManagedType<?> managedType = classManagedTypeMap.get(entity.getClass());
 
         final MapSupportingDirectFieldAccessFallbackBeanWrapper mapSupportingDirectFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entity);
@@ -200,9 +201,17 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         managedType.getAttributes().forEach(attribute -> {
 
             if (Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType())) {
-                final Object value = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attribute.getName());
+                final Object attributeValue = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attribute.getName());
 
-                Hibernate.initialize(value);
+                if (attributeValue == null) {
+                    return;
+                }
+
+                final Object deProxiedValue = BeanUtils.instantiateClass(attribute.getJavaType());
+
+                modelMapper.map(attributeValue, deProxiedValue);
+
+                mapSupportingDirectFieldAccessFallbackBeanWrapper.setPropertyValue(attribute.getName(), deProxiedValue);
             }
         });
 

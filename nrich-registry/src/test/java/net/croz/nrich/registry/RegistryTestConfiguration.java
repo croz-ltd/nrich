@@ -102,11 +102,20 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
+    public ModelMapper registryDataModelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
         final Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
 
         modelMapper.getConfiguration().setPropertyCondition(skipIds);
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return modelMapper;
+    }
+
+    @Bean
+    public ModelMapper registryHistoryModelMapper() {
+        final ModelMapper modelMapper = new ModelMapper();
+
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
         return modelMapper;
@@ -228,8 +237,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
-        return new RegistryDataServiceImpl(entityManager, modelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
+    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
+        return new RegistryDataServiceImpl(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
     }
 
     @Bean
@@ -243,8 +252,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration());
+    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryHistoryModelMapper) {
+        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryHistoryModelMapper);
     }
 
     @Bean
