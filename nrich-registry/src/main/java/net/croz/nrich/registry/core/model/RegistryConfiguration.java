@@ -12,7 +12,7 @@ import java.util.Map;
 @Getter
 public class RegistryConfiguration {
 
-    private Map<Class<?>, RegistryOverrideConfiguration> entityRegistryOverrideConfiguration;
+    private Map<Class<?>, RegistryOverrideConfiguration> entityRegistryOverrideConfigurationMap;
 
     private List<String> registryGroupDisplayOrderList;
 

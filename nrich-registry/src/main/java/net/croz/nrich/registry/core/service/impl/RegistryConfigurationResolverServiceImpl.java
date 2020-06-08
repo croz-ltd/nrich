@@ -58,7 +58,7 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
 
     @Override
     public Map<Class<?>, RegistryOverrideConfiguration> resolveRegistryOverrideConfigurationMap() {
-        return registryConfiguration.getEntityRegistryOverrideConfiguration() == null ? Collections.emptyMap() : registryConfiguration.getEntityRegistryOverrideConfiguration();
+        return registryConfiguration.getEntityRegistryOverrideConfigurationMap() == null ? Collections.emptyMap() : registryConfiguration.getEntityRegistryOverrideConfigurationMap();
     }
 
     @Override

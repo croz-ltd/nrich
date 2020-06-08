@@ -200,7 +200,7 @@ public class RegistryTestConfiguration {
         registryOverrideConfigurationMap.put(RegistryConfigurationTestEntity.class, registryOverrideConfiguration);
         registryOverrideConfigurationMap.put(RegistryConfigurationUpdateInterceptorTestEntity.class, registryInterceptorTestOverrideConfiguration);
 
-        registryConfiguration.setEntityRegistryOverrideConfiguration(registryOverrideConfigurationMap);
+        registryConfiguration.setEntityRegistryOverrideConfigurationMap(registryOverrideConfigurationMap);
 
         final SearchConfiguration<?, ?, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ)));
