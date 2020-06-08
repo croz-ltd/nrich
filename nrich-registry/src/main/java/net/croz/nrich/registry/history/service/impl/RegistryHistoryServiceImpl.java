@@ -189,7 +189,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         return new RevisionInfo(Long.valueOf(revisionNumber.toString()), revisionDateAsInstant, revisionType.name(), additionalRevisionPropertyMap);
     }
 
-    // TODO not happy about this solution, think of a better one, it is still required to ignore properties with object mapper since proxy properties remain
+    // TODO not happy about this solution, think of a better one, it is still required to ignore properties with object mapper since proxy properties remain + directly depending on hibernate is not good
     private <T> T initializeEntityOneToOneAssociations(final T entity) {
         Hibernate.initialize(entity);
 
