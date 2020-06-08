@@ -484,6 +484,22 @@ public class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldSupportSearchingByMapWithRange() {
+        // given
+        generateListForSearch(entityManager);
+
+        final Map<String, Object> mapSearchRequest = new HashMap<>();
+        mapSearchRequest.put("ageFrom", 20);
+        mapSearchRequest.put("ageTo", 25);
+
+        // when
+        final List<TestEntity> results = executeQuery(mapSearchRequest, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
     void shouldSupportSearchingByPropertyList() {
         // given
         generateListForSearch(entityManager);
