@@ -18,13 +18,17 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.additionalDataMap;
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceRequestBindingMap;
+import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceTestRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(NotificationTestConfiguration.class)
@@ -34,7 +38,7 @@ public class NotificationResolverServiceImplTest {
     private NotificationResolverServiceImpl notificationResolverServiceImpl;
 
     @Autowired
-    private Validator validator;
+    private LocalValidatorFactoryBean validator;
 
     @Test
     void shouldConvertValidationFailureToNotificationErrorResponse() {
@@ -259,6 +263,28 @@ public class NotificationResolverServiceImplTest {
         assertThat(notification.getMessageList()).containsExactly("Success: ok");
     }
 
+    @Test
+    void shouldConvertConstraintViolationExceptionTooNotificationErrorResponse() {
+        // given
+        final NotificationResolverServiceTestRequest request = invalidNotificationResolverServiceTestRequest();
+        final Set<ConstraintViolation<Object>> result = validate(request);
+
+        // when
+        final ValidationFailureNotification notification = notificationResolverServiceImpl.createMessageNotificationForValidationFailure(new ConstraintViolationException(result));
+
+        // then
+        assertThat(notification).isNotNull();
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getTitle()).isNotBlank();
+
+        assertThat(notification.getMessageList()).isNotEmpty();
+        assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
+                "Name really cannot be null", "Size is not valid it has to be between: 1 and 5", "Timestamp has to be in the future", "Minimum value for value field is: 10"
+        );
+        assertThat(notification.getValidationErrorList()).isNotEmpty();
+        assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
+    }
+
     private BindingResult validate(final Object objectToValidate, final Map<String, Object> valueMap) {
         final DataBinder binder = new DataBinder(objectToValidate);
 
@@ -269,5 +295,9 @@ public class NotificationResolverServiceImplTest {
         binder.validate();
 
         return binder.getBindingResult();
+    }
+
+    private Set<ConstraintViolation<Object>> validate(final Object objectToValidate) {
+        return validator.getValidator().validate(objectToValidate);
     }
 }

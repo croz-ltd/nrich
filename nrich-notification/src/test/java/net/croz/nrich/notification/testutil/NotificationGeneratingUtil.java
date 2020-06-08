@@ -1,5 +1,7 @@
 package net.croz.nrich.notification.testutil;
 
+import net.croz.nrich.notification.stub.NotificationResolverServiceTestRequest;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -26,5 +28,15 @@ public final class NotificationGeneratingUtil {
         additionalDataMap.put(key, value);
 
         return additionalDataMap;
+    }
+
+    public static NotificationResolverServiceTestRequest invalidNotificationResolverServiceTestRequest() {
+        final NotificationResolverServiceTestRequest request = new NotificationResolverServiceTestRequest();
+
+        request.setLastName("too long last name");
+        request.setTimestamp(Instant.now().minus(1, ChronoUnit.DAYS));
+        request.setValue(5);
+
+        return request;
     }
 }

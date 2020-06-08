@@ -1,6 +1,6 @@
-package net.croz.nrich.webmvc.service.impl;
+package net.croz.nrich.notification.service.impl;
 
-import net.croz.nrich.webmvc.service.ConstraintConversionService;
+import net.croz.nrich.notification.service.ConstraintConversionService;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.CustomValidatorBean;

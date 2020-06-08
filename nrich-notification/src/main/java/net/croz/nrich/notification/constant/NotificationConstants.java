@@ -32,6 +32,8 @@ public final class NotificationConstants {
 
     public static final String UNDEFINED_MESSAGE_VALUE = "UNDEFINED";
 
+    public static final String UNKNOWN_VALIDATION_TARGET = "UNKNOWN_VALIDATION_TARGET";
+
     private NotificationConstants() {
     }
 }

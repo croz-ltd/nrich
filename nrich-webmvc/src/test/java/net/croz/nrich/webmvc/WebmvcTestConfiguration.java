@@ -3,14 +3,14 @@ package net.croz.nrich.webmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.service.LoggingService;
 import net.croz.nrich.logging.service.impl.LoggingServiceImpl;
+import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.NotificationResolverService;
+import net.croz.nrich.notification.service.impl.ConstraintConversionServiceImpl;
 import net.croz.nrich.notification.service.impl.NotificationResolverServiceImpl;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
-import net.croz.nrich.webmvc.service.ConstraintConversionService;
 import net.croz.nrich.webmvc.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-import net.croz.nrich.webmvc.service.impl.ConstraintConversionServiceImpl;
 import net.croz.nrich.webmvc.service.impl.ExceptionAuxiliaryDataResolverServiceImpl;
 import net.croz.nrich.webmvc.service.impl.TransientPropertyResolverServiceImpl;
 import org.springframework.context.MessageSource;
@@ -60,8 +60,13 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationResolverService notificationResolverService(final MessageSource messageSource) {
-        return new NotificationResolverServiceImpl(messageSource);
+    public ConstraintConversionService constraintConversionService() {
+        return new ConstraintConversionServiceImpl();
+    }
+
+    @Bean
+    public NotificationResolverService notificationResolverService(final MessageSource messageSource, final ConstraintConversionService constraintConversionService) {
+        return new NotificationResolverServiceImpl(messageSource, constraintConversionService);
     }
 
     @Bean
@@ -85,12 +90,7 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public ConstraintConversionService constraintConversionService() {
-        return new ConstraintConversionServiceImpl();
-    }
-
-    @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResolverService notificationResolverService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ConstraintConversionService constraintConversionService) {
-        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResolverService, loggingService, exceptionAuxiliaryDataResolverService, constraintConversionService);
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResolverService notificationResolverService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResolverService, loggingService, exceptionAuxiliaryDataResolverService);
     }
 }
