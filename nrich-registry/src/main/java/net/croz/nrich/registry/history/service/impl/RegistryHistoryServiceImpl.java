@@ -201,7 +201,8 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         managedType.getAttributes().forEach(attribute -> {
 
             if (Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType())) {
-                final Object attributeValue = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attribute.getName());
+                final String attributeName = attribute.getName();
+                final Object attributeValue = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attributeName);
 
                 if (attributeValue == null) {
                     return;
@@ -211,7 +212,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
 
                 modelMapper.map(attributeValue, deProxiedValue);
 
-                mapSupportingDirectFieldAccessFallbackBeanWrapper.setPropertyValue(attribute.getName(), deProxiedValue);
+                mapSupportingDirectFieldAccessFallbackBeanWrapper.setPropertyValue(attributeName, deProxiedValue);
             }
         });
 
