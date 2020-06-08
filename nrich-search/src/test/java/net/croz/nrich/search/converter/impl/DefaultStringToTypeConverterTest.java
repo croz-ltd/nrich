@@ -39,6 +39,8 @@ public class DefaultStringToTypeConverterTest {
                 Arguments.of(null, Boolean.class, null),
                 Arguments.of(null, DefaultStringToTypeConverterTest.class, null),
                 Arguments.of("true", Boolean.class, Boolean.TRUE),
+                Arguments.of("yes", Boolean.class, Boolean.TRUE),
+                Arguments.of("no", Boolean.class, Boolean.FALSE),
                 Arguments.of("1", Long.class, 1L),
                 Arguments.of("D", Long.class, null),
                 Arguments.of("5", Integer.class, 5),

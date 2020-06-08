@@ -30,11 +30,17 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
 
     private final List<String> decimalNumberFormatList;
 
+    private final String booleanTrueRegexPattern;
+
+    private final String booleanFalseRegexPattern;
+
     private final List<ConverterHolder> converterHolderList;
 
-    public DefaultStringToTypeConverter(final List<String> dateFormatList, final List<String> decimalNumberFormatList) {
+    public DefaultStringToTypeConverter(final List<String> dateFormatList, final List<String> decimalNumberFormatList, final String booleanTrueRegexPattern, final String booleanFalseRegexPattern) {
         this.dateFormatList = dateFormatList;
         this.decimalNumberFormatList = decimalNumberFormatList;
+        this.booleanTrueRegexPattern = booleanTrueRegexPattern;
+        this.booleanFalseRegexPattern = booleanFalseRegexPattern;
         this.converterHolderList = initializeConverterList();
     }
 
@@ -71,11 +77,11 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     private List<ConverterHolder> initializeConverterList() {
 
         return Arrays.asList(
-                new ConverterHolder(Boolean.class, (value, type) -> Boolean.valueOf(value)),
+                new ConverterHolder(Boolean.class, (value, type) -> booleanConverter(value)),
                 new ConverterHolder(Long.class, (value, type) -> Long.valueOf(value)),
                 new ConverterHolder(Integer.class, (value, type) -> Integer.valueOf(value)),
                 new ConverterHolder(Short.class, (value, type) -> Short.valueOf(value)),
-                new ConverterHolder(Enum.class, this::convertEnum),
+                new ConverterHolder(Enum.class, this::enumConverter),
                 new ConverterHolder(Date.class, (value, type) -> dateConverter(value)),
                 new ConverterHolder(Instant.class, (value, type) -> temporalConverter(value, Instant::from)),
                 new ConverterHolder(LocalDate.class, (value, type) -> temporalConverter(value, LocalDate::from)),
@@ -89,7 +95,20 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         );
     }
 
-    private <E extends Enum<E>> E convertEnum(final String value, final Class<?> requiredType) {
+    private Boolean booleanConverter(final String value) {
+        Boolean convertedValue = null;
+
+        if (value.matches(booleanTrueRegexPattern)) {
+            convertedValue = Boolean.TRUE;
+        }
+        else if(value.matches(booleanFalseRegexPattern)) {
+            convertedValue = Boolean.FALSE;
+        }
+
+        return convertedValue;
+    }
+
+    private <E extends Enum<E>> E enumConverter(final String value, final Class<?> requiredType) {
         @SuppressWarnings("unchecked")
         final Class<E> enumType = (Class<E>) requiredType;
 
