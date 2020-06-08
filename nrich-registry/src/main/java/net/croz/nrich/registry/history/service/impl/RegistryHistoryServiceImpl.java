@@ -107,7 +107,7 @@ public class RegistryHistoryServiceImpl implements RegistryHistoryService {
         final List<Object[]> objectResultList = (List<Object[]>) resultList;
 
         return Optional.ofNullable(objectResultList).orElse(Collections.emptyList()).stream()
-                .map(value -> new EntityWithRevision<>(initializeEntityOneToOneAssociations((T) value[0]), convertToRevisionInfo((DefaultRevisionEntity) value[1], (RevisionType) value[2])))
+                .map(value -> new EntityWithRevision<>(initializeEntityOneToOneAssociations((T) value[0]), convertToRevisionInfo(value[1], (RevisionType) value[2])))
                 .collect(Collectors.toList());
     }
 
