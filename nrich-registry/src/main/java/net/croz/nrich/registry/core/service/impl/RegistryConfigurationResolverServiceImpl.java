@@ -2,14 +2,15 @@ package net.croz.nrich.registry.core.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
+import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
-import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.model.SearchConfiguration;
@@ -58,7 +59,10 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
 
     @Override
     public Map<Class<?>, RegistryOverrideConfiguration> resolveRegistryOverrideConfigurationMap() {
-        return registryConfiguration.getEntityRegistryOverrideConfigurationMap() == null ? Collections.emptyMap() : registryConfiguration.getEntityRegistryOverrideConfigurationMap();
+        return Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList())
+                .stream()
+                .filter(registryOverrideConfigurationHolder -> registryOverrideConfigurationHolder.getRegistryOverrideConfiguration() != null)
+                .collect(Collectors.toMap(RegistryOverrideConfigurationHolder::getType, RegistryOverrideConfigurationHolder::getRegistryOverrideConfiguration));
     }
 
     @Override
@@ -142,20 +146,14 @@ public class RegistryConfigurationResolverServiceImpl implements RegistryConfigu
         return excludeDomainPatternList.stream().noneMatch(classFullName::matches);
     }
 
+    @SuppressWarnings("unchecked")
     private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(final ManagedType<?> managedType) {
-        final Map<Class<?>, SearchConfiguration<?, ?, Map<String, Object>>> entitySearchOverrideMap = registryConfiguration.getEntitySearchOverrideConfigurationMap();
-
         final Class<?> type = managedType.getJavaType();
 
-        SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
-        if (entitySearchOverrideMap != null && entitySearchOverrideMap.get(type) != null) {
-
-            @SuppressWarnings("unchecked")
-            final SearchConfiguration<Object, Object, Map<String, Object>> resolvedSearchConfiguration = (SearchConfiguration<Object, Object, Map<String, Object>>) entitySearchOverrideMap.get(type);
-
-            searchConfiguration = resolvedSearchConfiguration;
-        }
-
-        return searchConfiguration;
+        return (SearchConfiguration<Object, Object, Map<String, Object>>) Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
+                .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getRegistryDataOverrideSearchConfiguration() != null)
+                .map(RegistryOverrideConfigurationHolder::getRegistryDataOverrideSearchConfiguration)
+                .findFirst()
+                .orElse(SearchConfiguration.emptyConfigurationMatchingAny());
     }
 }

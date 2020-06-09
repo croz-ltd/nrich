@@ -12,6 +12,7 @@ import net.croz.nrich.registry.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
@@ -195,21 +196,19 @@ public class RegistryTestConfiguration {
 
         registryInterceptorTestOverrideConfiguration.setReadOnly(true);
 
-        final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = new HashMap<>();
+        final RegistryOverrideConfigurationHolder registryTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryConfigurationTestEntity.class).registryOverrideConfiguration(registryOverrideConfiguration).build();
 
-        registryOverrideConfigurationMap.put(RegistryConfigurationTestEntity.class, registryOverrideConfiguration);
-        registryOverrideConfigurationMap.put(RegistryConfigurationUpdateInterceptorTestEntity.class, registryInterceptorTestOverrideConfiguration);
-
-        registryConfiguration.setEntityRegistryOverrideConfigurationMap(registryOverrideConfigurationMap);
+        final RegistryOverrideConfigurationHolder registryInterceptorTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).registryOverrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
 
         final SearchConfiguration<?, ?, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ)));
 
-        final Map<Class<?> , SearchConfiguration<?, ?, Map<String, Object>>> searchConfigurationMap = new HashMap<>();
+        final RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).registryDataOverrideSearchConfiguration(searchConfiguration).build();
 
-        searchConfigurationMap.put(RegistryTestEntityWithOverriddenSearchConfiguration.class, searchConfiguration);
-
-        registryConfiguration.setEntitySearchOverrideConfigurationMap(searchConfigurationMap);
+        registryConfiguration.setRegistryOverrideConfigurationHolderList(Arrays.asList(registryOverrideConfigurationHolder, registryTestEntityOverrideConfiguration, registryInterceptorTestEntityOverrideConfiguration));
 
         return registryConfiguration;
     }
