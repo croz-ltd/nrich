@@ -1,4 +1,15 @@
 // TODO fix dependencies in all projects, use minimal set of dependencies etc.
+plugins {
+  id "fr.brouillard.oss.gradle.jgitver" version "$gradleJgitverPluginVersion"
+}
+
+jgitver {
+  mavenLike true
+  policy {
+    pattern = "(.*)"
+    transformations = ["IGNORE"]
+  }
+}
 
 allprojects {
   repositories {
