@@ -28,9 +28,9 @@ public class ExcelExportServiceImpl implements ExcelExportService {
         final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
         final MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
-        int limit = request.getBatchSize();
-        int start = 0;
+        final int limit = request.getBatchSize();
 
+        int start = 0;
         Object[][] rowBatchData;
         while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
 
