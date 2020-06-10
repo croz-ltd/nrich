@@ -50,6 +50,14 @@ subprojects {
       usingSourceSet(sourceSets.main)
     }
 
+    registerFeature("webMvc") {
+      usingSourceSet(sourceSets.main)
+    }
+
+    registerFeature("webFlux") {
+      usingSourceSet(sourceSets.main)
+    }
+
     withSourcesJar()
   }
 
