@@ -46,7 +46,7 @@ public class CsrfWebFilterTest {
     private static final String CSRF_SECURED_ENDPOINT = "/secured/url";
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL_MILLIS, CsrfConstants.CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD_MILLIS, CsrfConstants.CSRF_TOKEN_HEADER_NAME, CsrfConstants.CSRF_DEFAULT_CRYPTO_KEY_LENGTH);
 
         csrfFilter = new CsrfWebFilter(csrfTokenManagerService, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
