@@ -1,4 +1,7 @@
 dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
+
+  implementation "org.springframework.security:spring-security-core"
+
 }
