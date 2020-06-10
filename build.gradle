@@ -42,20 +42,10 @@ subprojects {
   sourceCompatibility = "1.8"
 
   java {
-    registerFeature("web") {
-      usingSourceSet(sourceSets.main)
-    }
-
-    registerFeature("envers") {
-      usingSourceSet(sourceSets.main)
-    }
-
-    registerFeature("webMvc") {
-      usingSourceSet(sourceSets.main)
-    }
-
-    registerFeature("webFlux") {
-      usingSourceSet(sourceSets.main)
+    ["web", "envers", "webMvc", "webFlux"].forEach {
+      registerFeature(it) {
+        usingSourceSet(sourceSets.main)
+      }
     }
 
     withSourcesJar()
