@@ -35,7 +35,8 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         log.debug("csrfInterceptor.preHandle()");
 
         final String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
-        if (pathWithinApplication.equals("/")) {
+
+        if (CsrfConstants.EMPTY_PATH.equals(pathWithinApplication)) {
             return true;
         }
 

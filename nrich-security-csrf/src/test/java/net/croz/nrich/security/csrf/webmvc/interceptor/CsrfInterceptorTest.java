@@ -46,7 +46,7 @@ public class CsrfInterceptorTest {
     @Test
     void shouldPassThroughRequestWithoutPath() {
         // given
-        final MockHttpServletRequest emptyRequest = MockMvcRequestBuilders.post("/").buildRequest(new MockServletContext());
+        final MockHttpServletRequest emptyRequest = MockMvcRequestBuilders.post(CsrfConstants.EMPTY_PATH).buildRequest(new MockServletContext());
 
         // when
         final boolean result = csrfInterceptor.preHandle(emptyRequest, new MockHttpServletResponse(), null);

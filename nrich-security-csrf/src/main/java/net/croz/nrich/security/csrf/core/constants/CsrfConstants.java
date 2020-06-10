@@ -2,6 +2,8 @@ package net.croz.nrich.security.csrf.core.constants;
 
 public final class CsrfConstants {
 
+    public static final String EMPTY_PATH = "/";
+
     public static final String CSRF_TOKEN_HEADER_NAME = "X-CSRF-Token";
 
     public static final Integer CSRF_DEFAULT_CRYPTO_KEY_LENGTH = 128;

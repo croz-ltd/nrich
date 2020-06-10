@@ -35,7 +35,7 @@ public class CsrfWebFilter implements WebFilter {
         final String pathWithinApplication = exchange.getRequest().getPath().pathWithinApplication().value();
 
         final Mono<Void> result = chain.filter(exchange);
-        if (pathWithinApplication.equals("/")) {
+        if (CsrfConstants.EMPTY_PATH.equals(pathWithinApplication)) {
             return result;
         }
 

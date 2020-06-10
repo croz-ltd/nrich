@@ -59,7 +59,7 @@ public class CsrfWebFilterTest {
     @Test
     void shouldPassThroughRequestWithoutPath() {
         // given
-        final MockServerWebExchange emptyRequest = MockServerWebExchange.from(MockServerHttpRequest.post("/"));
+        final MockServerWebExchange emptyRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CsrfConstants.EMPTY_PATH));
 
         // when
         final Mono<Void> result = csrfFilter.filter(emptyRequest, chain);
