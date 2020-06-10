@@ -20,7 +20,7 @@ public final class CsrfConstants {
 
     public static final String NRICH_LAST_REAL_API_REQUEST_MILLIS = "NRICH_LAST_REAL_API_REQUEST_MILLIS";
 
-    public static final String CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME ="csrfInitialToken";
+    public static final String CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME = "csrfInitialToken";
 
     private CsrfConstants() {
     }
