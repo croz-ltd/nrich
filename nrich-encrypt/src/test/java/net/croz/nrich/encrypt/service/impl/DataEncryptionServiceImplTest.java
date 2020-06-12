@@ -10,7 +10,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -210,5 +212,30 @@ public class DataEncryptionServiceImplTest {
 
         // then
         assertThat(result).isNull();
+    }
+
+    @Test
+    void shouldEncryptDecryptMapData() {
+        // given
+        final String key = "mapKey";
+        final List<String> propertyList = Collections.singletonList("mapKey");
+        final String textToEncrypt = "some text";
+        final Map<String, String> data = new HashMap<>();
+
+        data.put(key, textToEncrypt);
+
+        // when
+        final Map<String, String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.get(key)).isNotEqualTo(textToEncrypt);
+
+        // and when
+        final Map<String, String> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).isNotNull();
+        assertThat(decryptResult.get(key)).isEqualTo(textToEncrypt);
     }
 }
