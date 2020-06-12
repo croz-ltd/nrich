@@ -27,14 +27,14 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
      * Pointcut that matches public methods with {@link DecryptArgument} annotation.
      */
     @Pointcut("execution(@net.croz.nrich.encrypt.annotation.DecryptArgument * *(..))")
-    void decryptAnnotatedMethods() {
+    public void decryptAnnotatedMethods() {
     }
 
     /**
      * Pointcut that matches public methods with {@link EncryptResult} annotation.
      */
     @Pointcut("execution(@net.croz.nrich.encrypt.annotation.EncryptResult * *(..))")
-    void encryptAnnotatedMethods() {
+    public void encryptAnnotatedMethods() {
     }
 
     @Around("decryptAnnotatedMethods()")
