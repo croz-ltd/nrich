@@ -9,6 +9,7 @@ import net.croz.nrich.encrypt.service.DataEncryptionService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Aspect
 public class EncryptDataAspect extends BaseDataEncryptionAdvice {
 
     private final DataEncryptionService dataEncryptionService;
@@ -42,6 +44,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
 
         final Object[] arguments = proceedingJoinPoint.getArgs();
         final List<Object> argumentList = Arrays.asList(arguments);
+
         if (annotation != null && annotation.argumentPathList().length > 0) {
             final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).currentUsername(currentUsername()).build();
             final Object[] decryptedArguments = decryptArguments(context, arguments, Arrays.asList(annotation.argumentPathList()));
@@ -60,6 +63,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         final Object[] arguments = proceedingJoinPoint.getArgs();
         final List<Object> argumentList = Arrays.asList(arguments);
         Object result = proceedingJoinPoint.proceed(arguments);
+
         if (annotation != null && annotation.resultPathList().length > 0) {
             final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).currentUsername(currentUsername()).build();
 
