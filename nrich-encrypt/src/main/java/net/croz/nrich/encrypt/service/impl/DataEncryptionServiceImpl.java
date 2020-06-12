@@ -6,11 +6,12 @@ import net.croz.nrich.encrypt.model.EncryptionContext;
 import net.croz.nrich.encrypt.model.EncryptionOperation;
 import net.croz.nrich.encrypt.service.DataEncryptionService;
 import net.croz.nrich.encrypt.service.TextEncryptionService;
-import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.PropertyAccessorFactory;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,7 +46,7 @@ public class DataEncryptionServiceImpl implements DataEncryptionService {
         final String[] pathList = targetPath.split("\\.");
 
         if (pathList.length > 1) {
-            final String[] remainingPath = Arrays.copyOfRange(pathList, 0, pathList.length - 2);
+            final String[] remainingPath = Arrays.copyOfRange(pathList, 0, pathList.length - 1);
 
             encryptDecryptNestedValue(encryptionContext, getPropertyValueByPath(object, String.join(".", remainingPath)), pathList[pathList.length - 1], operation);
         }
@@ -78,22 +79,37 @@ public class DataEncryptionServiceImpl implements DataEncryptionService {
         else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(element -> element instanceof String)) {
             @SuppressWarnings("unchecked")
             final Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
+
             final Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
                     .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
                     .collect(Collectors.toList());
 
-            textToEncryptOrDecryptList.clear();
-
-            textToEncryptOrDecryptList.addAll(encryptedValueList);
+            setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValueList);
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Object getPropertyValueByPath(final Object holder, final String path) {
-        return new BeanWrapperImpl(holder).getPropertyValue(path);
+        if (holder instanceof Map) {
+            return ((Map<String, Object>) holder).get(path);
+        }
+
+        try {
+            return PropertyAccessorFactory.forDirectFieldAccess(holder).getPropertyValue(path);
+        }
+        catch (final Exception ignored) {
+            return null;
+        }
     }
 
+    @SuppressWarnings("unchecked")
     protected void setPropertyValueByPath(final Object holder, final String path, final Object value) {
-        new BeanWrapperImpl(holder).setPropertyValue(path, value);
+        if (holder instanceof Map) {
+            ((Map<String, Object>) holder).put(path, value);
+        }
+        else {
+            PropertyAccessorFactory.forDirectFieldAccess(holder).setPropertyValue(path, value);
+        }
     }
 
     private String encryptDecryptText(final EncryptionContext encryptionContext, final String text, final EncryptionOperation operation) {
