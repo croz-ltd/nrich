@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@interface EncryptResult {
+public @interface EncryptResult {
 
   String[] resultPathList();
 
