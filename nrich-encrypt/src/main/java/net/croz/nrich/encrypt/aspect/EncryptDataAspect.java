@@ -24,14 +24,14 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
     /**
      * Pointcut that matches public methods with {@link DecryptArgument} annotation.
      */
-    @Pointcut("execution(@net.croz.grichencrypt.annotation.DecryptArgument * *(..))")
+    @Pointcut("execution(@net.croz.nrich.encrypt.annotation.DecryptArgument * *(..))")
     void decryptAnnotatedMethods() {
     }
 
     /**
      * Pointcut that matches public methods with {@link EncryptResult} annotation.
      */
-    @Pointcut("execution(@net.croz.grichencrypt.annotation.EncryptResult * *(..))")
+    @Pointcut("execution(@net.croz.nrich.encrypt.annotation.EncryptResult * *(..))")
     void encryptAnnotatedMethods() {
     }
 
