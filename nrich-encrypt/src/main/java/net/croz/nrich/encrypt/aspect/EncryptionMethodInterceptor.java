@@ -28,11 +28,6 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
     private final List<String> ignoredMethodList;
 
     @Override
-    protected DataEncryptionService getDataEncryptionService() {
-        return dataEncryptionService;
-    }
-
-    @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         if (!(invocation instanceof ProxyMethodInvocation)) {
             log.debug("Found method: {} was not instance of ProxyMethodInvocation it will not be advised!", methodName(invocation));
@@ -83,6 +78,11 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
         }
 
         return proxyMethodInvocation.proceed();
+    }
+
+    @Override
+    protected DataEncryptionService getDataEncryptionService() {
+        return dataEncryptionService;
     }
 
     private String methodName(final MethodInvocation invocation) {

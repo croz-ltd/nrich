@@ -21,11 +21,6 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
 
     private final DataEncryptionService dataEncryptionService;
 
-    @Override
-    protected DataEncryptionService getDataEncryptionService() {
-        return dataEncryptionService;
-    }
-
     /**
      * Pointcut that matches public methods with {@link DecryptArgument} annotation.
      */
@@ -72,6 +67,11 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         }
 
         return result;
+    }
+
+    @Override
+    protected DataEncryptionService getDataEncryptionService() {
+        return dataEncryptionService;
     }
 
     private <T extends Annotation> T methodAnnotation(final Signature signature, final Class<T> annotationType) {
