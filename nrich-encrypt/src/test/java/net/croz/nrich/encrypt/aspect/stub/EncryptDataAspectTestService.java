@@ -16,4 +16,9 @@ public interface EncryptDataAspectTestService {
     Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(String value);
 
     EncryptDataAspectTestServiceResult dataToDecrypt(EncryptDataAspectTestServiceResult data);
+
+    EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(String value);
+
+    EncryptDataAspectTestServiceResult dataToDecryptFromConfiguration(EncryptDataAspectTestServiceResult data);
+
 }

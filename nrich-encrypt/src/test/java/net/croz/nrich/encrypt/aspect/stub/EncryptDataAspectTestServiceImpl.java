@@ -11,28 +11,42 @@ import java.util.concurrent.Future;
 public class EncryptDataAspectTestServiceImpl implements EncryptDataAspectTestService {
 
     @EncryptResult(resultPathList = "value")
+    @Override
     public EncryptDataAspectTestServiceResult dataToEncrypt(final String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @EncryptResult(resultPathList = "value")
+    @Override
     public Future<EncryptDataAspectTestServiceResult> dataToEncryptWithCompletableFuture(final String value) {
         return CompletableFuture.completedFuture(new EncryptDataAspectTestServiceResult(value));
     }
 
     @EncryptResult(resultPathList = "value")
+    @Override
     public Mono<EncryptDataAspectTestServiceResult> dataToEncryptWithMono(final String value) {
         return Mono.just(new EncryptDataAspectTestServiceResult(value));
     }
 
     @EncryptResult(resultPathList = "value")
+    @Override
     public Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(final String value) {
         return Flux.just(new EncryptDataAspectTestServiceResult(value));
     }
 
     @DecryptArgument(argumentPathList = "value")
+    @Override
     public EncryptDataAspectTestServiceResult dataToDecrypt(final EncryptDataAspectTestServiceResult data) {
         return data;
     }
 
+    @Override
+    public EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(final String value) {
+        return new EncryptDataAspectTestServiceResult(value);
+    }
+
+    @Override
+    public EncryptDataAspectTestServiceResult dataToDecryptFromConfiguration(final EncryptDataAspectTestServiceResult data) {
+        return data;
+    }
 }
