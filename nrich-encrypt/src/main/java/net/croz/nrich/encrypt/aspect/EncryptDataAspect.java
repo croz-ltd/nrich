@@ -56,7 +56,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
     }
 
     @Around("encryptAnnotatedMethods()")
-    Object aroundEncryptAnnotatedMethods(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    public Object aroundEncryptAnnotatedMethods(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         final Signature signature = proceedingJoinPoint.getSignature();
         final EncryptResult annotation = methodAnnotation(signature, EncryptResult.class);
 
