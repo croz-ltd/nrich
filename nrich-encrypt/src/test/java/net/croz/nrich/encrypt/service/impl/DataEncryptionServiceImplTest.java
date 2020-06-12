@@ -173,7 +173,6 @@ public class DataEncryptionServiceImplTest {
         assertThatCode(() -> dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
     }
 
-
     @Test
     void shouldNotFailOnNestedPropertiesThatDontExist() {
         // given
