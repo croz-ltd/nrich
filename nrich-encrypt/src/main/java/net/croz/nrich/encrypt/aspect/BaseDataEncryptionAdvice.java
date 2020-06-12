@@ -3,12 +3,15 @@ package net.croz.nrich.encrypt.aspect;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.model.EncryptionContext;
 import net.croz.nrich.encrypt.service.DataEncryptionService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class BaseDataEncryptionAdvice {
@@ -39,7 +42,7 @@ public abstract class BaseDataEncryptionAdvice {
     protected abstract DataEncryptionService getDataEncryptionService();
 
     protected String currentUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        return Optional.ofNullable(SecurityContextHolder.getContext()).map(SecurityContext::getAuthentication).map(Authentication::getName).orElse(null);
     }
 
     private boolean isCompletableFutureResult(final Object forEncryption) {
