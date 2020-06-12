@@ -28,7 +28,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         final List<Object> argumentList = Arrays.asList(arguments);
 
         if (annotation.argumentPathList().length > 0) {
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).currentUsername(currentUsername()).build();
+            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
             final Object[] decryptedArguments = decryptArguments(context, arguments, Arrays.asList(annotation.argumentPathList()));
 
             return proceedingJoinPoint.proceed(decryptedArguments);
@@ -46,7 +46,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         Object result = proceedingJoinPoint.proceed(arguments);
 
         if (annotation.resultPathList().length > 0) {
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).currentUsername(currentUsername()).build();
+            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
 
             result = encryptResult(context, result, Arrays.asList(annotation.resultPathList()));
         }

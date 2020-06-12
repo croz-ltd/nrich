@@ -2,6 +2,7 @@ package net.croz.nrich.encrypt.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public class EncryptionContext {
     // same as methodArguments for decrypt operation
     private final List<Object> methodDecryptedArguments;
 
-    private final String currentUsername;
+    private final Authentication authentication;
 
 }

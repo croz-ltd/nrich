@@ -59,7 +59,7 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
 
                 log.debug("Found decrypt arguments configuration: {} for method: {}", decryptArgumentsConfiguration, methodName);
 
-                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).currentUsername(currentUsername()).build();
+                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
 
                 decryptedArguments = decryptArguments(context, arguments, decryptArgumentsConfiguration.getPropertyToEncryptDecryptList());
 
@@ -71,7 +71,7 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
 
                 final List<Object> decryptedArgumentList = Arrays.asList(decryptedArguments == null ? arguments : decryptedArguments);
 
-                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(decryptedArgumentList).currentUsername(currentUsername()).build();
+                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(decryptedArgumentList).authentication(authentication()).build();
 
                 return encryptResult(context, proxyMethodInvocation.proceed(), encryptResultConfiguration.getPropertyToEncryptDecryptList());
             }

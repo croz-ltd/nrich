@@ -41,8 +41,8 @@ public abstract class BaseDataEncryptionAdvice {
 
     protected abstract DataEncryptionService getDataEncryptionService();
 
-    protected String currentUsername() {
-        return Optional.ofNullable(SecurityContextHolder.getContext()).map(SecurityContext::getAuthentication).map(Authentication::getName).orElse(null);
+    protected Authentication authentication() {
+        return Optional.ofNullable(SecurityContextHolder.getContext()).map(SecurityContext::getAuthentication).orElse(null);
     }
 
     private boolean isCompletableFutureResult(final Object forEncryption) {
