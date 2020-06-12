@@ -185,4 +185,30 @@ public class DataEncryptionServiceImplTest {
         // then
         assertThatCode(() -> dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
     }
+
+    @Test
+    void shouldNotFailOnNullValueWhenEncryptingData() {
+        // given
+        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        final DataEncryptionServiceTestObject data = null;
+
+        // when
+        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNull();
+    }
+
+    @Test
+    void shouldNotFailOnNullValueWhenDecryptingData() {
+        // given
+        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        final DataEncryptionServiceTestObject data = null;
+
+        // when
+        final DataEncryptionServiceTestObject result = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNull();
+    }
 }
