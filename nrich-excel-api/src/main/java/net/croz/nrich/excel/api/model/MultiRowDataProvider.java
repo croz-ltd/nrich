@@ -1,4 +1,4 @@
-package net.croz.nrich.excel.model;
+package net.croz.nrich.excel.api.model;
 
 @FunctionalInterface
 public interface MultiRowDataProvider {

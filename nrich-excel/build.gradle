@@ -1,4 +1,6 @@
 dependencies {
+  api project(":nrich-excel-api")
+
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 

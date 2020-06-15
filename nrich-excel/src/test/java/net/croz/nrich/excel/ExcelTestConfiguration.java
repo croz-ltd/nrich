@@ -3,7 +3,7 @@ package net.croz.nrich.excel;
 import net.croz.nrich.excel.converter.CellValueConverter;
 import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
-import net.croz.nrich.excel.service.ExcelExportService;
+import net.croz.nrich.excel.api.service.ExcelExportService;
 import net.croz.nrich.excel.service.impl.ExcelExportServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

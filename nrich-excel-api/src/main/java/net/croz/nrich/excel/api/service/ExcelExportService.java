@@ -1,6 +1,6 @@
-package net.croz.nrich.excel.service;
+package net.croz.nrich.excel.api.service;
 
-import net.croz.nrich.excel.request.CreateExcelReportRequest;
+import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 
 import java.io.File;
 

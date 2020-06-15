@@ -3,10 +3,10 @@ package net.croz.nrich.excel.service.impl;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
-import net.croz.nrich.excel.model.MultiRowDataProvider;
-import net.croz.nrich.excel.request.CreateExcelReportRequest;
+import net.croz.nrich.excel.api.model.MultiRowDataProvider;
+import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
-import net.croz.nrich.excel.service.ExcelExportService;
+import net.croz.nrich.excel.api.service.ExcelExportService;
 import org.springframework.util.Assert;
 
 import java.io.File;

@@ -1,6 +1,6 @@
 package net.croz.nrich.excel.converter;
 
-import net.croz.nrich.excel.model.TypeDataFormat;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
 
 import java.util.List;

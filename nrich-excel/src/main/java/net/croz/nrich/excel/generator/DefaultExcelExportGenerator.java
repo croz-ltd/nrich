@@ -2,9 +2,9 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.converter.CellValueConverter;
-import net.croz.nrich.excel.model.ColumnDataFormat;
-import net.croz.nrich.excel.model.TemplateVariable;
-import net.croz.nrich.excel.model.TypeDataFormat;
+import net.croz.nrich.excel.api.model.ColumnDataFormat;
+import net.croz.nrich.excel.api.model.TemplateVariable;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;

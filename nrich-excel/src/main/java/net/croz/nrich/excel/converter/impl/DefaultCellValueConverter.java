@@ -2,7 +2,7 @@ package net.croz.nrich.excel.converter.impl;
 
 import lombok.Value;
 import net.croz.nrich.excel.converter.CellValueConverter;
-import net.croz.nrich.excel.model.TypeDataFormat;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.core.annotation.Order;
 

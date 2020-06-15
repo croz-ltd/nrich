@@ -1,13 +1,13 @@
-package net.croz.nrich.excel.model;
+package net.croz.nrich.excel.api.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class ColumnDataFormat {
+public class TypeDataFormat {
 
-    private final int columnIndex;
+    private final Class<?> type;
 
     private final String dataFormat;
 

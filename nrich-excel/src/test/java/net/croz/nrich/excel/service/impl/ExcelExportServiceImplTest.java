@@ -2,8 +2,8 @@ package net.croz.nrich.excel.service.impl;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.ExcelTestConfiguration;
-import net.croz.nrich.excel.model.MultiRowDataProvider;
-import net.croz.nrich.excel.request.CreateExcelReportRequest;
+import net.croz.nrich.excel.api.model.MultiRowDataProvider;
+import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
