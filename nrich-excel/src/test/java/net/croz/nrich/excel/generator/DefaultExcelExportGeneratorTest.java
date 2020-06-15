@@ -31,6 +31,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DefaultExcelExportGeneratorTest {
@@ -88,12 +89,15 @@ public class DefaultExcelExportGeneratorTest {
         // given
         final Object[] rowData = new Object[] { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
 
-        // when
         excelExportGenerator.writeRowData(rowData);
         excelExportGenerator.flushAndClose();
 
+        // when
+        final Throwable thrown = catchThrowable(() -> excelExportGenerator.writeRowData(rowData));
+
         // then
-        assertThrows(IllegalArgumentException.class, () -> excelExportGenerator.writeRowData(rowData));
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     @SneakyThrows
