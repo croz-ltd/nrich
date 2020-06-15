@@ -1,8 +1,8 @@
 package net.croz.nrich.notification.controller;
 
-import net.croz.nrich.notification.model.Notification;
-import net.croz.nrich.notification.response.ResponseWithNotification;
-import net.croz.nrich.notification.service.NotificationResolverService;
+import net.croz.nrich.notification.api.model.Notification;
+import net.croz.nrich.notification.api.response.ResponseWithNotification;
+import net.croz.nrich.notification.api.service.NotificationResolverService;
 
 public interface NotificationAwareController {
 

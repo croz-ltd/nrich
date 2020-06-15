@@ -2,12 +2,12 @@ package net.croz.nrich.notification.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.notification.constant.NotificationConstants;
-import net.croz.nrich.notification.model.Notification;
-import net.croz.nrich.notification.model.NotificationSeverity;
-import net.croz.nrich.notification.model.ValidationError;
-import net.croz.nrich.notification.model.ValidationFailureNotification;
+import net.croz.nrich.notification.api.model.Notification;
+import net.croz.nrich.notification.api.model.NotificationSeverity;
+import net.croz.nrich.notification.api.model.ValidationError;
+import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.notification.service.ConstraintConversionService;
-import net.croz.nrich.notification.service.NotificationResolverService;
+import net.croz.nrich.notification.api.service.NotificationResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

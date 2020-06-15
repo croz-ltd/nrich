@@ -1,8 +1,8 @@
 package net.croz.nrich.notification.controller;
 
 import net.croz.nrich.notification.NotificationTestConfiguration;
-import net.croz.nrich.notification.model.NotificationSeverity;
-import net.croz.nrich.notification.response.ResponseWithNotification;
+import net.croz.nrich.notification.api.model.NotificationSeverity;
+import net.croz.nrich.notification.api.response.ResponseWithNotification;
 import net.croz.nrich.notification.stub.NotificationAwareControllerTestComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

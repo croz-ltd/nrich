@@ -1,7 +1,7 @@
 package net.croz.nrich.notification;
 
 import net.croz.nrich.notification.service.ConstraintConversionService;
-import net.croz.nrich.notification.service.NotificationResolverService;
+import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.service.impl.ConstraintConversionServiceImpl;
 import net.croz.nrich.notification.service.impl.NotificationResolverServiceImpl;
 import net.croz.nrich.notification.stub.NotificationAwareControllerTestComponent;

@@ -2,8 +2,8 @@ package net.croz.nrich.webmvc.advice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
-import net.croz.nrich.notification.model.Notification;
-import net.croz.nrich.notification.model.ValidationFailureNotification;
+import net.croz.nrich.notification.api.model.Notification;
+import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.webmvc.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

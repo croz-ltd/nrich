@@ -1,8 +1,9 @@
-package net.croz.nrich.notification.response;
+package net.croz.nrich.notification.api.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.notification.model.Notification;
+
+import net.croz.nrich.notification.api.model.Notification;
 
 @RequiredArgsConstructor
 @Getter

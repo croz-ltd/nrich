@@ -1,10 +1,10 @@
 package net.croz.nrich.notification.service.impl;
 
 import net.croz.nrich.notification.NotificationTestConfiguration;
-import net.croz.nrich.notification.model.Notification;
-import net.croz.nrich.notification.model.NotificationSeverity;
-import net.croz.nrich.notification.model.ValidationError;
-import net.croz.nrich.notification.model.ValidationFailureNotification;
+import net.croz.nrich.notification.api.model.Notification;
+import net.croz.nrich.notification.api.model.NotificationSeverity;
+import net.croz.nrich.notification.api.model.ValidationError;
+import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestException;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithArguments;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithCustomTitle;

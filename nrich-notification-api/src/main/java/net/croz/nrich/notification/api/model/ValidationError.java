@@ -1,4 +1,4 @@
-package net.croz.nrich.notification.model;
+package net.croz.nrich.notification.api.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
