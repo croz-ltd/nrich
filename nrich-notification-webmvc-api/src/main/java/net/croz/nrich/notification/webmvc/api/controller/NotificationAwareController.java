@@ -1,4 +1,4 @@
-package net.croz.nrich.notification.web.api.controller;
+package net.croz.nrich.notification.webmvc.api.controller;
 
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.response.ResponseWithNotification;

@@ -9,7 +9,7 @@ include(
   "nrich-logging-api",
   "nrich-logging",
   "nrich-notification-api",
-  "nrich-notification-web-api",
+  "nrich-notification-webmvc-api",
   "nrich-notification",
   "nrich-registry-api",
   "nrich-registry",

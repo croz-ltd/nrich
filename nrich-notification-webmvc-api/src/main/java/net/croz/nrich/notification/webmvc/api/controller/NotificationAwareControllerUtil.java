@@ -1,4 +1,4 @@
-package net.croz.nrich.notification.web.api.controller;
+package net.croz.nrich.notification.webmvc.api.controller;
 
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

@@ -1,0 +1,7 @@
+dependencies {
+  api project(":nrich-notification-api")
+
+  webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
+  webMvcImplementation "org.springframework:spring-web"
+
+}
