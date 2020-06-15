@@ -15,6 +15,7 @@ import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
+import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
@@ -23,6 +24,8 @@ import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.impl.RegistryDataFormConfigurationResolverServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
 import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.data.stub.RegistryTestEntity;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
@@ -268,8 +271,8 @@ public class RegistryTestConfiguration {
 
         final Map<String, Class<?>> formConfigurationMap = new HashMap<>();
 
-        formConfigurationMap.put("existingUpdate", Object.class);
-        formConfigurationMap.put("existingCreate", Object.class);
+        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
+        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
 
         return new RegistryDataFormConfigurationResolverServiceImpl(registryClassList, formConfigurationMap);
     }
