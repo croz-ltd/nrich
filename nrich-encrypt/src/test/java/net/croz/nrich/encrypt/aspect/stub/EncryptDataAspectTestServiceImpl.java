@@ -16,6 +16,12 @@ public class EncryptDataAspectTestServiceImpl implements EncryptDataAspectTestSe
         return new EncryptDataAspectTestServiceResult(value);
     }
 
+    @EncryptResult(resultPathList = {})
+    @Override
+    public EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(final String value) {
+        return new EncryptDataAspectTestServiceResult(value);
+    }
+
     @EncryptResult(resultPathList = "value")
     @Override
     public Future<EncryptDataAspectTestServiceResult> dataToEncryptWithCompletableFuture(final String value) {
@@ -37,6 +43,12 @@ public class EncryptDataAspectTestServiceImpl implements EncryptDataAspectTestSe
     @DecryptArgument(argumentPathList = "value")
     @Override
     public EncryptDataAspectTestServiceResult dataToDecrypt(final EncryptDataAspectTestServiceResult data) {
+        return data;
+    }
+
+    @DecryptArgument(argumentPathList = {})
+    @Override
+    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(final EncryptDataAspectTestServiceResult data) {
         return data;
     }
 

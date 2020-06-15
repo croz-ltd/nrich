@@ -9,6 +9,8 @@ public interface EncryptDataAspectTestService {
 
     EncryptDataAspectTestServiceResult dataToEncrypt(String value);
 
+    EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(String value);
+
     Future<EncryptDataAspectTestServiceResult> dataToEncryptWithCompletableFuture(String value);
 
     Mono<EncryptDataAspectTestServiceResult> dataToEncryptWithMono(String value);
@@ -16,6 +18,8 @@ public interface EncryptDataAspectTestService {
     Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(String value);
 
     EncryptDataAspectTestServiceResult dataToDecrypt(EncryptDataAspectTestServiceResult data);
+
+    EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(EncryptDataAspectTestServiceResult data);
 
     EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(String value);
 

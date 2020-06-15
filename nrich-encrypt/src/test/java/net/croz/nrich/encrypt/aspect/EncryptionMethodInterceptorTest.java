@@ -66,4 +66,34 @@ public class EncryptionMethodInterceptorTest {
         // then
         assertThat(result.getValue()).isEqualTo(text);
     }
+
+    @Test
+    void shouldSkipResultEncryptionWhenAnnotationArgumentListIsEmpty() {
+        // given
+        final String text = "some text";
+
+        // when
+        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithInvalidAnnotation(text);
+
+        // then
+        assertThat(result.getValue()).isEqualTo(text);
+    }
+
+    @Test
+    void shouldSkipDecryptionWhenAnnotationArgumentListIsEmpty() {
+        // given
+        final String text = "some text";
+
+        // when
+        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
+
+        // then
+        assertThat(result.getValue()).isNotEqualTo(text);
+
+        // and when
+        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecryptWithInvalidAnnotation(result);
+
+        // then
+        assertThat(decryptResult.getValue()).isEqualTo(result.getValue());
+    }
 }
