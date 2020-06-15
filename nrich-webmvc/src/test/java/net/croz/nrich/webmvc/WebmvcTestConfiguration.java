@@ -1,7 +1,7 @@
 package net.croz.nrich.webmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.croz.nrich.logging.service.LoggingService;
+import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.logging.service.impl.LoggingServiceImpl;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;

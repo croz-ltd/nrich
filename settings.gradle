@@ -6,6 +6,7 @@ include(
   "nrich-excel-api",
   "nrich-excel",
   "nrich-form-configuration",
+  "nrich-logging-api",
   "nrich-logging",
   "nrich-notification-api",
   "nrich-notification-web-api",

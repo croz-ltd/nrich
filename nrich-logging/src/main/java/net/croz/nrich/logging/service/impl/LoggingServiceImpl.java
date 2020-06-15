@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.logging.constant.LoggingConstants;
 import net.croz.nrich.logging.model.LoggingVerbosityLevel;
-import net.croz.nrich.logging.service.LoggingService;
+import net.croz.nrich.logging.api.service.LoggingService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;

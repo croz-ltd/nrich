@@ -1,4 +1,4 @@
-package net.croz.nrich.logging.service;
+package net.croz.nrich.logging.api.service;
 
 import java.util.Map;
 

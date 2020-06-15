@@ -2,7 +2,7 @@ package net.croz.nrich.webmvc.advice;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.core.api.exception.ExceptionWithArguments;
-import net.croz.nrich.logging.service.LoggingService;
+import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.webmvc.service.ExceptionAuxiliaryDataResolverService;
