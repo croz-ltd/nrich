@@ -30,7 +30,7 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         if (!(invocation instanceof ProxyMethodInvocation)) {
-            log.debug("Found method: {} was not instance of ProxyMethodInvocation it will not be advised!", methodName(invocation));
+            log.debug("Found method: {} was not instance of ProxyMethodInvocation it will not be encrypted!!", methodName(invocation));
 
             return invocation.proceed();
         }
