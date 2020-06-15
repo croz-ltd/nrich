@@ -7,9 +7,6 @@ dependencies {
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-context"
 
-  webImplementation "jakarta.servlet:jakarta.servlet-api"
-  webImplementation "org.springframework:spring-web"
-
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 

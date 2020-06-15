@@ -1,0 +1,10 @@
+dependencies {
+  api project(":nrich-notification-api")
+
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  webImplementation "jakarta.servlet:jakarta.servlet-api"
+  webImplementation "org.springframework:spring-web"
+
+}
