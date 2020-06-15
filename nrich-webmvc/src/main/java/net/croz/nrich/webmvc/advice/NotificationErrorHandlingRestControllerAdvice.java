@@ -77,6 +77,9 @@ public class NotificationErrorHandlingRestControllerAdvice {
         else if (unwrappedException instanceof BindException) {
             return handleBindException((BindException) unwrappedException, request);
         }
+        else if (unwrappedException instanceof ConstraintViolationException) {
+            return handleConstraintViolationException((ConstraintViolationException) unwrappedException, request);
+        }
 
         final Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, request);
 
