@@ -1,5 +1,6 @@
 package net.croz.nrich.formconfiguration.request;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@EqualsAndHashCode
 public class FetchFormConfigurationRequest {
 
     @NotNull
