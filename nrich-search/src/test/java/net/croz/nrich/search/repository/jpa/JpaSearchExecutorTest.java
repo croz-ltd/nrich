@@ -95,11 +95,11 @@ public class JpaSearchExecutorTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("age")));
+        final List<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("age")));
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.get(0).getAge()).isEqualTo(28);
+        assertThat(result).isNotEmpty();
+        assertThat(result.get(0).getAge()).isEqualTo(28);
     }
 
     @Test
@@ -110,12 +110,12 @@ public class JpaSearchExecutorTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
+        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.getTotalPages()).isEqualTo(5);
-        assertThat(results.getContent()).hasSize(1);
+        assertThat(result).isNotEmpty();
+        assertThat(result.getTotalPages()).isEqualTo(5);
+        assertThat(result.getContent()).hasSize(1);
     }
 
     @Test
@@ -126,12 +126,12 @@ public class JpaSearchExecutorTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
+        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
 
         // then
-        assertThat(results).isNotEmpty();
-        assertThat(results.getTotalPages()).isEqualTo(1);
-        assertThat(results.getContent()).hasSize(5);
+        assertThat(result).isNotEmpty();
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getContent()).hasSize(5);
     }
 
     @Test
@@ -216,12 +216,12 @@ public class JpaSearchExecutorTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
 
         // when
-        final Page<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
+        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
 
         // then
-        assertThat(results).isEmpty();
-        assertThat(results.getTotalPages()).isEqualTo(0);
-        assertThat(results.getContent()).hasSize(0);
+        assertThat(result).isEmpty();
+        assertThat(result.getTotalPages()).isEqualTo(0);
+        assertThat(result.getContent()).hasSize(0);
     }
 
     @Test
