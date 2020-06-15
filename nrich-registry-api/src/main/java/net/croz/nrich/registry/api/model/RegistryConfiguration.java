@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-// TODO move to API
 @Setter
 @Getter
 public class RegistryConfiguration {
