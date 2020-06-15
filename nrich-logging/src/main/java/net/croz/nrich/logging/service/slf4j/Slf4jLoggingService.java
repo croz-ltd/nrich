@@ -1,4 +1,4 @@
-package net.croz.nrich.logging.service.impl;
+package net.croz.nrich.logging.service.slf4j;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class LoggingServiceImpl implements LoggingService {
+public class Slf4jLoggingService implements LoggingService {
 
     private final MessageSource messageSource;
 
