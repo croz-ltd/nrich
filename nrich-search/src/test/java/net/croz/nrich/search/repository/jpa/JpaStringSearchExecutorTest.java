@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +104,20 @@ public class JpaStringSearchExecutorTest {
 
         // then
         assertThat(result).hasSize(1);
+    }
+
+    @Test
+    void shouldReturnWholeResultListWhenRequestIsUnpaged() {
+        // given
+        generateListForStringSearch(entityManager);
+
+        // when
+        final Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", Collections.singletonList("ageFrom"), SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
+
+        // then
+        assertThat(result).isNotEmpty();
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.getContent()).hasSize(5);
     }
 
     @Test
