@@ -264,6 +264,20 @@ public class NotificationResolverServiceImplTest {
     }
 
     @Test
+    void shouldIgnoreNotFoundAdditionalDataMessages() {
+        // given
+        final Map<String, Object> additionalDataMap = additionalDataMap("notFound", "ok");
+        final String actionName = "upload.finished";
+
+        // when
+        final Notification notification = notificationResolverServiceImpl.createNotificationForSuccessfulAction(actionName, additionalDataMap);
+
+        // then
+        assertThat(notification).isNotNull();
+        assertThat(notification.getMessageList()).isEmpty();
+    }
+
+    @Test
     void shouldConvertConstraintViolationExceptionTooNotificationErrorResponse() {
         // given
         final NotificationResolverServiceTestRequest request = invalidNotificationResolverServiceTestRequest();
