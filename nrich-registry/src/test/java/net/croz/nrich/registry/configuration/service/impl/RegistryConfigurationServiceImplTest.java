@@ -60,8 +60,9 @@ public class RegistryConfigurationServiceImplTest {
         assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).isNullOrEmpty();
         assertThat(registryEntityConfiguration.isHistoryAvailable()).isFalse();
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).hasSize(3);
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("name", "id", "nonEditableProperty");
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).hasSize(5);
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber");
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isDecimal").containsExactly(false, false, false, true, true);
 
         // and when
         final RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(0);

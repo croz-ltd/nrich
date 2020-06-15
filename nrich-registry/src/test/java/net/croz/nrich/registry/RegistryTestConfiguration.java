@@ -189,7 +189,7 @@ public class RegistryTestConfiguration {
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
-        registryOverrideConfiguration.setPropertyDisplayList(Arrays.asList("name", "id"));
+        registryOverrideConfiguration.setPropertyDisplayList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
         registryOverrideConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
         registryOverrideConfiguration.setNonEditablePropertyList(Collections.singletonList("nonEditableProperty"));
         registryOverrideConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));

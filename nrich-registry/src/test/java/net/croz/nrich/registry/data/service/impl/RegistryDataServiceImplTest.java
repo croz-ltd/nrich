@@ -268,6 +268,19 @@ public class RegistryDataServiceImplTest {
         assertThat(resultWithEqualName).hasSize(1);
     }
 
+    @Test
+    void shouldThrowExceptionWhenConfigurationHasNotBeenDefined() {
+        // given
+        final ListRegistryRequest request = createListRegistryRequest("undefined.configuration", "name%");
+
+        // when
+        final Throwable thrown = catchThrowable(() -> registryDataService.list(request));
+
+        // then
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+    }
+
     private RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(final RegistryTestEmbeddedUserGroupId groupId) {
         try {
             return (RegistryTestEmbeddedUserGroup) entityManager.createQuery("from RegistryTestEmbeddedUserGroup where userGroupId.user.id = :userId and userGroupId.group.id = :groupId")

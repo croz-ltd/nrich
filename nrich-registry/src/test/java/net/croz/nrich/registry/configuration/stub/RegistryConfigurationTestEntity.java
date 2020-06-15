@@ -24,4 +24,8 @@ public class RegistryConfigurationTestEntity {
 
     private String skippedProperty;
 
+    private Float floatNumber;
+
+    private Double doubleNumber;
+
 }
