@@ -92,7 +92,8 @@ public class FormConfigurationServiceImpl implements FormConfigurationService {
 
         final ConstrainedPropertyValidatorConverterService converterService = constraintConverterServiceList.stream()
                 .filter(converter -> converter.supports(constrainedProperty))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for constrained property: %s", constrainedProperty)));
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for constrained property: %s", constrainedProperty)));
 
         return converterService.convert(constrainedProperty);
     }
