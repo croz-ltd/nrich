@@ -7,6 +7,7 @@ include(
   "nrich-form-configuration",
   "nrich-logging",
   "nrich-notification",
+  "nrich-registry-api",
   "nrich-registry",
   "nrich-security-csrf",
   "nrich-search-api",

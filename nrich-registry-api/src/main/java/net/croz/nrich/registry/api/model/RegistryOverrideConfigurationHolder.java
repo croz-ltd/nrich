@@ -1,8 +1,8 @@
-package net.croz.nrich.registry.core.model;
+package net.croz.nrich.registry.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 
 import java.util.Map;
 

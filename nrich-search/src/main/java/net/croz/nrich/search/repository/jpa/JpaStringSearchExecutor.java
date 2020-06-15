@@ -1,7 +1,7 @@
 package net.croz.nrich.search.repository.jpa;
 
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.repository.StringSearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.springframework.data.domain.Page;

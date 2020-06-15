@@ -1,16 +1,16 @@
 package net.croz.nrich.search.repository.support;
 
 import net.croz.nrich.search.SearchTestConfiguration;
-import net.croz.nrich.search.model.DefaultRootEntityResolver;
-import net.croz.nrich.search.model.PluralAssociationRestrictionType;
-import net.croz.nrich.search.model.SearchConfiguration;
-import net.croz.nrich.search.model.SearchJoin;
-import net.croz.nrich.search.model.SearchOperatorImpl;
-import net.croz.nrich.search.model.SearchOperatorOverride;
-import net.croz.nrich.search.model.SearchProjection;
-import net.croz.nrich.search.model.SearchPropertyJoin;
-import net.croz.nrich.search.model.SearchPropertyMapping;
-import net.croz.nrich.search.model.SubqueryConfiguration;
+import net.croz.nrich.search.api.model.DefaultRootEntityResolver;
+import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
+import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchJoin;
+import net.croz.nrich.search.api.model.SearchOperatorImpl;
+import net.croz.nrich.search.api.model.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.SearchProjection;
+import net.croz.nrich.search.api.model.SearchPropertyJoin;
+import net.croz.nrich.search.api.model.SearchPropertyMapping;
+import net.croz.nrich.search.api.model.SubqueryConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionResolver;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;

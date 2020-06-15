@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.security.interceptor;
 
-import net.croz.nrich.registry.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.data.interceptor.BaseRegistryDataInterceptor;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;

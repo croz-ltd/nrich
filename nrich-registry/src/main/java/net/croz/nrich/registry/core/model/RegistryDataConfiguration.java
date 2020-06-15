@@ -2,7 +2,7 @@ package net.croz.nrich.registry.core.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 
 import java.util.Map;
 

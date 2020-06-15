@@ -2,6 +2,10 @@ package net.croz.nrich.search.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.SearchPropertyMapping;
 
 import java.util.List;
 

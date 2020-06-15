@@ -2,7 +2,7 @@ package net.croz.nrich.search.util;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.search.api.annotation.Projection;
-import net.croz.nrich.search.model.SearchProjection;
+import net.croz.nrich.search.api.model.SearchProjection;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.annotation.Annotation;

@@ -1,4 +1,4 @@
-package net.croz.nrich.search.model;
+package net.croz.nrich.search.api.model;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;

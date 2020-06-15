@@ -1,6 +1,6 @@
 package net.croz.nrich.search.repository;
 
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

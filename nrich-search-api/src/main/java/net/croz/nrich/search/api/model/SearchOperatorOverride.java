@@ -1,4 +1,4 @@
-package net.croz.nrich.search.model;
+package net.croz.nrich.search.api.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;

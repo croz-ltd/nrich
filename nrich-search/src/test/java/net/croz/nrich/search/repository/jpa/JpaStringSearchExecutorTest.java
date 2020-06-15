@@ -1,7 +1,7 @@
 package net.croz.nrich.search.repository.jpa;
 
 import net.croz.nrich.search.SearchTestConfiguration;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntityStringSearchRepository;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package net.croz.nrich.search.repository.stub;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.model.AdditionalRestrictionResolver;
+import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

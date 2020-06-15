@@ -1,15 +1,15 @@
 package net.croz.nrich.search.support;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.model.AdditionalRestrictionResolver;
-import net.croz.nrich.search.model.PluralAssociationRestrictionType;
-import net.croz.nrich.search.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
+import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
-import net.croz.nrich.search.model.SearchFieldConfiguration;
-import net.croz.nrich.search.model.SearchJoin;
-import net.croz.nrich.search.model.SearchProjection;
-import net.croz.nrich.search.model.SearchPropertyJoin;
-import net.croz.nrich.search.model.SubqueryConfiguration;
+import net.croz.nrich.search.api.model.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.SearchJoin;
+import net.croz.nrich.search.api.model.SearchProjection;
+import net.croz.nrich.search.api.model.SearchPropertyJoin;
+import net.croz.nrich.search.api.model.SubqueryConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import net.croz.nrich.search.util.ProjectionListResolverUtil;

@@ -1,8 +1,6 @@
 dependencies {
-  api "jakarta.persistence:jakarta.persistence-api"
-  api "jakarta.validation:jakarta.validation-api"
+  api project (":nrich-search-api")
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
-
 }
