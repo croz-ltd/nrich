@@ -2,8 +2,8 @@ package net.croz.nrich.formconfiguration.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyConfiguration;
 import net.croz.nrich.formconfiguration.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.model.ConstrainedPropertyConfiguration;
 import net.croz.nrich.formconfiguration.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.request.FetchFormConfigurationRequest;
 import net.croz.nrich.formconfiguration.service.ConstrainedPropertyValidatorConverterService;
@@ -36,15 +36,19 @@ public class FormConfigurationServiceImpl implements FormConfigurationService {
     @Cacheable(value = "nrich.formConfiguration.cache", key = "#request.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
     public List<FormConfiguration> fetchFormConfigurationList(final FetchFormConfigurationRequest request) {
-        return request.getFormIdList().stream().map(formId -> {
-            final Class<?> validationDefinitionHolder = Optional.ofNullable(formIdConstraintHolderMap.get(formId)).orElseThrow(() -> new IllegalArgumentException(String.format("Form id: %s is not registered", formId)));
+        return request.getFormIdList().stream()
+                .map(this::resolveFormConfiguration)
+                .collect(Collectors.toList());
+    }
 
-            final List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList = new ArrayList<>();
+    private FormConfiguration resolveFormConfiguration(final String formId) {
+        final Class<?> validationDefinitionHolder = Optional.ofNullable(formIdConstraintHolderMap.get(formId)).orElseThrow(() -> new IllegalArgumentException(String.format("Form id: %s is not registered", formId)));
 
-            recursiveResolveFieldConfiguration(validationDefinitionHolder, constrainedPropertyConfigurationList, null);
+        final List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList = new ArrayList<>();
 
-            return new FormConfiguration(formId, constrainedPropertyConfigurationList);
-        }).collect(Collectors.toList());
+        recursiveResolveFieldConfiguration(validationDefinitionHolder, constrainedPropertyConfigurationList, null);
+
+        return new FormConfiguration(formId, constrainedPropertyConfigurationList);
     }
 
     private List<ConstrainedPropertyConfiguration> recursiveResolveFieldConfiguration(final Class<?> type, final List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList, final String prefix) {
