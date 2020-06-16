@@ -1,17 +1,19 @@
 package net.croz.nrich.search.model;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 
-@Value
+@RequiredArgsConstructor
+@Getter
 public class AttributeHolder {
 
-    Attribute<?, ?> attribute;
+    private final Attribute<?, ?> attribute;
 
-    ManagedType<?> managedType;
+    private final ManagedType<?> managedType;
 
-    boolean isPlural;
+    private final boolean isPlural;
 
 }

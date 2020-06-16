@@ -1,18 +1,20 @@
 package net.croz.nrich.search.model;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.SearchOperator;
 
-@Value
+@RequiredArgsConstructor
+@Getter
 public class Restriction {
 
     // TODO every aspect of path should have a marker if it is plural
-    String path;
+    private final String path;
 
-    SearchOperator searchOperator;
+    private final SearchOperator searchOperator;
 
-    Object value;
+    private final Object value;
 
-    boolean isPluralAttribute;
+    private final boolean isPluralAttribute;
 
 }
