@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
-import net.croz.nrich.encrypt.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
-import net.croz.nrich.encrypt.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.ProxyMethodInvocation;
@@ -59,7 +59,7 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
 
                 log.debug("Found decrypt arguments configuration: {} for method: {}", decryptArgumentsConfiguration, methodName);
 
-                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
+                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
 
                 decryptedArguments = decryptArguments(context, arguments, decryptArgumentsConfiguration.getPropertyToEncryptDecryptList());
 
@@ -71,7 +71,7 @@ public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implem
 
                 final List<Object> decryptedArgumentList = Arrays.asList(decryptedArguments == null ? arguments : decryptedArguments);
 
-                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(decryptedArgumentList).authentication(authentication()).build();
+                final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(decryptedArgumentList).principal(authentication()).build();
 
                 return encryptResult(context, proxyMethodInvocation.proceed(), encryptResultConfiguration.getPropertyToEncryptDecryptList());
             }

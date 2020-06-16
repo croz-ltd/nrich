@@ -1,9 +1,9 @@
-package net.croz.nrich.encrypt.model;
+package net.croz.nrich.encrypt.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.security.core.Authentication;
 
+import java.security.Principal;
 import java.util.List;
 
 @Getter
@@ -17,6 +17,6 @@ public class EncryptionContext {
     // same as methodArguments for decrypt operation
     private final List<Object> methodDecryptedArguments;
 
-    private final Authentication authentication;
+    private final Principal principal;
 
 }

@@ -9,7 +9,7 @@ import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestService
 import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
-import net.croz.nrich.encrypt.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import net.croz.nrich.encrypt.service.aes.AesTextEncryptionService;
 import net.croz.nrich.encrypt.service.impl.DataEncryptionServiceImpl;

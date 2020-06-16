@@ -1,8 +1,8 @@
 package net.croz.nrich.encrypt.aspect;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.encrypt.model.EncryptionContext;
-import net.croz.nrich.encrypt.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.api.annotation.DecryptArgument;
 import net.croz.nrich.encrypt.api.annotation.EncryptResult;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
-import net.croz.nrich.encrypt.model.EncryptionContext;
-import net.croz.nrich.encrypt.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -28,7 +28,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         final List<Object> argumentList = Arrays.asList(arguments);
 
         if (annotation.argumentPathList().length > 0) {
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
+            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
             final Object[] decryptedArguments = decryptArguments(context, arguments, Arrays.asList(annotation.argumentPathList()));
 
             return proceedingJoinPoint.proceed(decryptedArguments);
@@ -46,7 +46,7 @@ public class EncryptDataAspect extends BaseDataEncryptionAdvice {
         Object result = proceedingJoinPoint.proceed(arguments);
 
         if (annotation.resultPathList().length > 0) {
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).authentication(authentication()).build();
+            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
 
             result = encryptResult(context, result, Arrays.asList(annotation.resultPathList()));
         }

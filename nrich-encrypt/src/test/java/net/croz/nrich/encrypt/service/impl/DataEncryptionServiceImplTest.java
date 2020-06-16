@@ -1,7 +1,7 @@
 package net.croz.nrich.encrypt.service.impl;
 
 import net.croz.nrich.encrypt.EncryptTestConfiguration;
-import net.croz.nrich.encrypt.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceNestedTestObject;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceTestObject;
 import org.junit.jupiter.api.Test;

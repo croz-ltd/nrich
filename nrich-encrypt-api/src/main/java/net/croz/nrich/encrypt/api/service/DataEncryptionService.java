@@ -1,6 +1,6 @@
-package net.croz.nrich.encrypt.service;
+package net.croz.nrich.encrypt.api.service;
 
-import net.croz.nrich.encrypt.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
 
 import java.util.List;
 

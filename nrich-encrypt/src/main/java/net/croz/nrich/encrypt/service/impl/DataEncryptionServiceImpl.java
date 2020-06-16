@@ -2,9 +2,9 @@ package net.croz.nrich.encrypt.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.croz.nrich.encrypt.model.EncryptionContext;
+import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
-import net.croz.nrich.encrypt.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import org.springframework.beans.PropertyAccessorFactory;
 
