@@ -48,7 +48,7 @@ public class PoiCellHolder implements CellHolder {
             cell.setCellValue(value.toString());
         }
         else {
-            throw new IllegalArgumentException("Set cell value called with Unrecognized type!");
+            throw new IllegalArgumentException("Set cell value called with unrecognized type!");
         }
     }
 }
