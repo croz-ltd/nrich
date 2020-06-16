@@ -2,7 +2,7 @@ package net.croz.nrich.excel.factory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.excel.converter.CellValueConverter;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.generator.DefaultExcelExportGenerator;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;

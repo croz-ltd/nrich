@@ -1,9 +1,9 @@
 package net.croz.nrich.excel.converter.impl;
 
 import lombok.Value;
-import net.croz.nrich.excel.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
-import org.apache.poi.ss.usermodel.Cell;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
+import net.croz.nrich.excel.api.model.CellHolder;
 import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
@@ -44,12 +44,12 @@ public class DefaultCellValueConverter implements CellValueConverter {
     }
 
     @Override
-    public void setCellValue(final Cell cell, final Object value) {
+    public void setCellValue(final CellHolder cell, final Object value) {
         Optional.ofNullable(findConverter(value)).ifPresent(converterHolder -> converterHolder.setCellValueFunction.accept(cell, value));
     }
 
     @Override
-    public boolean supports(final Cell cell, final Object value) {
+    public boolean supports(final CellHolder cell, final Object value) {
         return findConverter(value) != null;
     }
 
@@ -97,7 +97,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
 
         String dataFormat;
 
-        BiConsumer<Cell, Object> setCellValueFunction;
+        BiConsumer<CellHolder, Object> setCellValueFunction;
 
     }
 }

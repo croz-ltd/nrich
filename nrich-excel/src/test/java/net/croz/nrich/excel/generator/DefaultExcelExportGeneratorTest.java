@@ -1,7 +1,7 @@
 package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
-import net.croz.nrich.excel.converter.CellValueConverter;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;

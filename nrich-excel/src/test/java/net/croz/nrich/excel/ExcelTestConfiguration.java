@@ -1,6 +1,6 @@
 package net.croz.nrich.excel;
 
-import net.croz.nrich.excel.converter.CellValueConverter;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.api.service.ExcelExportService;

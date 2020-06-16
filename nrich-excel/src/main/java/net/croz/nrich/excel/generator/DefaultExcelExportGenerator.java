@@ -1,10 +1,11 @@
 package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
-import net.croz.nrich.excel.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
+import net.croz.nrich.excel.model.PoiCellHolder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -113,8 +114,10 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             return;
         }
 
+        final PoiCellHolder cellHolder = new PoiCellHolder(cell);
+
         final CellValueConverter converter = cellValueConverterList.stream()
-                .filter(cellValueConverter -> cellValueConverter.supports(cell, value))
+                .filter(cellValueConverter -> cellValueConverter.supports(cellHolder, value))
                 .findFirst()
                 .orElse(null);
 
@@ -122,7 +125,7 @@ public class DefaultExcelExportGenerator implements ExcelExportGenerator {
             cell.setCellValue(value.toString());
         }
         else {
-            converter.setCellValue(cell, value);
+            converter.setCellValue(cellHolder, value);
         }
 
         if (style != null) {
