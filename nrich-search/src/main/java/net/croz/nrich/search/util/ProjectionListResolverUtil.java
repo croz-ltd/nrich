@@ -62,12 +62,14 @@ public final class ProjectionListResolverUtil {
     private static Value findValueAnnotation(final Annotation[] annotationList) {
         return (Value) Arrays.stream(annotationList)
                 .filter(annotation -> Value.class.isAssignableFrom(annotation.annotationType()))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 
     private static Projection findProjectionAnnotation(final Annotation[] annotationList) {
         return (Projection) Arrays.stream(annotationList)
                 .filter(annotation -> Projection.class.isAssignableFrom(annotation.annotationType()))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
     }
 }

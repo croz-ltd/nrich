@@ -1,13 +1,14 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.api.model.SearchFieldConfiguration;
 import net.croz.nrich.search.api.model.SearchOperator;
 import net.croz.nrich.search.api.model.SearchOperatorImpl;
 import net.croz.nrich.search.api.model.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.SearchPropertyMapping;
+import net.croz.nrich.search.model.AttributeHolder;
+import net.croz.nrich.search.model.Restriction;
+import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.springframework.util.StringUtils;
@@ -55,7 +56,7 @@ public class SearchDataParser {
                 return;
             }
 
-            JpaEntityAttributeResolver.AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
+            AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
 
             if (attributeHolder.getAttribute() != null) {
                 final String currentPath = path == null ? fieldNameWithoutPrefixAndSuffix : path + "." + fieldNameWithoutPrefixAndSuffix;
@@ -222,17 +223,4 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    @Value
-    public static class Restriction {
-
-        // TODO every aspect of path should have a marker if it is plural
-        String path;
-
-        SearchOperator searchOperator;
-
-        Object value;
-
-        boolean isPluralAttribute;
-
-    }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.api.model.SearchFieldConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
@@ -154,13 +155,13 @@ public class JpaQueryBuilder<T> {
     }
 
     private <P, R> List<Predicate> resolveQueryPredicateList(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final CriteriaBuilder criteriaBuilder, final Root<?> root, final CriteriaQuery<?> query) {
-        final Set<SearchDataParser.Restriction> restrictionList = new SearchDataParser(root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
+        final Set<Restriction> restrictionList = new SearchDataParser(root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
 
-        final Map<Boolean, List<SearchDataParser.Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(SearchDataParser.Restriction::isPluralAttribute));
+        final Map<Boolean, List<Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(Restriction::isPluralAttribute));
 
         final List<Predicate> mainQueryPredicateList = convertRestrictionListToPredicateList(restrictionsByType.get(false), root, criteriaBuilder);
 
-        final List<SearchDataParser.Restriction> pluralRestrictionList = restrictionsByType.get(true);
+        final List<Restriction> pluralRestrictionList = restrictionsByType.get(true);
         if (!CollectionUtils.isEmpty(pluralRestrictionList)) {
 
             if (searchConfiguration.getPluralAssociationRestrictionType() == PluralAssociationRestrictionType.JOIN) {
@@ -180,7 +181,7 @@ public class JpaQueryBuilder<T> {
         return mainQueryPredicateList;
     }
 
-    private Subquery<?> createSubqueryRestriction(final Class<?> resultType, final Root<?> parent, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final Collection<SearchDataParser.Restriction> restrictionList, final SearchPropertyJoin searchPropertyJoin) {
+    private Subquery<?> createSubqueryRestriction(final Class<?> resultType, final Root<?> parent, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final Collection<Restriction> restrictionList, final SearchPropertyJoin searchPropertyJoin) {
         final Subquery<?> subquery = query.subquery(resultType);
 
         final Root<?> subqueryRoot = subquery.from(resultType);
@@ -198,7 +199,7 @@ public class JpaQueryBuilder<T> {
         return subquery.where(subQueryPredicateList.toArray(new Predicate[0]));
     }
 
-    private List<Predicate> convertRestrictionListToPredicateList(final Collection<SearchDataParser.Restriction> restrictionList, final Root<?> rootPath, final CriteriaBuilder criteriaBuilder) {
+    private List<Predicate> convertRestrictionListToPredicateList(final Collection<Restriction> restrictionList, final Root<?> rootPath, final CriteriaBuilder criteriaBuilder) {
         final List<Predicate> predicateList = new ArrayList<>();
 
         restrictionList.forEach(restriction -> {
@@ -234,7 +235,7 @@ public class JpaQueryBuilder<T> {
     private <R> Subquery<?> buildSubquery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
         final ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
-        final Set<SearchDataParser.Restriction> subqueryRestrictionList;
+        final Set<Restriction> subqueryRestrictionList;
         if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
             final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
 

@@ -1,7 +1,7 @@
 package net.croz.nrich.search.support;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.util.Assert;
 
@@ -62,14 +62,4 @@ public class JpaEntityAttributeResolver {
                 .orElse(null);
     }
 
-    @Value
-    public static class AttributeHolder {
-
-        Attribute<?, ?> attribute;
-
-        ManagedType<?> managedType;
-
-        boolean isPlural;
-
-    }
 }

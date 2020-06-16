@@ -3,6 +3,7 @@ package net.croz.nrich.search.converter.impl;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
+import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -31,7 +32,7 @@ public class StringToEntityPropertyMapConverterImpl implements StringToEntityPro
         final Map<String, Object> resultMap = new HashMap<>();
 
         propertyToSearchList.forEach(property -> {
-            final JpaEntityAttributeResolver.AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(property);
+            final AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(property);
 
             if (attributeHolder.getAttribute() == null) {
                 return;
