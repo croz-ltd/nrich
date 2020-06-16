@@ -1,6 +1,6 @@
 package net.croz.nrich.formconfiguration.service;
 
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 
 import java.util.Locale;
 

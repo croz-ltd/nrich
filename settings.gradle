@@ -5,6 +5,7 @@ include(
   "nrich-encrypt",
   "nrich-excel-api",
   "nrich-excel",
+  "nrich-form-configuration-api",
   "nrich-form-configuration",
   "nrich-logging-api",
   "nrich-logging",

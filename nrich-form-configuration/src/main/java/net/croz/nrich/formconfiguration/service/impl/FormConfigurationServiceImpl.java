@@ -1,13 +1,13 @@
 package net.croz.nrich.formconfiguration.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyClientValidatorConfiguration;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyConfiguration;
-import net.croz.nrich.formconfiguration.model.FormConfiguration;
-import net.croz.nrich.formconfiguration.request.FetchFormConfigurationRequest;
-import net.croz.nrich.formconfiguration.service.ConstrainedPropertyValidatorConverterService;
-import net.croz.nrich.formconfiguration.service.FormConfigurationService;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfiguration;
+import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
+import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
+import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.FormConfigurationService;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.Validator;

@@ -1,10 +1,10 @@
 package net.croz.nrich.formconfiguration.service.impl;
 
 import net.croz.nrich.formconfiguration.FormConfigurationTestConfiguration;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyClientValidatorConfiguration;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyConfiguration;
-import net.croz.nrich.formconfiguration.model.FormConfiguration;
-import net.croz.nrich.formconfiguration.request.FetchFormConfigurationRequest;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfiguration;
+import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
+import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;

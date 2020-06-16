@@ -1,7 +1,7 @@
 package net.croz.nrich.formconfiguration.testutil;
 
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.request.FetchFormConfigurationRequest;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.metadata.ConstraintDescriptor;

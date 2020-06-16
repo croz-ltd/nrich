@@ -1,7 +1,7 @@
 package net.croz.nrich.formconfiguration.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

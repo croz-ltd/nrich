@@ -1,8 +1,8 @@
 package net.croz.nrich.formconfiguration.service.impl;
 
 import net.croz.nrich.formconfiguration.FormConfigurationTestConfiguration;
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceTestRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

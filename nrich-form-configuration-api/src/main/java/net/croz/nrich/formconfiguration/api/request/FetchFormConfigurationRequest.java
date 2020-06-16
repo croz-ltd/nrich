@@ -1,4 +1,4 @@
-package net.croz.nrich.formconfiguration.request;
+package net.croz.nrich.formconfiguration.api.request;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

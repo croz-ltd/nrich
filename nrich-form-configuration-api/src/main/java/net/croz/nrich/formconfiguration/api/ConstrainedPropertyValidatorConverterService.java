@@ -1,7 +1,7 @@
-package net.croz.nrich.formconfiguration.service;
+package net.croz.nrich.formconfiguration.api;
 
-import net.croz.nrich.formconfiguration.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
 
 import java.util.List;
 

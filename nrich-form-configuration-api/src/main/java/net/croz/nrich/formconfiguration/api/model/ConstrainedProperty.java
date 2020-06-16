@@ -1,4 +1,4 @@
-package net.croz.nrich.formconfiguration.model;
+package net.croz.nrich.formconfiguration.api.model;
 
 import lombok.Builder;
 import lombok.Getter;
