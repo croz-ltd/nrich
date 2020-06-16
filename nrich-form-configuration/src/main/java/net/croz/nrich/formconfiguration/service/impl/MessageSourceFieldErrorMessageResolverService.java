@@ -2,6 +2,7 @@ package net.croz.nrich.formconfiguration.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
+import net.croz.nrich.formconfiguration.constants.FormConfigurationConstants;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -14,15 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RequiredArgsConstructor
-public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageResolverService {
-
-    private static final String CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT = "%s.%s.client.%s.invalid";
-
-    private static final String CONSTRAINT_FULL_MESSAGE_FORMAT = "%s.%s.%s.invalid";
-
-    private static final String CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT = "client.%s.invalid";
-
-    private static final String CONSTRAINT_SHORT_MESSAGE_FORMAT = "%s.invalid";
+public class MessageSourceFieldErrorMessageResolverService implements FieldErrorMessageResolverService {
 
     private final MessageSource messageSource;
 
@@ -43,17 +36,17 @@ public class FieldErrorMessageResolverServiceImpl implements FieldErrorMessageRe
 
         final List<String> codeList = new ArrayList<>();
 
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
 
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
 
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
 
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
-        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
+        codeList.addAll(resolveMessageCodeList(messageCodesResolver, constraintPropertyName, FormConfigurationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
 
         return codeList;
     }

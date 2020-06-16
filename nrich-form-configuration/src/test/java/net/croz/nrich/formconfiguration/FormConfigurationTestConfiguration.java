@@ -4,7 +4,7 @@ import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverte
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.api.FormConfigurationService;
 import net.croz.nrich.formconfiguration.service.impl.DefaultConstrainedPropertyValidatorConverterService;
-import net.croz.nrich.formconfiguration.service.impl.FieldErrorMessageResolverServiceImpl;
+import net.croz.nrich.formconfiguration.service.impl.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.impl.FormConfigurationServiceImpl;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedIgnoredTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest;
@@ -39,7 +39,7 @@ public class FormConfigurationTestConfiguration {
 
     @Bean
     public FieldErrorMessageResolverService fieldErrorMessageResolverService(final MessageSource messageSource) {
-        return new FieldErrorMessageResolverServiceImpl(messageSource);
+        return new MessageSourceFieldErrorMessageResolverService(messageSource);
     }
 
     @Bean

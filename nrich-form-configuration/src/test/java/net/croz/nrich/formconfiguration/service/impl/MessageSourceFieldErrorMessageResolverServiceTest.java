@@ -13,10 +13,10 @@ import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGenerat
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
-public class FieldErrorMessageResolverServiceImplTest {
+public class MessageSourceFieldErrorMessageResolverServiceTest {
 
     @Autowired
-    private FieldErrorMessageResolverServiceImpl fieldErrorMessageResolverService;
+    private MessageSourceFieldErrorMessageResolverService fieldErrorMessageResolverService;
 
     @Test
     void shouldResolveValidationMessageForConstrainedProperty() {
