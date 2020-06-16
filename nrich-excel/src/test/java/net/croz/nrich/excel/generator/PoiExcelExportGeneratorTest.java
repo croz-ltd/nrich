@@ -5,6 +5,7 @@ import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
+import net.croz.nrich.excel.generator.poi.PoiExcelExportGenerator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -34,13 +35,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DefaultExcelExportGeneratorTest {
+public class PoiExcelExportGeneratorTest {
 
     private static final String REPORT_FILE_NAME = "report.xlsx";
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 
-    private DefaultExcelExportGenerator excelExportGenerator;
+    private PoiExcelExportGenerator excelExportGenerator;
 
     @TempDir
     File temporaryDirectory;
@@ -56,7 +57,7 @@ public class DefaultExcelExportGeneratorTest {
         final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
         final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
-        excelExportGenerator = new DefaultExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @SneakyThrows
