@@ -1,6 +1,6 @@
 package net.croz.nrich.search.repository.stub;
 
-import net.croz.nrich.search.repository.StringSearchExecutor;
+import net.croz.nrich.search.api.repository.StringSearchExecutor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

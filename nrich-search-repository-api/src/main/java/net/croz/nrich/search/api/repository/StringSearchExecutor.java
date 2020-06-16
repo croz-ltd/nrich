@@ -1,4 +1,4 @@
-package net.croz.nrich.search.repository;
+package net.croz.nrich.search.api.repository;
 
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import org.springframework.data.domain.Page;

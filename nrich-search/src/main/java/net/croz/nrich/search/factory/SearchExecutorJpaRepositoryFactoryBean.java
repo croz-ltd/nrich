@@ -1,8 +1,8 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.repository.SearchExecutor;
-import net.croz.nrich.search.repository.StringSearchExecutor;
+import net.croz.nrich.search.api.repository.SearchExecutor;
+import net.croz.nrich.search.api.repository.StringSearchExecutor;
 import net.croz.nrich.search.repository.jpa.JpaSearchExecutor;
 import net.croz.nrich.search.repository.jpa.JpaStringSearchExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;

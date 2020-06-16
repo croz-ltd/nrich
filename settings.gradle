@@ -17,6 +17,7 @@ include(
   "nrich-registry",
   "nrich-security-csrf",
   "nrich-search-api",
+  "nrich-search-repository-api",
   "nrich-search",
   "nrich-spring-util",
   "nrich-validation-api",
