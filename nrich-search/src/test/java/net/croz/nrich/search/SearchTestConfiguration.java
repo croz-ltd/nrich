@@ -2,8 +2,8 @@ package net.croz.nrich.search;
 
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
-import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
-import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
+import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
+import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.factory.SearchExecutorJpaRepositoryFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,6 +66,6 @@ public class SearchTestConfiguration {
 
     @Bean
     public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new StringToEntityPropertyMapConverterImpl(stringToTypeConverterList);
+        return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 }

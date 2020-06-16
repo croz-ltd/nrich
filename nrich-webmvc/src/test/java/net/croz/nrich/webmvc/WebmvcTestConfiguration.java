@@ -2,17 +2,17 @@ package net.croz.nrich.webmvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.api.service.LoggingService;
-import net.croz.nrich.logging.service.slf4j.Slf4jLoggingService;
+import net.croz.nrich.logging.service.Slf4jLoggingService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
-import net.croz.nrich.notification.service.impl.ConstraintConversionServiceImpl;
-import net.croz.nrich.notification.service.impl.NotificationResolverServiceImpl;
+import net.croz.nrich.notification.service.DefaultConstraintConversionService;
+import net.croz.nrich.notification.service.DefaultNotificationResolverService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-import net.croz.nrich.webmvc.service.impl.DefaultExceptionAuxiliaryDataResolverService;
-import net.croz.nrich.webmvc.service.impl.TransientPropertyResolverServiceImpl;
+import net.croz.nrich.webmvc.service.DefaultExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.service.DefaultTransientPropertyResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -61,12 +61,12 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public ConstraintConversionService constraintConversionService() {
-        return new ConstraintConversionServiceImpl();
+        return new DefaultConstraintConversionService();
     }
 
     @Bean
     public NotificationResolverService notificationResolverService(final MessageSource messageSource, final ConstraintConversionService constraintConversionService) {
-        return new NotificationResolverServiceImpl(messageSource, constraintConversionService);
+        return new DefaultNotificationResolverService(messageSource, constraintConversionService);
     }
 
     @Bean
@@ -76,7 +76,7 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
-       return new TransientPropertyResolverServiceImpl();
+       return new DefaultTransientPropertyResolverService();
     }
 
     @Bean

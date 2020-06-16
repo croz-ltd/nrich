@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.configuration.service.impl.RegistryConfigurationServiceImpl;
+import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.api.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
@@ -14,27 +14,27 @@ import net.croz.nrich.registry.api.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
-import net.croz.nrich.registry.core.service.impl.RegistryConfigurationResolverServiceImpl;
+import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.RegistryDataService;
-import net.croz.nrich.registry.data.service.impl.RegistryDataFormConfigurationResolverServiceImpl;
-import net.croz.nrich.registry.data.service.impl.RegistryDataRequestConversionServiceImpl;
-import net.croz.nrich.registry.data.service.impl.RegistryDataServiceImpl;
+import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
+import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
+import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
-import net.croz.nrich.registry.history.service.impl.RegistryHistoryServiceImpl;
+import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
-import net.croz.nrich.search.converter.impl.DefaultStringToTypeConverter;
-import net.croz.nrich.search.converter.impl.StringToEntityPropertyMapConverterImpl;
+import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
+import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchOperatorImpl;
 import net.croz.nrich.search.api.model.SearchOperatorOverride;
@@ -160,7 +160,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new StringToEntityPropertyMapConverterImpl(stringToTypeConverterList);
+        return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @Bean
@@ -217,7 +217,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryConfigurationResolverService registryConfigurationResolverService(final EntityManager entityManager, final RegistryConfiguration registryConfiguration) {
-        return new RegistryConfigurationResolverServiceImpl(entityManager, registryConfiguration);
+        return new DefaultRegistryConfigurationResolverService(entityManager, registryConfiguration);
     }
 
     @Bean
@@ -229,7 +229,7 @@ public class RegistryTestConfiguration {
     public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService) {
         final List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
 
-        return new RegistryConfigurationServiceImpl(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+        return new DefaultRegistryConfigurationService(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
@@ -239,12 +239,12 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
-        return new RegistryDataServiceImpl(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
+        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
     }
 
     @Bean
     public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new RegistryDataRequestConversionServiceImpl(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+        return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
     }
 
     @Bean
@@ -254,7 +254,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryHistoryModelMapper) {
-        return new RegistryHistoryServiceImpl(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryHistoryModelMapper);
+        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryHistoryModelMapper);
     }
 
     @Bean
@@ -273,6 +273,6 @@ public class RegistryTestConfiguration {
         formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
         formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
 
-        return new RegistryDataFormConfigurationResolverServiceImpl(registryClassList, formConfigurationMap);
+        return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMap);
     }
 }

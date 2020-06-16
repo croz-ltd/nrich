@@ -2,9 +2,9 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.converter.impl.DefaultCellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
+import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.generator.poi.PoiExcelExportGenerator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,7 +33,6 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleL
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PoiExcelExportGeneratorTest {
 

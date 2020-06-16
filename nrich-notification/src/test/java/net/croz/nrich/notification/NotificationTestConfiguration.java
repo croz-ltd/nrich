@@ -2,8 +2,8 @@ package net.croz.nrich.notification;
 
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
-import net.croz.nrich.notification.service.impl.ConstraintConversionServiceImpl;
-import net.croz.nrich.notification.service.impl.NotificationResolverServiceImpl;
+import net.croz.nrich.notification.service.DefaultConstraintConversionService;
+import net.croz.nrich.notification.service.DefaultNotificationResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +25,12 @@ public class NotificationTestConfiguration {
 
     @Bean
     public ConstraintConversionService constraintConversionService() {
-        return new ConstraintConversionServiceImpl();
+        return new DefaultConstraintConversionService();
     }
 
     @Bean
     public NotificationResolverService notificationResolverService(final MessageSource messageSource, final ConstraintConversionService constraintConversionService) {
-        return new NotificationResolverServiceImpl(messageSource, constraintConversionService);
+        return new DefaultNotificationResolverService(messageSource, constraintConversionService);
     }
 
     @Bean

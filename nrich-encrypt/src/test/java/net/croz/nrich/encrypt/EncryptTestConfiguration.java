@@ -3,16 +3,16 @@ package net.croz.nrich.encrypt;
 import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
 import net.croz.nrich.encrypt.aspect.EncryptionMethodInterceptor;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
-import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceImpl;
+import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestService;
-import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestServiceImpl;
+import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
-import net.croz.nrich.encrypt.service.aes.AesTextEncryptionService;
-import net.croz.nrich.encrypt.service.impl.DataEncryptionServiceImpl;
+import net.croz.nrich.encrypt.service.AesTextEncryptionService;
+import net.croz.nrich.encrypt.service.DefaultDataEncryptionService;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -41,7 +41,7 @@ public class EncryptTestConfiguration {
 
     @Bean
     public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
-        return new DataEncryptionServiceImpl(textEncryptionService);
+        return new DefaultDataEncryptionService(textEncryptionService);
     }
 
     @Bean
@@ -53,27 +53,27 @@ public class EncryptTestConfiguration {
     public Advisor encryptorAdvisor(final DataEncryptionService dataEncryptionService) {
         final List<String> propertyList = Collections.singletonList("value");
         final List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceImpl.dataToEncryptFromConfiguration", propertyList, EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceImpl.dataToDecryptFromConfiguration", propertyList, EncryptionOperation.DECRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestServiceImpl.*", propertyList, EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestServiceImpl.*", propertyList, EncryptionOperation.DECRYPT)
+                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToEncryptFromConfiguration", propertyList, EncryptionOperation.ENCRYPT),
+                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration", propertyList, EncryptionOperation.DECRYPT),
+                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.ENCRYPT),
+                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.DECRYPT)
         );
 
         final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
         pointcut.setExpression(buildPointcutExpression(encryptionConfigurationList));
 
-        return new DefaultPointcutAdvisor(pointcut, new EncryptionMethodInterceptor(dataEncryptionService, encryptionConfigurationList, Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestServiceImpl.ignoredMethod")));
+        return new DefaultPointcutAdvisor(pointcut, new EncryptionMethodInterceptor(dataEncryptionService, encryptionConfigurationList, Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod")));
     }
 
     @Bean
     public EncryptDataAspectTestService encryptDataAspectTestService() {
-        return new EncryptDataAspectTestServiceImpl();
+        return new DefaultEncryptDataAspectTestService();
     }
 
     @Bean
     public EncryptionMethodInterceptorTestService encryptionMethodInterceptorTestService() {
-        return new EncryptionMethodInterceptorTestServiceImpl();
+        return new DefaultEncryptionMethodInterceptorTestService();
     }
 
 
