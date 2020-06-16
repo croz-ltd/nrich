@@ -21,5 +21,6 @@ include(
   "nrich-spring-util",
   "nrich-validation-api",
   "nrich-validation",
+  "nrich-webmvc-api",
   "nrich-webmvc"
 )

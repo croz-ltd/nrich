@@ -11,10 +11,10 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(WebmvcTestConfiguration.class)
-public class ExceptionAuxiliaryDataResolverServiceImplTest {
+public class DefaultExceptionAuxiliaryDataResolverServiceTest {
 
     @Autowired
-    private ExceptionAuxiliaryDataResolverServiceImpl exceptionAuxiliaryDataResolverService;
+    private DefaultExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService;
 
     @Test
     void shouldResolveExceptionAuxiliaryData() {

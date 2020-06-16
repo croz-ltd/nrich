@@ -1,4 +1,4 @@
-package net.croz.nrich.webmvc.service;
+package net.croz.nrich.webmvc.api.service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

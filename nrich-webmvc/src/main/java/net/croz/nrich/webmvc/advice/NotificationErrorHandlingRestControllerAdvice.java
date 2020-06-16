@@ -5,7 +5,7 @@ import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
-import net.croz.nrich.webmvc.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
             return handleConstraintViolationException((ConstraintViolationException) unwrappedException, request);
         }
 
-        final Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, request);
+        final Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(unwrappedException, exceptionAuxiliaryData);
 
@@ -118,8 +119,12 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     private void logExceptionWithResolvedAuxiliaryData(final Exception exception, final HttpServletRequest request) {
-        final Map<String, ?> exceptionAuxiliaryData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, request);
+        final Map<String, ?> exceptionAuxiliaryData = exceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
+    }
+
+    private Map<String, Object> exceptionAuxiliaryData(final Exception exception, final HttpServletRequest request) {
+        return Optional.ofNullable(exceptionAuxiliaryDataResolverService).map(service -> service.resolveRequestExceptionAuxiliaryData(exception, request)).orElse(Collections.emptyMap());
     }
 }

@@ -9,9 +9,9 @@ import net.croz.nrich.notification.service.impl.ConstraintConversionServiceImpl;
 import net.croz.nrich.notification.service.impl.NotificationResolverServiceImpl;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
-import net.croz.nrich.webmvc.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-import net.croz.nrich.webmvc.service.impl.ExceptionAuxiliaryDataResolverServiceImpl;
+import net.croz.nrich.webmvc.service.impl.DefaultExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.impl.TransientPropertyResolverServiceImpl;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -86,7 +86,7 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService() {
-        return new ExceptionAuxiliaryDataResolverServiceImpl();
+        return new DefaultExceptionAuxiliaryDataResolverService();
     }
 
     @Bean
