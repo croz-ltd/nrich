@@ -1,4 +1,4 @@
-package net.croz.nrich.encrypt.model;
+package net.croz.nrich.encrypt.api.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

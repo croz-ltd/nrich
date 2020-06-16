@@ -1,4 +1,4 @@
-package net.croz.nrich.encrypt.service;
+package net.croz.nrich.encrypt.api.service;
 
 public interface TextEncryptionService {
 

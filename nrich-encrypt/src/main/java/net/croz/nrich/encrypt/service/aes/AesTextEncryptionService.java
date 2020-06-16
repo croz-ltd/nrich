@@ -2,7 +2,7 @@ package net.croz.nrich.encrypt.service.aes;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.exception.EncryptionOperationFailedException;
-import net.croz.nrich.encrypt.service.TextEncryptionService;
+import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
 
 import java.util.Base64;

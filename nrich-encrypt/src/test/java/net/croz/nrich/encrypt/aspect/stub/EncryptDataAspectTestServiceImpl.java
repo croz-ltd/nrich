@@ -1,7 +1,7 @@
 package net.croz.nrich.encrypt.aspect.stub;
 
-import net.croz.nrich.encrypt.annotation.DecryptArgument;
-import net.croz.nrich.encrypt.annotation.EncryptResult;
+import net.croz.nrich.encrypt.api.annotation.DecryptArgument;
+import net.croz.nrich.encrypt.api.annotation.EncryptResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

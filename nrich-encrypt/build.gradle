@@ -1,4 +1,6 @@
 dependencies {
+  api project(":nrich-encrypt-api")
+
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 

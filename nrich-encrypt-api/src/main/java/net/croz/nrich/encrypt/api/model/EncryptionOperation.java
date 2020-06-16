@@ -1,4 +1,4 @@
-package net.croz.nrich.encrypt.model;
+package net.croz.nrich.encrypt.api.model;
 
 /**
  * Enum defining encryption operation to be performed.

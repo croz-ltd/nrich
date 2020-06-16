@@ -1,8 +1,8 @@
 package net.croz.nrich.encrypt.aspect;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.encrypt.annotation.DecryptArgument;
-import net.croz.nrich.encrypt.annotation.EncryptResult;
+import net.croz.nrich.encrypt.api.annotation.DecryptArgument;
+import net.croz.nrich.encrypt.api.annotation.EncryptResult;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.model.EncryptionContext;
 import net.croz.nrich.encrypt.service.DataEncryptionService;
