@@ -1,4 +1,4 @@
-package net.croz.nrich.search.repository.jpa;
+package net.croz.nrich.search.repository;
 
 import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.api.model.SearchConfiguration;

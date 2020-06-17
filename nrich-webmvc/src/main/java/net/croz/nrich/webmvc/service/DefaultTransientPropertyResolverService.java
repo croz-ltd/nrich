@@ -1,7 +1,5 @@
 package net.croz.nrich.webmvc.service;
 
-import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;

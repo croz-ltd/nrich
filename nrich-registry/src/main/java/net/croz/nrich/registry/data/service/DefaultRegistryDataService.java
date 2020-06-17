@@ -12,7 +12,6 @@ import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
-import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;

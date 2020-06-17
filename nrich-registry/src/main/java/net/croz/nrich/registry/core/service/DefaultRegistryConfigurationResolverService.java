@@ -1,17 +1,16 @@
 package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.api.model.RegistryConfiguration;
+import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
-import net.croz.nrich.registry.api.model.RegistryConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfigurationHolder;
-import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import org.springframework.util.CollectionUtils;

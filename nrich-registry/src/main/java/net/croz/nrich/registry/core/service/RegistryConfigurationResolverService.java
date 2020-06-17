@@ -1,9 +1,9 @@
 package net.croz.nrich.registry.core.service;
 
+import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 
 import java.util.Map;
 

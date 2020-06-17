@@ -1,8 +1,6 @@
 package net.croz.nrich.search.converter;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import org.springframework.util.Assert;

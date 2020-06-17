@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.configuration.service;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;
 import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
@@ -8,13 +9,11 @@ import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
-import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import org.springframework.cache.annotation.Cacheable;

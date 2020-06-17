@@ -2,7 +2,6 @@ package net.croz.nrich.search.converter;
 
 import lombok.SneakyThrows;
 import lombok.Value;
-import net.croz.nrich.search.converter.StringToTypeConverter;
 import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;

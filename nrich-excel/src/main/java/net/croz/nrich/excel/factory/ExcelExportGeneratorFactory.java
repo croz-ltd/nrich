@@ -3,7 +3,7 @@ package net.croz.nrich.excel.factory;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.generator.poi.PoiExcelExportGenerator;
+import net.croz.nrich.excel.generator.PoiExcelExportGenerator;
 import net.croz.nrich.excel.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
 import org.springframework.core.io.ResourceLoader;
