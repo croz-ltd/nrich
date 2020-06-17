@@ -8,7 +8,7 @@ import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import java.util.Base64;
 
 @RequiredArgsConstructor
-public class AesTextEncryptionService implements TextEncryptionService {
+public class BytesEncryptorTextEncryptionService implements TextEncryptionService {
 
     private final BytesEncryptor encryptor;
 

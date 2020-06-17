@@ -10,10 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class AesTextEncryptionServiceTest {
+public class BytesEncryptorTextEncryptionServiceTest {
 
     @Autowired
-    private AesTextEncryptionService aesTextEncryptionService;
+    private BytesEncryptorTextEncryptionService textEncryptionService;
 
     @Test
     void shouldEncryptDecryptData() {
@@ -21,13 +21,13 @@ public class AesTextEncryptionServiceTest {
         final String textToEncrypt = "My text with different characters, for example: čćžšzp []{}%^*()(!@# 1";
 
         // when
-        final String encryptedText = aesTextEncryptionService.encryptText(textToEncrypt);
+        final String encryptedText = textEncryptionService.encryptText(textToEncrypt);
 
         // then
         assertThat(encryptedText).isNotEqualTo(textToEncrypt);
 
         // and when
-        final String decryptedText = aesTextEncryptionService.decryptText(encryptedText);
+        final String decryptedText = textEncryptionService.decryptText(encryptedText);
 
         // then
         assertThat(decryptedText).isEqualTo(textToEncrypt);
@@ -39,7 +39,7 @@ public class AesTextEncryptionServiceTest {
         final String textToEncrypt = null;
 
         // when
-        final Throwable thrown = catchThrowable(() -> aesTextEncryptionService.encryptText(textToEncrypt));
+        final Throwable thrown = catchThrowable(() -> textEncryptionService.encryptText(textToEncrypt));
 
         // then
         assertThat(thrown).isNotNull();
@@ -52,7 +52,7 @@ public class AesTextEncryptionServiceTest {
         final String textToDecrypt = "Non encrypted text";
 
         // when
-        final Throwable thrown = catchThrowable(() -> aesTextEncryptionService.decryptText(textToDecrypt));
+        final Throwable thrown = catchThrowable(() -> textEncryptionService.decryptText(textToDecrypt));
 
         // then
         assertThat(thrown).isNotNull();

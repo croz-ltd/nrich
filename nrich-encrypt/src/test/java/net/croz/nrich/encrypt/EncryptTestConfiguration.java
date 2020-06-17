@@ -11,7 +11,7 @@ import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
-import net.croz.nrich.encrypt.service.AesTextEncryptionService;
+import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptionService;
 import net.croz.nrich.encrypt.service.DefaultDataEncryptionService;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -36,7 +36,7 @@ public class EncryptTestConfiguration {
     public TextEncryptionService textEncryptionService() {
         final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
-        return new AesTextEncryptionService(encryptor, "UTF-8");
+        return new BytesEncryptorTextEncryptionService(encryptor, "UTF-8");
     }
 
     @Bean
