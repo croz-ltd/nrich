@@ -218,7 +218,7 @@ public class DefaultDataEncryptionServiceTest {
     void shouldEncryptDecryptMapData() {
         // given
         final String key = "mapKey";
-        final List<String> propertyList = Collections.singletonList("mapKey");
+        final List<String> propertyList = Collections.singletonList(key);
         final String textToEncrypt = "some text";
         final Map<String, String> data = new HashMap<>();
 
@@ -237,5 +237,33 @@ public class DefaultDataEncryptionServiceTest {
         // then
         assertThat(decryptResult).isNotNull();
         assertThat(decryptResult.get(key)).isEqualTo(textToEncrypt);
+    }
+
+    @Test
+    void shouldEncryptDecryptNestedMapData() {
+        // given
+        final String key = "mapKey";
+        final List<String> propertyList = Collections.singletonList("mapKey.mapKey");
+        final String textToEncrypt = "some text";
+        final Map<String, Map<String, String>> data = new HashMap<>();
+        final Map<String, String> nestedData = new HashMap<>();
+
+        nestedData.put(key, textToEncrypt);
+
+        data.put(key, nestedData);
+
+        // when
+        final Map<String, Map<String, String>> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.get(key).get(key)).isNotEqualTo(textToEncrypt);
+
+        // and when
+        final Map<String, Map<String, String>> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).isNotNull();
+        assertThat(result.get(key).get(key)).isEqualTo(textToEncrypt);
     }
 }
