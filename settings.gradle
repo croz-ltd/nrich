@@ -1,4 +1,4 @@
-rootProject.name = "nrich"
+rootProject.name = "nrichcode"
 
 include(
   "nrich-core-api",
