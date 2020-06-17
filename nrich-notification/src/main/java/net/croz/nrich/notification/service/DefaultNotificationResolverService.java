@@ -6,7 +6,6 @@ import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationError;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
-import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -34,12 +33,12 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     private final ConstraintConversionService constraintConversionService;
 
     @Override
-    public ValidationFailureNotification createMessageNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType) {
-        return createMessageNotificationForValidationFailure(errors, validationFailedOwningType, null);
+    public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType) {
+        return createNotificationForValidationFailure(errors, validationFailedOwningType, null);
     }
 
     @Override
-    public ValidationFailureNotification createMessageNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType, final Map<String, ?> messageListData) {
+    public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType, final Map<String, ?> messageListData) {
         final String typeName = validationFailedOwningType == null ? null : validationFailedOwningType.getName();
 
         final String title;
@@ -62,18 +61,18 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     }
 
     @Override
-    public ValidationFailureNotification createMessageNotificationForValidationFailure(final ConstraintViolationException exception) {
-        return createMessageNotificationForValidationFailure(exception, null);
+    public ValidationFailureNotification createNotificationForValidationFailure(final ConstraintViolationException exception) {
+        return createNotificationForValidationFailure(exception, null);
     }
 
     @Override
-    public ValidationFailureNotification createMessageNotificationForValidationFailure(final ConstraintViolationException exception, final Map<String, ?> messageListData) {
+    public ValidationFailureNotification createNotificationForValidationFailure(final ConstraintViolationException exception, final Map<String, ?> messageListData) {
         final Object target = constraintConversionService.resolveTarget(exception.getConstraintViolations());
         final Errors errors = constraintConversionService.convertConstraintViolationsToErrors(exception.getConstraintViolations(), target, NotificationConstants.UNKNOWN_VALIDATION_TARGET);
 
         final Class<?> targetClass = Optional.ofNullable(target).map(Object::getClass).orElse(null);
 
-        return createMessageNotificationForValidationFailure(errors, targetClass, messageListData);
+        return createNotificationForValidationFailure(errors, targetClass, messageListData);
     }
 
     @Override

@@ -47,7 +47,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -70,7 +70,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, null);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, null);
 
         // then
         assertThat(notification).isNotNull();
@@ -90,7 +90,7 @@ public class DefaultNotificationResolverServiceTest {
         result.addError(new ObjectError(NotificationResolverServiceTestRequest.class.getSimpleName(), "Object error occurred"));
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -110,7 +110,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestWithoutMessageRequest(), new HashMap<>());
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestWithoutMessageRequest.class);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestWithoutMessageRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -183,7 +183,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestRequestWithCustomTitle(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequestWithCustomTitle.class);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequestWithCustomTitle.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -228,7 +228,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, additionalDataMap);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, additionalDataMap);
 
         // then
         assertThat(notification).isNotNull();
@@ -284,7 +284,7 @@ public class DefaultNotificationResolverServiceTest {
         final Set<ConstraintViolation<Object>> result = validate(request);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createMessageNotificationForValidationFailure(new ConstraintViolationException(result));
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(new ConstraintViolationException(result));
 
         // then
         assertThat(notification).isNotNull();

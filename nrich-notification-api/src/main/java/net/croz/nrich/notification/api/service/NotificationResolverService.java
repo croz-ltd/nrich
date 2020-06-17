@@ -9,13 +9,13 @@ import java.util.Map;
 
 public interface NotificationResolverService {
 
-    ValidationFailureNotification createMessageNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType, Map<String, ?> messageListData);
+    ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType, Map<String, ?> messageListData);
 
-    ValidationFailureNotification createMessageNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType);
+    ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType);
 
-    ValidationFailureNotification createMessageNotificationForValidationFailure(ConstraintViolationException exception, Map<String, ?> messageListData);
+    ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception, Map<String, ?> messageListData);
 
-    ValidationFailureNotification createMessageNotificationForValidationFailure(ConstraintViolationException exception);
+    ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception);
 
     Notification createNotificationForException(Throwable throwable, Map<String, ?> messageListData, Object... additionalMessageArgumentList);
 

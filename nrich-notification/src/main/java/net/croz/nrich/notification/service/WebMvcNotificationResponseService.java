@@ -22,14 +22,14 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
 
     @Override
     public ResponseWithNotification<?> responseWithValidationFailureNotification(final Errors errors, final Class<?> validationFailedOwningType) {
-        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(errors, validationFailedOwningType);
+        final Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
     public ResponseWithNotification<?> responseWithValidationFailureNotification(final ConstraintViolationException exception) {
-        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception);
+        final Notification notification = notificationResolverService.createNotificationForValidationFailure(exception);
 
         return new ResponseWithNotification<>(null, notification);
     }

@@ -30,8 +30,8 @@ public class WebMvcNotificationResponseServiceTest {
         final NotificationResolverService notificationResolverService = mock(NotificationResolverService.class);
 
         when(notificationResolverService.createNotificationForSuccessfulAction("actionPrefix.actionSuffix")).thenReturn(new Notification("title", "Action success", Collections.emptyList(), NotificationSeverity.INFO));
-        when(notificationResolverService.createMessageNotificationForValidationFailure(any(Errors.class), any())).thenReturn(new ValidationFailureNotification("validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
-        when(notificationResolverService.createMessageNotificationForValidationFailure(any(ConstraintViolationException.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 2", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
+        when(notificationResolverService.createNotificationForValidationFailure(any(Errors.class), any())).thenReturn(new ValidationFailureNotification("validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
+        when(notificationResolverService.createNotificationForValidationFailure(any(ConstraintViolationException.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 2", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
         when(notificationResolverService.createNotificationForException(any(Throwable.class), anyMap())).thenReturn(new Notification("title", "Exception", Collections.emptyList(), NotificationSeverity.ERROR));
 
         notificationResponseService = new WebMvcNotificationResponseService(notificationResolverService);
