@@ -55,6 +55,11 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
         return new ResponseWithNotification<>(data, notification);
     }
 
+    @Override
+    public NotificationResolverService notificationResolverService() {
+        return notificationResolverService;
+    }
+
     private String extractActionNameFromCurrentRequest() {
         final HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 

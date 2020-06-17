@@ -38,6 +38,15 @@ public class WebMvcNotificationResponseServiceTest {
     }
 
     @Test
+    void shouldReturnNotificationResolverService() {
+        // when
+        final  NotificationResolverService notificationResolverService = notificationResponseService.notificationResolverService();
+
+        // then
+        assertThat(notificationResolverService).isNotNull();
+    }
+
+    @Test
     void shouldCreateResponseForValidationFailure() {
         // when
         final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(Errors.class), Object.class);

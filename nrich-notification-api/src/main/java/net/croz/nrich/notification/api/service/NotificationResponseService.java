@@ -17,4 +17,6 @@ public interface NotificationResponseService<T> {
     <D> T responseWithSuccessNotificationActionResolvedFromRequest(D data);
 
     <D> T responseWithSuccessNotification(D data, String actionName);
+
+    NotificationResolverService notificationResolverService();
 }
