@@ -1,0 +1,8 @@
+dependencies {
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+}

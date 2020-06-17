@@ -8,6 +8,7 @@ include(
   "nrich-excel",
   "nrich-form-configuration-api",
   "nrich-form-configuration",
+  "nrich-jackson",
   "nrich-logging-api",
   "nrich-logging",
   "nrich-notification-api",
