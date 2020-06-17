@@ -4,6 +4,7 @@ dependencies {
 
   implementation "org.slf4j:slf4j-api"
   implementation "org.springframework:spring-web"
+
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
   webMvcImplementation "org.springframework:spring-webmvc"
   webFluxImplementation "org.springframework:spring-webflux"
@@ -15,7 +16,6 @@ dependencies {
 
   testImplementation "io.projectreactor:reactor-test"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.mockito:mockito-core"

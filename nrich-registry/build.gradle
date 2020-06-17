@@ -8,11 +8,8 @@ dependencies {
   enversImplementation "org.hibernate:hibernate-envers"
 
   implementation project(":nrich-search")
-  implementation "com.fasterxml.jackson.core:jackson-core"
   implementation "com.fasterxml.jackson.core:jackson-databind"
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
   implementation "org.springframework.data:spring-data-jpa"
-  implementation "org.hibernate:hibernate-core"
   implementation "org.modelmapper:modelmapper"
   implementation "org.springframework:spring-web"
 
@@ -22,14 +19,13 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
+  testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.glassfish:jakarta.el"
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.hibernate:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.junit.jupiter:junit-jupiter-params"
-  testImplementation "org.mockito:mockito-core"
   testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework:spring-webmvc"
 }
