@@ -7,6 +7,9 @@ dependencies {
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-context"
 
+  webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
+  webMvcImplementation "org.springframework:spring-web"
+
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 
@@ -17,5 +20,6 @@ dependencies {
   testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.mockito:mockito-core"
   testImplementation "org.springframework:spring-test"
 }

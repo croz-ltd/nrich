@@ -19,6 +19,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
     private static final String DEFAULT_ERROR_MESSAGE = "Error message";
 
+    private static final String NOTIFICATION_KEY = "notification";
+
     @SneakyThrows
     @Test
     void shouldResolveExceptionNotification() {
@@ -35,10 +37,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
@@ -60,10 +62,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
@@ -85,10 +87,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
@@ -112,10 +114,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
@@ -139,10 +141,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
@@ -188,10 +190,10 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY)).isNotNull();
+        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NotificationErrorHandlingRestControllerAdvice.NOTIFICATION_KEY);
+        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");

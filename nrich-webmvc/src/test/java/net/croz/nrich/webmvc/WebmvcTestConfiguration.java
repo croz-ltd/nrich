@@ -3,16 +3,18 @@ package net.croz.nrich.webmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.logging.service.Slf4jLoggingService;
-import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
+import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultNotificationResolverService;
+import net.croz.nrich.notification.service.WebMvcNotificationResponseService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
-import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.service.DefaultExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.DefaultTransientPropertyResolverService;
+import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -70,6 +72,11 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
+    public NotificationResponseService<?> notificationResponseService(final NotificationResolverService notificationResolverService) {
+        return new WebMvcNotificationResponseService(notificationResolverService);
+    }
+
+    @Bean
     public LoggingService loggingService(final MessageSource messageSource) {
         return new Slf4jLoggingService(messageSource);
     }
@@ -90,7 +97,7 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResolverService notificationResolverService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
-        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResolverService, loggingService, exceptionAuxiliaryDataResolverService);
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService);
     }
 }

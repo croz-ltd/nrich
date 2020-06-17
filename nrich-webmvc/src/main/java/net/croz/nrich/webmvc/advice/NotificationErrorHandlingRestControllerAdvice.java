@@ -3,8 +3,7 @@ package net.croz.nrich.webmvc.advice;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.api.service.LoggingService;
-import net.croz.nrich.notification.api.model.Notification;
-import net.croz.nrich.notification.api.service.NotificationResolverService;
+import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,49 +25,41 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NotificationErrorHandlingRestControllerAdvice {
 
-    public static final String NOTIFICATION_KEY = "notification";
-
     private final List<String> exceptionToUnwrapList;
 
     private final List<String> exceptionAuxiliaryDataToIncludeInNotification;
 
-    private final NotificationResolverService notificationResolverService;
+    private final NotificationResponseService<?> notificationResponseService;
 
     private final LoggingService loggingService;
 
     private final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Notification>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
-        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception.getBindingResult(), exception.getParameter().getParameterType());
-
-        return notificationResponse(notification, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notificationResponseService.responseWithValidationFailureNotification(exception.getBindingResult(), exception.getParameter().getParameterType()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, Notification>> handleConstraintViolationException(final ConstraintViolationException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleConstraintViolationException(final ConstraintViolationException exception, final HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
-        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception);
-
-        return notificationResponse(notification, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notificationResponseService.responseWithValidationFailureNotification(exception));
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<Map<String, Notification>> handleBindException(final BindException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleBindException(final BindException exception, final HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         final Class<?> targetClass = Optional.ofNullable(exception.getTarget()).map(Object::getClass).orElse(null);
 
-        final Notification notification = notificationResolverService.createMessageNotificationForValidationFailure(exception.getBindingResult(), targetClass);
-
-        return notificationResponse(notification, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(notificationResponseService.responseWithValidationFailureNotification(exception.getBindingResult(), targetClass));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Notification>> handleException(final Exception exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleException(final Exception exception, final HttpServletRequest request) {
         final Exception unwrappedException = unwrapException(exception);
 
         if (unwrappedException instanceof MethodArgumentNotValidException) {
@@ -93,17 +83,8 @@ public class NotificationErrorHandlingRestControllerAdvice {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
-        final Notification notification = notificationResolverService.createNotificationForException(unwrappedException, notificationAuxiliaryData, exceptionArgumentList(exception));
 
-        return notificationResponse(notification, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private ResponseEntity<Map<String, Notification>> notificationResponse(final Notification notification, final HttpStatus status) {
-        final Map<String, Notification> notificationMap = new HashMap<>();
-
-        notificationMap.put(NOTIFICATION_KEY, notification);
-
-        return ResponseEntity.status(status).body(notificationMap);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, notificationAuxiliaryData, exceptionArgumentList(exception)));
     }
 
     private Exception unwrapException(final Exception exception) {
