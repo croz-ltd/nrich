@@ -7,6 +7,7 @@ include(
   "nrich-encrypt-spring-boot-starter",
   "nrich-excel-api",
   "nrich-excel",
+  "nrich-excel-spring-boot-starter",
   "nrich-form-configuration-api",
   "nrich-form-configuration",
   "nrich-jackson",
