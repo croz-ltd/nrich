@@ -1,9 +1,9 @@
-package net.croz.nrich.excel.factory;
+package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.ExcelTestConfiguration;
-import net.croz.nrich.excel.generator.ExcelExportGenerator;
-import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
+import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
+import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ExcelTestConfiguration.class)
-public class ExcelExportGeneratorFactoryTest {
+public class PoiExcelExportGeneratorFactoryTest {
 
     @Autowired
-    private ExcelExportGeneratorFactory excelExportGeneratorFactory;
+    private PoiExcelExportGeneratorFactory excelExportGeneratorFactory;
 
     @TempDir
     File temporaryDirectory;

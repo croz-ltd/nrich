@@ -1,4 +1,4 @@
-package net.croz.nrich.excel.generator;
+package net.croz.nrich.excel.api.generator;
 
 public interface ExcelExportGenerator {
 

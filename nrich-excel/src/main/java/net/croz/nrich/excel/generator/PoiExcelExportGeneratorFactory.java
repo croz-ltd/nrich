@@ -1,11 +1,11 @@
-package net.croz.nrich.excel.factory;
+package net.croz.nrich.excel.generator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.generator.PoiExcelExportGenerator;
-import net.croz.nrich.excel.generator.ExcelExportGenerator;
-import net.croz.nrich.excel.request.CreateReportGeneratorRequest;
+import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
+import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
+import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
 
@@ -13,12 +13,13 @@ import java.io.InputStream;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ExcelExportGeneratorFactory {
+public class PoiExcelExportGeneratorFactory implements ExcelExportGeneratorFactory {
 
     private final ResourceLoader resourceLoader;
 
     private final List<CellValueConverter> cellValueConverterList;
 
+    @Override
     public ExcelExportGenerator createReportGenerator(final CreateReportGeneratorRequest request) {
         Assert.isTrue(request.getOutputFile() != null && request.getOutputFile().exists(), "Output file cannot be null");
         Assert.hasText(request.getTemplatePath(), "Template path cannot be null");

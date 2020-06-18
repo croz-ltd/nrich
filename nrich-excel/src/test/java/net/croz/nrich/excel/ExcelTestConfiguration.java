@@ -1,9 +1,10 @@
 package net.croz.nrich.excel;
 
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.converter.DefaultCellValueConverter;
-import net.croz.nrich.excel.factory.ExcelExportGeneratorFactory;
+import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
 import net.croz.nrich.excel.api.service.ExcelExportService;
+import net.croz.nrich.excel.converter.DefaultCellValueConverter;
+import net.croz.nrich.excel.generator.PoiExcelExportGeneratorFactory;
 import net.croz.nrich.excel.service.DefaultExcelExportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ public class ExcelTestConfiguration {
 
     @Bean
     public ExcelExportGeneratorFactory excelExportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
-        return new ExcelExportGeneratorFactory(resourceLoader, cellValueConverterList);
+        return new PoiExcelExportGeneratorFactory(resourceLoader, cellValueConverterList);
     }
 
     @Bean

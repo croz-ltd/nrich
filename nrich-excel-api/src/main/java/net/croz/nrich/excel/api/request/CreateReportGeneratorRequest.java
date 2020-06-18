@@ -1,4 +1,4 @@
-package net.croz.nrich.excel.request;
+package net.croz.nrich.excel.api.request;
 
 import lombok.Builder;
 import lombok.Getter;
