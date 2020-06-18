@@ -6,6 +6,7 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation project(":nrich-encrypt")
+  implementation project(":nrich-spring-boot")
 
   implementation "org.aspectj:aspectjrt"
   implementation "org.aspectj:aspectjweaver"

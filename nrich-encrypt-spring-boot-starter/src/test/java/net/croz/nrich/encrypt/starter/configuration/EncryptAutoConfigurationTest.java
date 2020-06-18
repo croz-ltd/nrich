@@ -5,15 +5,13 @@ import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EncryptAutoConfigurationTest {
 
-    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-            .withConfiguration(AutoConfigurations.of(EncryptAutoConfiguration.class)).withInitializer(new ConfigFileApplicationContextInitializer());
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(EncryptAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {

@@ -20,6 +20,7 @@ include(
   "nrich-search-api",
   "nrich-search-repository-api",
   "nrich-search",
+  "nrich-spring-boot",
   "nrich-spring-util",
   "nrich-validation-api",
   "nrich-validation",
