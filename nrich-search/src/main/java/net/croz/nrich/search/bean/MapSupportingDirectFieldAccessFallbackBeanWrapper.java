@@ -1,4 +1,4 @@
-package net.croz.nrich.search.support;
+package net.croz.nrich.search.bean;
 
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
 

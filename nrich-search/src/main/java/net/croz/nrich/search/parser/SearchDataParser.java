@@ -10,7 +10,7 @@ import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
-import net.croz.nrich.search.support.MapSupportingDirectFieldAccessFallbackBeanWrapper;
+import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;

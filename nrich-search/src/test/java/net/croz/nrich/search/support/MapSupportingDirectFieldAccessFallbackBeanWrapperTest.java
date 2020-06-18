@@ -1,5 +1,6 @@
 package net.croz.nrich.search.support;
 
+import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
