@@ -11,11 +11,15 @@ import java.util.Objects;
 
 public class OnPropertyNotEmptyCondition implements Condition {
 
+    private static final String ANNOTATION_NAME = "net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty";
+
+    private static final String PROPERTY_NAME_ANNOTATION_VALUE = "value";
+
     @Override
     public boolean matches(final ConditionContext context, final AnnotatedTypeMetadata metadata) {
-        final Map<String, Object> attributes = metadata.getAnnotationAttributes(ConditionalOnPropertyNotEmpty.class.getName());
+        final Map<String, Object> attributes = metadata.getAnnotationAttributes(ANNOTATION_NAME);
         final Environment environment = context.getEnvironment();
-        final String propertyName = (String) Objects.requireNonNull(attributes).get("value");
+        final String propertyName = (String) Objects.requireNonNull(attributes).get(PROPERTY_NAME_ANNOTATION_VALUE);
 
         final String stringPropertyValue = environment.getProperty(propertyName);
 
