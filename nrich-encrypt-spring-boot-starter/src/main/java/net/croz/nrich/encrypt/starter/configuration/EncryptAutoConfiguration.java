@@ -1,0 +1,69 @@
+package net.croz.nrich.encrypt.starter.configuration;
+
+import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
+import net.croz.nrich.encrypt.api.service.DataEncryptionService;
+import net.croz.nrich.encrypt.api.service.TextEncryptionService;
+import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
+import net.croz.nrich.encrypt.aspect.EncryptionMethodInterceptor;
+import net.croz.nrich.encrypt.constants.EncryptConstants;
+import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptionService;
+import net.croz.nrich.encrypt.service.DefaultDataEncryptionService;
+import net.croz.nrich.encrypt.starter.annotation.ConditionalOnPropertyNotEmpty;
+import net.croz.nrich.encrypt.starter.properties.EncryptProperties;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AspectJExpressionPointcut;
+import org.springframework.aop.support.DefaultPointcutAdvisor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.keygen.KeyGenerators;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@EnableConfigurationProperties(EncryptProperties.class)
+@Configuration(proxyBeanMethods = false)
+public class EncryptAutoConfiguration {
+
+    @ConditionalOnMissingBean
+    @Bean
+    public TextEncryptionService textEncryptionService(final EncryptProperties encryptProperties) {
+        final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+
+        return new BytesEncryptorTextEncryptionService(encryptor, encryptProperties.getCharset());
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
+        return new DefaultDataEncryptionService(textEncryptionService);
+    }
+
+    @ConditionalOnProperty(name = "nrich.encrypt.configuration.encrypt-aspect-enabled", havingValue = "true", matchIfMissing = true)
+    @Bean
+    public EncryptDataAspect encryptDataAspect(final DataEncryptionService dataEncryptionService) {
+        return new EncryptDataAspect(dataEncryptionService);
+    }
+
+    @ConditionalOnProperty(name = "nrich.encrypt.configuration.encrypt-advisor-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnPropertyNotEmpty("nrich.encrypt.configuration.encryption-configuration-list")
+    @Bean
+    public Advisor encryptAdvisor(final DataEncryptionService dataEncryptionService, final EncryptProperties encryptProperties) {
+        final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+
+        pointcut.setExpression(buildPointcutExpression(encryptProperties.getEncryptionConfigurationList()));
+
+        return new DefaultPointcutAdvisor(pointcut, new EncryptionMethodInterceptor(dataEncryptionService, encryptProperties.getEncryptionConfigurationList(), encryptProperties.getIgnoredMethodList()));
+    }
+
+    private String buildPointcutExpression(final List<EncryptionConfiguration> encryptionConfigurationList) {
+        return encryptionConfigurationList.stream()
+                .map(EncryptionConfiguration::getMethodToEncryptDecrypt)
+                .map(method -> String.format(EncryptConstants.EXECUTION_METHOD_POINTCUT, method))
+                .collect(Collectors.joining(EncryptConstants.EXECUTION_METHOD_OR_SEPARATOR));
+    }
+}

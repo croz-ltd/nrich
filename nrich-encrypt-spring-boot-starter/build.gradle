@@ -1,0 +1,22 @@
+dependencies {
+  api project(":nrich-encrypt-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-encrypt")
+
+  implementation "org.aspectj:aspectjrt"
+  implementation "org.aspectj:aspectjweaver"
+  implementation "org.slf4j:slf4j-api"
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+  implementation "org.springframework.security:spring-security-core"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework.boot:spring-boot-test"
+
+}
