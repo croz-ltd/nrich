@@ -7,6 +7,7 @@ dependencies {
 
   implementation project(":nrich-notification")
 
+  implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
