@@ -41,6 +41,7 @@ public class NrichJacksonAutoConfigurationTest {
             assertThat(objectMapper.getSerializationConfig().getDefaultPropertyInclusion().getValueInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
             assertThat(objectMapper.getSerializationConfig().getDefaultPropertyInclusion().getContentInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
 
+            assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.FAIL_ON_EMPTY_BEANS)).isFalse();
             assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)).isFalse();
             assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)).isFalse();
 
