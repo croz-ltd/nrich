@@ -1,0 +1,19 @@
+dependencies {
+  api project(":nrich-form-configuration-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-form-configuration")
+
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.glassfish:jakarta.el"
+  testImplementation "org.hibernate.validator:hibernate-validator"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework.boot:spring-boot-test"
+}
