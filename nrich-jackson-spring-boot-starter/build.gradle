@@ -1,0 +1,17 @@
+dependencies {
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-jackson")
+
+  implementation "com.fasterxml.jackson.core:jackson-databind"
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework:spring-web"
+}

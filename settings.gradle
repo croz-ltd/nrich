@@ -12,6 +12,7 @@ include(
   "nrich-form-configuration",
   "nrich-form-configuration-spring-boot-starter",
   "nrich-jackson",
+  "nrich-jackson-spring-boot-starter",
   "nrich-logging-api",
   "nrich-logging",
   "nrich-notification-api",
