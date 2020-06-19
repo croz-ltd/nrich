@@ -17,6 +17,7 @@ include(
   "nrich-logging",
   "nrich-notification-api",
   "nrich-notification",
+  "nrich-notification-spring-boot-starter",
   "nrich-registry-api",
   "nrich-registry",
   "nrich-security-csrf",

@@ -1,0 +1,20 @@
+dependencies {
+  api project(":nrich-notification-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-notification")
+
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "jakarta.servlet:jakarta.servlet-api"
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework:spring-test"
+  testImplementation "org.springframework:spring-webmvc"
+  testImplementation "org.springframework.boot:spring-boot-test"
+}
