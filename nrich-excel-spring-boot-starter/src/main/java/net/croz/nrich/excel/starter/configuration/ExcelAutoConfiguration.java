@@ -20,7 +20,7 @@ import java.util.List;
 @Configuration(proxyBeanMethods = false)
 public class ExcelAutoConfiguration {
 
-    @ConditionalOnProperty(name = "nrich.excel.configuration.default-converter-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = "nrich.excel.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
     public CellValueConverter defaultCellValueConverter(final ExcelProperties excelProperties) {
         return new DefaultCellValueConverter(excelProperties.getDateFormat(), excelProperties.getDateTimeFormat(), excelProperties.getIntegerNumberFormat(), excelProperties.getDecimalNumberFormat(), excelProperties.isWriteDateWithTime());

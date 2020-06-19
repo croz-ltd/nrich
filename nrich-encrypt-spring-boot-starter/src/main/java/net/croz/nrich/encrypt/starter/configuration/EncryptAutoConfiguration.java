@@ -43,14 +43,14 @@ public class EncryptAutoConfiguration {
         return new DefaultDataEncryptionService(textEncryptionService);
     }
 
-    @ConditionalOnProperty(name = "nrich.encrypt.configuration.encrypt-aspect-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = "nrich.encrypt.encrypt-aspect-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
     public EncryptDataAspect encryptDataAspect(final DataEncryptionService dataEncryptionService) {
         return new EncryptDataAspect(dataEncryptionService);
     }
 
-    @ConditionalOnProperty(name = "nrich.encrypt.configuration.encrypt-advisor-enabled", havingValue = "true", matchIfMissing = true)
-    @ConditionalOnPropertyNotEmpty("nrich.encrypt.configuration.encryption-configuration-list")
+    @ConditionalOnProperty(name = "nrich.encrypt.encrypt-advisor-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnPropertyNotEmpty("nrich.encrypt.encryption-configuration-list")
     @Bean
     public Advisor encryptAdvisor(final DataEncryptionService dataEncryptionService, final EncryptProperties encryptProperties) {
         final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();

@@ -24,6 +24,6 @@ public class ExcelAutoConfigurationTest {
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
-        contextRunner.withPropertyValues("nrich.excel.configuration.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(CellValueConverter.class));
+        contextRunner.withPropertyValues("nrich.excel.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(CellValueConverter.class));
     }
 }

@@ -39,7 +39,7 @@ public class FormConfigurationAutoConfiguration {
         return new MessageSourceFieldErrorMessageResolverService(messageSource);
     }
 
-    @ConditionalOnProperty(name = "nrich.form-configuration.configuration.default-converter-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = "nrich.form-configuration.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
     public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(final FieldErrorMessageResolverService fieldErrorMessageResolverService) {
         return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);

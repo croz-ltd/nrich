@@ -24,13 +24,13 @@ public class EncryptAutoConfigurationTest {
 
     @Test
     void shouldNotCreateAspectWhenCreationIsDisabled() {
-        contextRunner.withPropertyValues("nrich.encrypt.configuration.encrypt-aspect-enabled=false").run(context -> assertThat(context).doesNotHaveBean(EncryptDataAspect.class));
+        contextRunner.withPropertyValues("nrich.encrypt.encrypt-aspect-enabled=false").run(context -> assertThat(context).doesNotHaveBean(EncryptDataAspect.class));
     }
 
     @Test
     void shouldCreateAdvisorWhenEncryptConfigurationIsDefined() {
-        contextRunner.withPropertyValues("nrich.encrypt.configuration.encryption-configuration-list[0].method-to-encrypt-decrypt=methodToEncrypt",
-                "nrich.encrypt.configuration.encryption-configuration-list[0].property-to-encrypt-decrypt-list=property",
-                "nrich.encrypt.configuration.encryption-configuration-list[0].encryption-operation=ENCRYPT").run(context -> assertThat(context).hasBean("encryptAdvisor"));
+        contextRunner.withPropertyValues("nrich.encrypt.encryption-configuration-list[0].method-to-encrypt-decrypt=methodToEncrypt",
+                "nrich.encrypt.encryption-configuration-list[0].property-to-encrypt-decrypt-list=property",
+                "nrich.encrypt.encryption-configuration-list[0].encryption-operation=ENCRYPT").run(context -> assertThat(context).hasBean("encryptAdvisor"));
     }
 }

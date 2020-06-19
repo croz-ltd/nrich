@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @ConstructorBinding
-@ConfigurationProperties("nrich.excel.configuration")
+@ConfigurationProperties("nrich.excel")
 public class ExcelProperties {
 
     private final String dateFormat;

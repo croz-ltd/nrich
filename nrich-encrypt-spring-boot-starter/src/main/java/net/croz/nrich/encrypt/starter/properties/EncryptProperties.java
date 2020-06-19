@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @ConstructorBinding
-@ConfigurationProperties("nrich.encrypt.configuration")
+@ConfigurationProperties("nrich.encrypt")
 public class EncryptProperties {
 
     private final List<EncryptionConfiguration> encryptionConfigurationList;
