@@ -64,4 +64,9 @@ public class RegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class);
         });
     }
+
+    @Test
+    void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
+        contextRunner.withPropertyValues("nrich.registry.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(StringToTypeConverter.class));
+    }
 }
