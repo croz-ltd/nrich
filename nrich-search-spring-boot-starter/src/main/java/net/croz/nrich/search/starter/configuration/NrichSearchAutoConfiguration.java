@@ -5,7 +5,7 @@ import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.StringToTypeConverter;
 import net.croz.nrich.search.factory.SearchExecutorJpaRepositoryFactoryBean;
-import net.croz.nrich.search.starter.properties.SearchProperties;
+import net.croz.nrich.search.starter.properties.NrichSearchProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,15 +15,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.List;
 
-@EnableConfigurationProperties(SearchProperties.class)
+@EnableConfigurationProperties(NrichSearchProperties.class)
 @EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)
 @Configuration(proxyBeanMethods = false)
-public class SearchAutoConfiguration {
+public class NrichSearchAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.search.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "searchDefaultStringToTypeConverter")
     @Bean
-    public StringToTypeConverter<?> searchDefaultStringToTypeConverter(final SearchProperties searchProperties) {
+    public StringToTypeConverter<?> searchDefaultStringToTypeConverter(final NrichSearchProperties searchProperties) {
         return new DefaultStringToTypeConverter(searchProperties.getDateFormatList(), searchProperties.getDecimalNumberFormatList(), searchProperties.getBooleanTrueRegexPattern(), searchProperties.getBooleanFalseRegexPattern());
     }
 

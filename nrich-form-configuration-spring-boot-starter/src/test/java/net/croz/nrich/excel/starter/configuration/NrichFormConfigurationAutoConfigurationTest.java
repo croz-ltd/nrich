@@ -4,7 +4,7 @@ import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverte
 import net.croz.nrich.formconfiguration.api.FormConfigurationService;
 import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
-import net.croz.nrich.formconfiguration.starter.configuration.FormConfigurationAutoConfiguration;
+import net.croz.nrich.formconfiguration.starter.configuration.NrichFormConfigurationAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -12,9 +12,9 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FormConfigurationAutoConfigurationTest {
+public class NrichFormConfigurationAutoConfigurationTest {
 
-    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(FormConfigurationAutoConfiguration.class));
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichFormConfigurationAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {
@@ -22,7 +22,7 @@ public class FormConfigurationAutoConfigurationTest {
             assertThat(context).hasSingleBean(FieldErrorMessageResolverService.class);
             assertThat(context).hasSingleBean(FormConfigurationService.class);
             assertThat(context).hasSingleBean(FormConfigurationController.class);
-            assertThat(context).hasBean(FormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
+            assertThat(context).hasBean(NrichFormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
         });
     }
 
@@ -32,7 +32,7 @@ public class FormConfigurationAutoConfigurationTest {
             assertThat(context).doesNotHaveBean(FieldErrorMessageResolverService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationController.class);
-            assertThat(context).doesNotHaveBean(FormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
+            assertThat(context).doesNotHaveBean(NrichFormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
         });
     }
 

@@ -23,7 +23,7 @@ import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
-import net.croz.nrich.registry.starter.properties.RegistryProperties;
+import net.croz.nrich.registry.starter.properties.NrichRegistryProperties;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
@@ -59,9 +59,9 @@ import java.util.stream.Collectors;
 
 @AutoConfigureAfter({ ValidationAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 @ConditionalOnBean({ EntityManagerFactory.class, LocalValidatorFactoryBean.class, RegistryConfiguration.class })
-@EnableConfigurationProperties(RegistryProperties.class)
+@EnableConfigurationProperties(NrichRegistryProperties.class)
 @Configuration(proxyBeanMethods = false)
-public class RegistryAutoConfiguration {
+public class NrichRegistryAutoConfiguration {
 
     public static final String FORM_CONFIGURATION_MAPPING_BEAN_NAME = "formConfigurationMapping";
 
@@ -112,7 +112,7 @@ public class RegistryAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.registry.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "registryDefaultStringToTypeConverter")
     @Bean
-    public StringToTypeConverter<?> registryDefaultStringToTypeConverter(final RegistryProperties registryProperties) {
+    public StringToTypeConverter<?> registryDefaultStringToTypeConverter(final NrichRegistryProperties registryProperties) {
         return new DefaultStringToTypeConverter(registryProperties.getDateFormatList(), registryProperties.getDecimalNumberFormatList(), registryProperties.getBooleanTrueRegexPattern(), registryProperties.getBooleanFalseRegexPattern());
     }
 
@@ -136,7 +136,7 @@ public class RegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService, final RegistryProperties registryProperties) {
+    public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService, final NrichRegistryProperties registryProperties) {
         return new DefaultRegistryConfigurationService(messageSource, registryProperties.getDefaultReadOnlyPropertyList(), registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 

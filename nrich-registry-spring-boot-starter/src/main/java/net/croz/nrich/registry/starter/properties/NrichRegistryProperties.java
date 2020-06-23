@@ -1,4 +1,4 @@
-package net.croz.nrich.search.starter.properties;
+package net.croz.nrich.registry.starter.properties;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,8 +9,10 @@ import java.util.List;
 
 @Getter
 @ConstructorBinding
-@ConfigurationProperties("nrich.search")
-public class SearchProperties {
+@ConfigurationProperties("nrich.registry")
+public class NrichRegistryProperties {
+
+    private final List<String> defaultReadOnlyPropertyList;
 
     private final List<String> dateFormatList;
 
@@ -22,7 +24,8 @@ public class SearchProperties {
 
     private final boolean defaultConverterEnabled;
 
-    public SearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichRegistryProperties(@DefaultValue({ "id", "version" }) final List<String> defaultReadOnlyPropertyList, @DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern, @DefaultValue("true") final boolean defaultConverterEnabled) {
+        this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
         this.dateFormatList = dateFormatList;
         this.decimalNumberFormatList = decimalNumberFormatList;
         this.booleanTrueRegexPattern = booleanTrueRegexPattern;

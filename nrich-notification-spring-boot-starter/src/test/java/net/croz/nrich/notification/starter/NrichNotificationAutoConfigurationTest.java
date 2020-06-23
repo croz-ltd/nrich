@@ -3,7 +3,7 @@ package net.croz.nrich.notification.starter;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
-import net.croz.nrich.notification.starter.configuration.NotificationAutoConfiguration;
+import net.croz.nrich.notification.starter.configuration.NrichNotificationAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -11,11 +11,11 @@ import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NotificationAutoConfigurationTest {
+public class NrichNotificationAutoConfigurationTest {
 
-    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NotificationAutoConfiguration.class));
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichNotificationAutoConfiguration.class));
 
-    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NotificationAutoConfiguration.class));
+    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichNotificationAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {

@@ -7,7 +7,7 @@ import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValida
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
-import net.croz.nrich.formconfiguration.starter.properties.FormConfigurationProperties;
+import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -27,9 +27,9 @@ import java.util.Map;
 
 @AutoConfigureAfter(ValidationAutoConfiguration.class)
 @ConditionalOnBean(LocalValidatorFactoryBean.class)
-@EnableConfigurationProperties(FormConfigurationProperties.class)
+@EnableConfigurationProperties(NrichFormConfigurationProperties.class)
 @Configuration(proxyBeanMethods = false)
-public class FormConfigurationAutoConfiguration {
+public class NrichFormConfigurationAutoConfiguration {
 
     public static final String FORM_CONFIGURATION_MAPPING_BEAN_NAME = "formConfigurationMapping";
 

@@ -1,6 +1,6 @@
 package net.croz.nrich.excel.starter.configuration;
 
-import net.croz.nrich.security.csrf.configuration.CsrfAutoConfiguration;
+import net.croz.nrich.security.csrf.configuration.NrichCsrfAutoConfiguration;
 import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.webflux.filter.CsrfWebFilter;
@@ -12,11 +12,11 @@ import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CsrfAutoConfigurationTest {
+public class NrichCsrfAutoConfigurationTest {
 
-    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(CsrfAutoConfiguration.class));
+    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichCsrfAutoConfiguration.class));
 
-    private final ReactiveWebApplicationContextRunner reactiveWebContextRunner = new ReactiveWebApplicationContextRunner().withConfiguration(AutoConfigurations.of(CsrfAutoConfiguration.class));
+    private final ReactiveWebApplicationContextRunner reactiveWebContextRunner = new ReactiveWebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichCsrfAutoConfiguration.class));
 
     @Test
     void shouldConfigureWebMvcConfiguration() {

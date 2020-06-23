@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties("nrich.encrypt")
-public class EncryptProperties {
+public class NrichEncryptProperties {
 
     private final List<EncryptionConfiguration> encryptionConfigurationList;
 
@@ -23,7 +23,7 @@ public class EncryptProperties {
 
     private final boolean encryptAdvisorEnabled;
 
-    public EncryptProperties(final List<EncryptionConfiguration> encryptionConfigurationList, final List<String> ignoredMethodList, @DefaultValue("UTF-8") final String charset, @DefaultValue("true") final boolean encryptAspectEnabled, @DefaultValue("true") final boolean encryptAdvisorEnabled) {
+    public NrichEncryptProperties(final List<EncryptionConfiguration> encryptionConfigurationList, final List<String> ignoredMethodList, @DefaultValue("UTF-8") final String charset, @DefaultValue("true") final boolean encryptAspectEnabled, @DefaultValue("true") final boolean encryptAdvisorEnabled) {
         this.encryptionConfigurationList = encryptionConfigurationList;
         this.ignoredMethodList = ignoredMethodList;
         this.charset = charset;

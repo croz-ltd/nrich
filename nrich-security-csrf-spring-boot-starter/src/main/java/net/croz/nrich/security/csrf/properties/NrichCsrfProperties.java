@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties("nrich.security.csrf")
-public class CsrfProperties {
+public class NrichCsrfProperties {
 
     private final boolean active;
 
@@ -31,7 +31,7 @@ public class CsrfProperties {
 
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
-    public CsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue(CsrfConstants.CSRF_TOKEN_HEADER_NAME) final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUrl, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
+    public NrichCsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue(CsrfConstants.CSRF_TOKEN_HEADER_NAME) final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUrl, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
         this.active = active;
         this.tokenExpirationInterval = tokenExpirationInterval;
         this.tokenFutureThreshold = tokenFutureThreshold;

@@ -8,7 +8,7 @@ import net.croz.nrich.encrypt.aspect.EncryptMethodInterceptor;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptService;
 import net.croz.nrich.encrypt.service.DefaultDataEncryptService;
-import net.croz.nrich.encrypt.starter.properties.EncryptProperties;
+import net.croz.nrich.encrypt.starter.properties.NrichEncryptProperties;
 import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
@@ -25,13 +25,13 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@EnableConfigurationProperties(EncryptProperties.class)
+@EnableConfigurationProperties(NrichEncryptProperties.class)
 @Configuration(proxyBeanMethods = false)
-public class EncryptAutoConfiguration {
+public class NrichEncryptAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TextEncryptionService textEncryptionService(final EncryptProperties encryptProperties) {
+    public TextEncryptionService textEncryptionService(final NrichEncryptProperties encryptProperties) {
         final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getCharset());
@@ -52,7 +52,7 @@ public class EncryptAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.encrypt.encrypt-advisor-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnPropertyNotEmpty("nrich.encrypt.encryption-configuration-list")
     @Bean
-    public Advisor encryptAdvisor(final DataEncryptionService dataEncryptionService, final EncryptProperties encryptProperties) {
+    public Advisor encryptAdvisor(final DataEncryptionService dataEncryptionService, final NrichEncryptProperties encryptProperties) {
         final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
         pointcut.setExpression(buildPointcutExpression(encryptProperties.getEncryptionConfigurationList()));

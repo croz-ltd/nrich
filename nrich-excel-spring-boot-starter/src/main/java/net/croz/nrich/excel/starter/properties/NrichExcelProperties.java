@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties("nrich.excel")
-public class ExcelProperties {
+public class NrichExcelProperties {
 
     private final String dateFormat;
 
@@ -22,7 +22,7 @@ public class ExcelProperties {
 
     private final boolean defaultConverterEnabled;
 
-    public ExcelProperties(@DefaultValue("dd.MM.yyyy.") final String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") final String dateTimeFormat, @DefaultValue("#,##0") final String integerNumberFormat, @DefaultValue("#,##0.00") final String decimalNumberFormat, @DefaultValue("false") final boolean writeDateWithTime, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichExcelProperties(@DefaultValue("dd.MM.yyyy.") final String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") final String dateTimeFormat, @DefaultValue("#,##0") final String integerNumberFormat, @DefaultValue("#,##0.00") final String decimalNumberFormat, @DefaultValue("false") final boolean writeDateWithTime, @DefaultValue("true") final boolean defaultConverterEnabled) {
         this.dateFormat = dateFormat;
         this.dateTimeFormat = dateTimeFormat;
         this.integerNumberFormat = integerNumberFormat;

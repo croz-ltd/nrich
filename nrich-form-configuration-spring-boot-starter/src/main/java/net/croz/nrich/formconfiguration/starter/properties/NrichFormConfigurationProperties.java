@@ -8,11 +8,11 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties("nrich.form-configuration")
-public class FormConfigurationProperties {
+public class NrichFormConfigurationProperties {
 
     private final boolean defaultConverterEnabled;
 
-    public FormConfigurationProperties(@DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichFormConfigurationProperties(@DefaultValue("true") final boolean defaultConverterEnabled) {
         this.defaultConverterEnabled = defaultConverterEnabled;
     }
 }
