@@ -25,6 +25,7 @@ include(
   "nrich-search-api",
   "nrich-search-repository-api",
   "nrich-search",
+  "nrich-search-spring-boot-starter",
   "nrich-spring-boot",
   "nrich-spring-util",
   "nrich-validation-api",
