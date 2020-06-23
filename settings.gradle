@@ -33,5 +33,6 @@ include(
   "nrich-validation-api",
   "nrich-validation",
   "nrich-webmvc-api",
-  "nrich-webmvc"
+  "nrich-webmvc",
+  "nrich-webmvc-spring-boot-starter"
 )

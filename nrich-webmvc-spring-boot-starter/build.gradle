@@ -1,0 +1,24 @@
+dependencies {
+  api project(":nrich-webmvc-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-webmvc")
+  implementation project(":nrich-logging")
+  implementation project(":nrich-notification-api")
+
+  implementation "jakarta.servlet:jakarta.servlet-api"
+  implementation "jakarta.validation:jakarta.validation-api"
+  implementation "org.springframework:spring-context"
+  implementation "org.springframework:spring-web"
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework:spring-test"
+  testImplementation "org.springframework.boot:spring-boot-test"
+}

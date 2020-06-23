@@ -5,8 +5,8 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation project(":nrich-core-api")
-  implementation project(":nrich-logging")
-  implementation project(":nrich-notification")
+  implementation project(":nrich-logging-api")
+  implementation project(":nrich-notification-api")
 
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-context"
@@ -16,6 +16,9 @@ dependencies {
   testCompileOnly "org.projectlombok:lombok"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation project(":nrich-logging")
+  testImplementation project(":nrich-notification")
 
   testImplementation "com.fasterxml.jackson.core:jackson-core"
   testImplementation "com.fasterxml.jackson.core:jackson-databind"
