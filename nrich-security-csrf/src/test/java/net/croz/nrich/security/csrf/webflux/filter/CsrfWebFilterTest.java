@@ -3,8 +3,8 @@ package net.croz.nrich.security.csrf.webflux.filter;
 import lombok.SneakyThrows;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
-import net.croz.nrich.security.csrf.core.service.CsrfTokenManagerService;
-import net.croz.nrich.security.csrf.core.service.aes.AesCsrfTokenManagerService;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.service.stub.CsrfTestController;
 import net.croz.nrich.security.csrf.webflux.stub.TestWebSessionManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ public class CsrfWebFilterTest {
 
     @BeforeEach
     void setup() {
-        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL_MILLIS, CsrfConstants.CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD_MILLIS, CsrfConstants.CSRF_TOKEN_HEADER_NAME, CsrfConstants.CSRF_DEFAULT_CRYPTO_KEY_LENGTH);
+        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL, CsrfConstants.CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD, CsrfConstants.CSRF_TOKEN_HEADER_NAME, CsrfConstants.CSRF_DEFAULT_CRYPTO_KEY_LENGTH);
 
         csrfFilter = new CsrfWebFilter(csrfTokenManagerService, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
 

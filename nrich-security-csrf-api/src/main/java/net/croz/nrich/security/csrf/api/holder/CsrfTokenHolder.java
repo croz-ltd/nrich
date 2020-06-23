@@ -1,4 +1,4 @@
-package net.croz.nrich.security.csrf.core.holder;
+package net.croz.nrich.security.csrf.api.holder;
 
 import java.security.Key;
 

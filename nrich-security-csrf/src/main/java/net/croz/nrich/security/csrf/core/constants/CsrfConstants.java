@@ -1,5 +1,7 @@
 package net.croz.nrich.security.csrf.core.constants;
 
+import java.time.Duration;
+
 public final class CsrfConstants {
 
     public static final String EMPTY_PATH = "/";
@@ -10,9 +12,11 @@ public final class CsrfConstants {
 
     public static final String CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE_NAME = "CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE";
 
-    public static final Integer CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL_MILLIS = 35 * 60 * 1000;
+    public static final Duration CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL = Duration.ofMinutes(35);
 
-    public static final Integer CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD_MILLIS = 60 * 1000;
+    public static final String CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL_STRING = CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL.toString();
+
+    public static final Duration CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD = Duration.ofMinutes(1);
 
     public static final String CSRF_DEFAULT_PING_URI = "/nrich/csrf/ping";
 

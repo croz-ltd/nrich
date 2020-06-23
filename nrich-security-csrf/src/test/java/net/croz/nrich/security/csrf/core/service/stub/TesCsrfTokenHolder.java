@@ -1,6 +1,6 @@
 package net.croz.nrich.security.csrf.core.service.stub;
 
-import net.croz.nrich.security.csrf.core.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
 
 import java.security.Key;
 import java.util.HashMap;

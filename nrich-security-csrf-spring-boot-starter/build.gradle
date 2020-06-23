@@ -1,8 +1,11 @@
 dependencies {
   api project(":nrich-security-csrf-api")
 
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
+
+  implementation project(":nrich-security-csrf")
 
   implementation "org.slf4j:slf4j-api"
   implementation "org.springframework:spring-web"
@@ -11,15 +14,12 @@ dependencies {
   webMvcImplementation "org.springframework:spring-webmvc"
   webFluxImplementation "org.springframework:spring-webflux"
 
-  testAnnotationProcessor "org.projectlombok:lombok"
-  testCompileOnly "org.projectlombok:lombok"
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "io.projectreactor:reactor-test"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.mockito:mockito-core"
   testImplementation "org.springframework:spring-test"
+  testImplementation "org.springframework.boot:spring-boot-test"
 }

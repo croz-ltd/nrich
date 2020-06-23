@@ -1,7 +1,7 @@
 package net.croz.nrich.security.csrf.webflux.holder;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.security.csrf.core.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 

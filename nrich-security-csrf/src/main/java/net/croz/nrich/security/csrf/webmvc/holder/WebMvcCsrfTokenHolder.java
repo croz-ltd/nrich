@@ -1,7 +1,7 @@
 package net.croz.nrich.security.csrf.webmvc.holder;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.security.csrf.core.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

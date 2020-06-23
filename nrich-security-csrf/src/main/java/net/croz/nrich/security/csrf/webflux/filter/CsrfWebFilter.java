@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
-import net.croz.nrich.security.csrf.core.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webflux.holder.WebFluxCsrfTokenHolder;
 import org.springframework.web.server.ServerWebExchange;
@@ -55,7 +55,7 @@ public class CsrfWebFilter implements WebFilter {
             }
             else if (webSession != null) {
 
-                csrfTokenManagerService.handleCsrfToken(new WebFluxCsrfTokenHolder(exchange, webSession));
+                csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenHolder(exchange, webSession));
 
                 updateLastApiCallAttribute(webSession);
             }
@@ -108,7 +108,7 @@ public class CsrfWebFilter implements WebFilter {
 
         updateLastActiveRequestMillis(exchange, 0L);
 
-        return Mono.fromRunnable(() -> csrfTokenManagerService.handleCsrfToken(new WebFluxCsrfTokenHolder(exchange, webSession)));
+        return Mono.fromRunnable(() -> csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenHolder(exchange, webSession)));
     }
 
     private void updateLastApiCallAttribute(final WebSession webSession) {

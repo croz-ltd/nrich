@@ -1,17 +1,18 @@
-package net.croz.nrich.security.csrf.core.service.aes;
+package net.croz.nrich.security.csrf.core.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
-import net.croz.nrich.security.csrf.core.holder.CsrfTokenHolder;
-import net.croz.nrich.security.csrf.core.service.CsrfTokenManagerService;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
@@ -21,15 +22,15 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
 
-    private final Integer tokenExpirationIntervalMilliseconds;
+    private final Duration tokenExpirationInterval;
 
-    private final Integer tokenFutureThresholdMilliseconds;
+    private final Duration tokenFutureThreshold;
 
     private final String tokenKeyName;
 
     private final Integer cryptoKeyLength;
 
-    public void handleCsrfToken(final CsrfTokenHolder csrfTokenHolder) {
+    public void validateAndRefreshToken(final CsrfTokenHolder csrfTokenHolder) {
         final String csrfToken = csrfTokenHolder.getToken(tokenKeyName);
 
         if (csrfToken == null) {
@@ -89,11 +90,11 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
         // If token time is in future, tolerate that case to some extent (for example, to avoid issues around unsynchronized computer times in cluster)
         if (currentTimeMillis < csrfTokenTimeMillis) {
-            if (csrfTokenTimeMillis - currentTimeMillis > tokenFutureThresholdMilliseconds) {
+            if (csrfTokenTimeMillis - currentTimeMillis > tokenFutureThreshold.toMillis()) {
                 throw new CsrfTokenException("Csrf token is too far in the future.");
             }
         }
-        else if (currentTimeMillis - csrfTokenTimeMillis > tokenExpirationIntervalMilliseconds) {
+        else if (currentTimeMillis - csrfTokenTimeMillis > tokenExpirationInterval.toMillis()) {
             throw new CsrfTokenException("Csrf token is too old.");
         }
 

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
-import net.croz.nrich.security.csrf.core.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenHolder;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,7 +55,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         }
         else if (httpSession != null) {
 
-            csrfTokenManagerService.handleCsrfToken(new WebMvcCsrfTokenHolder(request, response));
+            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenHolder(request, response));
 
             updateLastApiCallAttribute(httpSession);
         }
@@ -104,7 +104,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (!sessionJustInvalidated) {
-            csrfTokenManagerService.handleCsrfToken(new WebMvcCsrfTokenHolder(request, response));
+            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenHolder(request, response));
         }
         else {
             log.debug("    sending csrf stop ping header in response");
