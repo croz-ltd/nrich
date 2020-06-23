@@ -1,7 +1,7 @@
 package net.croz.nrich.encrypt.service;
 
 import net.croz.nrich.encrypt.EncryptTestConfiguration;
-import net.croz.nrich.encrypt.exception.EncryptionOperationFailedException;
+import net.croz.nrich.encrypt.exception.EncryptOperationFailedException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -10,10 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class BytesEncryptorTextEncryptionServiceTest {
+public class BytesEncryptorTextEncryptServiceTest {
 
     @Autowired
-    private BytesEncryptorTextEncryptionService textEncryptionService;
+    private BytesEncryptorTextEncryptService textEncryptionService;
 
     @Test
     void shouldEncryptDecryptData() {
@@ -43,7 +43,7 @@ public class BytesEncryptorTextEncryptionServiceTest {
 
         // then
         assertThat(thrown).isNotNull();
-        assertThat(thrown).isInstanceOf(EncryptionOperationFailedException.class);
+        assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class BytesEncryptorTextEncryptionServiceTest {
 
         // then
         assertThat(thrown).isNotNull();
-        assertThat(thrown).isInstanceOf(EncryptionOperationFailedException.class);
+        assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
     }
 
 }

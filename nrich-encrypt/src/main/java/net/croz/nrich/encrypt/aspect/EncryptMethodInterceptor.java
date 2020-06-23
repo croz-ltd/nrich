@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class EncryptionMethodInterceptor extends BaseDataEncryptionAdvice implements MethodInterceptor {
+public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements MethodInterceptor {
 
     private final DataEncryptionService dataEncryptionService;
 

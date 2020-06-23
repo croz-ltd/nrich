@@ -18,10 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class DefaultDataEncryptionServiceTest {
+public class DefaultDataEncryptServiceTest {
 
     @Autowired
-    private DefaultDataEncryptionService dataEncryptionService;
+    private DefaultDataEncryptService dataEncryptionService;
 
     @Test
     void shouldEncryptSimpleData() {

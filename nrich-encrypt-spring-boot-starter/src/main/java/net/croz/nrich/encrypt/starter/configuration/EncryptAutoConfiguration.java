@@ -4,10 +4,10 @@ import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
-import net.croz.nrich.encrypt.aspect.EncryptionMethodInterceptor;
+import net.croz.nrich.encrypt.aspect.EncryptMethodInterceptor;
 import net.croz.nrich.encrypt.constants.EncryptConstants;
-import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptionService;
-import net.croz.nrich.encrypt.service.DefaultDataEncryptionService;
+import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptService;
+import net.croz.nrich.encrypt.service.DefaultDataEncryptService;
 import net.croz.nrich.encrypt.starter.properties.EncryptProperties;
 import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import org.springframework.aop.Advisor;
@@ -34,13 +34,13 @@ public class EncryptAutoConfiguration {
     public TextEncryptionService textEncryptionService(final EncryptProperties encryptProperties) {
         final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
-        return new BytesEncryptorTextEncryptionService(encryptor, encryptProperties.getCharset());
+        return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getCharset());
     }
 
     @ConditionalOnMissingBean
     @Bean
     public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
-        return new DefaultDataEncryptionService(textEncryptionService);
+        return new DefaultDataEncryptService(textEncryptionService);
     }
 
     @ConditionalOnProperty(name = "nrich.encrypt.encrypt-aspect-enabled", havingValue = "true", matchIfMissing = true)
@@ -57,7 +57,7 @@ public class EncryptAutoConfiguration {
 
         pointcut.setExpression(buildPointcutExpression(encryptProperties.getEncryptionConfigurationList()));
 
-        return new DefaultPointcutAdvisor(pointcut, new EncryptionMethodInterceptor(dataEncryptionService, encryptProperties.getEncryptionConfigurationList(), encryptProperties.getIgnoredMethodList()));
+        return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptProperties.getEncryptionConfigurationList(), encryptProperties.getIgnoredMethodList()));
     }
 
     private String buildPointcutExpression(final List<EncryptionConfiguration> encryptionConfigurationList) {

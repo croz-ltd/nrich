@@ -16,7 +16,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Aspect
-public class EncryptDataAspect extends BaseDataEncryptionAdvice {
+public class EncryptDataAspect extends BaseEncryptDataAdvice {
 
     private final DataEncryptionService dataEncryptionService;
 

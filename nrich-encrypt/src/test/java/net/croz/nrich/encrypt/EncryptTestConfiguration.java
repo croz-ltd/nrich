@@ -1,7 +1,7 @@
 package net.croz.nrich.encrypt;
 
 import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
-import net.croz.nrich.encrypt.aspect.EncryptionMethodInterceptor;
+import net.croz.nrich.encrypt.aspect.EncryptMethodInterceptor;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestService;
@@ -11,8 +11,8 @@ import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
-import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptionService;
-import net.croz.nrich.encrypt.service.DefaultDataEncryptionService;
+import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptService;
+import net.croz.nrich.encrypt.service.DefaultDataEncryptService;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -36,12 +36,12 @@ public class EncryptTestConfiguration {
     public TextEncryptionService textEncryptionService() {
         final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
-        return new BytesEncryptorTextEncryptionService(encryptor, "UTF-8");
+        return new BytesEncryptorTextEncryptService(encryptor, "UTF-8");
     }
 
     @Bean
     public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
-        return new DefaultDataEncryptionService(textEncryptionService);
+        return new DefaultDataEncryptService(textEncryptionService);
     }
 
     @Bean
@@ -63,7 +63,7 @@ public class EncryptTestConfiguration {
 
         pointcut.setExpression(buildPointcutExpression(encryptionConfigurationList));
 
-        return new DefaultPointcutAdvisor(pointcut, new EncryptionMethodInterceptor(dataEncryptionService, encryptionConfigurationList, Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod")));
+        return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptionConfigurationList, Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod")));
     }
 
     @Bean

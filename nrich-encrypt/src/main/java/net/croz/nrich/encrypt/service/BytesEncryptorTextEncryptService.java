@@ -2,13 +2,13 @@ package net.croz.nrich.encrypt.service;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
-import net.croz.nrich.encrypt.exception.EncryptionOperationFailedException;
+import net.croz.nrich.encrypt.exception.EncryptOperationFailedException;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
 
 import java.util.Base64;
 
 @RequiredArgsConstructor
-public class BytesEncryptorTextEncryptionService implements TextEncryptionService {
+public class BytesEncryptorTextEncryptService implements TextEncryptionService {
 
     private final BytesEncryptor encryptor;
 
@@ -20,7 +20,7 @@ public class BytesEncryptorTextEncryptionService implements TextEncryptionServic
             return Base64.getUrlEncoder().encodeToString(encryptor.encrypt(textToEncrypt.getBytes(charset)));
         }
         catch (final Exception exception) {
-            throw new EncryptionOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt),  exception);
+            throw new EncryptOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt),  exception);
         }
     }
 
@@ -30,7 +30,7 @@ public class BytesEncryptorTextEncryptionService implements TextEncryptionServic
             return new String(encryptor.decrypt(Base64.getUrlDecoder().decode(textToDecrypt)), charset);
         }
         catch (final Exception exception) {
-            throw new EncryptionOperationFailedException(String.format("Error occurred during decryption for data: %s", textToDecrypt), exception);
+            throw new EncryptOperationFailedException(String.format("Error occurred during decryption for data: %s", textToDecrypt), exception);
         }
     }
 }

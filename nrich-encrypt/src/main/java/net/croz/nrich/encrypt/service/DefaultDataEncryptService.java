@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DefaultDataEncryptionService implements DataEncryptionService {
+public class DefaultDataEncryptService implements DataEncryptionService {
 
     private final TextEncryptionService textEncryptionService;
 
