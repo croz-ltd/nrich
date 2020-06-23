@@ -1,7 +1,7 @@
 package net.croz.nrich.security.csrf.configuration;
 
-import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
 import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.properties.NrichCsrfProperties;
 import net.croz.nrich.security.csrf.webflux.filter.CsrfWebFilter;
