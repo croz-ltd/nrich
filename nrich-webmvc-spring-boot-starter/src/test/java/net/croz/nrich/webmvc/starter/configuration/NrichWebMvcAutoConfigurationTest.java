@@ -14,9 +14,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WebMvcAutoConfigurationTest {
+public class NrichWebMvcAutoConfigurationTest {
 
-    private final WebApplicationContextRunner webApplicationContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(WebMvcAutoConfiguration.class));
+    private final WebApplicationContextRunner webApplicationContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichWebMvcAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {

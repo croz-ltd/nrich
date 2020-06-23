@@ -8,7 +8,7 @@ import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.DefaultExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.DefaultTransientPropertyResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-import net.croz.nrich.webmvc.starter.properties.WebMvcProperties;
+import net.croz.nrich.webmvc.starter.properties.NrichWebMvcProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,9 +19,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @ConditionalOnBean({ NotificationResponseService.class, LoggingService.class, MessageSource.class })
-@EnableConfigurationProperties(WebMvcProperties.class)
+@EnableConfigurationProperties(NrichWebMvcProperties.class)
 @Configuration(proxyBeanMethods = false)
-public class WebMvcAutoConfiguration {
+public class NrichWebMvcAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
@@ -37,12 +37,12 @@ public class WebMvcAutoConfiguration {
     }
 
     @Bean
-    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final WebMvcProperties webMvcProperties, final TransientPropertyResolverService transientPropertyResolverService) {
+    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final NrichWebMvcProperties webMvcProperties, final TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(webMvcProperties.isConvertEmptyStringsToNull(), webMvcProperties.isIgnoreTransientFields(), transientPropertyResolverService);
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final WebMvcProperties webMvcProperties, final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, @Autowired(required = false) final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NrichWebMvcProperties webMvcProperties, final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, @Autowired(required = false) final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService);
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @ConstructorBinding
 @ConfigurationProperties("nrich.webmvc")
-public class WebMvcProperties {
+public class NrichWebMvcProperties {
 
     private final boolean exceptionAuxiliaryDataResolvingEnabled;
 
@@ -22,7 +22,7 @@ public class WebMvcProperties {
 
     private final List<String> exceptionAuxiliaryDataToIncludeInNotification;
 
-    public WebMvcProperties(@DefaultValue("true") final boolean exceptionAuxiliaryDataResolvingEnabled, @DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean ignoreTransientFields, @DefaultValue("java.util.concurrent.ExecutionException") final List<String> exceptionToUnwrapList, @DefaultValue("uuid") final List<String> exceptionAuxiliaryDataToIncludeInNotification) {
+    public NrichWebMvcProperties(@DefaultValue("true") final boolean exceptionAuxiliaryDataResolvingEnabled, @DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean ignoreTransientFields, @DefaultValue("java.util.concurrent.ExecutionException") final List<String> exceptionToUnwrapList, @DefaultValue("uuid") final List<String> exceptionAuxiliaryDataToIncludeInNotification) {
         this.exceptionAuxiliaryDataResolvingEnabled = exceptionAuxiliaryDataResolvingEnabled;
         this.convertEmptyStringsToNull = convertEmptyStringsToNull;
         this.ignoreTransientFields = ignoreTransientFields;
