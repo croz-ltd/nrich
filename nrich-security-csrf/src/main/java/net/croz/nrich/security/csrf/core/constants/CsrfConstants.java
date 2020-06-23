@@ -14,8 +14,6 @@ public final class CsrfConstants {
 
     public static final Duration CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL = Duration.ofMinutes(35);
 
-    public static final String CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL_STRING = CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL.toString();
-
     public static final Duration CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD = Duration.ofMinutes(1);
 
     public static final String CSRF_DEFAULT_PING_URI = "/nrich/csrf/ping";
