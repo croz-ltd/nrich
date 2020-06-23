@@ -1,9 +1,9 @@
 package net.croz.nrich.security.csrf.webmvc.interceptor;
 
 import lombok.SneakyThrows;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
-import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.service.stub.CsrfTestController;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
@@ -38,7 +39,8 @@ public class CsrfInterceptorTest {
 
     @BeforeEach
     void setup() {
-        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(CsrfConstants.CSRF_TOKEN_DEFAULT_EXPIRATION_INTERVAL, CsrfConstants.CSRF_TOKEN_DEFAULT_FUTURE_THRESHOLD, CsrfConstants.CSRF_TOKEN_HEADER_NAME, CsrfConstants.CSRF_DEFAULT_CRYPTO_KEY_LENGTH);
+        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), CsrfConstants.CSRF_TOKEN_HEADER_NAME, 128);
+
         csrfInterceptor = new CsrfInterceptor(csrfTokenManagerService, CSRF_PING_URL, CSRF_INITIAL_TOKEN_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
     }
 

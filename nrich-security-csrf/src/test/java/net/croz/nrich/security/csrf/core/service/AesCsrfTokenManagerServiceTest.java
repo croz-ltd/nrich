@@ -18,7 +18,7 @@ public class AesCsrfTokenManagerServiceTest {
 
     @BeforeEach
     void setup() {
-        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), CsrfConstants.CSRF_TOKEN_HEADER_NAME, CsrfConstants.CSRF_DEFAULT_CRYPTO_KEY_LENGTH);;
+        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), CsrfConstants.CSRF_TOKEN_HEADER_NAME, 128);;
     }
 
     @Test
