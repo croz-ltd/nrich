@@ -28,7 +28,7 @@ public final class ProjectionListResolverUtil {
     }
 
     @SneakyThrows
-    private static  <R> SearchProjection<R> convertToProjection(final Field field) {
+    private static <R> SearchProjection<R> convertToProjection(final Field field) {
         final String alias = field.getName();
 
         final Annotation[] annotationList = field.getAnnotations();
