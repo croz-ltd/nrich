@@ -12,21 +12,31 @@ import java.util.List;
 @ConfigurationProperties("nrich.search")
 public class NrichSearchProperties {
 
-    private final List<String> dateFormatList;
-
-    private final List<String> decimalNumberFormatList;
-
-    private final String booleanTrueRegexPattern;
-
-    private final String booleanFalseRegexPattern;
+    private final StringSearchProperties stringSearch;
 
     private final boolean defaultConverterEnabled;
 
-    public NrichSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern, @DefaultValue("true") final boolean defaultConverterEnabled) {
-        this.dateFormatList = dateFormatList;
-        this.decimalNumberFormatList = decimalNumberFormatList;
-        this.booleanTrueRegexPattern = booleanTrueRegexPattern;
-        this.booleanFalseRegexPattern = booleanFalseRegexPattern;
+    public NrichSearchProperties(@DefaultValue final StringSearchProperties stringSearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
+        this.stringSearch = stringSearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
+    }
+
+    @Getter
+    public static class StringSearchProperties {
+
+        private final List<String> dateFormatList;
+
+        private final List<String> decimalNumberFormatList;
+
+        private final String booleanTrueRegexPattern;
+
+        private final String booleanFalseRegexPattern;
+
+        public StringSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern) {
+            this.dateFormatList = dateFormatList;
+            this.decimalNumberFormatList = decimalNumberFormatList;
+            this.booleanTrueRegexPattern = booleanTrueRegexPattern;
+            this.booleanFalseRegexPattern = booleanFalseRegexPattern;
+        }
     }
 }

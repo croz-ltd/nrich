@@ -113,7 +113,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryDefaultStringToTypeConverter")
     @Bean
     public StringToTypeConverter<?> registryDefaultStringToTypeConverter(final NrichRegistryProperties registryProperties) {
-        return new DefaultStringToTypeConverter(registryProperties.getDateFormatList(), registryProperties.getDecimalNumberFormatList(), registryProperties.getBooleanTrueRegexPattern(), registryProperties.getBooleanFalseRegexPattern());
+        return new DefaultStringToTypeConverter(registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(), registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern());
     }
 
     @ConditionalOnMissingBean(name = "registryStringToEntityPropertyMapConverter")

@@ -14,22 +14,32 @@ public class NrichRegistryProperties {
 
     private final List<String> defaultReadOnlyPropertyList;
 
-    private final List<String> dateFormatList;
-
-    private final List<String> decimalNumberFormatList;
-
-    private final String booleanTrueRegexPattern;
-
-    private final String booleanFalseRegexPattern;
+    private final RegistrySearchProperties registrySearch;
 
     private final boolean defaultConverterEnabled;
 
-    public NrichRegistryProperties(@DefaultValue({ "id", "version" }) final List<String> defaultReadOnlyPropertyList, @DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichRegistryProperties(@DefaultValue({ "id", "version" }) final List<String> defaultReadOnlyPropertyList, @DefaultValue final RegistrySearchProperties registrySearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
         this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
-        this.dateFormatList = dateFormatList;
-        this.decimalNumberFormatList = decimalNumberFormatList;
-        this.booleanTrueRegexPattern = booleanTrueRegexPattern;
-        this.booleanFalseRegexPattern = booleanFalseRegexPattern;
+        this.registrySearch = registrySearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
+    }
+
+    @Getter
+    public static class RegistrySearchProperties {
+
+        private final List<String> dateFormatList;
+
+        private final List<String> decimalNumberFormatList;
+
+        private final String booleanTrueRegexPattern;
+
+        private final String booleanFalseRegexPattern;
+
+        public RegistrySearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern) {
+            this.dateFormatList = dateFormatList;
+            this.decimalNumberFormatList = decimalNumberFormatList;
+            this.booleanTrueRegexPattern = booleanTrueRegexPattern;
+            this.booleanFalseRegexPattern = booleanFalseRegexPattern;
+        }
     }
 }
