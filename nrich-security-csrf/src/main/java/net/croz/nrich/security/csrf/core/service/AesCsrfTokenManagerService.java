@@ -15,7 +15,6 @@ import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.Date;
 
 @RequiredArgsConstructor
 public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
@@ -86,7 +85,7 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
         }
 
         final Long csrfTokenTimeMillis = new BigInteger(csrfTokenDecryptedBytes).longValue();
-        final Long currentTimeMillis = new Date().getTime();
+        final Long currentTimeMillis = Instant.now().toEpochMilli();
 
         // If token time is in future, tolerate that case to some extent (for example, to avoid issues around unsynchronized computer times in cluster)
         if (currentTimeMillis < csrfTokenTimeMillis) {
