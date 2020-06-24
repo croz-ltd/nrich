@@ -1,6 +1,7 @@
 package net.croz.nrich.security.csrf.configuration;
 
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
 import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.properties.NrichCsrfProperties;
@@ -24,6 +25,7 @@ public class NrichCsrfAutoConfiguration {
         return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getTokenKeyName(), csrfProperties.getCryptoKeyLength());
     }
 
+    @ConditionalOnProperty(name = "nrich.security.csrf.csrf-ping-url", havingValue = CsrfConstants.CSRF_DEFAULT_PING_URI, matchIfMissing = true)
     @Bean
     public CsrfPingController csrfPingController() {
         return new CsrfPingController();
@@ -32,12 +34,12 @@ public class NrichCsrfAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
     public CsrfInterceptor csrfInterceptor(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
-        return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUrl(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @Bean
     public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
-        return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUrl(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 }

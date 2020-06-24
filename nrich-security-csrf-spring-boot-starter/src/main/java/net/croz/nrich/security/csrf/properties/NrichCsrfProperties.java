@@ -27,18 +27,18 @@ public class NrichCsrfProperties {
 
     private final String initialTokenUrl;
 
-    private final String csrfPingUrl;
+    private final String csrfPingUri;
 
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
-    public NrichCsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue(CsrfConstants.CSRF_TOKEN_HEADER_NAME) final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUrl, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
+    public NrichCsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue("X-CSRF-Token") final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUri, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
         this.active = active;
         this.tokenExpirationInterval = tokenExpirationInterval;
         this.tokenFutureThreshold = tokenFutureThreshold;
         this.tokenKeyName = tokenKeyName;
         this.cryptoKeyLength = cryptoKeyLength;
         this.initialTokenUrl = initialTokenUrl;
-        this.csrfPingUrl = csrfPingUrl;
+        this.csrfPingUri = csrfPingUri;
         this.csrfExcludeConfigList = csrfExcludeConfigList;
     }
 }

@@ -29,6 +29,8 @@ public class CsrfInterceptorTest {
 
     private CsrfInterceptor csrfInterceptor;
 
+    private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
+
     private static final String CSRF_PING_URL = "/csrf/ping";
 
     private static final String CSRF_INITIAL_TOKEN_URL = "/csrf/initial/token";
@@ -39,7 +41,7 @@ public class CsrfInterceptorTest {
 
     @BeforeEach
     void setup() {
-        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), CsrfConstants.CSRF_TOKEN_HEADER_NAME, 128);
+        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), CSRF_TOKEN_KEY_NAME, 128);
 
         csrfInterceptor = new CsrfInterceptor(csrfTokenManagerService, CSRF_PING_URL, CSRF_INITIAL_TOKEN_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
     }
@@ -125,7 +127,7 @@ public class CsrfInterceptorTest {
 
         final String csrfToken = (String) modelAndView.getModel().get(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        final MockHttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(session).header(CsrfConstants.CSRF_TOKEN_HEADER_NAME, csrfToken).buildRequest(new MockServletContext());
+        final MockHttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(session).header(CSRF_TOKEN_KEY_NAME, csrfToken).buildRequest(new MockServletContext());
 
         // when
         final boolean result = csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object());
@@ -145,7 +147,7 @@ public class CsrfInterceptorTest {
 
         final String csrfToken = (String) modelAndView.getModel().get(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        final MockHttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(session).param(CsrfConstants.CSRF_TOKEN_HEADER_NAME, csrfToken).buildRequest(new MockServletContext());
+        final MockHttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(session).param(CSRF_TOKEN_KEY_NAME, csrfToken).buildRequest(new MockServletContext());
 
         // when
         final boolean result = csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object());
@@ -171,7 +173,7 @@ public class CsrfInterceptorTest {
         // when
         final MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT)
                 .session(session)
-                .header(CsrfConstants.CSRF_TOKEN_HEADER_NAME, csrfToken)).andReturn().getResponse();
+                .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
