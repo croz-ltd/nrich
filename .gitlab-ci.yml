@@ -1,0 +1,31 @@
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+
+stages:
+  - build
+  - publish
+
+gradle-build:
+  image: openjdk:8-jdk
+  stage: build
+  script:
+    - chmod +x gradlew
+    - ./gradlew clean build
+  artifacts:
+    expire_in: '15min'
+    paths:
+      - "*/build/libs/*.jar"
+
+gradle-publish:
+  image: openjdk:8-jdk
+  stage: publish
+  script:
+    - chmod +x gradlew
+    - ./gradlew publish
+  artifacts:
+    expire_in: '15min'
+    paths:
+      - "*/build/libs/*.jar"
