@@ -34,7 +34,7 @@ public class NrichEncryptAutoConfiguration {
     public TextEncryptionService textEncryptionService(final NrichEncryptProperties encryptProperties) {
         final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
-        return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getCharset());
+        return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());
     }
 
     @ConditionalOnMissingBean

@@ -17,16 +17,16 @@ public class NrichEncryptProperties {
 
     private final List<String> ignoredMethodList;
 
-    private final String charset;
+    private final String textEncryptCharset;
 
     private final boolean encryptAspectEnabled;
 
     private final boolean encryptAdvisorEnabled;
 
-    public NrichEncryptProperties(final List<EncryptionConfiguration> encryptionConfigurationList, final List<String> ignoredMethodList, @DefaultValue("UTF-8") final String charset, @DefaultValue("true") final boolean encryptAspectEnabled, @DefaultValue("true") final boolean encryptAdvisorEnabled) {
+    public NrichEncryptProperties(final List<EncryptionConfiguration> encryptionConfigurationList, final List<String> ignoredMethodList, @DefaultValue("UTF-8") final String textEncryptCharset, @DefaultValue("true") final boolean encryptAspectEnabled, @DefaultValue("true") final boolean encryptAdvisorEnabled) {
         this.encryptionConfigurationList = encryptionConfigurationList;
         this.ignoredMethodList = ignoredMethodList;
-        this.charset = charset;
+        this.textEncryptCharset = textEncryptCharset;
         this.encryptAspectEnabled = encryptAspectEnabled;
         this.encryptAdvisorEnabled = encryptAdvisorEnabled;
     }
