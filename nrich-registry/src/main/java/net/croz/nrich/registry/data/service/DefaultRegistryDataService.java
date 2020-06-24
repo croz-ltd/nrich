@@ -1,6 +1,5 @@
 package net.croz.nrich.registry.data.service;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
@@ -14,11 +13,12 @@ import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
+import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
-import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.util.PageableUtil;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
@@ -184,13 +184,12 @@ public class DefaultRegistryDataService implements RegistryDataService {
     }
 
     @SuppressWarnings("unchecked")
-    @SneakyThrows
     private <T> T resolveEntityInstance(final Class<T> type, final Object entityData) {
         if (entityData != null && type.equals(entityData.getClass())) {
             return (T) entityData;
         }
 
-        return type.newInstance();
+        return BeanUtils.instantiateClass(type);
     }
 
     private <T> T findEntityInstance(final Class<T> type, final Object id) {

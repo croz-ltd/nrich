@@ -1,6 +1,5 @@
 package net.croz.nrich.validation.constraint.validator;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.validation.constraint.util.ValidationReflectionUtil;
 
 import java.lang.reflect.Method;
@@ -10,14 +9,13 @@ abstract class BaseNullableCheckValidator {
 
     protected abstract boolean isPropertyValueValid(Object propertyValue);
 
-    @SneakyThrows
     protected boolean isValid(final Object value, final Class<? extends Predicate<?>> conditionClass, final String propertyName) {
         if (value == null) {
             return true;
         }
 
         @SuppressWarnings("unchecked")
-        final Predicate<Object> condition = (Predicate<Object>) conditionClass.getDeclaredConstructor().newInstance();
+        final Predicate<Object> condition = (Predicate<Object>) ValidationReflectionUtil.instantiateClass(conditionClass);
 
         final boolean conditionEvaluationResult = condition.test(value);
 

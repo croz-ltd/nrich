@@ -1,8 +1,8 @@
 package net.croz.nrich.search.util;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.search.api.annotation.Projection;
 import net.croz.nrich.search.api.model.SearchProjection;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.annotation.Annotation;
@@ -27,7 +27,6 @@ public final class ProjectionListResolverUtil {
                 .collect(Collectors.toList());
     }
 
-    @SneakyThrows
     private static <R> SearchProjection<R> convertToProjection(final Field field) {
         final String alias = field.getName();
 
@@ -43,7 +42,7 @@ public final class ProjectionListResolverUtil {
 
                 if (!Projection.DEFAULT.class.equals(projectionAnnotation.condition())) {
                     @SuppressWarnings("unchecked")
-                    final Predicate<R> predicate = (Predicate<R>) projectionAnnotation.condition().getDeclaredConstructor().newInstance();
+                    final Predicate<R> predicate = (Predicate<R>) BeanUtils.instantiateClass(projectionAnnotation.condition());
                     condition = predicate;
                 }
             }
