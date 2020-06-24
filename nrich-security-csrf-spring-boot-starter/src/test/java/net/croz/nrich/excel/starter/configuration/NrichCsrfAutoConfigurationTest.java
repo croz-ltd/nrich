@@ -1,8 +1,8 @@
 package net.croz.nrich.excel.starter.configuration;
 
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.configuration.NrichCsrfAutoConfiguration;
 import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
-import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.webflux.filter.CsrfWebFilter;
 import net.croz.nrich.security.csrf.webmvc.interceptor.CsrfInterceptor;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,15 @@ public class NrichCsrfAutoConfigurationTest {
             assertThat(context).hasSingleBean(CsrfTokenManagerService.class);
             assertThat(context).hasSingleBean(CsrfPingController.class);
             assertThat(context).hasSingleBean(CsrfWebFilter.class);
+        });
+    }
+
+    @Test
+    void shouldNotIncludeCsrfConfigurationWhenItIsDisabled() {
+        webContextRunner.withPropertyValues("nrich.security.csrf.active=false").run(context -> {
+            assertThat(context).doesNotHaveBean(CsrfTokenManagerService.class);
+            assertThat(context).doesNotHaveBean(CsrfPingController.class);
+            assertThat(context).doesNotHaveBean(CsrfInterceptor.class);
         });
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@ConditionalOnProperty(name = "nrich.security.csrf.active", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(NrichCsrfProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichCsrfAutoConfiguration {
@@ -28,14 +29,12 @@ public class NrichCsrfAutoConfiguration {
         return new CsrfPingController();
     }
 
-    @ConditionalOnProperty(name = "nrich.security.csrf.active", havingValue = "true", matchIfMissing = true)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
     public CsrfInterceptor csrfInterceptor(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
         return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUrl(), csrfProperties.getCsrfExcludeConfigList());
     }
 
-    @ConditionalOnProperty(name = "nrich.security.csrf.active", havingValue = "true", matchIfMissing = true)
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @Bean
     public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
