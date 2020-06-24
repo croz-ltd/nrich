@@ -1,6 +1,5 @@
 package net.croz.nrich.security.csrf.webflux.filter;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
@@ -160,7 +159,6 @@ public class CsrfWebFilterTest {
         StepVerifier.create(result).verifyComplete();
     }
 
-    @SneakyThrows
     @Test
     void shouldReturnResultWhenAccessingResourceWithToken() {
         // given

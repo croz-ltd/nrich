@@ -2,7 +2,6 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -42,9 +41,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
 
-    @SneakyThrows
     @Test
-    void shouldListRegistry() {
+    void shouldListRegistry() throws Exception {
         // given
         executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
 
@@ -64,9 +62,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(convertedResponse.getContent()).hasSize(5);
     }
 
-    @SneakyThrows
     @Test
-    void shouldCreateRegistryEntity() {
+    void shouldCreateRegistryEntity() throws Exception {
         // given
         final String entityName = "name for creating";
         final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), entityName);
@@ -85,9 +82,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(convertedResponse.getName()).isEqualTo(entityName);
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnErrorWhenCreateInputDataIsNotValid() {
+    void shouldReturnErrorWhenCreateInputDataIsNotValid() throws Exception {
         // given
         final CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), null);
 
@@ -98,9 +94,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @SneakyThrows
     @Test
-    void shouldUpdateRegistryEntity() {
+    void shouldUpdateRegistryEntity() throws Exception {
         // given
         final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
         final String entityName = "name for creating update";
@@ -120,9 +115,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(convertedResponse.getName()).isEqualTo(entityName);
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnErrorWhenUpdatingWithInvalidData() {
+    void shouldReturnErrorWhenUpdatingWithInvalidData() throws Exception {
         // given
         final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
         final UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), null);
@@ -134,9 +128,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @SneakyThrows
     @Test
-    void shouldDeleteRegistryEntity() {
+    void shouldDeleteRegistryEntity() throws Exception {
         // given
         final RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
@@ -155,9 +148,8 @@ public class RegistryDataControllerTest extends BaseWebTest {
         assertThat(convertedResponse.getId()).isEqualTo(registryTestEntity.getId());
     }
 
-    @SneakyThrows
     @Test
-    void shouldDeleteRegistryEntityWithCompositeKey() {
+    void shouldDeleteRegistryEntityWithCompositeKey() throws Exception {
         // given
         final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
 
@@ -166,7 +158,6 @@ public class RegistryDataControllerTest extends BaseWebTest {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/delete").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
-        // then
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 

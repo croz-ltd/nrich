@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.configuration.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
@@ -16,9 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class RegistryConfigurationControllerTest extends BaseWebTest {
 
-    @SneakyThrows
     @Test
-    void shouldFetchRegistryConfiguration() {
+    void shouldFetchRegistryConfiguration() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 

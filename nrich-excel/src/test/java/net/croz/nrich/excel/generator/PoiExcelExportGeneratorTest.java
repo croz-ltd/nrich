@@ -1,6 +1,5 @@
 package net.croz.nrich.excel.generator;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
@@ -58,9 +57,8 @@ public class PoiExcelExportGeneratorTest {
         excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
-    @SneakyThrows
     @Test
-    void shouldExportDataToExcel() {
+    void shouldExportDataToExcel() throws Exception {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         final Object[] rowData = new Object[] { 1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null };
@@ -99,9 +97,8 @@ public class PoiExcelExportGeneratorTest {
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @SneakyThrows
     @Test
-    void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() {
+    void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() throws Exception {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         final Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L };

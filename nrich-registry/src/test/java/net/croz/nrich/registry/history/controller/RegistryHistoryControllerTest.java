@@ -2,7 +2,6 @@ package net.croz.nrich.registry.history.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
@@ -33,9 +32,8 @@ public class RegistryHistoryControllerTest extends BaseWebTest {
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
 
-    @SneakyThrows
     @Test
-    void shouldFetchRegistryHistoryList() {
+    void shouldFetchRegistryHistoryList() throws Exception {
         // given
         // given
         final RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);

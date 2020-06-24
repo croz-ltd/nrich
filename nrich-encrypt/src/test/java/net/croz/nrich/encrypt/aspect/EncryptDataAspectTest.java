@@ -1,6 +1,5 @@
 package net.croz.nrich.encrypt.aspect;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.encrypt.EncryptTestConfiguration;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceResult;
@@ -34,9 +33,8 @@ public class EncryptDataAspectTest {
         assertThat(decryptResult.getValue()).isEqualTo(text);
     }
 
-    @SneakyThrows
     @Test
-    void shouldEncryptCompletableFutureData() {
+    void shouldEncryptCompletableFutureData() throws Exception {
         // given
         final String text = "some text";
 

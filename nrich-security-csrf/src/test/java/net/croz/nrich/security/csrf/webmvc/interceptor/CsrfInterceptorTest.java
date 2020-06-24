@@ -1,6 +1,5 @@
 package net.croz.nrich.security.csrf.webmvc.interceptor;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
@@ -156,9 +155,8 @@ public class CsrfInterceptorTest {
         assertThat(result).isTrue();
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnResultWhenAccessingResourceWithToken() {
+    void shouldReturnResultWhenAccessingResourceWithToken() throws Exception {
         // given
         final MockHttpSession session = new MockHttpSession();
         final ModelAndView modelAndView = new ModelAndView();

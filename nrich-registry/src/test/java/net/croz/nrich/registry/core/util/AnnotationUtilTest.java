@@ -1,6 +1,5 @@
 package net.croz.nrich.registry.core.util;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.core.stub.AnnotationUtilTestEntity;
 import org.junit.jupiter.api.Test;
 
@@ -48,9 +47,8 @@ public class AnnotationUtilTest {
         assertThat(isAnnotationPresent).isTrue();
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnFalseWhenAnnotationClassForFieldIsNotOnClassPath() {
+    void shouldReturnFalseWhenAnnotationClassForFieldIsNotOnClassPath() throws Exception {
         // given
         final Field field = AnnotationUtilTestEntity.class.getField("name");
         final String nonExistingClass = "non.existing.class.Test";
@@ -62,9 +60,8 @@ public class AnnotationUtilTest {
         assertThat(isAnnotationPresent).isFalse();
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnFalseWhenAnnotationClassForFieldIsNotPresent() {
+    void shouldReturnFalseWhenAnnotationClassForFieldIsNotPresent() throws Exception {
         // given
         final Field field = AnnotationUtilTestEntity.class.getField("name");
         final String nonPresentAnnotation = Test.class.getName();
@@ -76,9 +73,8 @@ public class AnnotationUtilTest {
         assertThat(isAnnotationPresent).isFalse();
     }
 
-    @SneakyThrows
     @Test
-    void shouldReturnTrueWhenAnnotationClassForFieldIsPresent() {
+    void shouldReturnTrueWhenAnnotationClassForFieldIsPresent() throws Exception {
         // given
         final Field field = AnnotationUtilTestEntity.class.getField("name");
         final String presentAnnotationName = NotNull.class.getName();

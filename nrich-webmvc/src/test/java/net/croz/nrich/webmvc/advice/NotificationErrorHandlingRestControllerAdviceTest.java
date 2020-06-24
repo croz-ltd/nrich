@@ -1,7 +1,6 @@
 package net.croz.nrich.webmvc.advice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.SneakyThrows;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.webmvc.test.BaseWebTest;
@@ -21,9 +20,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
     private static final String NOTIFICATION_KEY = "notification";
 
-    @SneakyThrows
     @Test
-    void shouldResolveExceptionNotification() {
+    void shouldResolveExceptionNotification() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -48,9 +46,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(notification.getMessageList().get(0)).startsWith("UUID");
     }
 
-    @SneakyThrows
     @Test
-    void shouldResolveExceptionWithArgumentsNotification() {
+    void shouldResolveExceptionWithArgumentsNotification() throws Exception {
         // when
         final String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
 
@@ -71,9 +68,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
     }
 
-    @SneakyThrows
     @Test
-    void shouldResolveValidationNotification() {
+    void shouldResolveValidationNotification() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -98,9 +94,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
 
-    @SneakyThrows
     @Test
-    void shouldResolveValidationBindFailedNotification() {
+    void shouldResolveValidationBindFailedNotification() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -125,9 +120,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
 
-    @SneakyThrows
     @Test
-    void shouldUnwrapException() {
+    void shouldUnwrapException() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -150,9 +144,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
     }
 
-    @SneakyThrows
     @Test
-    void shouldUnwrapValidationException() {
+    void shouldUnwrapValidationException() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -162,9 +155,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(responseString).isNotEmpty();
     }
 
-    @SneakyThrows
     @Test
-    void shouldUnwrapBindException() {
+    void shouldUnwrapBindException() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
         final String responseString = response.getContentAsString();
@@ -174,9 +166,8 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         assertThat(responseString).isNotEmpty();
     }
 
-    @SneakyThrows
     @Test
-    void shouldResolveConstraintExceptionNotification() {
+    void shouldResolveConstraintExceptionNotification() throws Exception {
         // when
         final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         final String responseString = response.getContentAsString();

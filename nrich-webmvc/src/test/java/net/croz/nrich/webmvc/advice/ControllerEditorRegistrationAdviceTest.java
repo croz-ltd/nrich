@@ -1,6 +1,5 @@
 package net.croz.nrich.webmvc.advice;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.webmvc.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
 
@@ -9,9 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
 
-    @SneakyThrows
     @Test
-    void shouldConvertEmptyStringsToNull() {
+    void shouldConvertEmptyStringsToNull() throws Exception {
         // given
         final String emptyString = " ";
 
@@ -22,9 +20,8 @@ public class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
         assertThat(response).isEqualTo("value=null");
     }
 
-    @SneakyThrows
     @Test
-    void shouldNotBindTransientFields() {
+    void shouldNotBindTransientFields() throws Exception {
         // when
         final String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/ignoreTransientProperty").param("transientProperty", "transient").param("property", "nonTransient")).andReturn().getResponse().getContentAsString();
 

@@ -30,9 +30,8 @@ public class DefaultExcelExportServiceTest {
     @TempDir
     File temporaryDirectory;
 
-    @SneakyThrows
     @Test
-    void shouldCreateExcelReport() {
+    void shouldCreateExcelReport() throws Exception {
         // given
         final File file = createFileInTemporaryDirectory();
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };

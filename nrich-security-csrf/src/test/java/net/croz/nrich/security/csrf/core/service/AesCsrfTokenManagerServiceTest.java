@@ -1,6 +1,5 @@
 package net.croz.nrich.security.csrf.core.service;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.service.stub.TesCsrfTokenHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,9 +77,8 @@ public class AesCsrfTokenManagerServiceTest {
         assertThat(thrown.getMessage()).isEqualTo("Csrf token can't be decrypted.");
     }
 
-    @SneakyThrows
     @Test
-    void shouldThrowExceptionOnInvalidTokenDuration() {
+    void shouldThrowExceptionOnInvalidTokenDuration() throws Exception {
         // given
         final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
         tokenHolder.storeToken(CSRF_TOKEN_HEADER_NAME, aesCsrfTokenManagerService.generateToken(tokenHolder));
