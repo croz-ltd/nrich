@@ -1,7 +1,6 @@
 package net.croz.nrich.webmvc.advice.stub;
 
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -48,24 +47,22 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
         return request.getName();
     }
 
-    @SneakyThrows
+
     @PostMapping("unwrappedExceptionResolving")
-    public void unwrappedExceptionResolving() {
+    public void unwrappedExceptionResolving() throws Exception {
         throw new ExecutionException(new NotificationErrorHandlingRestControllerAdviceTestException());
     }
 
-    @SneakyThrows
     @PostMapping("unwrappedExceptionValidationFailedResolving")
-    public void unwrappedExceptionValidationFailedResolving() {
+    public void unwrappedExceptionValidationFailedResolving() throws Exception {
         final MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[1], -1);
         final MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, mock(BindingResult.class));
 
         throw new ExecutionException(exception);
     }
 
-    @SneakyThrows
     @PostMapping("unwrappedExceptionBindExceptionResolving")
-    public void unwrappedExceptionBindExceptionResolving() {
+    public void unwrappedExceptionBindExceptionResolving() throws Exception {
         final BindException exception = new BindException(mock(BindingResult.class));
 
         throw new ExecutionException(exception);
