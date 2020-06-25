@@ -1,4 +1,4 @@
-package net.croz.nrich.search.api.model;
+package net.croz.nrich.search.api.model.sort;
 
 public enum SortDirection {
 

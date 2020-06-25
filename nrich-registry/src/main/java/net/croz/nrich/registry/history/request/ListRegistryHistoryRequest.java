@@ -2,7 +2,7 @@ package net.croz.nrich.registry.history.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.croz.nrich.search.api.model.SortProperty;
+import net.croz.nrich.search.api.model.sort.SortProperty;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

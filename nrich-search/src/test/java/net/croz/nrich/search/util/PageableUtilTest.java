@@ -1,7 +1,7 @@
 package net.croz.nrich.search.util;
 
-import net.croz.nrich.search.api.model.SortDirection;
-import net.croz.nrich.search.api.model.SortProperty;
+import net.croz.nrich.search.api.model.sort.SortDirection;
+import net.croz.nrich.search.api.model.sort.SortProperty;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
