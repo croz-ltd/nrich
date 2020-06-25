@@ -1,5 +1,6 @@
 package net.croz.nrich.validation.constraint.mapping;
 
+import net.croz.nrich.validation.api.constraint.InList;
 import net.croz.nrich.validation.api.constraint.MaxSizeInBytes;
 import net.croz.nrich.validation.api.constraint.NotNullWhen;
 import net.croz.nrich.validation.api.constraint.NullWhen;
@@ -7,6 +8,7 @@ import net.croz.nrich.validation.api.constraint.ValidFile;
 import net.croz.nrich.validation.api.constraint.ValidOib;
 import net.croz.nrich.validation.api.constraint.ValidRange;
 import net.croz.nrich.validation.api.constraint.ValidSearchProperties;
+import net.croz.nrich.validation.constraint.validator.InListValidator;
 import net.croz.nrich.validation.constraint.validator.MaxSizeInBytesValidator;
 import net.croz.nrich.validation.constraint.validator.NotNullWhenValidator;
 import net.croz.nrich.validation.constraint.validator.NullWhenValidator;
@@ -27,5 +29,6 @@ public class DefaultConstraintMappingContributor implements ConstraintMappingCon
         builder.addConstraintMapping().constraintDefinition(NotNullWhen.class).validatedBy(NotNullWhenValidator.class);
         builder.addConstraintMapping().constraintDefinition(NullWhen.class).validatedBy(NullWhenValidator.class);
         builder.addConstraintMapping().constraintDefinition(ValidFile.class).validatedBy(ValidFileValidator.class);
+        builder.addConstraintMapping().constraintDefinition(InList.class).validatedBy(InListValidator.class);
     }
 }
