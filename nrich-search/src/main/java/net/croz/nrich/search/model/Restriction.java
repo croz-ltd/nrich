@@ -2,7 +2,7 @@ package net.croz.nrich.search.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.api.model.SearchOperator;
+import net.croz.nrich.search.api.model.operator.SearchOperator;
 
 @RequiredArgsConstructor
 @Getter

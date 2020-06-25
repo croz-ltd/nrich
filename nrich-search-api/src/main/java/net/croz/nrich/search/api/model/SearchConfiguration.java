@@ -3,6 +3,7 @@ package net.croz.nrich.search.api.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 
 import java.util.List;
 import java.util.function.Function;
