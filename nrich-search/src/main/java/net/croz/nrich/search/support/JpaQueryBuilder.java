@@ -8,7 +8,7 @@ import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
-import net.croz.nrich.search.api.model.SubqueryConfiguration;
+import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.parser.SearchDataParser;
