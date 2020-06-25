@@ -47,7 +47,6 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
         protected RepositoryComposition.RepositoryFragments getRepositoryFragments(final RepositoryMetadata metadata) {
             RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
 
-
             if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
 
