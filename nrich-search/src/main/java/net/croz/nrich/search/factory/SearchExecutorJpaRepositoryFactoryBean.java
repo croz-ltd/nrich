@@ -1,8 +1,8 @@
 package net.croz.nrich.search.factory;
 
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.repository.SearchExecutor;
 import net.croz.nrich.search.api.repository.StringSearchExecutor;
-import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.repository.JpaSearchExecutor;
 import net.croz.nrich.search.repository.JpaStringSearchExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -54,7 +54,6 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
             }
             if (StringSearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
                 final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
-
 
                 final StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
 
