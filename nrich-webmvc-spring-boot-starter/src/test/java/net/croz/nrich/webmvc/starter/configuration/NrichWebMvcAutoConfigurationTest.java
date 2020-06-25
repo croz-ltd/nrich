@@ -4,6 +4,7 @@ import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.localeresolver.ConstrainedSessionLocaleResolver;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.starter.configuration.stub.LoggingTestService;
 import net.croz.nrich.webmvc.starter.configuration.stub.NotificationResponseTestService;
@@ -26,6 +27,14 @@ public class NrichWebMvcAutoConfigurationTest {
             assertThat(context).hasSingleBean(ExceptionAuxiliaryDataResolverService.class);
             assertThat(context).hasSingleBean(ControllerEditorRegistrationAdvice.class);
             assertThat(context).hasSingleBean(NotificationErrorHandlingRestControllerAdvice.class);
+            assertThat(context).doesNotHaveBean(ConstrainedSessionLocaleResolver.class);
+        });
+    }
+
+    @Test
+    void shouldAddConstrainedLocaleResolverWhenAllowedLocaleListIsNotEmpty() {
+        webApplicationContextRunner.withPropertyValues("nrich.webmvc.allowed-locale-list=hr,en").withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context -> {
+            assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class);
         });
     }
 }

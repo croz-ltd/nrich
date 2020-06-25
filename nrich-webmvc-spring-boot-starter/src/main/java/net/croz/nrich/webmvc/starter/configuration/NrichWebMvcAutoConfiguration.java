@@ -2,9 +2,11 @@ package net.croz.nrich.webmvc.starter.configuration;
 
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.localeresolver.ConstrainedSessionLocaleResolver;
 import net.croz.nrich.webmvc.service.DefaultExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.DefaultTransientPropertyResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
@@ -43,5 +45,11 @@ public class NrichWebMvcAutoConfiguration {
     @Bean
     public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NrichWebMvcProperties webMvcProperties, final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, @Autowired(required = false) final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService);
+    }
+
+    @ConditionalOnPropertyNotEmpty("nrich.webmvc.allowed-locale-list")
+    @Bean
+    public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(final NrichWebMvcProperties webMvcProperties) {
+        return new ConstrainedSessionLocaleResolver(webMvcProperties.getDefaultLocale(), webMvcProperties.getAllowedLocaleList());
     }
 }

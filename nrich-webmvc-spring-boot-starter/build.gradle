@@ -8,6 +8,7 @@ dependencies {
   implementation project(":nrich-webmvc")
   implementation project(":nrich-logging")
   implementation project(":nrich-notification-api")
+  implementation project(":nrich-spring-boot")
 
   implementation "jakarta.servlet:jakarta.servlet-api"
   implementation "jakarta.validation:jakarta.validation-api"
