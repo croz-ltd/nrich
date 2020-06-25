@@ -14,7 +14,7 @@ import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.search.api.model.SortDirection;
 import net.croz.nrich.search.api.model.SortProperty;
 import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
-import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import net.croz.nrich.search.util.PageableUtil;
 import org.modelmapper.ModelMapper;

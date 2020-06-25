@@ -26,8 +26,8 @@ import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateI
 import net.croz.nrich.registry.starter.properties.NrichRegistryProperties;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
-import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.converter.StringToTypeConverter;
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

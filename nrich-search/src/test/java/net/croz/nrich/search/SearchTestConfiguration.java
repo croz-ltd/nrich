@@ -1,7 +1,7 @@
 package net.croz.nrich.search;
 
-import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.converter.StringToTypeConverter;
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.factory.SearchExecutorJpaRepositoryFactoryBean;

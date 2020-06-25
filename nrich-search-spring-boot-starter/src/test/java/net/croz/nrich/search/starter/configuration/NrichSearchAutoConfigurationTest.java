@@ -1,7 +1,7 @@
 package net.croz.nrich.search.starter.configuration;
 
-import net.croz.nrich.search.converter.StringToEntityPropertyMapConverter;
-import net.croz.nrich.search.converter.StringToTypeConverter;
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.starter.properties.NrichSearchProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;

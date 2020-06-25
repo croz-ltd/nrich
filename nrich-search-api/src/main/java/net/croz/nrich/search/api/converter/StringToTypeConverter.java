@@ -1,4 +1,4 @@
-package net.croz.nrich.search.converter;
+package net.croz.nrich.search.api.converter;
 
 public interface StringToTypeConverter<T> {
 
