@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 
 import java.util.List;
 import java.util.function.Function;

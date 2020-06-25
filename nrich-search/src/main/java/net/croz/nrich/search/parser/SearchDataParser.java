@@ -1,11 +1,11 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.api.model.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
 import net.croz.nrich.search.api.model.operator.SearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorImpl;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
-import net.croz.nrich.search.api.model.SearchPropertyMapping;
+import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;

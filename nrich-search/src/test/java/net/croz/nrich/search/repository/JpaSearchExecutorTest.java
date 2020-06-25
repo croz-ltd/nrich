@@ -3,7 +3,7 @@ package net.croz.nrich.search.repository;
 import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
-import net.croz.nrich.search.api.model.SearchPropertyJoin;
+import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.SubqueryConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
