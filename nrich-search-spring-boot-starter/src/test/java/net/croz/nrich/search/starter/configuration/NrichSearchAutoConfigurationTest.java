@@ -2,6 +2,7 @@ package net.croz.nrich.search.starter.configuration;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
+import net.croz.nrich.search.api.factory.RepositoryFactorySupportFactory;
 import net.croz.nrich.search.starter.properties.NrichSearchProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -18,6 +19,7 @@ public class NrichSearchAutoConfigurationTest {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(StringToTypeConverter.class);
             assertThat(context).hasSingleBean(StringToEntityPropertyMapConverter.class);
+            assertThat(context).hasSingleBean(RepositoryFactorySupportFactory.class);
         });
     }
 

@@ -1,4 +1,4 @@
-package net.croz.nrich.search.factory;
+package net.croz.nrich.search.api.factory;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
@@ -11,14 +11,20 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
-    public SearchExecutorJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    private final RepositoryFactorySupportFactory repositoryFactorySupportFactory;
+
+    private final Class<? extends T> repositoryInterface;
+
+    public SearchExecutorJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
         super(repositoryInterface);
+        this.repositoryInterface = repositoryInterface;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
+        this.repositoryFactorySupportFactory = repositoryFactorySupportFactory;
     }
 
     @Override
     protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
-        return new SearchRepositoryJpaRepositoryFactory(entityManager, stringToEntityPropertyMapConverter);
+        return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager, stringToEntityPropertyMapConverter);
     }
 
 }

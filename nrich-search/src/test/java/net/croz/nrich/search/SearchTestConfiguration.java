@@ -2,9 +2,11 @@ package net.croz.nrich.search;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
-import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
+import net.croz.nrich.search.api.factory.RepositoryFactorySupportFactory;
+import net.croz.nrich.search.api.factory.SearchExecutorJpaRepositoryFactoryBean;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
-import net.croz.nrich.search.factory.SearchExecutorJpaRepositoryFactoryBean;
+import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
+import net.croz.nrich.search.factory.SearchRepositoryFactorySupportFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -67,5 +69,10 @@ public class SearchTestConfiguration {
     @Bean
     public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
+    }
+
+    @Bean
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory() {
+        return new SearchRepositoryFactorySupportFactory();
     }
 }
