@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 public class SearchRepositoryFactorySupportFactory implements RepositoryFactorySupportFactory {
 
     @Override
-    public RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public RepositoryFactorySupport createRepositoryFactory(final Class<?> repositoryInterface, final EntityManager entityManager, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         return new SearchRepositoryJpaRepositoryFactory(entityManager, stringToEntityPropertyMapConverter);
     }
 }

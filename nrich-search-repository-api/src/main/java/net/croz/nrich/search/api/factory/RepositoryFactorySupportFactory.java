@@ -7,6 +7,6 @@ import javax.persistence.EntityManager;
 
 public interface RepositoryFactorySupportFactory {
 
-    RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter);
+    RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter);
 
 }

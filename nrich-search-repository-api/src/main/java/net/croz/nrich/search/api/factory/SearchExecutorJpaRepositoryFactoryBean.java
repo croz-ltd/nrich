@@ -13,15 +13,18 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
 
     private final RepositoryFactorySupportFactory repositoryFactorySupportFactory;
 
+    private final Class<? extends T> repositoryInterface;
+
     public SearchExecutorJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
         super(repositoryInterface);
+        this.repositoryInterface = repositoryInterface;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.repositoryFactorySupportFactory = repositoryFactorySupportFactory;
     }
 
     @Override
     protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
-        return this.repositoryFactorySupportFactory.createRepositoryFactory(entityManager, stringToEntityPropertyMapConverter);
+        return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager, stringToEntityPropertyMapConverter);
     }
 
 }
