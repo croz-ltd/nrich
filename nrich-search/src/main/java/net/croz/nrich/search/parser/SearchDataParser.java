@@ -172,7 +172,10 @@ public class SearchDataParser {
     }
 
     private String findPathUsingAttributePrefix(final List<String> fieldNameList, final ManagedType<?> managedType) {
-        final List<String> attributeNameList = managedType.getAttributes().stream().filter(Attribute::isAssociation).map(Attribute::getName).collect(Collectors.toList());
+        final List<String> attributeNameList = managedType.getAttributes().stream()
+                .filter(Attribute::isAssociation)
+                .map(Attribute::getName)
+                .collect(Collectors.toList());
 
         String foundPath = null;
 
