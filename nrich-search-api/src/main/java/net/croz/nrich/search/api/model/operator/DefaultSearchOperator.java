@@ -9,7 +9,7 @@ import java.util.Objects;
 
 // TODO check if other operators are required
 @SuppressWarnings("unchecked")
-public enum SearchOperatorImpl implements SearchOperator {
+public enum DefaultSearchOperator implements SearchOperator {
 
     ILIKE {
         @Override

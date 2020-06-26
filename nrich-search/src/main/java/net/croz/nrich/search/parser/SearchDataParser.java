@@ -3,7 +3,7 @@ package net.croz.nrich.search.parser;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.operator.SearchOperator;
-import net.croz.nrich.search.api.model.operator.SearchOperatorImpl;
+import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.model.AttributeHolder;
@@ -129,28 +129,28 @@ public class SearchDataParser {
         final SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
         final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
 
-        SearchOperator operator = SearchOperatorImpl.EQ;
+        SearchOperator operator = DefaultSearchOperator.EQ;
         if (resolvedOperator != null) {
             operator = resolvedOperator;
         }
         else if (Collection.class.isAssignableFrom(value.getClass())) {
-            operator = SearchOperatorImpl.IN;
+            operator = DefaultSearchOperator.IN;
         }
         else if (String.class.isAssignableFrom(attributeType)) {
-            operator = SearchOperatorImpl.ILIKE;
+            operator = DefaultSearchOperator.ILIKE;
         }
         else if (isRangeSearchSupported) {
             if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromIncludingSuffix())) {
-                operator = SearchOperatorImpl.GE;
+                operator = DefaultSearchOperator.GE;
             }
             else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromSuffix())) {
-                operator = SearchOperatorImpl.GT;
+                operator = DefaultSearchOperator.GT;
             }
             else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToIncludingSuffix())) {
-                operator = SearchOperatorImpl.LE;
+                operator = DefaultSearchOperator.LE;
             }
             else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToSuffix())) {
-                operator = SearchOperatorImpl.LT;
+                operator = DefaultSearchOperator.LT;
             }
         }
 

@@ -36,7 +36,7 @@ import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
-import net.croz.nrich.search.api.model.operator.SearchOperatorImpl;
+import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
@@ -205,7 +205,7 @@ public class RegistryTestConfiguration {
                 .type(RegistryConfigurationUpdateInterceptorTestEntity.class).registryOverrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
 
         final SearchConfiguration<?, ?, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
-        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ)));
+        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
         final RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
                 .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).registryDataOverrideSearchConfiguration(searchConfiguration).build();
