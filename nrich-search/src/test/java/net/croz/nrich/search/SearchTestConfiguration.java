@@ -72,7 +72,7 @@ public class SearchTestConfiguration {
     }
 
     @Bean
-    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory() {
-        return new SearchRepositoryFactorySupportFactory();
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+        return new SearchRepositoryFactorySupportFactory(stringToEntityPropertyMapConverter);
     }
 }

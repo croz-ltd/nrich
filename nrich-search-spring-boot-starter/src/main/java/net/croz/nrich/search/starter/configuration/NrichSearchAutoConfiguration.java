@@ -37,7 +37,7 @@ public class NrichSearchAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory() {
-        return new SearchRepositoryFactorySupportFactory();
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(final StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter) {
+        return new SearchRepositoryFactorySupportFactory(searchStringToEntityPropertyMapConverter);
     }
 }
