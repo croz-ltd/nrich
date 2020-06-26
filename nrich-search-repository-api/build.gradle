@@ -1,4 +1,6 @@
 dependencies {
   api project(":nrich-search-api")
   api "org.springframework.data:spring-data-commons"
+
+  implementation "org.springframework.data:spring-data-jpa"
 }
