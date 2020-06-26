@@ -548,6 +548,23 @@ public class JpaQueryBuilderTest {
         assertThat(results).hasSize(5);
     }
 
+    @Test
+    void shouldSearchByMultipleAssociationValues() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+                .nestedEntityNestedEntityName("nested0")
+                .nestedEntityNestedEntityAliasName("nested alias0")
+                .build();
+
+        // when
+        final List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
     private <P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }

@@ -1,16 +1,16 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
-import net.croz.nrich.search.api.model.operator.SearchOperator;
 import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
+import net.croz.nrich.search.api.model.operator.SearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
+import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
-import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
@@ -72,7 +72,7 @@ public class SearchDataParser {
                 String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
 
                 if (mappedPath == null) {
-                    mappedPath = findPathUsingAttributePrefix(fieldNameList, managedType);
+                    mappedPath = findPathUsingAttributePrefix(originalFieldName, managedType);
                 }
 
                 if (mappedPath != null) {
@@ -171,24 +171,17 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private String findPathUsingAttributePrefix(final List<String> fieldNameList, final ManagedType<?> managedType) {
+    private String findPathUsingAttributePrefix(final String originalFieldName, final ManagedType<?> managedType) {
         final List<String> attributeNameList = managedType.getAttributes().stream()
                 .filter(Attribute::isAssociation)
                 .map(Attribute::getName)
                 .collect(Collectors.toList());
 
-        String foundPath = null;
-
-        for (final String attribute : attributeNameList) {
-            final String foundFieldName = findFieldName(fieldNameList, attribute);
-
-            if (foundFieldName != null) {
-                foundPath = attribute + "." + StringUtils.uncapitalize(foundFieldName.substring(attribute.length()));
-                break;
-            }
-        }
-
-        return foundPath;
+        return attributeNameList.stream()
+                .filter(attribute -> isFieldNameValid(originalFieldName, attribute))
+                .map(attribute -> attribute + "." + StringUtils.uncapitalize(originalFieldName.substring(attribute.length())))
+                .findFirst()
+                .orElse(null);
     }
 
     private boolean searchUsingPropertyMapping(final SearchDataParserConfiguration searchConfiguration) {
@@ -219,11 +212,7 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private String findFieldName(final List<String> fieldNameList, final String attribute) {
-        return fieldNameList.stream()
-                .filter(field -> field.startsWith(attribute) && field.length() > attribute.length())
-                .findFirst()
-                .orElse(null);
+    private boolean isFieldNameValid(final String fieldName, final String attribute) {
+        return fieldName.startsWith(attribute) && fieldName.length() > attribute.length();
     }
-
 }

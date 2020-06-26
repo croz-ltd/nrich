@@ -42,6 +42,10 @@ public class TestEntitySearchRequest {
 
     private TestCollectionEntitySearchRequest subqueryRestrictionHolder;
 
+    private String nestedEntityNestedEntityName;
+
+    private String nestedEntityNestedEntityAliasName;
+
     public TestEntitySearchRequest(final String name) {
         this.name = name;
     }

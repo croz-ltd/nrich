@@ -27,7 +27,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
     public static List<TestEntity> generateListForSearch(final EntityManager entityManager, final int numberOfCollectionEntities) {
         final List<TestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> {
-            final TestNestedEntity nestedEntity = new TestNestedEntity(null, "nested" + value);
+            final TestNestedEntity nestedEntity = new TestNestedEntity(null, "nested" + value, "nested alias" + value);
             final List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities).mapToObj(counter -> new TestCollectionEntity(null, "collection" + (value + counter))).collect(Collectors.toList());
             final TestEntityEmbedded testEntityEmbedded = new TestEntityEmbedded("embedded" + value);
 

@@ -23,4 +23,6 @@ public class TestNestedEntity {
 
     private String nestedEntityName;
 
+    private String nestedEntityAliasName;
+
 }
