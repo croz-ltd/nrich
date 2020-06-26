@@ -1,15 +1,19 @@
 package net.croz.nrich.search.api.request;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 
 import java.util.List;
 
-public interface BaseSortablePageableRequest {
+@Setter
+@Getter
+public abstract class BaseSortablePageableRequest implements SortablePageableRequest {
 
-    Integer getPageNumber();
+    private Integer pageSize;
 
-    Integer getPageSize();
+    private Integer pageNumber;
 
-    List<SortProperty> getSortPropertyList();
+    private List<SortProperty> sortPropertyList;
 
 }
