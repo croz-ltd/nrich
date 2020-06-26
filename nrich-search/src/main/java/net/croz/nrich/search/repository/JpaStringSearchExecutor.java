@@ -1,8 +1,8 @@
 package net.croz.nrich.search.repository;
 
+import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.repository.StringSearchExecutor;
-import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.repository.support.PageableExecutionUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Transactional(readOnly = true)
 public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
