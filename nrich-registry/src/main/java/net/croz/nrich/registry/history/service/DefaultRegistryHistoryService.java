@@ -134,7 +134,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         }
 
         sortPropertyList.forEach(sortProperty -> {
-            final AuditProperty<?> auditProperty = resolveAuditProperty(sortProperty.getName());
+            final AuditProperty<?> auditProperty = resolveAuditProperty(sortProperty.getProperty());
 
             if (sortProperty.getDirection() == SortDirection.ASC) {
                 auditQuery.addOrder(auditProperty.asc());

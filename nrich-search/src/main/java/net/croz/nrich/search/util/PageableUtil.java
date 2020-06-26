@@ -49,7 +49,7 @@ public final class PageableUtil {
                     .map(PageableUtil::convertToSortOrder)
                     .collect(Collectors.toList());
 
-            if (uniqueSortOrder != null && sortPropertyList.stream().map(SortProperty::getName).noneMatch(value -> value.equals(uniqueSortProperty.getName()))) {
+            if (uniqueSortOrder != null && sortPropertyList.stream().map(SortProperty::getProperty).noneMatch(value -> value.equals(uniqueSortProperty.getProperty()))) {
                 orderList.add(uniqueSortOrder);
             }
 
@@ -60,6 +60,6 @@ public final class PageableUtil {
     }
 
     private static Sort.Order convertToSortOrder(final SortProperty sortProperty) {
-        return sortProperty.getDirection() == SortDirection.ASC ? Sort.Order.asc(sortProperty.getName()) : Sort.Order.desc(sortProperty.getName());
+        return sortProperty.getDirection() == SortDirection.ASC ? Sort.Order.asc(sortProperty.getProperty()) : Sort.Order.desc(sortProperty.getProperty());
     }
 }

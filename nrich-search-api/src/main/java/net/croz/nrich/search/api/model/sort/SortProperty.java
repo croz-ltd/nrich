@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 public class SortProperty {
 
     @NotNull
-    private String name;
+    private String property;
 
     @NotNull
     private SortDirection direction;
