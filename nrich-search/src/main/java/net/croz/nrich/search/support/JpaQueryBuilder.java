@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
-import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
@@ -174,7 +174,7 @@ public class JpaQueryBuilder<T> {
             }
         }
 
-        final List<Subquery<?>> subqueryList = resolveSubqueryList(request, searchConfiguration.getSearchFieldConfiguration(), searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder);
+        final List<Subquery<?>> subqueryList = resolveSubqueryList(request, searchConfiguration.getSearchPropertyConfiguration(), searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder);
 
         subqueryList.forEach(subquery -> mainQueryPredicateList.add(criteriaBuilder.exists(subquery)));
 
@@ -221,30 +221,30 @@ public class JpaQueryBuilder<T> {
     }
 
     // TODO enable join usage or subquery?
-    private <R> List<Subquery<?>> resolveSubqueryList(final R request, final SearchFieldConfiguration searchFieldConfiguration, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+    private <R> List<Subquery<?>> resolveSubqueryList(final R request, final SearchPropertyConfiguration searchPropertyConfiguration, final List<SubqueryConfiguration> subqueryConfigurationList, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
         if (CollectionUtils.isEmpty(subqueryConfigurationList)) {
             return Collections.emptyList();
         }
 
         return subqueryConfigurationList.stream()
-                .map(subqueryConfiguration -> buildSubquery(request, searchFieldConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
+                .map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private <R> Subquery<?> buildSubquery(final R request, final SearchFieldConfiguration searchFieldConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
+    private <R> Subquery<?> buildSubquery(final R request, final SearchPropertyConfiguration searchPropertyConfiguration, final Root<?> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder, final SubqueryConfiguration subqueryConfiguration) {
         final ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
         final Set<Restriction> subqueryRestrictionList;
         if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
             final String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName()) : subqueryConfiguration.getPropertyPrefix();
 
-            subqueryRestrictionList = new SearchDataParser(subqueryRoot, request, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).build()).resolveRestrictionList(propertyPrefix);
+            subqueryRestrictionList = new SearchDataParser(subqueryRoot, request, SearchDataParserConfiguration.builder().searchPropertyConfiguration(searchPropertyConfiguration).build()).resolveRestrictionList(propertyPrefix);
         }
         else {
             final Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
 
-            subqueryRestrictionList = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchFieldConfiguration(searchFieldConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
+            subqueryRestrictionList = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, SearchDataParserConfiguration.builder().searchPropertyConfiguration(searchPropertyConfiguration).resolveFieldMappingUsingPrefix(true).build()).resolveRestrictionList();
         }
 
         Subquery<?> subquery = null;

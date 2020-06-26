@@ -3,7 +3,7 @@ package net.croz.nrich.search.model;
 import lombok.Builder;
 import lombok.Getter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
-import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 
@@ -19,10 +19,10 @@ public class SearchDataParserConfiguration {
 
     private final List<SearchOperatorOverride> searchOperatorOverrideList;
 
-    private final SearchFieldConfiguration searchFieldConfiguration;
+    private final SearchPropertyConfiguration searchPropertyConfiguration;
 
     public static SearchDataParserConfiguration fromSearchConfiguration(final SearchConfiguration<?, ?, ?> searchConfiguration) {
-        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchFieldConfiguration());
+        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchPropertyConfiguration());
     }
 
 }

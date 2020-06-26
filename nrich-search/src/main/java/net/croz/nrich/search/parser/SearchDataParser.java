@@ -1,7 +1,7 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.api.model.property.SearchFieldConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.operator.SearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorImpl;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
@@ -89,7 +89,7 @@ public class SearchDataParser {
     }
 
     private List<String> resolveFieldNameList(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
-        final List<String> ignoredFieldList = searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList();
+        final List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList();
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
@@ -106,8 +106,8 @@ public class SearchDataParser {
     }
 
     private String fieldNameWithoutSuffixAndPrefix(final String originalFieldName, final String prefix) {
-        final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
-        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix(), searchFieldConfiguration.getCollectionQuerySuffix() };
+        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
+        final String[] suffixListToRemove = new String[] { searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(), searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix() };
 
         String fieldName = originalFieldName;
         for (final String suffix : suffixListToRemove) {
@@ -127,7 +127,7 @@ public class SearchDataParser {
     private Restriction createAttributeRestriction(final Class<?> attributeType, final String attributeName, final String path, final Object value, final boolean isPluralAttribute) {
         final boolean isRangeSearchSupported = isRangeSearchSupported(attributeType);
         final SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
-        final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
+        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
 
         SearchOperator operator = SearchOperatorImpl.EQ;
         if (resolvedOperator != null) {
@@ -140,16 +140,16 @@ public class SearchDataParser {
             operator = SearchOperatorImpl.ILIKE;
         }
         else if (isRangeSearchSupported) {
-            if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryFromIncludingSuffix())) {
+            if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromIncludingSuffix())) {
                 operator = SearchOperatorImpl.GE;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryFromSuffix())) {
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromSuffix())) {
                 operator = SearchOperatorImpl.GT;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryToIncludingSuffix())) {
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToIncludingSuffix())) {
                 operator = SearchOperatorImpl.LE;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryToSuffix())) {
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToSuffix())) {
                 operator = SearchOperatorImpl.LT;
             }
         }
@@ -158,7 +158,7 @@ public class SearchDataParser {
     }
 
     private boolean isRangeSearchSupported(final Class<?> attributeType) {
-        return searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
+        return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
     private String findPathUsingMapping(final List<SearchPropertyMapping> propertyMappingList, final String fieldName) {
