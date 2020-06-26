@@ -1,4 +1,4 @@
-package net.croz.nrich.search.api.model;
+package net.croz.nrich.search.api.model.property;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class SearchFieldConfiguration {
+public class SearchPropertyConfiguration {
 
     private List<String> searchIgnoredFieldList;
 
@@ -30,8 +30,8 @@ public class SearchFieldConfiguration {
 
     private String collectionQuerySuffix;
 
-    public static SearchFieldConfiguration defaultSearchFieldConfiguration() {
-        return new SearchFieldConfigurationBuilder()
+    public static SearchPropertyConfiguration defaultSearchPropertyConfiguration() {
+        return new SearchPropertyConfigurationBuilder()
                 .rangeQuerySupportedClassList(Arrays.asList(Date.class, java.util.Date.class, Temporal.class, Number.class))
                 .defaultSubqueryJoinAttribute("id")
                 .rangeQueryFromIncludingSuffix("FromIncluding")

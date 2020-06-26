@@ -1,11 +1,11 @@
 package net.croz.nrich.search.parser;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.search.api.model.SearchFieldConfiguration;
-import net.croz.nrich.search.api.model.SearchOperator;
-import net.croz.nrich.search.api.model.SearchOperatorImpl;
-import net.croz.nrich.search.api.model.SearchOperatorOverride;
-import net.croz.nrich.search.api.model.SearchPropertyMapping;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
+import net.croz.nrich.search.api.model.operator.SearchOperator;
+import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
@@ -89,7 +89,7 @@ public class SearchDataParser {
     }
 
     private List<String> resolveFieldNameList(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
-        final List<String> ignoredFieldList = searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchFieldConfiguration().getSearchIgnoredFieldList();
+        final List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList();
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
@@ -106,8 +106,8 @@ public class SearchDataParser {
     }
 
     private String fieldNameWithoutSuffixAndPrefix(final String originalFieldName, final String prefix) {
-        final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
-        final String[] suffixListToRemove = new String[] { searchFieldConfiguration.getRangeQueryFromIncludingSuffix(), searchFieldConfiguration.getRangeQueryFromSuffix(), searchFieldConfiguration.getRangeQueryToIncludingSuffix(), searchFieldConfiguration.getRangeQueryToSuffix(), searchFieldConfiguration.getCollectionQuerySuffix() };
+        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
+        final String[] suffixListToRemove = new String[] { searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(), searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix() };
 
         String fieldName = originalFieldName;
         for (final String suffix : suffixListToRemove) {
@@ -127,30 +127,30 @@ public class SearchDataParser {
     private Restriction createAttributeRestriction(final Class<?> attributeType, final String attributeName, final String path, final Object value, final boolean isPluralAttribute) {
         final boolean isRangeSearchSupported = isRangeSearchSupported(attributeType);
         final SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
-        final SearchFieldConfiguration searchFieldConfiguration = searchConfiguration.getSearchFieldConfiguration();
+        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
 
-        SearchOperator operator = SearchOperatorImpl.EQ;
+        SearchOperator operator = DefaultSearchOperator.EQ;
         if (resolvedOperator != null) {
             operator = resolvedOperator;
         }
         else if (Collection.class.isAssignableFrom(value.getClass())) {
-            operator = SearchOperatorImpl.IN;
+            operator = DefaultSearchOperator.IN;
         }
         else if (String.class.isAssignableFrom(attributeType)) {
-            operator = SearchOperatorImpl.ILIKE;
+            operator = DefaultSearchOperator.ILIKE;
         }
         else if (isRangeSearchSupported) {
-            if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryFromIncludingSuffix())) {
-                operator = SearchOperatorImpl.GE;
+            if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromIncludingSuffix())) {
+                operator = DefaultSearchOperator.GE;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryFromSuffix())) {
-                operator = SearchOperatorImpl.GT;
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryFromSuffix())) {
+                operator = DefaultSearchOperator.GT;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryToIncludingSuffix())) {
-                operator = SearchOperatorImpl.LE;
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToIncludingSuffix())) {
+                operator = DefaultSearchOperator.LE;
             }
-            else if (attributeName.endsWith(searchFieldConfiguration.getRangeQueryToSuffix())) {
-                operator = SearchOperatorImpl.LT;
+            else if (attributeName.endsWith(searchPropertyConfiguration.getRangeQueryToSuffix())) {
+                operator = DefaultSearchOperator.LT;
             }
         }
 
@@ -158,7 +158,7 @@ public class SearchDataParser {
     }
 
     private boolean isRangeSearchSupported(final Class<?> attributeType) {
-        return searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchFieldConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
+        return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
     private String findPathUsingMapping(final List<SearchPropertyMapping> propertyMappingList, final String fieldName) {

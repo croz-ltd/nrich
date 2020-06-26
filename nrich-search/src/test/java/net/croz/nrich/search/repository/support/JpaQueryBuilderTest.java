@@ -5,12 +5,12 @@ import net.croz.nrich.search.api.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
-import net.croz.nrich.search.api.model.SearchOperatorImpl;
-import net.croz.nrich.search.api.model.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.SearchProjection;
-import net.croz.nrich.search.api.model.SearchPropertyJoin;
-import net.croz.nrich.search.api.model.SearchPropertyMapping;
-import net.croz.nrich.search.api.model.SubqueryConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
+import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
+import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionResolver;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
@@ -425,7 +425,7 @@ public class JpaQueryBuilderTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-                .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, SearchOperatorImpl.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", SearchOperatorImpl.LIKE)))
+                .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
                 .build();
 
         // when

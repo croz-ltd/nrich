@@ -1,4 +1,4 @@
-package net.croz.nrich.search.api.model;
+package net.croz.nrich.search.api.model.operator;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 // TODO check if other operators are required
 @SuppressWarnings("unchecked")
-public enum SearchOperatorImpl implements SearchOperator {
+public enum DefaultSearchOperator implements SearchOperator {
 
     ILIKE {
         @Override

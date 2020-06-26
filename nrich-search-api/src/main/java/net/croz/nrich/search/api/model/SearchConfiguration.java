@@ -3,6 +3,10 @@ package net.croz.nrich.search.api.model;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
+import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
 
 import java.util.List;
 import java.util.function.Function;
@@ -40,17 +44,17 @@ public class SearchConfiguration<T, P, R> {
     private boolean anyMatch;
 
     @Builder.Default
-    private SearchFieldConfiguration searchFieldConfiguration = SearchFieldConfiguration.defaultSearchFieldConfiguration();
+    private SearchPropertyConfiguration searchPropertyConfiguration = SearchPropertyConfiguration.defaultSearchPropertyConfiguration();
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfiguration() {
-        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).build();
+        return SearchConfiguration.<T, P, R>builder().searchPropertyConfiguration(SearchPropertyConfiguration.defaultSearchPropertyConfiguration()).build();
     }
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationMatchingAny() {
-        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).anyMatch(true).build();
+        return SearchConfiguration.<T, P, R>builder().searchPropertyConfiguration(SearchPropertyConfiguration.defaultSearchPropertyConfiguration()).anyMatch(true).build();
     }
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationWithDefaultMappingResolve() {
-        return SearchConfiguration.<T, P, R>builder().searchFieldConfiguration(SearchFieldConfiguration.defaultSearchFieldConfiguration()).resolveFieldMappingUsingPrefix(true).build();
+        return SearchConfiguration.<T, P, R>builder().searchPropertyConfiguration(SearchPropertyConfiguration.defaultSearchPropertyConfiguration()).resolveFieldMappingUsingPrefix(true).build();
     }
 }

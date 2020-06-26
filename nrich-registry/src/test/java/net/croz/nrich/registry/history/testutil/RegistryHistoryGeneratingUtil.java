@@ -7,8 +7,8 @@ import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbedde
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObject;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey;
-import net.croz.nrich.search.api.model.SortDirection;
-import net.croz.nrich.search.api.model.SortProperty;
+import net.croz.nrich.search.api.model.sort.SortDirection;
+import net.croz.nrich.search.api.model.sort.SortProperty;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;

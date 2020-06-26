@@ -1,6 +1,6 @@
 package net.croz.nrich.search.api.request;
 
-import net.croz.nrich.search.api.model.SortProperty;
+import net.croz.nrich.search.api.model.sort.SortProperty;
 
 import java.util.List;
 
