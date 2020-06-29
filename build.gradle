@@ -73,7 +73,7 @@ subprojects {
           username System.getenv("GRC_GRADLE_USERNAME")
           password System.getenv("GRC_GRADLE_PASSWORD")
         }
-        url nexusUrl as String
+        url "https://repository.dmz.croz.net/repository/maven-releases/"
       }
     }
 
