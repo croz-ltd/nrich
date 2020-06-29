@@ -74,8 +74,8 @@ subprojects {
           username System.getenv("GRC_GRADLE_USERNAME")
           password System.getenv("GRC_GRADLE_PASSWORD")
         }
-        def releasesRepoUrl = "https://repository.dmz.croz.net/repository/maven-releases/"
-        def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/maven-snapshots/"
+        def releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
+        def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
         url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
       }
     }
