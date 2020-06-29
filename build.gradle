@@ -15,8 +15,8 @@ allprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://repository.lan.croz.net/repository/releases/" }
-    maven { url "https://repository.lan.croz.net/repository/snapshots/" }
+    maven { url "https://repository.dmz.croz.net/repository/releases/" }
+    maven { url "https://repository.dmz.croz.net/repository/snapshots/" }
   }
 
   configurations {
