@@ -66,6 +66,7 @@ subprojects {
     jvmArgs = ["-noverify", "-XX:TieredStopAtLevel=1"]
   }
 
+
   publishing {
     repositories {
       maven {
@@ -73,7 +74,9 @@ subprojects {
           username System.getenv("GRC_GRADLE_USERNAME")
           password System.getenv("GRC_GRADLE_PASSWORD")
         }
-        url "https://repository.dmz.croz.net/repository/maven-releases/"
+        def releasesRepoUrl = "https://repository.dmz.croz.net/repository/maven-releases/"
+        def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/maven-snapshots/"
+        url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
       }
     }
 
