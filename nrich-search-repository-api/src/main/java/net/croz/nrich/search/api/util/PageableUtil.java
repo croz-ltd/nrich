@@ -2,6 +2,7 @@ package net.croz.nrich.search.api.util;
 
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
+import net.croz.nrich.search.api.request.SortablePageableRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,6 +16,14 @@ import java.util.stream.Collectors;
 public final class PageableUtil {
 
     private PageableUtil() {
+    }
+
+    public static Pageable convertToPageable(final SortablePageableRequest request, final SortProperty uniqueSortProperty) {
+        return convertToPageable(request.getPageNumber(), request.getPageSize(), uniqueSortProperty, request.getSortPropertyList());
+    }
+
+    public static Pageable convertToPageable(final SortablePageableRequest request) {
+        return convertToPageable(request.getPageNumber(), request.getPageSize(), request.getSortPropertyList());
     }
 
     public static Pageable convertToPageable(final Integer pageNumber, final Integer pageSize) {
