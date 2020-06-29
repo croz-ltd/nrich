@@ -70,8 +70,8 @@ subprojects {
     repositories {
       maven {
         credentials {
-          username nexusUsername
-          password nexusPassword
+          username System.getenv("GRC_GRADLE_USERNAME")
+          password System.getenv("GRC_GRADLE_PASSWORD")
         }
         url nexusUrl as String
       }
