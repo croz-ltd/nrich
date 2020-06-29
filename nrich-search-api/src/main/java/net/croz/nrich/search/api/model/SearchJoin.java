@@ -25,4 +25,8 @@ public class SearchJoin<R> {
     public static <R> SearchJoin<R> innerJoin(final String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null);
     }
+
+    public static <R> SearchJoin<R> leftJoin(final String path) {
+        return new SearchJoin<>(path, path, JoinType.LEFT, null);
+    }
 }
