@@ -12,7 +12,7 @@ import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
-import net.croz.nrich.search.util.PageableUtil;
+import net.croz.nrich.search.api.util.PageableUtil;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;

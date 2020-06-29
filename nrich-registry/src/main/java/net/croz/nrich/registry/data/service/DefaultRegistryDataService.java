@@ -16,7 +16,7 @@ import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.support.JpaQueryBuilder;
-import net.croz.nrich.search.util.PageableUtil;
+import net.croz.nrich.search.api.util.PageableUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;

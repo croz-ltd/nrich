@@ -3,4 +3,10 @@ dependencies {
   api "org.springframework.data:spring-data-commons"
 
   implementation "org.springframework.data:spring-data-jpa"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework:spring-test"
 }

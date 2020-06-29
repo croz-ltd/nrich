@@ -1,4 +1,4 @@
-package net.croz.nrich.search.util;
+package net.croz.nrich.search.api.util;
 
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
