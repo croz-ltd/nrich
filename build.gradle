@@ -75,7 +75,7 @@ subprojects {
         }
         def releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
         def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
-        url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
       }
     }
 
