@@ -64,7 +64,11 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         }
 
         return Arrays.stream(argumentList)
-                .map(value -> value instanceof Object[] ? Arrays.toString((Object[]) value) : value)
+                .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
                 .toArray();
+    }
+
+    private String convertToString(final Object[] value) {
+        return Arrays.toString(value).replace('[', ' ').replace(']', ' ').trim();
     }
 }

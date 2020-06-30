@@ -38,7 +38,7 @@ public class MessageSourceFieldErrorMessageResolverServiceTest {
     void shouldConvertArraysToStringWhenResolvingMessage() {
         // given
         final Map<String, Object> argumentMap = new HashMap<>();
-        argumentMap.put("value", Arrays.asList("one", "two"));
+        argumentMap.put("value", new String[] { "one", "two "});
 
         final ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 
@@ -46,6 +46,6 @@ public class MessageSourceFieldErrorMessageResolverServiceTest {
         final String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
 
         // then
-        assertThat(message).isEqualTo("Not in list: [one, two]");
+        assertThat(message).isEqualTo("Not in list: one, two");
     }
 }
