@@ -116,6 +116,7 @@ public class NrichRegistryAutoConfiguration {
         return new DefaultStringToTypeConverter(registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(), registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern());
     }
 
+    // TODO qualifier on a list, prefix maybe, this way it will pick up from search also?
     @ConditionalOnMissingBean(name = "registryStringToEntityPropertyMapConverter")
     @Bean
     public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
