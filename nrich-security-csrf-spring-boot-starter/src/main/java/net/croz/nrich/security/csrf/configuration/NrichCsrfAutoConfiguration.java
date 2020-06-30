@@ -7,12 +7,15 @@ import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.properties.NrichCsrfProperties;
 import net.croz.nrich.security.csrf.webflux.filter.CsrfWebFilter;
 import net.croz.nrich.security.csrf.webmvc.interceptor.CsrfInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @ConditionalOnProperty(name = "nrich.security.csrf.active", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(NrichCsrfProperties.class)
@@ -41,5 +44,18 @@ public class NrichCsrfAutoConfiguration {
     @Bean
     public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
         return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
+    }
+
+    @ConditionalOnBean(CsrfInterceptor.class)
+    @Bean
+    public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(final CsrfInterceptor csrfInterceptor) {
+        return new WebMvcConfigurer() {
+
+            @Override
+            public void addInterceptors(final InterceptorRegistry registry) {
+                registry.addInterceptor(csrfInterceptor);
+            }
+
+        };
     }
 }
