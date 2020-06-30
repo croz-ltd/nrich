@@ -24,9 +24,9 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
 
     private final CsrfTokenManagerService csrfTokenManagerService;
 
-    private final String csrfPingUrl;
-
     private final String initialTokenUrl;
+
+    private final String csrfPingUrl;
 
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
