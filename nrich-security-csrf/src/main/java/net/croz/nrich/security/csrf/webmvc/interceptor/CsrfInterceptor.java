@@ -10,6 +10,7 @@ import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,10 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
         log.debug("csrfInterceptor.preHandle()");
+
+        if (handler instanceof ResourceHttpRequestHandler) {
+            return true;
+        }
 
         final String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
 

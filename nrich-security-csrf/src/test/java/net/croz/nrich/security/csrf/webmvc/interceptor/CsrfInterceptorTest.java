@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -52,6 +53,18 @@ public class CsrfInterceptorTest {
 
         // when
         final boolean result = csrfInterceptor.preHandle(emptyRequest, new MockHttpServletResponse(), new Object());
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void shouldPassThroughRequestForResource() {
+        // given
+        final MockHttpServletRequest emptyRequest = MockMvcRequestBuilders.post("/css/style.css").buildRequest(new MockServletContext());
+
+        // when
+        final boolean result = csrfInterceptor.preHandle(emptyRequest, new MockHttpServletResponse(), new ResourceHttpRequestHandler());
 
         // then
         assertThat(result).isTrue();
