@@ -7,6 +7,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -26,13 +27,16 @@ public class ConstrainedProperty {
         return constraintDescriptor.getAnnotation().annotationType().getSimpleName();
     }
 
-    public Object[] getConstraintArgumentList() {
+    public Map<String, Object> getConstraintArgumentMap() {
         final List<String> ignoredKeyList = Arrays.asList("groups", "message", "payload");
 
         return constraintDescriptor.getAttributes().entrySet().stream()
                 .filter(entry -> !ignoredKeyList.contains(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .toArray();
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public Object[] getConstraintArgumentList() {
+        return getConstraintArgumentMap().values().toArray();
     }
 
     public String getConstraintMessage() {

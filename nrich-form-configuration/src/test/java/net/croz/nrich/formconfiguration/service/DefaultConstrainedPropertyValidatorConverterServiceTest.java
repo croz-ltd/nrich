@@ -36,7 +36,7 @@ public class DefaultConstrainedPropertyValidatorConverterServiceTest {
 
         // then
         assertThat(validatorConfiguration).isNotNull();
-        assertThat(validatorConfiguration.getArgumentList()).isEmpty();
+        assertThat(validatorConfiguration.getArgumentMap()).isEmpty();
         assertThat(validatorConfiguration.getName()).isEqualTo("NotNull");
         assertThat(validatorConfiguration.getErrorMessage()).isEqualTo("Really cannot be null");
     }

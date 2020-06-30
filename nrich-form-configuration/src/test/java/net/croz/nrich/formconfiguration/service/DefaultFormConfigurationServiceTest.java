@@ -65,7 +65,7 @@ public class DefaultFormConfigurationServiceTest {
         assertThat(lastNameValidatorConfiguration).isNotNull();
 
         assertThat(lastNameValidatorConfiguration.getName()).isEqualTo("Size");
-        assertThat(lastNameValidatorConfiguration.getArgumentList()).containsExactly(1, 5);
+        assertThat(lastNameValidatorConfiguration.getArgumentMap().values()).containsExactly(1, 5);
         assertThat(lastNameValidatorConfiguration.getErrorMessage()).isEqualTo("Size must be between: 1 and 5");
     }
 
@@ -99,7 +99,7 @@ public class DefaultFormConfigurationServiceTest {
         assertThat(valueValidatorConfiguration).isNotNull();
 
         assertThat(valueValidatorConfiguration.getName()).isEqualTo("Min");
-        assertThat(valueValidatorConfiguration.getArgumentList()).containsExactly(10L);
+        assertThat(valueValidatorConfiguration.getArgumentMap().values()).containsExactly(10L);
         assertThat(valueValidatorConfiguration.getErrorMessage()).isEqualTo("Minimum value is: 10");
     }
 
