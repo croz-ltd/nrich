@@ -21,7 +21,8 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
     @Override
     public String resolveErrorMessage(final ConstrainedProperty constrainedProperty, final Locale locale) {
         final List<String> messageCodeList = resolveConstraintMessageCodeList(constrainedProperty);
-        final DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), constrainedProperty.getConstraintArgumentList(), constrainedProperty.getConstraintMessage());
+        final Object[] argumentList = convertArraysInArgumentList(constrainedProperty.getConstraintArgumentList());
+        final DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentList, constrainedProperty.getConstraintMessage());
 
         return messageSource.getMessage(defaultMessageSourceResolvable, locale);
     }
@@ -55,5 +56,15 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         final String messageCode = String.format(messageFormat, (Object[]) argumentList);
 
         return Arrays.asList(messageCodesResolver.resolveMessageCodes(messageCode, constraintPropertyName));
+    }
+
+    private Object[] convertArraysInArgumentList(final Object[] argumentList) {
+        if (argumentList == null) {
+            return null;
+        }
+
+        return Arrays.stream(argumentList)
+                .map(value -> value instanceof Object[] ? Arrays.toString((Object[]) value) : value)
+                .toArray();
     }
 }

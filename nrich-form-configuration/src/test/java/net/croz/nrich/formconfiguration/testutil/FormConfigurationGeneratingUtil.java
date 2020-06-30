@@ -8,6 +8,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -27,13 +28,17 @@ public final class FormConfigurationGeneratingUtil {
     }
 
     public static ConstrainedProperty createConstrainedProperty(final Class<?> parentType) {
+        return createConstrainedProperty(parentType, Collections.emptyMap());
+    }
+
+    public static ConstrainedProperty createConstrainedProperty(final Class<?> parentType, final Map<String, Object> attributeMap) {
         @SuppressWarnings("unchecked")
         final ConstraintDescriptor<Annotation> constraintDescriptor = mock(ConstraintDescriptor.class);
         final Annotation annotation = mock(Annotation.class);
 
         doReturn(NotNull.class).when(annotation).annotationType();
 
-        when(constraintDescriptor.getAttributes()).thenReturn(Collections.emptyMap());
+        when(constraintDescriptor.getAttributes()).thenReturn(attributeMap);
         when(constraintDescriptor.getAnnotation()).thenReturn(annotation);
 
         return ConstrainedProperty.builder()
