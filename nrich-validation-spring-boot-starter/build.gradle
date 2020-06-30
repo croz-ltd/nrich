@@ -1,0 +1,8 @@
+dependencies {
+  api project(":nrich-validation-api")
+
+  implementation project(":nrich-validation")
+
+  implementation "org.hibernate.validator:hibernate-validator"
+  implementation "org.springframework:spring-context"
+}
