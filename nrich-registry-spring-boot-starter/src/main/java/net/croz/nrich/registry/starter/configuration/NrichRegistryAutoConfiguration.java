@@ -147,8 +147,8 @@ public class NrichRegistryAutoConfiguration {
     }
 
     @Bean
-    public RegistryDataService registryDataService(final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
-        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
+    public RegistryDataService registryDataService(final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList) {
+        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()));
     }
 
     @ConditionalOnMissingBean
