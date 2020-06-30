@@ -34,4 +34,8 @@ public class ConstrainedProperty {
                 .map(Map.Entry::getValue)
                 .toArray();
     }
+
+    public String getConstraintMessage() {
+        return constraintDescriptor.getMessageTemplate();
+    }
 }
