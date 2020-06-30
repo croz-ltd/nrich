@@ -15,8 +15,8 @@ allprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://repository.lan.croz.net/repository/releases/" }
-    maven { url "https://repository.lan.croz.net/repository/snapshots/" }
+    maven { url "https://repository.dmz.croz.net/repository/releases/" }
+    maven { url "https://repository.dmz.croz.net/repository/snapshots/" }
   }
 
   configurations {
@@ -70,10 +70,12 @@ subprojects {
     repositories {
       maven {
         credentials {
-          username nexusUsername
-          password nexusPassword
+          username System.getenv("GRC_GRADLE_USERNAME")
+          password System.getenv("GRC_GRADLE_PASSWORD")
         }
-        url nexusUrl as String
+        def releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
+        def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
+        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
       }
     }
 
