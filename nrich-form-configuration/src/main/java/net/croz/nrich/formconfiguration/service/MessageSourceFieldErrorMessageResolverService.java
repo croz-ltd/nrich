@@ -26,12 +26,12 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         return messageSource.getMessage(defaultMessageSourceResolvable, locale);
     }
 
-    private List<String> resolveConstraintMessageCodeList(final ConstrainedProperty request) {
+    private List<String> resolveConstraintMessageCodeList(final ConstrainedProperty constrainedProperty) {
         final DefaultMessageCodesResolver messageCodesResolver = new DefaultMessageCodesResolver();
-        final String constraintOwningClassName = StringUtils.uncapitalize(request.getParentType().getName());
-        final String constraintOwningClassShortName = StringUtils.uncapitalize(request.getParentType().getSimpleName());
-        final String constraintPropertyName = request.getName();
-        final String constraintName = request.getConstraintName();
+        final String constraintOwningClassName = StringUtils.uncapitalize(constrainedProperty.getParentType().getName());
+        final String constraintOwningClassShortName = StringUtils.uncapitalize(constrainedProperty.getParentType().getSimpleName());
+        final String constraintPropertyName = constrainedProperty.getName();
+        final String constraintName = constrainedProperty.getConstraintName();
 
         final List<String> codeList = new ArrayList<>();
 
