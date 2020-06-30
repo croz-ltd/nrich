@@ -33,16 +33,16 @@ public class DefaultConstraintConversionService implements ConstraintConversionS
         return errors;
     }
 
+    @SuppressWarnings("unchecked")
+    private ConstraintViolation<Object> asObjectConstraintViolation(final ConstraintViolation<?> constraintViolation) {
+        return (ConstraintViolation<Object>) constraintViolation;
+    }
+
     private static class ValidatorConverter extends CustomValidatorBean {
 
         @Override
         public void processConstraintViolations(final Set<ConstraintViolation<Object>> violations, final Errors errors) {
             super.processConstraintViolations(violations, errors);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private ConstraintViolation<Object> asObjectConstraintViolation(final ConstraintViolation<?> constraintViolation) {
-        return (ConstraintViolation<Object>) constraintViolation;
     }
 }
