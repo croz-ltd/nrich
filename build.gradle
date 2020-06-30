@@ -66,7 +66,6 @@ subprojects {
     jvmArgs = ["-noverify", "-XX:TieredStopAtLevel=1"]
   }
 
-
   publishing {
     repositories {
       maven {
