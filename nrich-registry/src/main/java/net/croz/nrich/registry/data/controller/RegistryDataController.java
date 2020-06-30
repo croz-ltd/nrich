@@ -2,6 +2,7 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("nrich/registry/data")
@@ -33,8 +35,13 @@ public class RegistryDataController {
 
     private final Validator validator;
 
+    @PostMapping("list-bulk")
+    public <P> Map<String, Page<P>> listBulk(@RequestBody @Valid final ListBulkRegistryRequest request) {
+        return registryDataService.listBulk(request);
+    }
+
     @PostMapping("list")
-    public <T> Page<T> list(@RequestBody @Valid final ListRegistryRequest request) {
+    public <P> Page<P> list(@RequestBody @Valid final ListRegistryRequest request) {
         return registryDataService.list(request);
     }
 

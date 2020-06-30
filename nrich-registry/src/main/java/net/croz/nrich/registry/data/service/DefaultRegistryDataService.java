@@ -6,7 +6,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -67,7 +67,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public <P> Map<String, Page<P>> bulkList(final BulkListRegistryRequest request) {
+    public <P> Map<String, Page<P>> listBulk(final ListBulkRegistryRequest request) {
         return request.getRegistryRequestList().stream()
                 .collect(Collectors.toMap(ListRegistryRequest::getRegistryId, this::list));
     }

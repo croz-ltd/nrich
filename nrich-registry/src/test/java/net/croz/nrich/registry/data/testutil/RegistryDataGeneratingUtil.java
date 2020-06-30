@@ -2,7 +2,7 @@ package net.croz.nrich.registry.data.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -59,12 +59,12 @@ public final class RegistryDataGeneratingUtil {
         return registryTestEntity;
     }
 
-    public static BulkListRegistryRequest createBulkListRegistryRequest(final String classFullName, final String query) {
-        final BulkListRegistryRequest bulkListRegistryRequest = new BulkListRegistryRequest();
+    public static ListBulkRegistryRequest createBulkListRegistryRequest(final String classFullName, final String query) {
+        final ListBulkRegistryRequest listBulkRegistryRequest = new ListBulkRegistryRequest();
 
-        bulkListRegistryRequest.setRegistryRequestList(Collections.singletonList(createListRegistryRequest(classFullName, query)));
+        listBulkRegistryRequest.setRegistryRequestList(Collections.singletonList(createListRegistryRequest(classFullName, query)));
 
-        return bulkListRegistryRequest;
+        return listBulkRegistryRequest;
     }
 
     public static ListRegistryRequest createListRegistryRequest(final String classFullName, final String query, final int pageNumber, final int pageSize) {

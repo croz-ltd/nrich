@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
@@ -20,7 +21,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Map;
 
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
@@ -40,6 +43,27 @@ public class RegistryDataControllerTest extends BaseWebTest {
 
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
+
+    @Test
+    void shouldBulkListRegistry() throws Exception {
+        // given
+        executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
+
+        final ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+
+        // when
+        final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/list-bulk").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        // and when
+        final Map<?, ?> convertedResponse = objectMapper.readValue(response.getContentAsString(), Map.class);
+
+        // then
+        assertThat(convertedResponse).isNotNull();
+        assertThat(convertedResponse.get(RegistryTestEntity.class.getName())).isNotNull();
+    }
 
     @Test
     void shouldListRegistry() throws Exception {

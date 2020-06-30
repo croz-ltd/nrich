@@ -10,7 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public class BulkListRegistryRequest {
+public class ListBulkRegistryRequest {
 
     @Size(min = 1)
     @Valid

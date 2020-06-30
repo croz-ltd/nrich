@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.data.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.data.request.BulkListRegistryRequest;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
@@ -54,10 +54,10 @@ public class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final BulkListRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        final ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final Map<String, Page<RegistryTestEntity>> result = registryDataService.bulkList(request);
+        final Map<String, Page<RegistryTestEntity>> result = registryDataService.listBulk(request);
 
         // then
         assertThat(result).hasSize(1);
