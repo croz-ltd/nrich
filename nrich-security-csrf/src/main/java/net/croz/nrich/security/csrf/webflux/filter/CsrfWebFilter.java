@@ -2,10 +2,10 @@ package net.croz.nrich.security.csrf.webflux.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
-import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webflux.holder.WebFluxCsrfTokenHolder;
 import org.springframework.web.server.ServerWebExchange;
@@ -80,14 +80,14 @@ public class CsrfWebFilter implements WebFilter {
 
     private Mono<Void> handleCsrfPingUrl(final ServerWebExchange exchange, final WebSession webSession) {
         if (webSession != null) {
-            Long lastRealApiRequestMillis = webSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
+            final Long lastRealApiRequestMillis = webSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
             log.debug("    lastRealApiRequestMillis: {}", lastRealApiRequestMillis);
 
             if (lastRealApiRequestMillis != null) {
                 final long deltaMillis = System.currentTimeMillis() - lastRealApiRequestMillis;
                 log.debug("    deltaMillis: {}", deltaMillis);
 
-                long maxInactiveIntervalMillis = webSession.getMaxIdleTime().toMillis();
+                final long maxInactiveIntervalMillis = webSession.getMaxIdleTime().toMillis();
                 log.debug("    maxInactiveIntervalMillis: {}", maxInactiveIntervalMillis);
 
                 if ((maxInactiveIntervalMillis > 0) && (deltaMillis > maxInactiveIntervalMillis)) {
