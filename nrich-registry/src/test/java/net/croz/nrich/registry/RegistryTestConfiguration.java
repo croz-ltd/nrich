@@ -149,8 +149,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryWebMvcConfiguration registryWebMvcConfiguration(final ObjectMapper objectMapper) {
-        return new RegistryWebMvcConfiguration(objectMapper);
+    public RegistryWebMvcTestConfiguration registryWebMvcConfiguration(final ObjectMapper objectMapper) {
+        return new RegistryWebMvcTestConfiguration(objectMapper);
     }
 
     @Bean

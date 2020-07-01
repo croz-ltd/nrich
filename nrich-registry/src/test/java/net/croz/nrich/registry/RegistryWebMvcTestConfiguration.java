@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class RegistryWebMvcConfiguration implements WebMvcConfigurer {
+public class RegistryWebMvcTestConfiguration implements WebMvcConfigurer {
 
     private final ObjectMapper objectMapper;
 
