@@ -2,10 +2,10 @@ package net.croz.nrich.security.csrf.webmvc.interceptor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
-import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenHolder;
 import org.springframework.web.servlet.ModelAndView;
@@ -87,7 +87,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
 
         long deltaMillis = 0L;
         if (httpSession != null) {
-            final Integer lastRealApiRequestMillis = (Integer) httpSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
+            final Long lastRealApiRequestMillis = (Long) httpSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
             log.debug("    lastRealApiRequestMillis: {}", lastRealApiRequestMillis);
 
             if (lastRealApiRequestMillis != null) {
