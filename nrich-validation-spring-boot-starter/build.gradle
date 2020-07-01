@@ -1,8 +1,19 @@
 dependencies {
   api project(":nrich-validation-api")
 
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
   implementation project(":nrich-validation")
 
   implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.springframework:spring-context"
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.springframework.boot:spring-boot-test"
 }

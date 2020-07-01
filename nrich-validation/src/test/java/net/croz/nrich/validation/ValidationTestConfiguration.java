@@ -18,7 +18,12 @@ public class ValidationTestConfiguration {
 
     @Bean
     public ValidFileValidatorProperties validFileValidatorProperties() {
-        return new ValidFileValidatorProperties(true, Collections.singletonList("txt"), Collections.singletonList("text/plain"), "(?U)[\\w-.]+");
+        final ValidFileValidatorProperties validFileValidatorProperties = new ValidFileValidatorProperties();
+        validFileValidatorProperties.setAllowedExtensionList(Collections.singletonList("txt"));
+        validFileValidatorProperties.setAllowedContentTypeList(Collections.singletonList("text/plain"));
+        validFileValidatorProperties.setAllowedFileNameRegex("(?U)[\\w-.]+");
+
+        return validFileValidatorProperties;
     }
 
 }
