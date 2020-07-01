@@ -90,7 +90,7 @@ public class CsrfInterceptorTest {
         final MockHttpSession session = new MockHttpSession();
 
         session.setMaxInactiveInterval(10);
-        session.setAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, 0);
+        session.setAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, 0L);
 
         final MockHttpServletRequest pingRequest = MockMvcRequestBuilders.post(CSRF_PING_URL).session(session).buildRequest(new MockServletContext());
 
