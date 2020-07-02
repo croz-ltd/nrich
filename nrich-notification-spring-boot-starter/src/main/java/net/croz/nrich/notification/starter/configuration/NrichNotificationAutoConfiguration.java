@@ -20,6 +20,8 @@ import javax.annotation.PostConstruct;
 @Configuration(proxyBeanMethods = false)
 public class NrichNotificationAutoConfiguration {
 
+    private static final String NOTIFICATION_MESSAGES_NAME = "notificationMessages";
+
     @ConditionalOnMissingBean
     @Bean
     public ConstraintConversionService constraintConversionService() {
@@ -52,7 +54,7 @@ public class NrichNotificationAutoConfiguration {
         @PostConstruct
         void registerNotificationMessages() {
             if (messageSource instanceof AbstractResourceBasedMessageSource) {
-                ((AbstractResourceBasedMessageSource) messageSource).addBasenames("notificationMessages");
+                ((AbstractResourceBasedMessageSource) messageSource).addBasenames(NOTIFICATION_MESSAGES_NAME);
             }
         }
     }
