@@ -1,5 +1,6 @@
 package net.croz.nrich.notification.service;
 
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
@@ -17,7 +18,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,10 +30,10 @@ public class WebMvcNotificationResponseServiceTest {
     void setup() {
         final NotificationResolverService notificationResolverService = mock(NotificationResolverService.class);
 
-        when(notificationResolverService.createNotificationForSuccessfulAction("actionPrefix.actionSuffix")).thenReturn(new Notification("title", "Action success", Collections.emptyList(), NotificationSeverity.INFO));
-        when(notificationResolverService.createNotificationForValidationFailure(any(Errors.class), any())).thenReturn(new ValidationFailureNotification("validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
-        when(notificationResolverService.createNotificationForValidationFailure(any(ConstraintViolationException.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 2", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyList()));
-        when(notificationResolverService.createNotificationForException(any(Throwable.class), anyMap())).thenReturn(new Notification("title", "Exception", Collections.emptyList(), NotificationSeverity.ERROR));
+        when(notificationResolverService.createNotificationForAction(eq("actionPrefix.actionSuffix"), any(AdditionalNotificationData.class))).thenReturn(new Notification("title", "Action success", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap()));
+        when(notificationResolverService.createNotificationForValidationFailure(any(Errors.class), any(), any(AdditionalNotificationData.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()));
+        when(notificationResolverService.createNotificationForValidationFailure(any(ConstraintViolationException.class), any(AdditionalNotificationData.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 2", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()));
+        when(notificationResolverService.createNotificationForException(any(Throwable.class), any(AdditionalNotificationData.class))).thenReturn(new Notification("title", "Exception", Collections.emptyList(), NotificationSeverity.ERROR, Collections.emptyMap()));
 
         notificationResponseService = new WebMvcNotificationResponseService(notificationResolverService);
     }
@@ -40,7 +41,7 @@ public class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldReturnNotificationResolverService() {
         // when
-        final  NotificationResolverService notificationResolverService = notificationResponseService.notificationResolverService();
+        final NotificationResolverService notificationResolverService = notificationResponseService.notificationResolverService();
 
         // then
         assertThat(notificationResolverService).isNotNull();
@@ -73,7 +74,7 @@ public class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateResponseForException() {
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithExceptionNotification(new Exception(), Collections.emptyMap());
+        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithExceptionNotification(new Exception());
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -83,14 +84,14 @@ public class WebMvcNotificationResponseServiceTest {
     }
 
     @Test
-    void shouldCreateSuccessNotificationFromCurrentRequest() {
+    void shouldCreateNotificationFromCurrentRequest() {
         // given
         final String data = "data";
         final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         // when
-        final ResponseWithNotification<String> responseWithNotification = notificationResponseService.responseWithSuccessNotificationActionResolvedFromRequest(data);
+        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest(data);
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -99,4 +100,21 @@ public class WebMvcNotificationResponseServiceTest {
         assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
     }
+
+    @Test
+    void shouldCreateNotificationFromActionName() {
+        // given
+        final String data = "data";
+
+        // when
+        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification(data, "actionPrefix.actionSuffix");
+
+        // then
+        assertThat(responseWithNotification).isNotNull();
+        assertThat(responseWithNotification.getData()).isEqualTo(data);
+        assertThat(responseWithNotification.getNotification()).isNotNull();
+        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+    }
+
 }

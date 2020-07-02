@@ -1,12 +1,13 @@
 package net.croz.nrich.notification.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.notification.constant.NotificationConstants;
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationError;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
+import net.croz.nrich.notification.constant.NotificationConstants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -33,13 +34,9 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     private final ConstraintConversionService constraintConversionService;
 
     @Override
-    public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType) {
-        return createNotificationForValidationFailure(errors, validationFailedOwningType, null);
-    }
-
-    @Override
-    public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType, final Map<String, ?> messageListData) {
+    public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType, final AdditionalNotificationData additionalNotificationData) {
         final String typeName = validationFailedOwningType == null ? null : validationFailedOwningType.getName();
+        final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.WARN);
 
         final String title;
         if (typeName == null) {
@@ -52,36 +49,26 @@ public class DefaultNotificationResolverService implements NotificationResolverS
 
         final String contentText = resolveMessage(NotificationConstants.VALIDATION_FAILED_CONTENT_CODE, null);
         final List<ValidationError> validationErrorList = convertValidationErrorsToMessageList(errors, validationFailedOwningType);
-        final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(messageListData);
+        final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData());
         final List<String> validationMessageList = validationErrorList.stream().flatMap(value -> value.getErrorMessageList().stream()).collect(Collectors.toList());
 
         final List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).collect(Collectors.toList());
 
-        return new ValidationFailureNotification(title, contentText, messageList, NotificationSeverity.WARN, validationErrorList);
+        return new ValidationFailureNotification(title, contentText, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList);
     }
 
     @Override
-    public ValidationFailureNotification createNotificationForValidationFailure(final ConstraintViolationException exception) {
-        return createNotificationForValidationFailure(exception, null);
-    }
-
-    @Override
-    public ValidationFailureNotification createNotificationForValidationFailure(final ConstraintViolationException exception, final Map<String, ?> messageListData) {
+    public ValidationFailureNotification createNotificationForValidationFailure(final ConstraintViolationException exception, final AdditionalNotificationData additionalNotificationData) {
         final Object target = constraintConversionService.resolveTarget(exception.getConstraintViolations());
         final Errors errors = constraintConversionService.convertConstraintViolationsToErrors(exception.getConstraintViolations(), target, NotificationConstants.UNKNOWN_VALIDATION_TARGET);
 
         final Class<?> targetClass = Optional.ofNullable(target).map(Object::getClass).orElse(null);
 
-        return createNotificationForValidationFailure(errors, targetClass, messageListData);
+        return createNotificationForValidationFailure(errors, targetClass, additionalNotificationData);
     }
 
     @Override
-    public Notification createNotificationForException(final Throwable throwable, final Object... additionalMessageArgumentList) {
-        return createNotificationForException(throwable, null, additionalMessageArgumentList);
-    }
-
-    @Override
-    public Notification createNotificationForException(final Throwable throwable, final Map<String, ?> messageListData, final Object... additionalMessageArgumentList) {
+    public Notification createNotificationForException(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
         final String typeName = throwable.getClass().getName();
         final String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
 
@@ -89,26 +76,22 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String messageCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SUFFIX);
         final String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
 
-        final String message = resolveMessage(messageCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE, null, additionalMessageArgumentList);
-        final NotificationSeverity severity = resolveExceptionSeverity(severityCode);
+        final String message = resolveMessage(messageCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE, null, exceptionMessageArgumentList);
+        final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(resolveExceptionSeverity(severityCode));
 
-        return new Notification(title, message, resolveMessageListFromNotificationData(messageListData), severity);
+        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     @Override
-    public Notification createNotificationForSuccessfulAction(final String actionName) {
-        return createNotificationForSuccessfulAction(actionName, null);
-    }
-
-    @Override
-    public Notification createNotificationForSuccessfulAction(final String actionName, final Map<String, ?> messageListData) {
+    public Notification createNotificationForAction(final String actionName, final AdditionalNotificationData additionalNotificationData) {
         final String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, actionName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
         final String messageCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, actionName, NotificationConstants.MESSAGE_SUFFIX);
 
         final String title = resolveMessage(titleCode, NotificationConstants.SUCCESS_MESSAGE_TITLE_CODE, NotificationConstants.SUCCESS_DEFAULT_TITLE);
         final String message = resolveMessage(messageCode, NotificationConstants.SUCCESS_DEFAULT_CODE);
+        final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.INFO);
 
-        return new Notification(title, message, resolveMessageListFromNotificationData(messageListData), NotificationSeverity.INFO);
+        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(final Errors errors, final Class<?> validationFailedOwningType) {

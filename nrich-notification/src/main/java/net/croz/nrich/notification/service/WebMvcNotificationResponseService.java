@@ -1,6 +1,7 @@
 package net.croz.nrich.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.response.ResponseWithNotification;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
@@ -12,7 +13,6 @@ import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -21,36 +21,36 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     private final NotificationResolverService notificationResolverService;
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(final Errors errors, final Class<?> validationFailedOwningType) {
-        final Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType);
+    public ResponseWithNotification<?> responseWithValidationFailureNotification(final Errors errors, final Class<?> validationFailedOwningType, final AdditionalNotificationData additionalNotificationData) {
+        final Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType, additionalNotificationData);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(final ConstraintViolationException exception) {
-        final Notification notification = notificationResolverService.createNotificationForValidationFailure(exception);
+    public ResponseWithNotification<?> responseWithValidationFailureNotification(final ConstraintViolationException exception, final AdditionalNotificationData additionalNotificationData) {
+        final Notification notification = notificationResolverService.createNotificationForValidationFailure(exception, additionalNotificationData);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithExceptionNotification(final Throwable throwable, final Map<String, ?> messageListData, final Object... additionalMessageArgumentList) {
-        final Notification notification = notificationResolverService.createNotificationForException(throwable, messageListData, additionalMessageArgumentList);
+    public ResponseWithNotification<?> responseWithExceptionNotification(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, final Object... additionalMessageArgumentList) {
+        final Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData, additionalMessageArgumentList);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithSuccessNotificationActionResolvedFromRequest(final D data) {
+    public <D> ResponseWithNotification<D> responseWithNotificationActionResolvedFromRequest(final D data, final AdditionalNotificationData additionalNotificationData) {
         final String actionName = extractActionNameFromCurrentRequest();
 
-        return responseWithSuccessNotification(data, actionName);
+        return responseWithNotification(data, actionName, additionalNotificationData);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithSuccessNotification(final D data, final String actionName) {
-        final Notification notification = notificationResolverService.createNotificationForSuccessfulAction(actionName);
+    public <D> ResponseWithNotification<D> responseWithNotification(final D data, final String actionName, final AdditionalNotificationData additionalNotificationData) {
+        final Notification notification = notificationResolverService.createNotificationForAction(actionName, additionalNotificationData);
 
         return new ResponseWithNotification<>(data, notification);
     }

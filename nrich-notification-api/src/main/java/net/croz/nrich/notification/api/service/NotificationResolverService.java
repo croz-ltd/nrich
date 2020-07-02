@@ -1,27 +1,35 @@
 package net.croz.nrich.notification.api.service;
 
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import org.springframework.validation.Errors;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 
 public interface NotificationResolverService {
 
-    ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType, Map<String, ?> messageListData);
+    ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData);
 
-    ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType);
+    ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception, AdditionalNotificationData additionalNotificationData);
 
-    ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception, Map<String, ?> messageListData);
+    Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList);
 
-    ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception);
+    Notification createNotificationForAction(String actionName, AdditionalNotificationData additionalNotificationData);
 
-    Notification createNotificationForException(Throwable throwable, Map<String, ?> messageListData, Object... additionalMessageArgumentList);
+    default ValidationFailureNotification createNotificationForValidationFailure(Errors errors, Class<?> validationFailedOwningType) {
+        return createNotificationForValidationFailure(errors, validationFailedOwningType, AdditionalNotificationData.empty());
+    }
 
-    Notification createNotificationForException(Throwable throwable, Object... additionalMessageArgumentList);
+    default ValidationFailureNotification createNotificationForValidationFailure(ConstraintViolationException exception) {
+        return createNotificationForValidationFailure(exception, AdditionalNotificationData.empty());
+    }
 
-    Notification createNotificationForSuccessfulAction(String actionName, Map<String, ?> messageListData);
+    default Notification createNotificationForException(Throwable throwable, Object... exceptionMessageArgumentList) {
+        return createNotificationForException(throwable, AdditionalNotificationData.empty(), exceptionMessageArgumentList);
+    }
 
-    Notification createNotificationForSuccessfulAction(String actionName);
+    default Notification createNotificationForAction(String actionName) {
+        return createNotificationForAction(actionName, AdditionalNotificationData.empty());
+    }
 }

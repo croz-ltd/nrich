@@ -1,6 +1,7 @@
 package net.croz.nrich.notification.service;
 
 import net.croz.nrich.notification.NotificationTestConfiguration;
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationError;
@@ -167,7 +168,7 @@ public class DefaultNotificationResolverServiceTest {
         final String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForSuccessfulAction(actionName);
+        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
 
         // then
         assertThat(notification).isNotNull();
@@ -210,7 +211,7 @@ public class DefaultNotificationResolverServiceTest {
         final String actionName = "upload.finished.with-title";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForSuccessfulAction(actionName);
+        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
 
         // then
         assertThat(notification).isNotNull();
@@ -228,7 +229,7 @@ public class DefaultNotificationResolverServiceTest {
         final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, additionalDataMap);
+        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, AdditionalNotificationData.builder().messageListData(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -242,7 +243,7 @@ public class DefaultNotificationResolverServiceTest {
         final Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception, additionalDataMap);
+        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception, AdditionalNotificationData.builder().messageListData(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -256,7 +257,7 @@ public class DefaultNotificationResolverServiceTest {
         final String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForSuccessfulAction(actionName, additionalDataMap);
+        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListData(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -270,7 +271,7 @@ public class DefaultNotificationResolverServiceTest {
         final String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForSuccessfulAction(actionName, additionalDataMap);
+        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListData(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();

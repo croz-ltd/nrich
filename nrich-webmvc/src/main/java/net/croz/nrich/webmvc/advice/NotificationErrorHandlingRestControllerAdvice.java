@@ -3,6 +3,7 @@ package net.croz.nrich.webmvc.advice;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.api.service.LoggingService;
+import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import org.springframework.http.HttpStatus;
@@ -84,7 +85,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
         }
 
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, notificationAuxiliaryData, exceptionArgumentList(exception)));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, AdditionalNotificationData.builder().messageListData(notificationAuxiliaryData).build(), exceptionArgumentList(exception)));
     }
 
     private Exception unwrapException(final Exception exception) {
