@@ -52,7 +52,7 @@ public class DefaultNotificationResolverServiceTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isNotBlank();
 
         assertThat(notification.getMessageList()).isNotEmpty();
@@ -75,7 +75,7 @@ public class DefaultNotificationResolverServiceTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isNotBlank();
 
         assertThat(notification.getMessageList()).isNotEmpty();
@@ -95,7 +95,7 @@ public class DefaultNotificationResolverServiceTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isNotBlank();
 
         assertThat(notification.getMessageList()).isNotEmpty();
@@ -130,7 +130,7 @@ public class DefaultNotificationResolverServiceTest {
         // then
         assertThat(notification).isNotNull();
         assertThat(notification.getTitle()).isNotBlank();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getContent()).isEqualTo("Error message");
         assertThat(notification.getMessageList()).isEmpty();
     }
@@ -188,7 +188,7 @@ public class DefaultNotificationResolverServiceTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isEqualTo("Validation failure custom title");
     }
 
@@ -289,7 +289,7 @@ public class DefaultNotificationResolverServiceTest {
 
         // then
         assertThat(notification).isNotNull();
-        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARN);
+        assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isNotBlank();
 
         assertThat(notification.getMessageList()).isNotEmpty();

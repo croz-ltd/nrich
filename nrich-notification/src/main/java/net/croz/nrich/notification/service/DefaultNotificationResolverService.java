@@ -36,7 +36,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     @Override
     public ValidationFailureNotification createNotificationForValidationFailure(final Errors errors, final Class<?> validationFailedOwningType, final AdditionalNotificationData additionalNotificationData) {
         final String typeName = validationFailedOwningType == null ? null : validationFailedOwningType.getName();
-        final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.WARN);
+        final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.WARNING);
 
         final String title;
         if (typeName == null) {
