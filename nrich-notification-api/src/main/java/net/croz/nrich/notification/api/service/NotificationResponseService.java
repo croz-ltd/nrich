@@ -39,4 +39,12 @@ public interface NotificationResponseService<T> {
     default <D> T responseWithNotification(D data, String actionName) {
         return responseWithNotification(data, actionName, AdditionalNotificationData.empty());
     }
+
+    default T responseWithNotificationActionResolvedFromRequest() {
+        return responseWithNotificationActionResolvedFromRequest(null, AdditionalNotificationData.empty());
+    }
+
+    default T responseWithNotification(String actionName) {
+        return responseWithNotification(null, actionName, AdditionalNotificationData.empty());
+    }
 }

@@ -117,4 +117,32 @@ public class WebMvcNotificationResponseServiceTest {
         assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
     }
 
+    @Test
+    void shouldCreateNotificationFromCurrentRequestWithoutData() {
+        // given
+        final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
+
+        // when
+        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest();
+
+        // then
+        assertThat(responseWithNotification).isNotNull();
+        assertThat(responseWithNotification.getNotification()).isNotNull();
+        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+    }
+
+    @Test
+    void shouldCreateNotificationFromActionNameWithoutData() {
+        // when
+        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification("actionPrefix.actionSuffix");
+
+        // then
+        assertThat(responseWithNotification).isNotNull();
+        assertThat(responseWithNotification.getNotification()).isNotNull();
+        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+    }
+
 }
