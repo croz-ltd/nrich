@@ -47,14 +47,14 @@ public class DefaultNotificationResolverService implements NotificationResolverS
             title = resolveMessage(titleCode, NotificationConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE, NotificationConstants.VALIDATION_FAILED_DEFAULT_TITLE);
         }
 
-        final String contentText = resolveMessage(NotificationConstants.VALIDATION_FAILED_CONTENT_CODE, null);
+        final String content = resolveMessage(NotificationConstants.VALIDATION_FAILED_CONTENT_CODE, null);
         final List<ValidationError> validationErrorList = convertValidationErrorsToMessageList(errors, validationFailedOwningType);
         final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData());
         final List<String> validationMessageList = validationErrorList.stream().flatMap(value -> value.getErrorMessageList().stream()).collect(Collectors.toList());
 
         final List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).collect(Collectors.toList());
 
-        return new ValidationFailureNotification(title, contentText, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList);
+        return new ValidationFailureNotification(title, content, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList);
     }
 
     @Override
@@ -76,10 +76,10 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String messageCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SUFFIX);
         final String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
 
-        final String message = resolveMessage(messageCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE, null, exceptionMessageArgumentList);
+        final String content = resolveMessage(messageCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE, null, exceptionMessageArgumentList);
         final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(resolveExceptionSeverity(severityCode));
 
-        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
+        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     @Override
@@ -88,10 +88,10 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String messageCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, actionName, NotificationConstants.MESSAGE_SUFFIX);
 
         final String title = resolveMessage(titleCode, NotificationConstants.SUCCESS_MESSAGE_TITLE_CODE, NotificationConstants.SUCCESS_DEFAULT_TITLE);
-        final String message = resolveMessage(messageCode, NotificationConstants.SUCCESS_DEFAULT_CODE);
+        final String content = resolveMessage(messageCode, NotificationConstants.SUCCESS_DEFAULT_CODE, null, (Object[]) null);
         final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.INFO);
 
-        return new Notification(title, message, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
+        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(final Errors errors, final Class<?> validationFailedOwningType) {
