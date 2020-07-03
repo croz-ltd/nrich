@@ -1,11 +1,13 @@
 package net.croz.nrich.notification.starter.configuration;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultNotificationResolverService;
+import net.croz.nrich.notification.service.MessageSourceNotificationMessageResolverService;
 import net.croz.nrich.notification.service.WebMvcNotificationResponseService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -30,8 +32,14 @@ public class NrichNotificationAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public NotificationResolverService notificationResolverService(final MessageSource messageSource, final ConstraintConversionService constraintConversionService) {
-        return new DefaultNotificationResolverService(messageSource, constraintConversionService);
+    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+        return new MessageSourceNotificationMessageResolverService(messageSource);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+        return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

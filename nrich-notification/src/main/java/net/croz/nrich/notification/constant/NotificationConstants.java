@@ -8,6 +8,8 @@ public final class NotificationConstants {
 
     public static final String CONSTRAINT_FULL_MESSAGE_FORMAT = "%s.%s.%s.%s";
 
+    public static final String FIELD_ERROR_FORMAT = "%s: %s";
+
     public static final String INVALID_SUFFIX = "invalid";
 
     public static final String FIELD_LABEL_SUFFIX = "label";
