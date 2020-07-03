@@ -90,7 +90,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("Name really cannot be null");
+        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
 
@@ -116,7 +116,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("Name really cannot be null");
+        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
 
@@ -188,7 +188,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("Name really cannot be null");
+        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
 

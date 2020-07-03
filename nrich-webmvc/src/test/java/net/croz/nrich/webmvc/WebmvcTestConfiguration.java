@@ -3,11 +3,13 @@ package net.croz.nrich.webmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.logging.service.Slf4jLoggingService;
+import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultNotificationResolverService;
+import net.croz.nrich.notification.service.MessageSourceNotificationMessageResolverService;
 import net.croz.nrich.notification.service.WebMvcNotificationResponseService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
@@ -67,8 +69,13 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationResolverService notificationResolverService(final MessageSource messageSource, final ConstraintConversionService constraintConversionService) {
-        return new DefaultNotificationResolverService(messageSource, constraintConversionService);
+    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+        return new MessageSourceNotificationMessageResolverService(messageSource);
+    }
+
+    @Bean
+    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+        return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 
     @Bean
