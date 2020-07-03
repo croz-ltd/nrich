@@ -11,6 +11,7 @@ import net.croz.nrich.notification.constant.NotificationConstants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -96,14 +97,11 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(final Errors errors, final Class<?> validationFailedOwningType) {
-        final String prefix = validationFailedOwningType == null ? null : validationFailedOwningType.getName();
-
         final Map<String, List<String>> resultMap = new LinkedHashMap<>();
 
         for (final ObjectError objectError : errors.getAllErrors()) {
             final String constraintFieldName = constraintFieldNameOrDefault(objectError, ValidationError.CONTAINING_OBJECT_NAME);
-            final List<String> messageCodeList = resolveMessageCodeListForObjectError(prefix, objectError);
-            final String message = resolveMessage(messageCodeList, objectError.getArguments(), objectError.getDefaultMessage());
+            final String message = resolveMessageForObjectError(validationFailedOwningType, objectError);
 
             if (!resultMap.containsKey(constraintFieldName)) {
                 resultMap.put(constraintFieldName, new ArrayList<>());
@@ -117,40 +115,48 @@ public class DefaultNotificationResolverService implements NotificationResolverS
                 .collect(Collectors.toList());
     }
 
-    private String resolveMessage(final List<String> messageCodeList, final Object[] argumentList, final String defaultMessage) {
-        final DefaultMessageSourceResolvable messageCodeResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentsWithoutMessageCodeResolvable(argumentList), defaultMessage);
-
-        return messageSource.getMessage(messageCodeResolvable, LocaleContextHolder.getLocale());
-    }
-
-    private List<String> resolveMessageCodeListForObjectError(final String prefix, final ObjectError objectError) {
-        final String[] defaultCodeList = objectError.getCodes() == null ? new String[0] : objectError.getCodes();
+    private String resolveMessageForObjectError(final Class<?> validationFailedOwningType, final ObjectError objectError) {
+        final String constraintName = objectError.getCode();
         final String fieldName = constraintFieldNameOrDefault(objectError, null);
-        final String prefixWithFieldName = fieldName == null ? prefix : String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, prefix, fieldName);
+        final String name = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getName());
+        final String shortName = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
 
-        final List<String> messageCodeList = new ArrayList<>(Arrays.asList(defaultCodeList));
+        final List<String> messageCodeList = new ArrayList<>();
 
-        // reverse codes so most frequently used start first
-        Collections.reverse(messageCodeList);
+        messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, constraintName, NotificationConstants.INVALID_SUFFIX));
 
-        final List<String> messageCodeWithPrefixList = messageCodeList.stream().map(value -> String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, prefixWithFieldName, value)).collect(Collectors.toList());
-
-        messageCodeList.addAll(0, messageCodeWithPrefixList);
-
-        // add last message code that is usually constraint name
-        if (defaultCodeList.length > 0) {
-            if (fieldName != null) {
-                messageCodeList.add(messageCodeWithPrefixList.size(), String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, fieldName, defaultCodeList[defaultCodeList.length - 1]));
-            }
-
-            messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, defaultCodeList[defaultCodeList.length - 1], NotificationConstants.INVALID_SUFFIX));
+        if (fieldName == null) {
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, constraintName, NotificationConstants.INVALID_SUFFIX));
+        }
+        else {
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, name, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, shortName, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
         }
 
-        return messageCodeList;
+        if (objectError.getCodes() != null) {
+            messageCodeList.addAll(Arrays.asList(objectError.getCodes()));
+        }
+
+        String message = resolveMessage(messageCodeList, argumentsWithoutMessageCodeResolvable(objectError.getArguments()), objectError.getDefaultMessage());
+
+        if (fieldName != null) {
+            messageCodeList.clear();
+
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+
+            final String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
+
+            message = fieldNameMessage + ": " + message;
+        }
+
+        return message;
     }
 
     private Object[] argumentsWithoutMessageCodeResolvable(final Object[] arguments) {
-        if (arguments == null) {
+        if (arguments == null || arguments.length == 0) {
             return null;
         }
 
@@ -187,6 +193,12 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String messageCode = String.format(NotificationConstants.ADDITIONAL_EXCEPTION_DATA_MESSAGE_CODE_FORMAT, additionalDataEntry.getKey());
 
         return resolveMessage(messageCode, NotificationConstants.UNDEFINED_MESSAGE_VALUE, additionalDataEntry.getValue());
+    }
+
+    private String resolveMessage(final List<String> messageCodeList, final Object[] argumentList, final String defaultMessage) {
+        final DefaultMessageSourceResolvable messageCodeResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentsWithoutMessageCodeResolvable(argumentList), defaultMessage);
+
+        return messageSource.getMessage(messageCodeResolvable, LocaleContextHolder.getLocale());
     }
 
     private String resolveMessage(final String messageCode, final String defaultMessage, final Object... arguments) {
