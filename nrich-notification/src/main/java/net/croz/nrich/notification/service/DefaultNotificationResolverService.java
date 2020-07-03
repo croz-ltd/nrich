@@ -138,19 +138,30 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         messageCodeList.addAll(0, messageCodeWithPrefixList);
 
         // add last message code that is usually constraint name
-        if (fieldName != null && defaultCodeList.length > 0) {
-            messageCodeList.add(messageCodeWithPrefixList.size(), String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, fieldName, defaultCodeList[defaultCodeList.length - 1]));
+        if (defaultCodeList.length > 0) {
+            if (fieldName != null) {
+                messageCodeList.add(messageCodeWithPrefixList.size(), String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, fieldName, defaultCodeList[defaultCodeList.length - 1]));
+            }
+
+            messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, defaultCodeList[defaultCodeList.length - 1], NotificationConstants.INVALID_SUFFIX));
         }
 
         return messageCodeList;
     }
 
     private Object[] argumentsWithoutMessageCodeResolvable(final Object[] arguments) {
-        if (arguments == null || !(arguments[0] instanceof DefaultMessageSourceResolvable)) {
-            return arguments;
+        if (arguments == null) {
+            return null;
         }
 
-        return Arrays.copyOfRange(arguments, 1, arguments.length);
+        Object[] filteredArguments = arguments;
+        if ((arguments[0] instanceof DefaultMessageSourceResolvable)) {
+            filteredArguments = Arrays.copyOfRange(arguments, 1, arguments.length);
+        }
+
+        return Arrays.stream(filteredArguments)
+                .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
+                .toArray();
     }
 
     private String constraintFieldNameOrDefault(final ObjectError objectError, final String defaultValue) {
@@ -186,5 +197,9 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(new String[] { messageCode, defaultMessageCode }, arguments, defaultMessage);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
+    }
+
+    private String convertToString(final Object[] value) {
+        return Arrays.toString(value).replace('[', ' ').replace(']', ' ').trim();
     }
 }

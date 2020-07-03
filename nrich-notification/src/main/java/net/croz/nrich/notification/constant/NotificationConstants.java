@@ -4,6 +4,8 @@ public final class NotificationConstants {
 
     public static final String PREFIX_MESSAGE_FORMAT = "%s.%s";
 
+    public static final String INVALID_SUFFIX = "invalid";
+
     public static final String MESSAGE_TITLE_SUFFIX = "title";
 
     public static final String MESSAGE_SUFFIX = "message";
