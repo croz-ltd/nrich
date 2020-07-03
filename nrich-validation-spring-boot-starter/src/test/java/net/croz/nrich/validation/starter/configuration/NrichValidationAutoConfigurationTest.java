@@ -18,6 +18,7 @@ public class NrichValidationAutoConfigurationTest {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(ValidFileValidatorProperties.class);
             assertThat(context).getBean(ValidFileValidatorProperties.class).isInstanceOf(ValidFileValidatorProperties.class);
+            assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class);
         });
     }
 
@@ -37,6 +38,13 @@ public class NrichValidationAutoConfigurationTest {
             assertThat(fileValidationProperties.getAllowedExtensionList()).isEqualTo(Arrays.asList("txt", "pdf"));
             assertThat(fileValidationProperties.getAllowedContentTypeList()).isEqualTo(Arrays.asList("text/plain", "application/pdf"));
             assertThat(fileValidationProperties.getAllowedFileNameRegex()).isEqualTo("(?U)[\\w-.]+");
+        });
+    }
+
+    @Test
+    void shouldNotRegisterValidationMessagesWhenDisabledViaProperty() {
+        contextRunner.withPropertyValues("nrich.validation.register-messages=false").run(context -> {
+           assertThat(context).doesNotHaveBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class);
         });
     }
 }
