@@ -116,13 +116,13 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             final Class<?> attributeType = attribute.getJavaType();
 
             final boolean isIdAttribute = attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getCompositeIdentityPropertyNameList().contains(attributeName);
-            final boolean isOneToOne = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType());
-            final Class<?> oneToOneReferencedClass = isOneToOne ? resolveOneToOneClass(attribute) : null;
+            final boolean isSingularAssociation = Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType()) || Attribute.PersistentAttributeType.MANY_TO_ONE.equals(attribute.getPersistentAttributeType());
+            final Class<?> singularAssociationReferencedClass = isSingularAssociation ? resolveSingularAssociationReferencedClass(attribute) : null;
 
             final boolean isReadOnly = readOnlyPropertyList.contains(attributeName) || readOnlyOverridePropertyList.contains(attributeName);
             final boolean isSortable = !nonSortablePropertyList.contains(attributeName);
 
-            final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isOneToOne, oneToOneReferencedClass, isReadOnly, isSortable);
+            final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation, singularAssociationReferencedClass, isReadOnly, isSortable);
 
             registryPropertyConfigurationList.add(registryPropertyConfiguration);
 
@@ -144,7 +144,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .collect(Collectors.toList());
     }
 
-    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(final String entityTypePrefix, final Class<?> attributeType, final String attributeName, final boolean isIdAttribute, final boolean isOneToOne, final Class<?> oneToOneReferencedClass, final boolean isReadOnly, final boolean isSortable) {
+    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(final String entityTypePrefix, final Class<?> attributeType, final String attributeName, final boolean isIdAttribute, final boolean isSingularAssociation, final Class<?> singularAssociationReferencedClass, final boolean isReadOnly, final boolean isSortable) {
         final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
         final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
@@ -156,8 +156,8 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .originalType(attributeType.getName())
                 .javascriptType(javascriptType)
                 .isDecimal(isDecimal)
-                .isOneToOne(isOneToOne)
-                .oneToOneReferencedClass(Optional.ofNullable(oneToOneReferencedClass).map(Class::getName).orElse(null))
+                .isSingularAssociation(isSingularAssociation)
+                .singularAssociationReferencedClass(Optional.ofNullable(singularAssociationReferencedClass).map(Class::getName).orElse(null))
                 .isId(isIdAttribute)
                 .formLabel(formLabel)
                 .columnHeader(columnHeader)
@@ -166,7 +166,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .build();
     }
 
-    private Class<?> resolveOneToOneClass(final Attribute<?, ?> attribute) {
+    private Class<?> resolveSingularAssociationReferencedClass(final Attribute<?, ?> attribute) {
         return ((ManagedType<?>) ((SingularAttribute<?, ?>) attribute).getType()).getJavaType();
     }
 

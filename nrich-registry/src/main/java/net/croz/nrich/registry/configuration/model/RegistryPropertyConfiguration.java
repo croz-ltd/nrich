@@ -17,9 +17,9 @@ public class RegistryPropertyConfiguration {
 
     private final boolean isDecimal;
 
-    private final boolean isOneToOne;
+    private final boolean isSingularAssociation;
 
-    private final String oneToOneReferencedClass;
+    private final String singularAssociationReferencedClass;
 
     private final String formLabel;
 

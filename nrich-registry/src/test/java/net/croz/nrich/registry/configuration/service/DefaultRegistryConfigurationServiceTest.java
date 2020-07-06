@@ -72,7 +72,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(nameConfiguration.getOriginalType()).isEqualTo(String.class.getName());
         assertThat(nameConfiguration.isId()).isFalse();
         assertThat(nameConfiguration.isDecimal()).isFalse();
-        assertThat(nameConfiguration.isOneToOne()).isFalse();
+        assertThat(nameConfiguration.isSingularAssociation()).isFalse();
         assertThat(nameConfiguration.getFormLabel()).isEqualTo("Name of property");
         assertThat(nameConfiguration.getColumnHeader()).isEqualTo("Header of property");
         assertThat(nameConfiguration.isEditable()).isTrue();
@@ -92,7 +92,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(nonEditablePropertyConfiguration.getOriginalType()).isEqualTo(String.class.getName());
         assertThat(nonEditablePropertyConfiguration.isId()).isFalse();
         assertThat(nameConfiguration.isDecimal()).isFalse();
-        assertThat(nameConfiguration.isOneToOne()).isFalse();
+        assertThat(nameConfiguration.isSingularAssociation()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isEditable()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
 
@@ -124,7 +124,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntity");
+        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
 
         // and when
         final RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(1);
@@ -134,11 +134,18 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(numberRegistryConfiguration.getJavascriptType()).isEqualTo(JavascriptType.NUMBER);
 
         // and when
-        final RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(2);
+        final RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(2);
 
         // then
-        assertThat(oneToOnePropertyConfiguration.isOneToOne()).isTrue();
-        assertThat(oneToOnePropertyConfiguration.getOneToOneReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
+        assertThat(manyToOnePropertyConfiguration.isSingularAssociation()).isTrue();
+        assertThat(manyToOnePropertyConfiguration.getSingularAssociationReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
+
+        // and when
+        final RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(3);
+
+        // then
+        assertThat(oneToOnePropertyConfiguration.isSingularAssociation()).isTrue();
+        assertThat(oneToOnePropertyConfiguration.getSingularAssociationReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
     }
 
     @Test
