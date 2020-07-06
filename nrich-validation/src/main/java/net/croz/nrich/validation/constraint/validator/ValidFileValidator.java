@@ -1,6 +1,5 @@
 package net.croz.nrich.validation.constraint.validator;
 
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.ValidFile;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +10,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public class ValidFileValidator implements ConstraintValidator<ValidFile, Object> {
 
     private String[] allowedContentTypeList;
