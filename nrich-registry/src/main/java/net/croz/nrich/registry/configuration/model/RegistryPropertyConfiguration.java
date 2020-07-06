@@ -29,4 +29,6 @@ public class RegistryPropertyConfiguration {
 
     private final boolean sortable;
 
+    private final boolean searchable;
+
 }

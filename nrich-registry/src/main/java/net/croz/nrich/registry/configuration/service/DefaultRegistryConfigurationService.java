@@ -104,6 +104,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         final List<String> ignoredPropertyList = Optional.ofNullable(registryOverrideConfiguration.getIgnoredPropertyList()).orElse(Collections.emptyList());
         final List<String> readOnlyOverridePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonEditablePropertyList()).orElse(Collections.emptyList());
         final List<String> nonSortablePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonSortablePropertyList()).orElse(Collections.emptyList());
+        final List<String> nonSearchablePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonSearchablePropertyList()).orElse(Collections.emptyList());
 
         final List<RegistryPropertyConfiguration> registryPropertyConfigurationList = new ArrayList<>();
 
@@ -121,8 +122,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
             final boolean isReadOnly = readOnlyPropertyList.contains(attributeName) || readOnlyOverridePropertyList.contains(attributeName);
             final boolean isSortable = !nonSortablePropertyList.contains(attributeName);
+            final boolean isSearchable = !nonSearchablePropertyList.contains(attributeName);
 
-            final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation, singularAssociationReferencedClass, isReadOnly, isSortable);
+            final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation, singularAssociationReferencedClass, isReadOnly, isSortable, isSearchable);
 
             registryPropertyConfigurationList.add(registryPropertyConfiguration);
 
@@ -139,12 +141,12 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         historyPropertyList.addAll(registryHistoryConfiguration.getRevisionAdditionalPropertyList());
 
         return historyPropertyList.stream()
-                .map(propertyWithType -> resolveRegistryPropertyConfiguration(RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false, null, true, true))
+                .map(propertyWithType -> resolveRegistryPropertyConfiguration(RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false, null, true, true, false))
                 .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.getPropertyDisplayList()))
                 .collect(Collectors.toList());
     }
 
-    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(final String entityTypePrefix, final Class<?> attributeType, final String attributeName, final boolean isIdAttribute, final boolean isSingularAssociation, final Class<?> singularAssociationReferencedClass, final boolean isReadOnly, final boolean isSortable) {
+    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(final String entityTypePrefix, final Class<?> attributeType, final String attributeName, final boolean isIdAttribute, final boolean isSingularAssociation, final Class<?> singularAssociationReferencedClass, final boolean isReadOnly, final boolean isSortable, final boolean isSearchable) {
         final JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
         final boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
@@ -162,6 +164,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .formLabel(formLabel)
                 .columnHeader(columnHeader)
                 .editable(!isReadOnly)
+                .searchable(isSearchable)
                 .sortable(isSortable)
                 .build();
     }

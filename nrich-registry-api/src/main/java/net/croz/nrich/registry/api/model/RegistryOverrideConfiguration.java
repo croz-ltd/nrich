@@ -30,6 +30,8 @@ public class RegistryOverrideConfiguration {
 
     private List<String> nonSortablePropertyList;
 
+    private List<String> nonSearchablePropertyList;
+
     public static RegistryOverrideConfiguration defaultConfiguration() {
         return RegistryOverrideConfiguration.builder()
                 .readOnly(false)
@@ -41,6 +43,7 @@ public class RegistryOverrideConfiguration {
                 .propertyDisplayList(Collections.emptyList())
                 .nonEditablePropertyList(Collections.emptyList())
                 .nonSortablePropertyList(Collections.emptyList())
+                .nonSearchablePropertyList(Collections.emptyList())
                 .build();
     }
 }
