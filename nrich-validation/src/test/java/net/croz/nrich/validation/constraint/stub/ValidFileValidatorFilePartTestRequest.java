@@ -9,7 +9,7 @@ import org.springframework.http.codec.multipart.FilePart;
 @Getter
 public class ValidFileValidatorFilePartTestRequest {
 
-    @ValidFile
+    @ValidFile(allowedContentTypeList = "text/plain", allowedExtensionList = "txt", allowedFileNameRegex = "(?U)[\\w-.]+")
     private final FilePart file;
 
 }

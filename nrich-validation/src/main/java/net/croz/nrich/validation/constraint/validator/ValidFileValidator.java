@@ -7,17 +7,29 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class ValidFileValidator implements ConstraintValidator<ValidFile, Object> {
 
-    private final ValidFileValidatorProperties validFileValidatorProperties;
+    private String[] allowedContentTypeList;
+
+    private String[] allowedExtensionList;
+
+    private String allowedFileNameRegex;
+
+    @Override
+    public void initialize(ValidFile constraintAnnotation) {
+        this.allowedContentTypeList = constraintAnnotation.allowedContentTypeList();
+        this.allowedExtensionList = constraintAnnotation.allowedExtensionList();
+        this.allowedFileNameRegex = constraintAnnotation.allowedFileNameRegex();
+    }
 
     @Override
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
-        if (Boolean.FALSE.equals(validFileValidatorProperties.getValidationEnabled()) || value == null) {
+        if (value == null) {
             return true;
         }
 
@@ -36,13 +48,13 @@ public class ValidFileValidator implements ConstraintValidator<ValidFile, Object
         }
 
         boolean valid = true;
-        if (fileContentType != null && validFileValidatorProperties.getAllowedContentTypeList() != null) {
-            valid = validFileValidatorProperties.getAllowedContentTypeList().contains(fileContentType);
+        if (fileContentType != null && allowedContentTypeList.length > 0) {
+            valid = Arrays.asList(allowedContentTypeList).contains(fileContentType);
         }
-        if (validFileValidatorProperties.getAllowedFileNameRegex() != null) {
-            valid &= fileName.matches(validFileValidatorProperties.getAllowedFileNameRegex());
+        if (!allowedFileNameRegex.isEmpty()) {
+            valid &= fileName.matches(allowedFileNameRegex);
         }
-        if (validFileValidatorProperties.getAllowedExtensionList() != null) {
+        if (allowedExtensionList.length > 0) {
             final String[] fileNameList = fileName.split("\\.");
 
             final String extension;
@@ -54,7 +66,7 @@ public class ValidFileValidator implements ConstraintValidator<ValidFile, Object
             }
 
             if (extension != null) {
-                valid &= validFileValidatorProperties.getAllowedExtensionList().stream().anyMatch(extension::equalsIgnoreCase);
+                valid &= Arrays.stream(allowedExtensionList).anyMatch(extension::equalsIgnoreCase);
             }
         }
 

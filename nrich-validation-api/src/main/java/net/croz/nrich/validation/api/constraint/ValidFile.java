@@ -30,6 +30,12 @@ public @interface ValidFile {
 
     Class<? extends Payload>[] payload() default { };
 
+    String[] allowedContentTypeList() default { };
+
+    String[] allowedExtensionList() default { };
+
+    String allowedFileNameRegex() default "";
+
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented
