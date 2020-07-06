@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
 import java.util.Arrays;
 import java.util.Collections;
@@ -432,6 +433,27 @@ public class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldConvertJoinFetchesToRegularJoinsWhenConvertingToCountQuery() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+                .build();
+
+        // when
+        final CriteriaQuery<TestEntity> query = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+
+        // and when
+        final CriteriaQuery<Long> countQuery = jpaQueryBuilder.convertToCountQuery(query);
+
+        // then
+        assertThat(entityManager.createQuery(countQuery).getSingleResult()).isEqualTo(1L);
     }
 
     @Test
