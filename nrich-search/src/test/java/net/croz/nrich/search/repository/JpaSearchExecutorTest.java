@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.JoinType;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -169,13 +168,29 @@ public class JpaSearchExecutorTest {
 
         final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
-        final SearchJoin<TestEntitySearchRequest> collectionJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("collectionEntityList").path("collectionEntityList").joinType(JoinType.LEFT).build();
+        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+                .distinct(true)
+                .joinList(Collections.singletonList(SearchJoin.leftJoin("collectionEntityList")))
+                .build();
+
+        // when
+        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+
+        // then
+        assertThat(result).isEqualTo(5L);
+    }
+
+    @Test
+    void shouldCountDistinctEntitiesWithJoinFetch() {
+        // given
+        generateListForSearch(entityManager, 2);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
                 .distinct(true)
-                .joinList(Collections.singletonList(collectionJoin))
+                .joinList(Collections.singletonList(SearchJoin.innerJoinFetch("collectionEntityList")))
                 .build();
-
         // when
         final long result = testEntitySearchRepository.count(request, searchConfiguration);
 

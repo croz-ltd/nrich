@@ -22,11 +22,21 @@ public class SearchJoin<R> {
 
     private Predicate<R> condition;
 
+    private boolean fetch;
+
     public static <R> SearchJoin<R> innerJoin(final String path) {
-        return new SearchJoin<>(path, path, JoinType.INNER, null);
+        return new SearchJoin<>(path, path, JoinType.INNER, null, false);
     }
 
     public static <R> SearchJoin<R> leftJoin(final String path) {
-        return new SearchJoin<>(path, path, JoinType.LEFT, null);
+        return new SearchJoin<>(path, path, JoinType.LEFT, null, false);
+    }
+
+    public static <R> SearchJoin<R> innerJoinFetch(final String path) {
+        return new SearchJoin<>(path, path, JoinType.INNER, null, true);
+    }
+
+    public static <R> SearchJoin<R> leftJoinFetch(final String path) {
+        return new SearchJoin<>(path, path, JoinType.LEFT, null, true);
     }
 }

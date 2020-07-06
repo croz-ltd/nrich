@@ -161,7 +161,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
         final List<SearchJoin<Map<String, Object>>> searchJoinList = managedType.getSingularAttributes().stream()
                 .filter(Attribute::isAssociation)
-                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.<Map<String, Object>>leftJoin(singularAttribute.getName()) : SearchJoin.<Map<String, Object>>innerJoin(singularAttribute.getName()))
+                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.<Map<String, Object>>leftJoinFetch(singularAttribute.getName()) : SearchJoin.<Map<String, Object>>innerJoinFetch(singularAttribute.getName()))
                 .collect(Collectors.toList());
 
         searchConfiguration.setJoinList(searchJoinList);;

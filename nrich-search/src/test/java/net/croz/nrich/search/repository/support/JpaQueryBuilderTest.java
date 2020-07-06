@@ -417,6 +417,24 @@ public class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldApplyJoinsFetchToQuery() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+                .build();
+
+        // when
+        final List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
     void shouldOverrideOperatorByTypeAndPath() {
         // given
         generateListForSearch(entityManager);

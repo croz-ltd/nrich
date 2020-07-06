@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
-import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
 import net.croz.nrich.search.model.Restriction;
@@ -72,7 +72,7 @@ public class JpaQueryBuilder<T> {
 
         final Root<T> root = query.from(rootEntity);
 
-        applyJoinsToQuery(request, root, searchConfiguration.getJoinList());
+        applyJoinsToQuery(request, root, searchConfiguration.getJoinList(), entityType.isAssignableFrom(resultClass));
 
         List<SearchProjection<R>> searchProjectionList = searchConfiguration.getProjectionList();
         if (!resultClass.equals(entityType) && CollectionUtils.isEmpty(searchProjectionList)) {
@@ -108,6 +108,8 @@ public class JpaQueryBuilder<T> {
         final Root<?> root = query.getRoots().iterator().next();
         final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
+        convertFetchListToJoinList(root);
+
         if (countQuery.isDistinct()) {
             countQuery.select(builder.countDistinct(root));
         }
@@ -124,15 +126,14 @@ public class JpaQueryBuilder<T> {
         return searchConfiguration.getResultClass() == null ? (Class<P>) rootEntity : searchConfiguration.getResultClass();
     }
 
-    private <R> List<Selection<Object>> applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList) {
+    private <R> void applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList, final boolean canUseFetch) {
         if (CollectionUtils.isEmpty(joinList)) {
-            return Collections.emptyList();
+            return;
         }
 
-        return joinList.stream()
+        joinList.stream()
                 .filter(join -> shouldApplyJoin(join, request))
-                .map(searchJoin -> root.join(searchJoin.getPath(), searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType()).alias(searchJoin.getAlias()))
-                .collect(Collectors.toList());
+                .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin, canUseFetch));
     }
 
     private <R> List<Selection<?>> resolveQueryProjectionList(final Root<?> root, final List<SearchProjection<R>> projectionList, final R request) {
@@ -148,6 +149,17 @@ public class JpaQueryBuilder<T> {
 
     private <R> boolean shouldApplyJoin(final SearchJoin<R> join, final R request) {
         return join.getCondition() == null || join.getCondition().test(request);
+    }
+
+    private void applyJoinOrJoinFetch(final Root<?> root, final SearchJoin<?> join, final boolean canUseFetch) {
+        final JoinType joinType = join.getJoinType() == null ? JoinType.INNER : join.getJoinType();
+
+        if (canUseFetch && join.isFetch()) {
+            root.fetch(join.getPath(), joinType);
+        }
+        else {
+            root.join(join.getPath(), joinType).alias(join.getAlias());
+        }
     }
 
     private <R> boolean shouldApplyProjection(final SearchProjection<R> projection, final R request) {
@@ -289,5 +301,12 @@ public class JpaQueryBuilder<T> {
         }
 
         query.where(fullPredicateList.toArray(new Predicate[0]));
+    }
+
+    // fetches are not allowed in count queries
+    private void convertFetchListToJoinList(final Root<?> root) {
+        root.getFetches().forEach(fetch -> root.join(fetch.getAttribute().getName(), fetch.getJoinType()));
+
+        root.getFetches().clear();
     }
 }
