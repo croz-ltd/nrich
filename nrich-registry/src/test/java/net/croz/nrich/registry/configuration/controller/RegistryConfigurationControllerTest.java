@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.configuration.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class RegistryConfigurationControllerTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
         // and when
-        final List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {});
+        final List<RegistryCategoryConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryCategoryConfiguration>>() {});
 
         // then
         assertThat(convertedResponse).isNotNull();

@@ -8,7 +8,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
-public class RegistryGroupDefinition {
+public class RegistryCategoryDefinition {
 
     private final String registryGroupId;
 

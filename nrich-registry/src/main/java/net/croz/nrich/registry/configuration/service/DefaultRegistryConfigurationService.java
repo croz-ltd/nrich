@@ -7,12 +7,12 @@ import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparat
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
-import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
-import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
@@ -39,7 +39,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
     private final List<String> readOnlyPropertyList;
 
-    private final RegistryGroupDefinitionHolder registryGroupDefinitionHolder;
+    private final RegistryCategoryDefinitionHolder registryCategoryDefinitionHolder;
 
     private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
 
@@ -47,26 +47,26 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
     @Cacheable("nrich.registryConfiguration.cache")
     @Override
-    public List<RegistryGroupConfiguration> fetchRegistryGroupConfiguration() {
-        final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
+    public List<RegistryCategoryConfiguration> fetchRegistryCategoryConfigurationList() {
+        final List<RegistryCategoryConfiguration> registryCategoryConfigurationList = new ArrayList<>();
 
         final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList = resolveHistoryPropertyList(registryHistoryConfiguration);
 
-        registryGroupDefinitionHolder.getRegistryGroupDefinitionList().forEach(registryGroupDefinition -> {
+        registryCategoryDefinitionHolder.getRegistryCategoryDefinitionList().forEach(registryGroupDefinition -> {
             final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
             final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
                     .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType))
                     .collect(Collectors.toList());
 
-            final RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList, registryPropertyHistoryConfigurationList);
+            final RegistryCategoryConfiguration registryConfiguration = new RegistryCategoryConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList, registryPropertyHistoryConfigurationList);
 
-            registryGroupConfigurationList.add(registryConfiguration);
+            registryCategoryConfigurationList.add(registryConfiguration);
         });
 
-        registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.getRegistryGroupDisplayOrderList()));
+        registryCategoryConfigurationList.sort(new RegistryGroupConfigurationComparator(registryCategoryDefinitionHolder.getRegistryCategoryDisplayOrderList()));
 
-        return registryGroupConfigurationList;
+        return registryCategoryConfigurationList;
     }
 
     private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {

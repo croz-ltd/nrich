@@ -7,11 +7,11 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
-public class RegistryGroupConfiguration {
+public class RegistryCategoryConfiguration {
 
-    private final String registryGroupId;
+    private final String registryCategoryId;
 
-    private final String registryGroupIdDisplay;
+    private final String registryCategoryIdDisplay;
 
     private final List<RegistryEntityConfiguration> registryEntityConfigurationList;
 

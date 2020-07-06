@@ -1,21 +1,21 @@
 package net.croz.nrich.registry.configuration.comparator;
 
-import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class RegistryGroupConfigurationComparator extends DisplayOrderComparator implements Comparator<RegistryGroupConfiguration> {
+public class RegistryGroupConfigurationComparator extends DisplayOrderComparator implements Comparator<RegistryCategoryConfiguration> {
 
     public RegistryGroupConfigurationComparator(final List<String> propertyDisplayOrderList) {
         super(propertyDisplayOrderList);
     }
 
     @Override
-    public int compare(final RegistryGroupConfiguration firstConfiguration, final RegistryGroupConfiguration secondConfiguration) {
-        final String firstGroupId = firstConfiguration.getRegistryGroupId();
-        final String secondGroupId = secondConfiguration.getRegistryGroupId();
+    public int compare(final RegistryCategoryConfiguration firstConfiguration, final RegistryCategoryConfiguration secondConfiguration) {
+        final String firstGroupId = firstConfiguration.getRegistryCategoryId();
+        final String secondGroupId = secondConfiguration.getRegistryCategoryId();
 
         if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
             return firstGroupId.compareTo(secondGroupId);

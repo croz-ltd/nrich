@@ -8,8 +8,8 @@ import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
-import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
-import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryCategoryDefinition;
+import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.api.model.SearchConfiguration;
@@ -36,12 +36,12 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     private final RegistryConfiguration registryConfiguration;
 
     @Override
-    public RegistryGroupDefinitionHolder resolveRegistryGroupDefinition() {
+    public RegistryCategoryDefinitionHolder resolveRegistryGroupDefinition() {
         final Set<ManagedType<?>> managedTypeList = entityManager.getMetamodel().getManagedTypes();
 
-        final List<RegistryGroupDefinition> registryGroupDefinitionList = new ArrayList<>();
+        final List<RegistryCategoryDefinition> registryCategoryDefinitionList = new ArrayList<>();
 
-        registryConfiguration.getRegistryGroupDefinitionConfigurationList().forEach(registryGroupDefinition -> {
+        registryConfiguration.getRegistryCategoryDefinitionConfigurationList().forEach(registryGroupDefinition -> {
             final List<ManagedType<?>> includedManagedTypeList = managedTypeList.stream()
                     .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
                     .collect(Collectors.toList());
@@ -50,10 +50,10 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 return;
             }
 
-            registryGroupDefinitionList.add(new RegistryGroupDefinition(registryGroupDefinition.getRegistryGroupId(), includedManagedTypeList));
+            registryCategoryDefinitionList.add(new RegistryCategoryDefinition(registryGroupDefinition.getRegistryCategoryId(), includedManagedTypeList));
         });
 
-        return new RegistryGroupDefinitionHolder(registryGroupDefinitionList, registryConfiguration.getRegistryGroupDisplayOrderList());
+        return new RegistryCategoryDefinitionHolder(registryCategoryDefinitionList, registryConfiguration.getRegistryCategoryDisplayOrderList());
     }
 
     @Override
@@ -66,10 +66,10 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
     @Override
     public RegistryDataConfigurationHolder resolveRegistryDataConfiguration() {
-        final RegistryGroupDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
+        final RegistryCategoryDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
 
-        final List<ManagedType<?>> managedTypeList = groupDefinitionHolder.getRegistryGroupDefinitionList().stream()
-                .map(RegistryGroupDefinition::getRegistryEntityList)
+        final List<ManagedType<?>> managedTypeList = groupDefinitionHolder.getRegistryCategoryDefinitionList().stream()
+                .map(RegistryCategoryDefinition::getRegistryEntityList)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 

@@ -3,7 +3,7 @@ package net.croz.nrich.registry.configuration.service;
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
 import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
-import net.croz.nrich.registry.configuration.model.RegistryGroupConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
@@ -25,20 +25,20 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfiguration() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
+        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
 
         // then
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(3);
-        assertThat(result).extracting("registryGroupId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
-        assertThat(result).extracting("registryGroupIdDisplay").containsExactly("Configuration group", "Data group", "HISTORY");
+        assertThat(result).extracting("registryCategoryId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
+        assertThat(result).extracting("registryCategoryIdDisplay").containsExactly("Configuration group", "Data group", "HISTORY");
     }
 
     @Test
     void shouldResolveConfigurationWithOverrideDefined() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
+        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getRegistryId()))
                 .findFirst()
@@ -109,8 +109,8 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndEmbeddedId() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
+        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getRegistryId()))
                 .findFirst()
@@ -151,8 +151,8 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithIdClass() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfiguration();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
+        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
         final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getRegistryId()))
                 .findFirst()

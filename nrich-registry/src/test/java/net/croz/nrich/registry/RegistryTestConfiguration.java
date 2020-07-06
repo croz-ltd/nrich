@@ -4,40 +4,40 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
-import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
-import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
+import net.croz.nrich.registry.api.model.RegistryCategoryDefinitionConfiguration;
 import net.croz.nrich.registry.api.model.RegistryConfiguration;
-import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
-import net.croz.nrich.registry.api.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.model.RegistryOverrideConfigurationHolder;
-import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
+import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
+import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
+import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
+import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
+import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
-import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
-import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
+import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
+import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
+import net.croz.nrich.registry.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
-import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
+import net.croz.nrich.registry.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
-import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
-import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
+import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
+import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -167,24 +167,24 @@ public class RegistryTestConfiguration {
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        final RegistryCategoryDefinitionConfiguration registryDataConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
 
-        registryDataConfigurationGroup.setRegistryGroupId("DATA");
-        registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
-        registryDataConfigurationGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+        registryDataConfigurationCategory.setRegistryCategoryId("DATA");
+        registryDataConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryDataConfigurationCategory.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
-        final RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        final RegistryCategoryDefinitionConfiguration registryConfigurationConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
 
-        registryConfigurationConfigurationGroup.setRegistryGroupId("CONFIGURATION");
-        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
+        registryConfigurationConfigurationCategory.setRegistryCategoryId("CONFIGURATION");
+        registryConfigurationConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
 
-        final RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        final RegistryCategoryDefinitionConfiguration registryHistoryConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
 
-        registryHistoryConfigurationGroup.setRegistryGroupId("HISTORY");
-        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
+        registryHistoryConfigurationCategory.setRegistryCategoryId("HISTORY");
+        registryHistoryConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
 
-        registryConfiguration.setRegistryGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
-        registryConfiguration.setRegistryGroupDefinitionConfigurationList(Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup));
+        registryConfiguration.setRegistryCategoryDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
+        registryConfiguration.setRegistryCategoryDefinitionConfigurationList(Arrays.asList(registryDataConfigurationCategory, registryConfigurationConfigurationCategory, registryHistoryConfigurationCategory));
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 

@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 public class RegistryConfiguration {
 
-    private List<String> registryGroupDisplayOrderList;
+    private List<String> registryCategoryDisplayOrderList;
 
-    private List<RegistryGroupDefinitionConfiguration> registryGroupDefinitionConfigurationList;
+    private List<RegistryCategoryDefinitionConfiguration> registryCategoryDefinitionConfigurationList;
 
     private List<RegistryOverrideConfigurationHolder> registryOverrideConfigurationHolderList;
 
