@@ -14,6 +14,6 @@ public class RegistryOverrideConfigurationHolder {
 
     private final RegistryOverrideConfiguration registryOverrideConfiguration;
 
-    private final SearchConfiguration<?, ?, Map<String, Object>> registryDataOverrideSearchConfiguration;
+    private final SearchConfiguration<Object, Object, Map<String, Object>> registryDataOverrideSearchConfiguration;
 
 }

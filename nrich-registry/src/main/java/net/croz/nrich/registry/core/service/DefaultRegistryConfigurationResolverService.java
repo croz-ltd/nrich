@@ -13,6 +13,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.SearchJoin;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
@@ -145,14 +146,26 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         return excludeDomainPatternList.stream().noneMatch(classFullName::matches);
     }
 
-    @SuppressWarnings("unchecked")
     private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(final ManagedType<?> managedType) {
         final Class<?> type = managedType.getJavaType();
 
-        return (SearchConfiguration<Object, Object, Map<String, Object>>) Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
                 .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getRegistryDataOverrideSearchConfiguration() != null)
                 .map(RegistryOverrideConfigurationHolder::getRegistryDataOverrideSearchConfiguration)
                 .findFirst()
-                .orElse(SearchConfiguration.emptyConfigurationMatchingAny());
+                .orElse(emptySearchConfigurationWithRequiredJoinList(managedType));
+    }
+
+    private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinList(final ManagedType<?> managedType) {
+        final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
+
+        final List<SearchJoin<Map<String, Object>>> searchJoinList = managedType.getSingularAttributes().stream()
+                .filter(Attribute::isAssociation)
+                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.<Map<String, Object>>leftJoin(singularAttribute.getName()) : SearchJoin.<Map<String, Object>>innerJoin(singularAttribute.getName()))
+                .collect(Collectors.toList());
+
+        searchConfiguration.setJoinList(searchJoinList);;
+
+        return searchConfiguration;
     }
 }
