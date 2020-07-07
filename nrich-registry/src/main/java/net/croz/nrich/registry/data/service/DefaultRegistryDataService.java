@@ -204,7 +204,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
             wherePart = idMap.entrySet().stream()
                     .map(entry -> toParameterExpression(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.joining(" and "));
+                    .collect(Collectors.joining(RegistryDataConstants.FIND_QUERY_SEPARATOR));
 
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
         }
