@@ -18,6 +18,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
@@ -54,6 +55,13 @@ public final class RegistryDataGeneratingUtil {
         return registryTestEntity;
     }
 
+    public static RegistryTestEntityWithoutAssociation createRegistryTestEntityWithoutAssociation(final EntityManager entityManager) {
+        final RegistryTestEntityWithoutAssociation registryTestEntity = new RegistryTestEntityWithoutAssociation(null, "name 1", 50);
+
+        entityManager.persist(registryTestEntity);
+
+        return registryTestEntity;
+    }
 
     public static List<RegistryTestEntity> createRegistryTestEntityList(final EntityManager entityManager) {
         final List<RegistryTestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntity(null, "name " + value, 50 + value, null)).collect(Collectors.toList());

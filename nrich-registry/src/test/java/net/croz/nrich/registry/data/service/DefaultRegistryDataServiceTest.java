@@ -1,9 +1,9 @@
 package net.croz.nrich.registry.data.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
@@ -11,6 +11,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithEmbeddedId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithOverriddenSearchConfigurationList;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithoutAssociation;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityManager;
@@ -144,6 +146,28 @@ public class DefaultRegistryDataServiceTest {
         // and when
         flushEntityManager(entityManager);
         final RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
+
+        // then
+        assertThat(loaded.getAge()).isEqualTo(51);
+        assertThat(loaded.getName()).isEqualTo("name 2");
+    }
+
+    @Test
+    void shouldUpdateRegistryEntityWithoutAssociations() {
+        // given
+        final RegistryTestEntityWithoutAssociation registryTestEntity = createRegistryTestEntityWithoutAssociation(entityManager);
+
+        final UpdateRegistryServiceRequest request = updateRegistryServiceRequest(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId());
+
+        // when
+        final RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(request);
+
+        // then
+        assertThat(updatedEntity).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        final RegistryTestEntityWithoutAssociation loaded = entityManager.find(RegistryTestEntityWithoutAssociation.class, registryTestEntity.getId());
 
         // then
         assertThat(loaded.getAge()).isEqualTo(51);
