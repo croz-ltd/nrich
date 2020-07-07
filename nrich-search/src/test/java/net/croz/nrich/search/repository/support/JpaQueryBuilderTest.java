@@ -437,7 +437,7 @@ public class JpaQueryBuilderTest {
     }
 
     @Test
-    void shouldConvertJoinFetchesToRegularJoinsWhenConvertingToCountQuery() {
+    void shouldRemoveFetchesWhenConvertingToCountQuery() {
         // given
         generateListForSearch(entityManager);
 

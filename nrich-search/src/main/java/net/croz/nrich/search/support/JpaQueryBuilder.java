@@ -110,7 +110,8 @@ public class JpaQueryBuilder<T> {
         final Root<?> root = query.getRoots().iterator().next();
         final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
-        convertFetchListToJoinList(root);
+        // fetches are not allowed in count query
+        root.getFetches().clear();
 
         if (countQuery.isDistinct()) {
             countQuery.select(builder.countDistinct(root));
@@ -303,13 +304,6 @@ public class JpaQueryBuilder<T> {
         }
 
         query.where(fullPredicateList.toArray(new Predicate[0]));
-    }
-
-    // fetches are not allowed in count queries
-    private void convertFetchListToJoinList(final Root<?> root) {
-        root.getFetches().forEach(fetch -> root.join(fetch.getAttribute().getName(), fetch.getJoinType()));
-
-        root.getFetches().clear();
     }
 
     private <R> boolean joinFetchExists(final List<SearchJoin<R>> joinList) {
