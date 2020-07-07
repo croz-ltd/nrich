@@ -68,11 +68,13 @@ public class JpaQueryBuilder<T> {
 
         final Class<P> resultClass = resolveResultClass(searchConfiguration, rootEntity);
 
+        Assert.isTrue(!joinFetchExists(searchConfiguration.getJoinList()) || entityType.isAssignableFrom(resultClass), "Join Fetch is ony possible when result class is not an projection!");
+
         final CriteriaQuery<P> query = criteriaBuilder.createQuery(resultClass);
 
         final Root<T> root = query.from(rootEntity);
 
-        applyJoinsToQuery(request, root, searchConfiguration.getJoinList(), entityType.isAssignableFrom(resultClass));
+        applyJoinsToQuery(request, root, searchConfiguration.getJoinList());
 
         List<SearchProjection<R>> searchProjectionList = searchConfiguration.getProjectionList();
         if (!resultClass.equals(entityType) && CollectionUtils.isEmpty(searchProjectionList)) {
@@ -126,14 +128,14 @@ public class JpaQueryBuilder<T> {
         return searchConfiguration.getResultClass() == null ? (Class<P>) rootEntity : searchConfiguration.getResultClass();
     }
 
-    private <R> void applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList, final boolean canUseFetch) {
+    private <R> void applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList) {
         if (CollectionUtils.isEmpty(joinList)) {
             return;
         }
 
         joinList.stream()
                 .filter(join -> shouldApplyJoin(join, request))
-                .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin, canUseFetch));
+                .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin));
     }
 
     private <R> List<Selection<?>> resolveQueryProjectionList(final Root<?> root, final List<SearchProjection<R>> projectionList, final R request) {
@@ -151,10 +153,10 @@ public class JpaQueryBuilder<T> {
         return join.getCondition() == null || join.getCondition().test(request);
     }
 
-    private void applyJoinOrJoinFetch(final Root<?> root, final SearchJoin<?> join, final boolean canUseFetch) {
+    private void applyJoinOrJoinFetch(final Root<?> root, final SearchJoin<?> join) {
         final JoinType joinType = join.getJoinType() == null ? JoinType.INNER : join.getJoinType();
 
-        if (canUseFetch && join.isFetch()) {
+        if (join.isFetch()) {
             root.fetch(join.getPath(), joinType);
         }
         else {
@@ -308,5 +310,10 @@ public class JpaQueryBuilder<T> {
         root.getFetches().forEach(fetch -> root.join(fetch.getAttribute().getName(), fetch.getJoinType()));
 
         root.getFetches().clear();
+    }
+
+    private <R> boolean joinFetchExists(final List<SearchJoin<R>> joinList) {
+        return Optional.ofNullable(joinList).orElse(Collections.emptyList()).stream()
+                .anyMatch(SearchJoin::isFetch);
     }
 }

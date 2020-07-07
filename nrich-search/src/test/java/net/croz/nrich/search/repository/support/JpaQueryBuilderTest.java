@@ -38,6 +38,7 @@ import java.util.Map;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @Transactional
 @SpringJUnitConfig(SearchTestConfiguration.class)
@@ -603,6 +604,31 @@ public class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(1);
+    }
+
+
+    @Test
+    void shouldThrowExceptionWhenUsingJoinFetchAndProjection() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
+        final SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
+
+        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+                .resultClass(TestEntityDto.class)
+                .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
+                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+                .build();
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+
+        // when
+        final Throwable thrown = catchThrowable(() -> executeQuery(request, searchConfiguration));
+
+        // then
+        assertThat(thrown).isNotNull();
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
     private <P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration) {
