@@ -43,7 +43,6 @@ public class JpaSearchExecutorTest {
         assertThat(testEntitySearchRepository).isNotNull();
     }
 
-
     @Test
     void shouldFindOne() {
         // given
