@@ -35,15 +35,28 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static RegistryTestEntity createRegistryTestEntity(final EntityManager entityManager) {
-        final RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50);
+        final RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50, null);
 
         entityManager.persist(registryTestEntity);
 
         return registryTestEntity;
     }
 
+    public static RegistryTestEntity createRegistryTestEntityWithParent(final EntityManager entityManager) {
+        final RegistryTestEntity parentEntity = new RegistryTestEntity(null, "parent", 60, null);
+
+        entityManager.persist(parentEntity);
+
+        final RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50, parentEntity);
+
+        entityManager.persist(registryTestEntity);
+
+        return registryTestEntity;
+    }
+
+
     public static List<RegistryTestEntity> createRegistryTestEntityList(final EntityManager entityManager) {
-        final List<RegistryTestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntity(null, "name " + value, 50 + value)).collect(Collectors.toList());
+        final List<RegistryTestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntity(null, "name " + value, 50 + value, null)).collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 

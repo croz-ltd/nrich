@@ -214,7 +214,14 @@ public class DefaultRegistryDataService implements RegistryDataService {
             parameterMap.put(RegistryCoreConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
         }
 
-        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, type.getName(), wherePart);
+        final String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getAssociationList().stream()
+                .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
+
+        final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
+
+        final String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
+
+        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, wherePart);
 
         @SuppressWarnings("unchecked")
         final TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
