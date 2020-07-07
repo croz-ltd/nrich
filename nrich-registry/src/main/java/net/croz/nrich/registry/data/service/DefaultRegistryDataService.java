@@ -4,7 +4,6 @@ import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
@@ -15,7 +14,6 @@ import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.api.util.PageableUtil;
-import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -23,16 +21,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.ManagedType;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,7 +49,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
 
-    public DefaultRegistryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final List<RegistryDataInterceptor> registryDataInterceptorList) {
+    private final RegistryEntityFinderService registryEntityFinderService;
+
+    public DefaultRegistryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final List<RegistryDataInterceptor> registryDataInterceptorList, final RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
@@ -63,6 +59,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         this.registryDataInterceptorList = registryDataInterceptorList;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationHolder);
         this.classNameManagedTypeWrapperMap = initializeManagedTypeMap(registryDataConfigurationHolder);
+        this.registryEntityFinderService = registryEntityFinderService;
     }
 
     @Transactional(readOnly = true)
@@ -107,7 +104,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         final ManagedTypeWrapper wrapper = classNameManagedTypeWrapperMap.get(request.getClassFullName());
 
-        T instance = findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
+        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
 
         if (wrapper.isCompositeIdentity()) {
             entityManager.remove(instance);
@@ -129,7 +126,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
-        final T instance = findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
+        final T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
 
         entityManager.remove(instance);
 
@@ -190,72 +187,5 @@ public class DefaultRegistryDataService implements RegistryDataService {
         }
 
         return BeanUtils.instantiateClass(type);
-    }
-
-    private <T> T findEntityInstance(final Class<T> type, final Object id) {
-        Assert.isTrue(id instanceof Map || id instanceof Number, String.format("Id: %s is of not supported type!", id));
-
-        final String wherePart;
-        final Map<String, Object> parameterMap = new HashMap<>();
-        if (id instanceof Map) {
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
-
-            wherePart = idMap.entrySet().stream()
-                    .map(entry -> toParameterExpression(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.joining(RegistryDataConstants.FIND_QUERY_SEPARATOR));
-
-            idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
-        }
-        else {
-            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryCoreConstants.ID_ATTRIBUTE, RegistryCoreConstants.ID_ATTRIBUTE);
-
-            parameterMap.put(RegistryCoreConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
-        }
-
-        final String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getAssociationList().stream()
-                .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
-
-        final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
-
-        final String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
-
-        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, wherePart);
-
-        @SuppressWarnings("unchecked")
-        final TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
-
-        parameterMap.forEach(query::setParameter);
-
-        return query.getSingleResult();
-    }
-
-    private String toParameterExpression(final String key, final Object value) {
-        final String keyWithId;
-        if (value instanceof Number) {
-            keyWithId = key;
-        }
-        else {
-            keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryCoreConstants.ID_ATTRIBUTE);
-        }
-
-        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
-    }
-
-    private String toParameterVariable(final String key) {
-        final String[] keyList = key.split("\\.");
-
-        return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
-    }
-
-    private Object resolveIdValue(final Object value) {
-        if (value instanceof Number) {
-            return Long.valueOf(value.toString());
-        }
-
-        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryCoreConstants.ID_ATTRIBUTE);
-
-        return idValue == null ? null : Long.valueOf(idValue.toString());
     }
 }
