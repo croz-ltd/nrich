@@ -25,8 +25,9 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static RegistryHistoryTestEntity creteRegistryHistoryTestEntityRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
-        final RegistryHistoryTestEntity parent = new RegistryHistoryTestEntity(null, "parent", null);
-        final RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first", parent);
+        final RegistryHistoryTestEntity parent = new RegistryHistoryTestEntity(null, "parent", null, null);
+        final RegistryHistoryTestEntity related = new RegistryHistoryTestEntity(null, "related", null, null);
+        final RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first", parent, related);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 

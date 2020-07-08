@@ -2,8 +2,8 @@ package net.croz.nrich.registry.configuration.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
-import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
@@ -97,13 +97,13 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
 
         // and when
-        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryTestEntityConfiguration.getRegistryHistoryPropertyConfigurationList();
+        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryEntityConfiguration.getRegistryHistoryPropertyConfigurationList();
 
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
-        assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("id", "timestamp", "revisionProperty");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision property");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision property");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("revisionNumber", "revisionTimestamp", "revisionType", "revisionProperty");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
     }
 
     @Test
