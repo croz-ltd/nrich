@@ -61,8 +61,8 @@ public class DefaultRegistryHistoryServiceTest {
 
         assertThat(firstResult.getRevisionInfo()).isNotNull();
 
-        assertThat(firstResult.getRevisionInfo().getRevisionTypeName()).isEqualTo(RevisionType.ADD.name());
-        assertThat(firstResult.getRevisionInfo().getRevisionDate()).isNotNull();
+        assertThat(firstResult.getRevisionInfo().getRevisionType()).isEqualTo(RevisionType.ADD.name());
+        assertThat(firstResult.getRevisionInfo().getRevisionTimestamp()).isNotNull();
         assertThat(firstResult.getRevisionInfo().getRevisionNumber()).isNotNull();
 
         assertThat(firstResult.getRevisionInfo().getAdditionalRevisionPropertyMap()).isNotNull();
@@ -81,7 +81,7 @@ public class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "parent");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "parent");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent");
     }
 
     @Test

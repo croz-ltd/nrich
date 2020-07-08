@@ -9,6 +9,8 @@ public class PropertyWithType {
 
     private final String name;
 
+    private final String originalName;
+
     private final Class<?> type;
 
 }

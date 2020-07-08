@@ -12,9 +12,9 @@ public class RevisionInfo {
 
     private final Long revisionNumber;
 
-    private final Instant revisionDate;
+    private final Instant revisionTimestamp;
 
-    private final String revisionTypeName;
+    private final String revisionType;
 
     private final Map<String, Object> additionalRevisionPropertyMap;
 

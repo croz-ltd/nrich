@@ -13,6 +13,8 @@ public class RegistryHistoryConfigurationHolder {
 
     private final PropertyWithType revisionTimestampProperty;
 
+    private final PropertyWithType revisionTypeProperty;
+
     private final List<PropertyWithType> revisionAdditionalPropertyList;
 
     private final List<String> propertyDisplayList;

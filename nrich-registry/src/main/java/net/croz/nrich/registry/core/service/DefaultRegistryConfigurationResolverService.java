@@ -23,6 +23,7 @@ import javax.persistence.metamodel.ManagedType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -94,11 +95,11 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 .findFirst()
                 .orElse(null);
 
-        String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME;
+        String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_DEFAULT_NAME;
         Class<?> revisionNumberPropertyType = Integer.class;
 
-        String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME;
-        Class<?> revisionTimestampPropertyType = Long.class;
+        String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_DEFAULT_NAME;
+        Class<?> revisionTimestampPropertyType = Date.class;
 
         final List<PropertyWithType> additionalPropertyList = new ArrayList<>();
         for (final Attribute<?, ?> attribute : Optional.ofNullable(revisionEntityManagedType).map(ManagedType::getAttributes).orElse(Collections.emptySet())) {
@@ -120,14 +121,15 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 revisionTimestampPropertyType = attributeType;
             }
             else {
-                additionalPropertyList.add(new PropertyWithType(attributeName, attributeType));
+                additionalPropertyList.add(new PropertyWithType(attributeName, attributeName, attributeType));
             }
         }
 
-        final PropertyWithType revisionNumberProperty = new PropertyWithType(revisionNumberPropertyName, revisionNumberPropertyType);
-        final PropertyWithType revisionTimestampProperty = new PropertyWithType(revisionTimestampPropertyName, revisionTimestampPropertyType);
+        final PropertyWithType revisionNumberProperty = new PropertyWithType(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, revisionNumberPropertyName, revisionNumberPropertyType);
+        final PropertyWithType revisionTimestampProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, revisionTimestampPropertyName, revisionTimestampPropertyType);
+        final PropertyWithType revisionTypeProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, String.class);
 
-        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, additionalPropertyList, registryConfiguration.getRegistryHistoryDisplayList());
+        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, revisionTypeProperty, additionalPropertyList, registryConfiguration.getRegistryHistoryDisplayList());
     }
 
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
