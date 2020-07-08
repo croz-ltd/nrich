@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.history.testutil;
 
-import net.croz.nrich.registry.history.constants.RegistryHistoryConstants;
+import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
@@ -92,7 +92,7 @@ public final class RegistryHistoryGeneratingUtil {
         final ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
 
         request.setSortPropertyList(Arrays.asList(
-                new SortProperty(RegistryHistoryConstants.REVISION_NUMBER_PROPERTY, SortDirection.DESC), new SortProperty(RegistryHistoryConstants.REVISION_TYPE_PROPERTY, SortDirection.DESC),
+                new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
                 new SortProperty("name", SortDirection.DESC), new SortProperty("revisionProperty", SortDirection.ASC)
         ));
 
@@ -102,7 +102,7 @@ public final class RegistryHistoryGeneratingUtil {
     public static ListRegistryHistoryRequest listRegistryHistoryRequest(final String className, final Object id) {
         final ListRegistryHistoryRequest request = new ListRegistryHistoryRequest();
 
-        request.setSortPropertyList(Collections.singletonList(new SortProperty(RegistryHistoryConstants.REVISION_NUMBER_PROPERTY, SortDirection.ASC)));
+        request.setSortPropertyList(Collections.singletonList(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC)));
 
         request.setRegistryId(className);
         request.setRegistryRecordId(id);
