@@ -95,10 +95,11 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 .findFirst()
                 .orElse(null);
 
-        String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_DEFAULT_NAME;
+        String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_DEFAULT_ORIGINAL_NAME;
         Class<?> revisionNumberPropertyType = Integer.class;
 
-        String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_DEFAULT_NAME;
+        String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_DEFAULT_ORIGINAL_NAME;
+        // actually a long but for easier client handling it can be treated as a date
         Class<?> revisionTimestampPropertyType = Date.class;
 
         final List<PropertyWithType> additionalPropertyList = new ArrayList<>();

@@ -14,9 +14,9 @@ public final class RegistryEnversConstants {
 
     public static final String REVISION_NUMBER_PROPERTY_NAME = "revisionNumber";
 
-    public static final String REVISION_TIMESTAMP_PROPERTY_DEFAULT_NAME = "timestamp";
+    public static final String REVISION_TIMESTAMP_PROPERTY_DEFAULT_ORIGINAL_NAME = "timestamp";
 
-    public static final String REVISION_NUMBER_PROPERTY_DEFAULT_NAME = "id";
+    public static final String REVISION_NUMBER_PROPERTY_DEFAULT_ORIGINAL_NAME = "id";
 
     public static final String REVISION_TYPE_PROPERTY_NAME = "revisionType";
 
