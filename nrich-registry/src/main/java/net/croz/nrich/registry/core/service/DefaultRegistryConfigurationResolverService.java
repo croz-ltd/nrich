@@ -156,10 +156,10 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getRegistryDataOverrideSearchConfiguration() != null)
                 .map(RegistryOverrideConfigurationHolder::getRegistryDataOverrideSearchConfiguration)
                 .findFirst()
-                .orElse(emptySearchConfigurationWithRequiredJoinList(managedType));
+                .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedType));
     }
 
-    private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinList(final ManagedType<?> managedType) {
+    private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinFetchList(final ManagedType<?> managedType) {
         final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         final List<SearchJoin<Map<String, Object>>> searchJoinList = managedType.getSingularAttributes().stream()
