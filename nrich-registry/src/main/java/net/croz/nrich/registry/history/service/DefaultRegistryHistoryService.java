@@ -1,18 +1,18 @@
 package net.croz.nrich.registry.history.service;
 
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
+import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
-import net.croz.nrich.registry.history.constants.RegistryHistoryConstants;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.model.RevisionInfo;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
-import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.api.util.PageableUtil;
+import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
@@ -44,16 +44,16 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
 
-    private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
+    private final RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder;
 
     private final ModelMapper modelMapper;
 
     private final Map<Class<?>, ManagedType<?>> classManagedTypeMap;
 
-    public DefaultRegistryHistoryService(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfiguration, final ModelMapper modelMapper) {
+    public DefaultRegistryHistoryService(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, final ModelMapper modelMapper) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
-        this.registryHistoryConfiguration = registryHistoryConfiguration;
+        this.registryHistoryConfigurationHolder = registryHistoryConfigurationHolder;
         this.modelMapper = modelMapper;
         this.classManagedTypeMap = initializeManagedTypeMap(registryDataConfigurationHolder);
     }
@@ -109,7 +109,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         final List<Object[]> objectResultList = (List<Object[]>) resultList;
 
         return Optional.ofNullable(objectResultList).orElse(Collections.emptyList()).stream()
-                .map(value -> new EntityWithRevision<>(initializeEntityOneToOneAssociations((T) value[0]), convertToRevisionInfo(value[1], (RevisionType) value[2])))
+                .map(value -> new EntityWithRevision<>(initializeEntitySingularAssociations((T) value[0]), convertToRevisionInfo(value[1], (RevisionType) value[2])))
                 .collect(Collectors.toList());
     }
 
@@ -146,16 +146,20 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
     }
 
     private AuditProperty<?> resolveAuditProperty(final String sortProperty) {
-        final AuditProperty<?> auditProperty;
+        final PropertyWithType revisionProperty = findByName(sortProperty);
 
-        if (RegistryHistoryConstants.REVISION_NUMBER_PROPERTY.equals(sortProperty)) {
+        final AuditProperty<?> auditProperty;
+        if (RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME.equals(sortProperty)) {
             auditProperty = AuditEntity.revisionNumber();
         }
-        else if (RegistryHistoryConstants.REVISION_TYPE_PROPERTY.equals(sortProperty)) {
+        else if (RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME.equals(sortProperty)) {
             auditProperty = AuditEntity.revisionType();
         }
-        else if (sortProperty.startsWith(RegistryHistoryConstants.REVISION_PROPERTY_PREFIX)) {
-            auditProperty = AuditEntity.revisionProperty(sortProperty);
+        else if (RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME.equals(sortProperty)) {
+            auditProperty = AuditEntity.revisionProperty(registryHistoryConfigurationHolder.getRevisionTimestampProperty().getOriginalName());
+        }
+        else if (revisionProperty != null) {
+            auditProperty = AuditEntity.revisionProperty(revisionProperty.getOriginalName());
         }
         else {
             auditProperty = AuditEntity.property(sortProperty);
@@ -177,44 +181,48 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
     private RevisionInfo convertToRevisionInfo(final Object revisionEntity, final RevisionType revisionType) {
         final MapSupportingDirectFieldAccessFallbackBeanWrapper directFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(revisionEntity);
 
-        final Object revisionNumber = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfiguration.getRevisionNumberProperty().getName());
+        final Object revisionNumber = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfigurationHolder.getRevisionNumberProperty().getOriginalName());
 
-        final Object revisionDate = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfiguration.getRevisionTimestampProperty().getName());
+        final Object revisionDate = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfigurationHolder.getRevisionTimestampProperty().getOriginalName());
 
         Assert.isTrue(revisionNumber != null && revisionDate != null, "Revision number or revision date are empty!");
 
         final Instant revisionDateAsInstant = revisionDate instanceof Long ? Instant.ofEpochMilli((long) revisionDate) : ((Date) revisionDate).toInstant();
 
-        final Map<String, Object> additionalRevisionPropertyMap = registryHistoryConfiguration.getRevisionAdditionalPropertyList().stream()
-                .collect(Collectors.toMap(PropertyWithType::getName, propertyWithType -> directFieldAccessFallbackBeanWrapper.getPropertyValue(propertyWithType.getName())));
+        final Map<String, Object> additionalRevisionPropertyMap = registryHistoryConfigurationHolder.getRevisionAdditionalPropertyList().stream()
+                .collect(Collectors.toMap(PropertyWithType::getName, propertyWithType -> directFieldAccessFallbackBeanWrapper.getPropertyValue(propertyWithType.getOriginalName())));
 
         return new RevisionInfo(Long.valueOf(revisionNumber.toString()), revisionDateAsInstant, revisionType.name(), additionalRevisionPropertyMap);
     }
 
     // TODO not happy about this solution, think of a better one
-    private <T> T initializeEntityOneToOneAssociations(final T entity) {
+    private <T> T initializeEntitySingularAssociations(final T entity) {
         final ManagedType<?> managedType = classManagedTypeMap.get(entity.getClass());
 
         final MapSupportingDirectFieldAccessFallbackBeanWrapper mapSupportingDirectFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entity);
 
-        managedType.getAttributes().forEach(attribute -> {
+        managedType.getSingularAttributes().stream().filter(Attribute::isAssociation).forEach(attribute -> {
+            final String attributeName = attribute.getName();
+            final Object attributeValue = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attributeName);
 
-            if (Attribute.PersistentAttributeType.ONE_TO_ONE.equals(attribute.getPersistentAttributeType())) {
-                final String attributeName = attribute.getName();
-                final Object attributeValue = mapSupportingDirectFieldAccessFallbackBeanWrapper.getPropertyValue(attributeName);
-
-                if (attributeValue == null) {
-                    return;
-                }
-
-                final Object deProxiedValue = BeanUtils.instantiateClass(attribute.getJavaType());
-
-                modelMapper.map(attributeValue, deProxiedValue);
-
-                mapSupportingDirectFieldAccessFallbackBeanWrapper.setPropertyValue(attributeName, deProxiedValue);
+            if (attributeValue == null) {
+                return;
             }
+
+            final Object deProxiedValue = BeanUtils.instantiateClass(attribute.getJavaType());
+
+            modelMapper.map(attributeValue, deProxiedValue);
+
+            mapSupportingDirectFieldAccessFallbackBeanWrapper.setPropertyValue(attributeName, deProxiedValue);
         });
 
         return entity;
+    }
+
+    private PropertyWithType findByName(final String name) {
+        return registryHistoryConfigurationHolder.getRevisionAdditionalPropertyList().stream()
+                .filter(value -> name.equals(value.getName()))
+                .findFirst()
+                .orElse(null);
     }
 }
