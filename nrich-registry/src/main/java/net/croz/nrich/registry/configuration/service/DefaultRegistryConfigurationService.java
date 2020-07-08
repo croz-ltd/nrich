@@ -6,8 +6,8 @@ import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurati
 import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.model.JavascriptType;
-import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.configuration.model.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
@@ -56,10 +56,10 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
             final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
-                    .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType))
+                    .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
                     .collect(Collectors.toList());
 
-            final RegistryCategoryConfiguration registryConfiguration = new RegistryCategoryConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList, registryPropertyHistoryConfigurationList);
+            final RegistryCategoryConfiguration registryConfiguration = new RegistryCategoryConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList);
 
             registryCategoryConfigurationList.add(registryConfiguration);
         });
@@ -69,7 +69,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         return registryCategoryConfigurationList;
     }
 
-    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType) {
+    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType, final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
         final Class<?> entityType = managedType.getJavaType();
         final RegistryOverrideConfiguration registryOverrideConfiguration = resolveRegistryOverrideConfiguration(entityType, registryOverrideConfigurationMap);
         final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(managedType);
@@ -87,6 +87,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .registryName(entityType.getSimpleName())
                 .registryDisplayName(registryDisplayName)
                 .registryPropertyConfigurationList(registryPropertyConfigurationList)
+                .registryHistoryPropertyConfigurationList(registryPropertyHistoryConfigurationList)
                 .readOnly(registryOverrideConfiguration.isReadOnly())
                 .creatable(registryOverrideConfiguration.isCreatable())
                 .updateable(registryOverrideConfiguration.isUpdateable())
@@ -138,6 +139,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
         historyPropertyList.add(registryHistoryConfiguration.getRevisionNumberProperty());
         historyPropertyList.add(registryHistoryConfiguration.getRevisionTimestampProperty());
+        historyPropertyList.add(registryHistoryConfiguration.getRevisionTypeProperty());
         historyPropertyList.addAll(registryHistoryConfiguration.getRevisionAdditionalPropertyList());
 
         return historyPropertyList.stream()

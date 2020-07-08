@@ -15,6 +15,4 @@ public class RegistryCategoryConfiguration {
 
     private final List<RegistryEntityConfiguration> registryEntityConfigurationList;
 
-    private final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList;
-
 }
