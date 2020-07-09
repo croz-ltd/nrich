@@ -24,7 +24,7 @@ public class RegistryOverrideConfiguration {
 
     private List<String> ignoredPropertyList;
 
-    private List<String> propertyDisplayList;
+    private List<String> propertyDisplayOrderList;
 
     private List<String> nonEditablePropertyList;
 
@@ -40,7 +40,7 @@ public class RegistryOverrideConfiguration {
                 .deletable(true)
                 .isHistoryAvailable(false)
                 .ignoredPropertyList(Collections.emptyList())
-                .propertyDisplayList(Collections.emptyList())
+                .propertyDisplayOrderList(Collections.emptyList())
                 .nonEditablePropertyList(Collections.emptyList())
                 .nonSortablePropertyList(Collections.emptyList())
                 .nonSearchablePropertyList(Collections.emptyList())

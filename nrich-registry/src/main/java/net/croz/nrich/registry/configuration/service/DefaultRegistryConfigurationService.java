@@ -77,9 +77,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         final String registryDisplayName = registryDisplayLabel(entityType);
         final boolean isHistoryAvailable = registryOverrideConfiguration.isHistoryAvailable() || isAudited(entityType);
         final List<RegistryPropertyConfiguration> registryPropertyConfigurationList = resolveRegistryPropertyListForType(managedTypeWrapper, registryOverrideConfiguration);
-        final List<String> registryDisplayList = Optional.ofNullable(registryOverrideConfiguration.getPropertyDisplayList()).orElse(Collections.emptyList());
+        final List<String> registryPropertyDisplayOrderList = Optional.ofNullable(registryOverrideConfiguration.getPropertyDisplayOrderList()).orElse(Collections.emptyList());
 
-        registryPropertyConfigurationList.sort(new RegistryPropertyComparator(registryDisplayList));
+        registryPropertyConfigurationList.sort(new RegistryPropertyComparator(registryPropertyDisplayOrderList));
 
         return RegistryEntityConfiguration.builder()
                 .category(registryGroupId)
