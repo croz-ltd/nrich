@@ -89,9 +89,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         modelMapper.map(request.getEntityData(), instance);
 
-        entityManager.persist(instance);
-
-        return instance;
+        return entityManager.merge(instance);
     }
 
     @Transactional
@@ -113,9 +111,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         modelMapper.map(request.getEntityData(), instance);
 
-        entityManager.persist(instance);
-
-        return instance;
+        return entityManager.merge(instance);
     }
 
     @Transactional
