@@ -1,7 +1,7 @@
 package net.croz.nrich.jackson.starter.configuration;
 
 import com.fasterxml.jackson.databind.Module;
-import net.croz.nrich.jackson.module.ConvertEmptyStringToNullModule;
+import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import net.croz.nrich.jackson.starter.properties.NrichJacksonProperties;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,7 +21,7 @@ public class NrichJacksonAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.jackson.convert-empty-strings-to-null", havingValue = "true", matchIfMissing = true)
     @Bean
     public Module convertEmptyStringsToNullModule() {
-        return ConvertEmptyStringToNullModule.convertEmptyStringToNullModule();
+        return JacksonModuleUtil.convertEmptyStringToNullModule();
     }
 
 }

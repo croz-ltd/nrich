@@ -2,7 +2,7 @@ package net.croz.nrich.jackson.deserializer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.croz.nrich.jackson.module.ConvertEmptyStringToNullModule;
+import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public class ConvertEmptyStringToNullDeserializerTest {
     @BeforeEach
     void setup() {
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(ConvertEmptyStringToNullModule.convertEmptyStringToNullModule());
+        objectMapper.registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
     }
 
     @Test
