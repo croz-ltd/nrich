@@ -29,11 +29,15 @@ public class RegistryEntityConfiguration {
 
     private final boolean isCompositeIdentity;
 
+    private final boolean isEmbeddedIdentity;
+
     private final List<String> compositeIdentityPropertyNameList;
 
     private final boolean isHistoryAvailable;
 
     private final List<RegistryPropertyConfiguration> registryPropertyConfigurationList;
+
+    private final List<RegistryPropertyConfiguration> registryEmbeddedIdPropertyConfigurationList;
 
     private final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList;
 

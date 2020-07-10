@@ -57,6 +57,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isDeletable()).isFalse();
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isFalse();
+        assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isFalse();
         assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).isNullOrEmpty();
         assertThat(registryEntityConfiguration.isHistoryAvailable()).isFalse();
 
@@ -122,9 +123,11 @@ public class DefaultRegistryConfigurationServiceTest {
 
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
+        assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("id");
 
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
+        assertThat(registryEntityConfiguration.getRegistryEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
         // and when
         final RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(1);

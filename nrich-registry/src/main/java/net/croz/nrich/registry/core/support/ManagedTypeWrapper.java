@@ -34,11 +34,14 @@ public final class ManagedTypeWrapper {
 
     private final List<SingularAttribute<?, ?>> associationList;
 
+    private final EmbeddableType<?> embeddableIdType;
+
     public ManagedTypeWrapper(final ManagedType<?> managedType) {
         Assert.isTrue(managedType instanceof IdentifiableType, "Managed type has no id attribute, no operations will be possible!");
 
         identifiableType = (IdentifiableType<?>) managedType;
-        isCompositeIdentity = !identifiableType.hasSingleIdAttribute() || identifiableType.getIdType() instanceof EmbeddableType;
+        embeddableIdType = ((IdentifiableType<?>) managedType).getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) ((IdentifiableType<?>) managedType).getIdType() : null;
+        isCompositeIdentity = !identifiableType.hasSingleIdAttribute() || embeddableIdType != null;
         idAttributeName = identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
         compositeIdentityNameTypeMap = resolveCompositeIdentityNameTypeMap();
         compositeIdentityPropertyNameList = new ArrayList<>(compositeIdentityNameTypeMap.keySet());
@@ -54,7 +57,7 @@ public final class ManagedTypeWrapper {
             propertyNameList = identifiableType.getIdClassAttributes().stream()
                     .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
         }
-        else if (identifiableType.getIdType() instanceof EmbeddableType) {
+        else if (embeddableIdType != null) {
             propertyNameList = Collections.singletonMap(idAttributeName, identifiableType.getIdType().getJavaType());
         }
 
