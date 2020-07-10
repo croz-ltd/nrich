@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.core.support;
 
 import lombok.Getter;
-import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -41,14 +40,14 @@ public final class ManagedTypeWrapper {
         identifiableType = (IdentifiableType<?>) managedType;
         isCompositeIdentity = !identifiableType.hasSingleIdAttribute() || identifiableType.getIdType() instanceof EmbeddableType;
         idAttributeName = identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
-        compositeIdentityNameTypeMap = resolveCompositeIdentityNameTypeMap(idAttributeName);
+        compositeIdentityNameTypeMap = resolveCompositeIdentityNameTypeMap();
         compositeIdentityPropertyNameList = new ArrayList<>(compositeIdentityNameTypeMap.keySet());
         isIdentifierAssigned = resolveIsIdentifierAssigned();
         associationList = managedType.getSingularAttributes().stream()
                 .filter(Attribute::isAssociation).collect(Collectors.toList());
     }
 
-    private Map<String, Class<?>> resolveCompositeIdentityNameTypeMap(final String embeddedPropertyPrefix) {
+    private Map<String, Class<?>> resolveCompositeIdentityNameTypeMap() {
         Map<String, Class<?>> propertyNameList = Collections.emptyMap();
 
         if (!identifiableType.hasSingleIdAttribute()) {
@@ -56,8 +55,7 @@ public final class ManagedTypeWrapper {
                     .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
         }
         else if (identifiableType.getIdType() instanceof EmbeddableType) {
-            propertyNameList = ((EmbeddableType<?>) identifiableType.getIdType()).getAttributes().stream()
-                    .collect(Collectors.toMap(attribute -> String.format(RegistryConfigurationConstants.REGISTRY_PROPERTY_PREFIX_FORMAT, embeddedPropertyPrefix, attribute.getName()), Attribute::getJavaType));
+            propertyNameList = Collections.singletonMap(idAttributeName, identifiableType.getIdType().getJavaType());
         }
 
         return propertyNameList;

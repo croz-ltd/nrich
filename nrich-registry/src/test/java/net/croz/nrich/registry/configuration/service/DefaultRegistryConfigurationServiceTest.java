@@ -122,7 +122,7 @@ public class DefaultRegistryConfigurationServiceTest {
 
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
         assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
-        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("id.firstId", "id.secondId");
+        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("id");
 
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
 
