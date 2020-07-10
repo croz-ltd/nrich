@@ -1,7 +1,6 @@
 package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
@@ -18,6 +17,8 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class EntityManagerRegistryEntityFinderService implements RegistryEntityFinderService {
+
+    private static final String ID_ATTRIBUTE = "id";
 
     private final EntityManager entityManager;
 
@@ -41,9 +42,9 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
         }
         else {
-            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, RegistryCoreConstants.ID_ATTRIBUTE, RegistryCoreConstants.ID_ATTRIBUTE);
+            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, ID_ATTRIBUTE, ID_ATTRIBUTE);
 
-            parameterMap.put(RegistryCoreConstants.ID_ATTRIBUTE, Long.valueOf(id.toString()));
+            parameterMap.put(ID_ATTRIBUTE, Long.valueOf(id.toString()));
         }
 
         final String joinFetchQueryPart = managedTypeWrapper(type).getAssociationList().stream()
@@ -63,13 +64,30 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         return query.getSingleResult();
     }
 
+    @Override
+    public <T> Map<String, Object> resolveIdParameterMap(final Class<T> type, final Object id) {
+        final Map<String, Object> parameterMap = new HashMap<>();
+        if (id instanceof Map) {
+            @SuppressWarnings("unchecked")
+            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
+                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+
+            idMap.forEach((key, value) -> parameterMap.put(key, resolveIdValue(value)));
+        }
+        else {
+            parameterMap.put(ID_ATTRIBUTE, Long.valueOf(id.toString()));
+        }
+
+        return parameterMap;
+    }
+
     private String toParameterExpression(final String key, final Object value) {
         final String keyWithId;
         if (value instanceof Number) {
             keyWithId = key;
         }
         else {
-            keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, RegistryCoreConstants.ID_ATTRIBUTE);
+            keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, ID_ATTRIBUTE);
         }
 
         return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
@@ -86,7 +104,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             return Long.valueOf(value.toString());
         }
 
-        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryCoreConstants.ID_ATTRIBUTE);
+        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(ID_ATTRIBUTE);
 
         return idValue == null ? null : Long.valueOf(idValue.toString());
     }

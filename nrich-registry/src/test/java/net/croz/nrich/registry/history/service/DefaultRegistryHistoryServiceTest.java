@@ -67,7 +67,6 @@ public class DefaultRegistryHistoryServiceTest {
 
         assertThat(firstResult.getRevisionInfo().getAdditionalRevisionPropertyMap()).isNotNull();
         assertThat(firstResult.getRevisionInfo().getAdditionalRevisionPropertyMap().get("revisionProperty")).isEqualTo("revision property value");
-
     }
 
     @Test

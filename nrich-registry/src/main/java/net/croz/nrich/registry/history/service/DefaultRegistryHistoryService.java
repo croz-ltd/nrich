@@ -1,11 +1,11 @@
 package net.croz.nrich.registry.history.service;
 
-import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
+import net.croz.nrich.registry.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.model.RevisionInfo;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
@@ -50,12 +50,15 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private final Map<Class<?>, ManagedType<?>> classManagedTypeMap;
 
-    public DefaultRegistryHistoryService(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, final ModelMapper modelMapper) {
+    private final RegistryEntityFinderService registryEntityFinderService;
+
+    public DefaultRegistryHistoryService(final EntityManager entityManager, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, final ModelMapper modelMapper, final RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.registryHistoryConfigurationHolder = registryHistoryConfigurationHolder;
         this.modelMapper = modelMapper;
         this.classManagedTypeMap = initializeManagedTypeMap(registryDataConfigurationHolder);
+        this.registryEntityFinderService = registryEntityFinderService;
     }
 
     @Transactional(readOnly = true)
@@ -92,7 +95,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         final AuditQuery auditQuery = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(type, false, true);
 
         if (request.getRegistryRecordId() != null) {
-            addIdCondition(auditQuery, request.getRegistryRecordId());
+            addIdCondition(type, auditQuery, request.getRegistryRecordId());
         }
 
         return auditQuery;
@@ -113,19 +116,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
                 .collect(Collectors.toList());
     }
 
-    private void addIdCondition(final AuditQuery auditQuery, final Object id) {
-        Assert.isTrue(id instanceof Map || id instanceof Number, String.format("Id: %s is of not supported type!", id));
-
-        if (id instanceof Map) {
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
-
-            idMap.forEach((key, value) -> auditQuery.add(value instanceof Number ? AuditEntity.property(key).eq(resolveIdValue(value)) : AuditEntity.relatedId(key).eq(resolveIdValue(value))));
-        }
-        else {
-            auditQuery.add(AuditEntity.id().eq(Long.valueOf(id.toString())));
-        }
+    private void addIdCondition(final Class<?> type, final AuditQuery auditQuery, final Object id) {
+        registryEntityFinderService.resolveIdParameterMap(type, id).forEach((key, value) -> auditQuery.add(AuditEntity.property(key).eq(value)));
     }
 
     private void addOrder(final AuditQuery auditQuery, final List<SortProperty> sortPropertyList) {
@@ -166,16 +158,6 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         }
 
         return auditProperty;
-    }
-
-    private Long resolveIdValue(final Object value) {
-        if (value instanceof Number) {
-            return Long.valueOf(value.toString());
-        }
-
-        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(RegistryCoreConstants.ID_ATTRIBUTE);
-
-        return idValue == null ? null : Long.valueOf(idValue.toString());
     }
 
     private RevisionInfo convertToRevisionInfo(final Object revisionEntity, final RevisionType revisionType) {
