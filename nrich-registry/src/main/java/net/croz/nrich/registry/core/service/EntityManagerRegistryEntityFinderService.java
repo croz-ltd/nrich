@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.data.service;
+package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
