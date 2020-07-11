@@ -1,16 +1,19 @@
 package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
-import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -18,95 +21,96 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EntityManagerRegistryEntityFinderService implements RegistryEntityFinderService {
 
-    private static final String ID_ATTRIBUTE = "id";
-
     private final EntityManager entityManager;
+
+    private final ModelMapper modelMapper;
 
     private final Map<Class<?>, ManagedTypeWrapper> managedTypeWrapperMap = new ConcurrentHashMap<>();
 
     @Override
     public <T> T findEntityInstance(final Class<T> type, final Object id) {
-        Assert.isTrue(id instanceof Map || id instanceof Number, String.format("Id: %s is of not supported type!", id));
+        final QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, false);
 
-        final String wherePart;
-        final Map<String, Object> parameterMap = new HashMap<>();
-        if (id instanceof Map) {
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
-
-            wherePart = idMap.entrySet().stream()
-                    .map(entry -> toParameterExpression(entry.getKey(), entry.getValue()))
-                    .collect(Collectors.joining(RegistryDataConstants.FIND_QUERY_SEPARATOR));
-
-            idMap.forEach((key, value) -> parameterMap.put(toParameterVariable(key), resolveIdValue(value)));
-        }
-        else {
-            wherePart = String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, ID_ATTRIBUTE, ID_ATTRIBUTE);
-
-            parameterMap.put(ID_ATTRIBUTE, Long.valueOf(id.toString()));
-        }
-
-        final String joinFetchQueryPart = managedTypeWrapper(type).getSingularAssociationList().stream()
+        final String joinFetchQueryPart = managedTypeWrapperMap.get(type).getSingularAssociationList().stream()
                 .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
 
         final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
 
         final String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
 
-        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, wherePart);
+        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
 
         @SuppressWarnings("unchecked")
         final TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
 
-        parameterMap.forEach(query::setParameter);
+        queryCondition.parameterMap.forEach(query::setParameter);
 
         return query.getSingleResult();
     }
 
     @Override
     public <T> Map<String, Object> resolveIdParameterMap(final Class<T> type, final Object id) {
+        return queryWherePartWithParameterMap(type, id, true).parameterMap;
+    }
+
+    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean rawParameterValue) {
+        final ManagedTypeWrapper managedTypeWrapper = managedTypeWrapper(type);
+
+        final List<String> wherePartList = new ArrayList<>();
         final Map<String, Object> parameterMap = new HashMap<>();
-        if (id instanceof Map) {
+
+        if (managedTypeWrapper.isIdClassIdentifier()) {
+            Assert.isTrue(id instanceof Map, "Id should be instance of Map for @IdClass identifier");
+
             @SuppressWarnings("unchecked")
             final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
                     .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
-            idMap.forEach((key, value) -> parameterMap.put(key, resolveIdValue(value)));
+            final Map<String, Class<?>> idClassPropertyMap = managedTypeWrapper.getIdClassPropertyMap();
+
+            idClassPropertyMap.forEach((key, value) -> {
+                final Object convertedIdValue = modelMapper.map(idMap.get(key), value);
+
+                wherePartList.add(toParameterExpression(key, rawParameterValue));
+
+                parameterMap.put(toParameterVariable(key, rawParameterValue), convertedIdValue);
+            });
         }
         else {
-            parameterMap.put(ID_ATTRIBUTE, Long.valueOf(id.toString()));
+            final Object convertedIdValue;
+            if (managedTypeWrapper.isEmbeddedIdentifier()) {
+                Assert.isTrue(id instanceof Map || managedTypeWrapper.getEmbeddableIdType().getJavaType().equals(id.getClass()), "Id should be instance of Map or EmbeddedId for @EmbeddedId identifier");
+
+                convertedIdValue = modelMapper.map(id, managedTypeWrapper.getEmbeddableIdType().getJavaType());
+            }
+            else {
+                convertedIdValue = modelMapper.map(id, managedTypeWrapper.getIdentifiableType().getIdType().getJavaType());
+            }
+
+            final String idAttributeName = managedTypeWrapper.getIdAttributeName();
+
+            wherePartList.add(toParameterExpression(idAttributeName, rawParameterValue));
+
+            parameterMap.put(toParameterVariable(idAttributeName, rawParameterValue), convertedIdValue);
         }
 
-        return parameterMap;
+        return new QueryCondition(String.join(RegistryDataConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
     }
 
-    private String toParameterExpression(final String key, final Object value) {
-        final String keyWithId;
-        if (value instanceof Number) {
-            keyWithId = key;
-        }
-        else {
-            keyWithId = String.format(RegistryDataConstants.PROPERTY_PREFIX_FORMAT, key, ID_ATTRIBUTE);
-        }
-
-        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, keyWithId, toParameterVariable(key));
+    private String toParameterExpression(final String key, final boolean rawParameterValue) {
+        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, rawParameterValue));
     }
 
-    private String toParameterVariable(final String key) {
+    private String toParameterVariable(final String key, final boolean rawParameterValue) {
+        if (rawParameterValue) {
+            return key;
+        }
+
         final String[] keyList = key.split("\\.");
 
-        return Arrays.stream(keyList).map(StringUtils::capitalize).collect(Collectors.joining());
-    }
-
-    private Object resolveIdValue(final Object value) {
-        if (value instanceof Number) {
-            return Long.valueOf(value.toString());
-        }
-
-        final Object idValue = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value).getPropertyValue(ID_ATTRIBUTE);
-
-        return idValue == null ? null : Long.valueOf(idValue.toString());
+        return Arrays.stream(keyList)
+                .map(StringUtils::capitalize)
+                .collect(Collectors.joining());
     }
 
     private ManagedTypeWrapper managedTypeWrapper(final Class<?> type) {
@@ -115,5 +119,14 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         }
 
         return managedTypeWrapperMap.get(type);
+    }
+
+    @Value
+    private static class QueryCondition {
+
+        String wherePart;
+
+        Map<String, Object> parameterMap;
+
     }
 }

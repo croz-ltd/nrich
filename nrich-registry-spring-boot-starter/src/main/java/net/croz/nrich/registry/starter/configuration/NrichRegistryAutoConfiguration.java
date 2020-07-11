@@ -84,9 +84,9 @@ public class NrichRegistryAutoConfiguration {
         return modelMapper;
     }
 
-    @ConditionalOnMissingBean(name = "registryHistoryModelMapper")
+    @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
-    public ModelMapper registryHistoryModelMapper() {
+    public ModelMapper registryBaseModelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -151,8 +151,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService() {
-        return new EntityManagerRegistryEntityFinderService(entityManager);
+    public RegistryEntityFinderService registryEntityFinderService(final ModelMapper registryBaseModelMapper) {
+        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper);
     }
 
     @Bean
@@ -174,8 +174,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
     @Bean
-    public RegistryHistoryService registryHistoryService(final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryHistoryModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryHistoryModelMapper, registryEntityFinderService);
+    public RegistryHistoryService registryHistoryService(final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryBaseModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
+        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)

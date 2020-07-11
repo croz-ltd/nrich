@@ -117,7 +117,14 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
     }
 
     private void addIdCondition(final Class<?> type, final AuditQuery auditQuery, final Object id) {
-        registryEntityFinderService.resolveIdParameterMap(type, id).forEach((key, value) -> auditQuery.add(AuditEntity.property(key).eq(value)));
+        final Map<String, Object> idParameterMap = registryEntityFinderService.resolveIdParameterMap(type, id);
+
+        if (idParameterMap.size() == 1) {
+            idParameterMap.forEach((key, value) -> auditQuery.add(AuditEntity.id().eq(value)));
+        }
+        else {
+            idParameterMap.forEach((key, value) -> auditQuery.add(AuditEntity.property(key).eq(value)));
+        }
     }
 
     private void addOrder(final AuditQuery auditQuery, final List<SortProperty> sortPropertyList) {

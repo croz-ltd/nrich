@@ -188,7 +188,7 @@ public class RegistryDataControllerTest extends BaseWebTest {
     }
 
     @Test
-    void shouldDeleteRegistryEntityWithCompositeKey() throws Exception {
+    void shouldDeleteRegistryEntityWithEmbeddedId() throws Exception {
         // given
         final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
 

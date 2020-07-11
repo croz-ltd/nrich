@@ -39,11 +39,11 @@ public class RegistryTestEntityWithEmbeddedId {
 
         private Long secondId;
 
-        public Map<String, Long> asMap() {
-            final Map<String, Long> mapKey = new HashMap<>();
+        public Map<String, Object> asMap() {
+            final Map<String, Object> mapKey = new HashMap<>();
 
-            mapKey.put("id.firstId", firstId);
-            mapKey.put("id.secondId", secondId);
+            mapKey.put("firstId", firstId.intValue());
+            mapKey.put("secondId", secondId.intValue());
 
             return mapKey;
         }

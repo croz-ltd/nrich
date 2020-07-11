@@ -18,6 +18,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithDifferentIdName;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
@@ -207,12 +208,21 @@ public final class RegistryDataGeneratingUtil {
         return new RegistryTestEmbeddedUserGroupId(user, group);
     }
 
+    public static RegistryTestEntityWithIdClass createRegistryTestEntityWithIdClass(final EntityManager entityManager) {
+        final RegistryTestEntityWithIdClass registryTestEntityWithIdClass = new RegistryTestEntityWithIdClass(1L, 2L, "value");
+
+        entityManager.persist(registryTestEntityWithIdClass);
+
+        return registryTestEntityWithIdClass;
+    }
+
     public static DeleteRegistryRequest createDeleteEmbeddedUserGroupRequest(final RegistryTestEmbeddedUserGroupId id) {
         final DeleteRegistryRequest request = new DeleteRegistryRequest();
 
         final Map<String, Object> idMap = new HashMap<>();
-        idMap.put("userGroupId.user", id.getUser());
-        idMap.put("userGroupId.group", id.getGroup());
+
+        idMap.put("user", id.getUser());
+        idMap.put("group", id.getGroup());
 
         request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
         request.setId(idMap);
@@ -223,13 +233,23 @@ public final class RegistryDataGeneratingUtil {
     public static UpdateRegistryServiceRequest createUpdateEmbeddedUserGroupRequest(final RegistryTestEmbeddedUserGroupId id, final RegistryTestEmbeddedUserGroupId updateId, final String updateName) {
         final UpdateRegistryServiceRequest request = new UpdateRegistryServiceRequest();
 
-        final Map<String, Object> idMap = new HashMap<>();
-        idMap.put("userGroupId.user", id.getUser());
-        idMap.put("userGroupId.group", id.getGroup());
-
         request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
-        request.setId(idMap);
+        request.setId(id);
         request.setEntityData(new RegistryTestEmbeddedUserGroup(updateId, updateName));
+
+        return request;
+    }
+
+    public static DeleteRegistryRequest createDeleteRegistryTestEntityWithIdClassRequest(final RegistryTestEntityWithIdClass entity) {
+        final DeleteRegistryRequest request = new DeleteRegistryRequest();
+
+        final Map<String, Object> idMap = new HashMap<>();
+
+        idMap.put("firstId", entity.getFirstId());
+        idMap.put("secondId", entity.getSecondId());
+
+        request.setClassFullName(RegistryTestEntityWithIdClass.class.getName());
+        request.setId(idMap);
 
         return request;
     }

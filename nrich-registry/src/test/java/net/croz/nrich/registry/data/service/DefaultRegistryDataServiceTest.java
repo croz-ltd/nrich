@@ -11,6 +11,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithDifferentIdName;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
+import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import org.junit.jupiter.api.Test;
@@ -20,13 +21,13 @@ import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Map;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryTestEntityWithIdClassRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryServiceRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
@@ -35,10 +36,13 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithDifferentIdNameList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithEmbeddedId;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithIdClass;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithOverriddenSearchConfigurationList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithoutAssociation;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryServiceRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataResolvingUtil.findRegistryTestEmbeddedUserGroup;
+import static net.croz.nrich.registry.data.testutil.RegistryDataResolvingUtil.findRegistryTestEntityWithIdClass;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.flushEntityManager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -208,7 +212,7 @@ public class DefaultRegistryDataServiceTest {
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(registryUpdateGroupId);
+        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryUpdateGroupId);
 
         // then
         assertThat(loaded).isNotNull();
@@ -243,7 +247,7 @@ public class DefaultRegistryDataServiceTest {
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(registryTestEmbeddedUserGroup.getUserGroupId());
+        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryTestEmbeddedUserGroup.getUserGroupId());
 
         // then
         assertThat(loaded).isNull();
@@ -320,15 +324,24 @@ public class DefaultRegistryDataServiceTest {
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 
-    private RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(final RegistryTestEmbeddedUserGroupId groupId) {
-        try {
-            return (RegistryTestEmbeddedUserGroup) entityManager.createQuery("from RegistryTestEmbeddedUserGroup where userGroupId.user.id = :userId and userGroupId.group.id = :groupId")
-                    .setParameter("userId", groupId.getUser().getId())
-                    .setParameter("groupId", groupId.getGroup().getId())
-                    .getSingleResult();
-        }
-        catch (final NoResultException ignored) {
-            return null;
-        }
+    @Test
+    void shouldDeleteRegistryEntityWithIdClassId() {
+        // given
+        final RegistryTestEntityWithIdClass registryTestEntityWithIdClass = createRegistryTestEntityWithIdClass(entityManager);
+
+        final DeleteRegistryRequest request = createDeleteRegistryTestEntityWithIdClassRequest(registryTestEntityWithIdClass);
+
+        // when
+        final RegistryTestEntityWithIdClass result = registryDataService.delete(request);
+
+        // then
+        assertThat(result).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        final RegistryTestEntityWithIdClass loaded = findRegistryTestEntityWithIdClass(entityManager, registryTestEntityWithIdClass);
+
+        // then
+        assertThat(loaded).isNull();
     }
 }

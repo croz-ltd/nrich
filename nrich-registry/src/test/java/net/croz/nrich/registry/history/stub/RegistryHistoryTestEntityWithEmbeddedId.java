@@ -43,8 +43,8 @@ public class RegistryHistoryTestEntityWithEmbeddedId {
         public Map<String, Long> asMap() {
             final Map<String, Long> mapKey = new HashMap<>();
 
-            mapKey.put("id.firstId", firstId);
-            mapKey.put("id.secondId", secondId);
+            mapKey.put("firstId", firstId);
+            mapKey.put("secondId", secondId);
 
             return mapKey;
         }

@@ -118,7 +118,7 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public ModelMapper registryHistoryModelMapper() {
+    public ModelMapper registryBaseModelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -240,8 +240,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService(final EntityManager entityManager) {
-        return new EntityManagerRegistryEntityFinderService(entityManager);
+    public RegistryEntityFinderService registryEntityFinderService(final EntityManager entityManager, final ModelMapper registryBaseModelMapper) {
+        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper);
     }
 
     @Bean
@@ -260,8 +260,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryHistoryModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryHistoryModelMapper, registryEntityFinderService);
+    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryBaseModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
+        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
     }
 
     @Bean

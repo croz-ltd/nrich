@@ -33,7 +33,7 @@ public class NrichRegistryAutoConfigurationTest {
     void shouldConfigureDefaultConfiguration() {
         contextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
             assertThat(context).hasBean("registryDataModelMapper");
-            assertThat(context).hasBean("registryHistoryModelMapper");
+            assertThat(context).hasBean("registryBaseModelMapper");
 
             assertThat(context).hasSingleBean(ObjectMapper.class);
             assertThat(context).hasSingleBean(StringToTypeConverter.class);

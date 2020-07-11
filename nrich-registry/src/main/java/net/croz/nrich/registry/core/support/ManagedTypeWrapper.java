@@ -10,9 +10,11 @@ import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -23,6 +25,8 @@ public final class ManagedTypeWrapper {
     private final boolean isIdClassIdentifier;
 
     private final boolean isEmbeddedIdentifier;
+
+    private final Map<String, Class<?>> idClassPropertyMap;
 
     private final List<String> idClassPropertyNameList;
 
@@ -42,7 +46,8 @@ public final class ManagedTypeWrapper {
         isEmbeddedIdentifier = embeddableIdType != null;
         isIdClassIdentifier = !identifiableType.hasSingleIdAttribute();
         idAttributeName = resolveIdAttributeName(identifiableType);
-        idClassPropertyNameList = resolveIdClassPropertyNameList(identifiableType);
+        idClassPropertyMap = resolveIdClassPropertyMap(identifiableType);
+        idClassPropertyNameList = new ArrayList<>(idClassPropertyMap.keySet());
         isIdentifierAssigned = resolveIsIdentifierAssigned(identifiableType);
         singularAssociationList = resolveSingularAssociationList(identifiableType);
     }
@@ -55,10 +60,9 @@ public final class ManagedTypeWrapper {
         return identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
     }
 
-    private List<String> resolveIdClassPropertyNameList(final IdentifiableType<?> identifiableType) {
-        return identifiableType.hasSingleIdAttribute() ? Collections.emptyList() : identifiableType.getIdClassAttributes().stream()
-                .map(Attribute::getName)
-                .collect(Collectors.toList());
+    private Map<String, Class<?>> resolveIdClassPropertyMap(final IdentifiableType<?> identifiableType) {
+        return identifiableType.hasSingleIdAttribute() ? Collections.emptyMap() : identifiableType.getIdClassAttributes().stream()
+                .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
     }
 
     private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> identifiableType) {
