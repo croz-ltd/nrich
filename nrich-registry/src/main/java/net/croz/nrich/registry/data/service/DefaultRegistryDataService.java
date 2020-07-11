@@ -103,7 +103,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
 
-        if (wrapper.isCompositeIdentity()) {
+        if (wrapper.isIdClassIdentifier() || wrapper.isEmbeddedIdentifier()) {
             entityManager.remove(instance);
             instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), request.getEntityData());
         }
@@ -151,7 +151,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         final ManagedTypeWrapper managedTypeWrapper = classNameManagedTypeWrapperMap.get(request.getRegistryId());
 
-        final String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getCompositeIdentityPropertyNameList().get(0));
+        final String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
 
         final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.getSortPropertyList());
 

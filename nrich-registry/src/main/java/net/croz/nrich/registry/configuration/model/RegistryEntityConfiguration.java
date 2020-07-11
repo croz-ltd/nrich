@@ -27,11 +27,11 @@ public class RegistryEntityConfiguration {
 
     private final boolean isIdentifierAssigned;
 
-    private final boolean isCompositeIdentity;
+    private final boolean isIdClassIdentity;
 
     private final boolean isEmbeddedIdentity;
 
-    private final List<String> compositeIdentityPropertyNameList;
+    private final List<String> idClassPropertyNameList;
 
     private final boolean isHistoryAvailable;
 

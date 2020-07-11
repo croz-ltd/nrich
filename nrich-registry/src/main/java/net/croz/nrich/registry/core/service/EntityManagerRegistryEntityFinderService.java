@@ -47,7 +47,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             parameterMap.put(ID_ATTRIBUTE, Long.valueOf(id.toString()));
         }
 
-        final String joinFetchQueryPart = managedTypeWrapper(type).getAssociationList().stream()
+        final String joinFetchQueryPart = managedTypeWrapper(type).getSingularAssociationList().stream()
                 .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
 
         final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);

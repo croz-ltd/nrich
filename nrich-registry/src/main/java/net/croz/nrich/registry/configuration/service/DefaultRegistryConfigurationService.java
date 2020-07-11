@@ -97,20 +97,20 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .deletable(registryOverrideConfiguration.isDeletable())
                 .isHistoryAvailable(isHistoryAvailable)
                 .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
-                .isCompositeIdentity(managedTypeWrapper.isCompositeIdentity())
+                .isIdClassIdentity(managedTypeWrapper.isIdClassIdentifier())
                 .isEmbeddedIdentity(managedTypeWrapper.getEmbeddableIdType() != null)
-                .compositeIdentityPropertyNameList(managedTypeWrapper.getCompositeIdentityPropertyNameList())
+                .idClassPropertyNameList(managedTypeWrapper.getIdClassPropertyNameList())
                 .build();
     }
 
     private List<RegistryPropertyConfiguration> resolveRegistryPropertyListForType(final ManagedTypeWrapper managedTypeWrapper, final RegistryOverrideConfiguration registryOverrideConfiguration) {
-        final Predicate<String> isIdAttributePredicate = (attributeName) -> attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getCompositeIdentityPropertyNameList().contains(attributeName);
+        final Predicate<String> isIdAttributePredicate = (attributeName) -> attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getIdClassPropertyNameList().contains(attributeName);
 
         return resolveManagedTypePropertyList(managedTypeWrapper.getIdentifiableType(), managedTypeWrapper.getIdentifiableType().getJavaType(), null, isIdAttributePredicate, registryOverrideConfiguration);
     }
 
     private List<RegistryPropertyConfiguration> resolverEmbeddedIdPropertyConfigurationList(final ManagedTypeWrapper managedTypeWrapper, final RegistryOverrideConfiguration registryOverrideConfiguration) {
-        if (managedTypeWrapper.getEmbeddableIdType() == null) {
+        if (!managedTypeWrapper.isEmbeddedIdentifier()) {
             return Collections.emptyList();
         }
 

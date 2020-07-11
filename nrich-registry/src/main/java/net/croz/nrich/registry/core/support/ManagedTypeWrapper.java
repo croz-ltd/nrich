@@ -10,11 +10,9 @@ import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
@@ -22,17 +20,17 @@ public final class ManagedTypeWrapper {
 
     private final IdentifiableType<?> identifiableType;
 
-    private final boolean isCompositeIdentity;
+    private final boolean isIdClassIdentifier;
 
-    private final List<String> compositeIdentityPropertyNameList;
+    private final boolean isEmbeddedIdentifier;
 
-    private final Map<String, Class<?>> compositeIdentityNameTypeMap;
+    private final List<String> idClassPropertyNameList;
 
     private final String idAttributeName;
 
     private final boolean isIdentifierAssigned;
 
-    private final List<SingularAttribute<?, ?>> associationList;
+    private final List<SingularAttribute<?, ?>> singularAssociationList;
 
     private final EmbeddableType<?> embeddableIdType;
 
@@ -40,36 +38,40 @@ public final class ManagedTypeWrapper {
         Assert.isTrue(managedType instanceof IdentifiableType, "Managed type has no id attribute, no operations will be possible!");
 
         identifiableType = (IdentifiableType<?>) managedType;
-        embeddableIdType = ((IdentifiableType<?>) managedType).getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) ((IdentifiableType<?>) managedType).getIdType() : null;
-        isCompositeIdentity = !identifiableType.hasSingleIdAttribute() || embeddableIdType != null;
-        idAttributeName = identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
-        compositeIdentityNameTypeMap = resolveCompositeIdentityNameTypeMap();
-        compositeIdentityPropertyNameList = new ArrayList<>(compositeIdentityNameTypeMap.keySet());
-        isIdentifierAssigned = resolveIsIdentifierAssigned();
-        associationList = managedType.getSingularAttributes().stream()
-                .filter(Attribute::isAssociation).collect(Collectors.toList());
+        embeddableIdType = resolveEmbeddedIdentifierType(identifiableType);
+        isEmbeddedIdentifier = embeddableIdType != null;
+        isIdClassIdentifier = !identifiableType.hasSingleIdAttribute();
+        idAttributeName = resolveIdAttributeName(identifiableType);
+        idClassPropertyNameList = resolveIdClassPropertyNameList(identifiableType);
+        isIdentifierAssigned = resolveIsIdentifierAssigned(identifiableType);
+        singularAssociationList = resolveSingularAssociationList(identifiableType);
     }
 
-    private Map<String, Class<?>> resolveCompositeIdentityNameTypeMap() {
-        Map<String, Class<?>> propertyNameList = Collections.emptyMap();
-
-        if (!identifiableType.hasSingleIdAttribute()) {
-            propertyNameList = identifiableType.getIdClassAttributes().stream()
-                    .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
-        }
-        else if (embeddableIdType != null) {
-            propertyNameList = Collections.singletonMap(idAttributeName, identifiableType.getIdType().getJavaType());
-        }
-
-        return propertyNameList;
+    private EmbeddableType<?> resolveEmbeddedIdentifierType(final IdentifiableType<?> identifiableType) {
+        return identifiableType.getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) identifiableType.getIdType() : null;
     }
 
-    private boolean resolveIsIdentifierAssigned() {
+    private String resolveIdAttributeName(final IdentifiableType<?> identifiableType) {
+        return identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
+    }
+
+    private List<String> resolveIdClassPropertyNameList(final IdentifiableType<?> identifiableType) {
+        return identifiableType.hasSingleIdAttribute() ? Collections.emptyList() : identifiableType.getIdClassAttributes().stream()
+                .map(Attribute::getName)
+                .collect(Collectors.toList());
+    }
+
+    private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> identifiableType) {
         return identifiableType.getAttributes().stream()
                 .map(Attribute::getJavaMember)
                 .filter(member -> member instanceof Field)
                 .map(member -> (Field) member)
                 .map(Field::getDeclaredAnnotations)
                 .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
+    }
+
+    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(final IdentifiableType<?> identifiableType) {
+        return identifiableType.getSingularAttributes().stream()
+                .filter(Attribute::isAssociation).collect(Collectors.toList());
     }
 }

@@ -56,9 +56,9 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isUpdateable()).isTrue();
         assertThat(registryEntityConfiguration.isDeletable()).isFalse();
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
-        assertThat(registryEntityConfiguration.isCompositeIdentity()).isFalse();
+        assertThat(registryEntityConfiguration.isIdClassIdentity()).isFalse();
         assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isFalse();
-        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).isNullOrEmpty();
+        assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isNullOrEmpty();
         assertThat(registryEntityConfiguration.isHistoryAvailable()).isFalse();
 
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).hasSize(5);
@@ -122,9 +122,9 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration).isNotNull();
 
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
-        assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
+        assertThat(registryEntityConfiguration.isIdClassIdentity()).isFalse();
         assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
-        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("id");
+        assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isEmpty();
 
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
         assertThat(registryEntityConfiguration.getRegistryEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
@@ -166,8 +166,9 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration).isNotNull();
 
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
-        assertThat(registryEntityConfiguration.isCompositeIdentity()).isTrue();
-        assertThat(registryEntityConfiguration.getCompositeIdentityPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
+        assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isFalse();
+        assertThat(registryEntityConfiguration.isIdClassIdentity()).isTrue();
+        assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
 
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("firstId", "secondId", "name");
         assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isId").containsExactlyInAnyOrder(true, true, false);
