@@ -29,7 +29,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
     @Override
     public <T> T findEntityInstance(final Class<T> type, final Object id) {
-        final QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, false);
+        final QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         final String joinFetchQueryPart = managedTypeWrapperMap.get(type).getSingularAssociationList().stream()
                 .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
@@ -50,10 +50,10 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
     @Override
     public <T> Map<String, Object> resolveIdParameterMap(final Class<T> type, final Object id) {
-        return queryWherePartWithParameterMap(type, id, true).parameterMap;
+        return queryWherePartWithParameterMap(type, id, false).parameterMap;
     }
 
-    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean rawParameterValue) {
+    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean convertParameterToHqlFormat) {
         final ManagedTypeWrapper managedTypeWrapper = managedTypeWrapper(type);
 
         final List<String> wherePartList = new ArrayList<>();
@@ -71,9 +71,9 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             idClassPropertyMap.forEach((key, value) -> {
                 final Object convertedIdValue = modelMapper.map(idMap.get(key), value);
 
-                wherePartList.add(toParameterExpression(key, rawParameterValue));
+                wherePartList.add(toParameterExpression(key, convertParameterToHqlFormat));
 
-                parameterMap.put(toParameterVariable(key, rawParameterValue), convertedIdValue);
+                parameterMap.put(toParameterVariable(key, convertParameterToHqlFormat), convertedIdValue);
             });
         }
         else {
@@ -89,20 +89,20 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
             final String idAttributeName = managedTypeWrapper.getIdAttributeName();
 
-            wherePartList.add(toParameterExpression(idAttributeName, rawParameterValue));
+            wherePartList.add(toParameterExpression(idAttributeName, convertParameterToHqlFormat));
 
-            parameterMap.put(toParameterVariable(idAttributeName, rawParameterValue), convertedIdValue);
+            parameterMap.put(toParameterVariable(idAttributeName, convertParameterToHqlFormat), convertedIdValue);
         }
 
         return new QueryCondition(String.join(RegistryDataConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
     }
 
-    private String toParameterExpression(final String key, final boolean rawParameterValue) {
-        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, rawParameterValue));
+    private String toParameterExpression(final String key, final boolean convertParameterToHqlFormat) {
+        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToHqlFormat));
     }
 
-    private String toParameterVariable(final String key, final boolean rawParameterValue) {
-        if (rawParameterValue) {
+    private String toParameterVariable(final String key, final boolean convertParameterToHqlFormat) {
+        if (!convertParameterToHqlFormat) {
             return key;
         }
 
