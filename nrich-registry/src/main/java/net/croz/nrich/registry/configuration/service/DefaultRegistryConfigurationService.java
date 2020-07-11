@@ -98,7 +98,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
                 .isHistoryAvailable(isHistoryAvailable)
                 .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
                 .isIdClassIdentity(managedTypeWrapper.isIdClassIdentifier())
-                .isEmbeddedIdentity(managedTypeWrapper.getEmbeddableIdType() != null)
+                .isEmbeddedIdentity(managedTypeWrapper.isEmbeddedIdentifier())
                 .idClassPropertyNameList(managedTypeWrapper.getIdClassPropertyNameList())
                 .build();
     }
