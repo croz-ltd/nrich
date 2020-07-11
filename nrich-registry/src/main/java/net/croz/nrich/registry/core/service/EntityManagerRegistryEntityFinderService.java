@@ -53,7 +53,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         return queryWherePartWithParameterMap(type, id, false).parameterMap;
     }
 
-    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean convertParameterToHqlFormat) {
+    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean convertParameterToQueryFormat) {
         final ManagedTypeWrapper managedTypeWrapper = managedTypeWrapper(type);
 
         final List<String> wherePartList = new ArrayList<>();
@@ -71,9 +71,9 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             idClassPropertyMap.forEach((key, value) -> {
                 final Object convertedIdValue = modelMapper.map(idMap.get(key), value);
 
-                wherePartList.add(toParameterExpression(key, convertParameterToHqlFormat));
+                wherePartList.add(toParameterExpression(key, convertParameterToQueryFormat));
 
-                parameterMap.put(toParameterVariable(key, convertParameterToHqlFormat), convertedIdValue);
+                parameterMap.put(toParameterVariable(key, convertParameterToQueryFormat), convertedIdValue);
             });
         }
         else {
@@ -89,20 +89,20 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
             final String idAttributeName = managedTypeWrapper.getIdAttributeName();
 
-            wherePartList.add(toParameterExpression(idAttributeName, convertParameterToHqlFormat));
+            wherePartList.add(toParameterExpression(idAttributeName, convertParameterToQueryFormat));
 
-            parameterMap.put(toParameterVariable(idAttributeName, convertParameterToHqlFormat), convertedIdValue);
+            parameterMap.put(toParameterVariable(idAttributeName, convertParameterToQueryFormat), convertedIdValue);
         }
 
         return new QueryCondition(String.join(RegistryDataConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
     }
 
-    private String toParameterExpression(final String key, final boolean convertParameterToHqlFormat) {
-        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToHqlFormat));
+    private String toParameterExpression(final String key, final boolean convertParameterToQueryFormat) {
+        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToQueryFormat));
     }
 
-    private String toParameterVariable(final String key, final boolean convertParameterToHqlFormat) {
-        if (!convertParameterToHqlFormat) {
+    private String toParameterVariable(final String key, final boolean convertParameterToQueryFormat) {
+        if (!convertParameterToQueryFormat) {
             return key;
         }
 
