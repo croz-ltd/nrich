@@ -18,7 +18,7 @@ public class NrichRegistryProperties {
 
     private final boolean defaultConverterEnabled;
 
-    public NrichRegistryProperties(@DefaultValue({ "id", "version" }) final List<String> defaultReadOnlyPropertyList, @DefaultValue final RegistrySearchProperties registrySearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichRegistryProperties(final List<String> defaultReadOnlyPropertyList, @DefaultValue final RegistrySearchProperties registrySearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
         this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
         this.registrySearch = registrySearch;
         this.defaultConverterEnabled = defaultConverterEnabled;

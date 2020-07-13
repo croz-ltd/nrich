@@ -106,7 +106,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     private List<RegistryPropertyConfiguration> resolveRegistryPropertyListForType(final ManagedTypeWrapper managedTypeWrapper, final RegistryOverrideConfiguration registryOverrideConfiguration) {
         final Predicate<String> isIdAttributePredicate = (attributeName) -> attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getIdClassPropertyNameList().contains(attributeName);
 
-        return resolveManagedTypePropertyList(managedTypeWrapper.getIdentifiableType(), managedTypeWrapper.getIdentifiableType().getJavaType(), null, isIdAttributePredicate, registryOverrideConfiguration);
+        return resolveManagedTypePropertyList(managedTypeWrapper.getIdentifiableType(), managedTypeWrapper.getIdentifiableType().getJavaType(), null, isIdAttributePredicate, !managedTypeWrapper.isIdentifierAssigned(), registryOverrideConfiguration);
     }
 
     private List<RegistryPropertyConfiguration> resolverEmbeddedIdPropertyConfigurationList(final ManagedTypeWrapper managedTypeWrapper, final RegistryOverrideConfiguration registryOverrideConfiguration) {
@@ -114,10 +114,10 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             return Collections.emptyList();
         }
 
-        return resolveManagedTypePropertyList(managedTypeWrapper.getEmbeddableIdType(), managedTypeWrapper.getIdentifiableType().getJavaType(), managedTypeWrapper.getIdAttributeName(), (attribute) -> false, registryOverrideConfiguration);
+        return resolveManagedTypePropertyList(managedTypeWrapper.getEmbeddableIdType(), managedTypeWrapper.getIdentifiableType().getJavaType(), managedTypeWrapper.getIdAttributeName(), (attribute) -> false, true, registryOverrideConfiguration);
     }
 
-    private List<RegistryPropertyConfiguration> resolveManagedTypePropertyList(final ManagedType<?> managedType, final Class<?> entityType, final String prefix, final Predicate<String> isIdAttributePredicate, final RegistryOverrideConfiguration registryOverrideConfiguration) {
+    private List<RegistryPropertyConfiguration> resolveManagedTypePropertyList(final ManagedType<?> managedType, final Class<?> entityType, final String prefix, final Predicate<String> isIdAttributePredicate, final boolean isIdReadOnly, final RegistryOverrideConfiguration registryOverrideConfiguration) {
         final List<String> ignoredPropertyList = Optional.ofNullable(registryOverrideConfiguration.getIgnoredPropertyList()).orElse(Collections.emptyList());
         final List<String> readOnlyOverridePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonEditablePropertyList()).orElse(Collections.emptyList());
         final List<String> nonSortablePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonSortablePropertyList()).orElse(Collections.emptyList());
@@ -137,7 +137,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             final boolean isSingularAssociation = attribute.isAssociation() && attribute instanceof SingularAttribute;
             final Class<?> singularAssociationReferencedClass = isSingularAssociation ? resolveSingularAssociationReferencedClass(attribute) : null;
 
-            final boolean isReadOnly = readOnlyPropertyList.contains(attributeName) || readOnlyOverridePropertyList.contains(attributeName);
+            final boolean isReadOnly = isIdAttribute ? isIdReadOnly : readOnlyPropertyList.contains(attributeName) || readOnlyOverridePropertyList.contains(attributeName);
             final boolean isSortable = !nonSortablePropertyList.contains(attributeName);
             final boolean isSearchable = !nonSearchablePropertyList.contains(attributeName);
 

@@ -140,7 +140,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService, final NrichRegistryProperties registryProperties) {
-        return new DefaultRegistryConfigurationService(messageSource, registryProperties.getDefaultReadOnlyPropertyList(), registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+        return new DefaultRegistryConfigurationService(messageSource, Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList()), registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @ConditionalOnWebApplication
