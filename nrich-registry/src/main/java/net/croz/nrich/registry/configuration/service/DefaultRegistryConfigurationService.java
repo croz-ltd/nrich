@@ -141,7 +141,6 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             final boolean isSortable = !nonSortablePropertyList.contains(attributeName);
             final boolean isSearchable = !nonSearchablePropertyList.contains(attributeName);
 
-
             final RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation, singularAssociationReferencedClass, isReadOnly, isSortable, isSearchable);
 
             registryPropertyConfigurationList.add(registryPropertyConfiguration);
