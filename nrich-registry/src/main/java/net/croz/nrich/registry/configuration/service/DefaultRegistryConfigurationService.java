@@ -27,6 +27,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,6 +59,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
             final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
                     .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
+                    .sorted(Comparator.comparing(RegistryEntityConfiguration::getRegistryId))
                     .collect(Collectors.toList());
 
             final RegistryCategoryConfiguration registryConfiguration = new RegistryCategoryConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList);
