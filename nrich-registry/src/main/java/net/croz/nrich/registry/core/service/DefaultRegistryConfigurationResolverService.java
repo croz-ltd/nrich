@@ -172,7 +172,6 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 .collect(Collectors.toList());
 
         searchConfiguration.setJoinList(searchJoinList);
-        ;
 
         return searchConfiguration;
     }
