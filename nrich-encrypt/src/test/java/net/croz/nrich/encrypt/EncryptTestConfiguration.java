@@ -1,18 +1,18 @@
 package net.croz.nrich.encrypt;
 
-import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
-import net.croz.nrich.encrypt.aspect.EncryptMethodInterceptor;
-import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
-import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService;
-import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestService;
-import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService;
-import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
+import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
+import net.croz.nrich.encrypt.aspect.EncryptMethodInterceptor;
+import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService;
+import net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService;
+import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
+import net.croz.nrich.encrypt.aspect.stub.EncryptionMethodInterceptorTestService;
 import net.croz.nrich.encrypt.service.BytesEncryptorTextEncryptService;
 import net.croz.nrich.encrypt.service.DefaultDataEncryptService;
+import net.croz.nrich.encrypt.util.PointcutResolvingUtil;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcut;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
@@ -26,7 +26,6 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @EnableAspectJAutoProxy
 @Configuration(proxyBeanMethods = false)
@@ -61,7 +60,7 @@ public class EncryptTestConfiguration {
 
         final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
-        pointcut.setExpression(buildPointcutExpression(encryptionConfigurationList));
+        pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptionConfigurationList));
 
         return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptionConfigurationList, Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod")));
     }
@@ -74,14 +73,6 @@ public class EncryptTestConfiguration {
     @Bean
     public EncryptionMethodInterceptorTestService encryptionMethodInterceptorTestService() {
         return new DefaultEncryptionMethodInterceptorTestService();
-    }
-
-
-    private String buildPointcutExpression(final List<EncryptionConfiguration> encryptionConfigurationList) {
-        return encryptionConfigurationList.stream()
-                .map(EncryptionConfiguration::getMethodToEncryptDecrypt)
-                .map(method -> String.format(EncryptConstants.EXECUTION_METHOD_POINTCUT, method))
-                .collect(Collectors.joining(EncryptConstants.EXECUTION_METHOD_OR_SEPARATOR));
     }
 
 }
