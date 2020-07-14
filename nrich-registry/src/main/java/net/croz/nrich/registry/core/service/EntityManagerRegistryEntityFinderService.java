@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,13 +24,13 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
     private final ModelMapper modelMapper;
 
-    private final Map<Class<?>, ManagedTypeWrapper> managedTypeWrapperMap = new ConcurrentHashMap<>();
+    private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
 
     @Override
     public <T> T findEntityInstance(final Class<T> type, final Object id) {
         final QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
-        final String joinFetchQueryPart = managedTypeWrapperMap.get(type).getSingularAssociationList().stream()
+        final String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
                 .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
 
         final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
@@ -54,7 +53,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
     }
 
     private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean convertParameterToQueryFormat) {
-        final ManagedTypeWrapper managedTypeWrapper = managedTypeWrapper(type);
+        final ManagedTypeWrapper managedTypeWrapper = classNameManagedTypeWrapperMap.get(type.getName());
 
         final List<String> wherePartList = new ArrayList<>();
         final Map<String, Object> parameterMap = new HashMap<>();
@@ -111,14 +110,6 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         return Arrays.stream(keyList)
                 .map(StringUtils::capitalize)
                 .collect(Collectors.joining());
-    }
-
-    private ManagedTypeWrapper managedTypeWrapper(final Class<?> type) {
-        if (!managedTypeWrapperMap.containsKey(type)) {
-            managedTypeWrapperMap.put(type, new ManagedTypeWrapper(entityManager.getMetamodel().managedType(type)));
-        }
-
-        return managedTypeWrapperMap.get(type);
     }
 
     @Value

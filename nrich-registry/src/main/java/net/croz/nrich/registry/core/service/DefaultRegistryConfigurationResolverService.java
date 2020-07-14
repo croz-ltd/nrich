@@ -11,6 +11,7 @@ import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -44,8 +46,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         final List<RegistryCategoryDefinition> registryCategoryDefinitionList = new ArrayList<>();
 
         registryConfiguration.getRegistryCategoryDefinitionConfigurationList().forEach(registryGroupDefinition -> {
-            final List<ManagedType<?>> includedManagedTypeList = managedTypeList.stream()
+            final List<ManagedTypeWrapper> includedManagedTypeList = managedTypeList.stream()
                     .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
+                    .map(ManagedTypeWrapper::new)
                     .collect(Collectors.toList());
 
             if (CollectionUtils.isEmpty(includedManagedTypeList)) {
@@ -70,21 +73,23 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     public RegistryDataConfigurationHolder resolveRegistryDataConfiguration() {
         final RegistryCategoryDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
 
-        final List<ManagedType<?>> managedTypeList = groupDefinitionHolder.getRegistryCategoryDefinitionList().stream()
+        final List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.getRegistryCategoryDefinitionList().stream()
                 .map(RegistryCategoryDefinition::getRegistryEntityList)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
         final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList = new ArrayList<>();
 
-        managedTypeList.forEach(managedType -> {
+        managedTypeWrapperList.forEach(managedTypeWrapper -> {
             @SuppressWarnings("unchecked")
-            final Class<Object> type = (Class<Object>) managedType.getJavaType();
+            final Class<Object> type = (Class<Object>) managedTypeWrapper.getJavaType();
 
-            registryDataConfigurationList.add(new RegistryDataConfiguration<>(type, resolveSearchConfiguration(managedType)));
+            registryDataConfigurationList.add(new RegistryDataConfiguration<>(type, resolveSearchConfiguration(managedTypeWrapper)));
         });
 
-        return new RegistryDataConfigurationHolder(registryDataConfigurationList);
+        final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap = managedTypeWrapperList.stream().collect(Collectors.toMap(value -> value.getJavaType().getName(), Function.identity()));
+
+        return new RegistryDataConfigurationHolder(classNameManagedTypeWrapperMap, registryDataConfigurationList);
     }
 
     @Override
@@ -149,25 +154,25 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         return excludeDomainPatternList.stream().noneMatch(classFullName::matches);
     }
 
-    private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(final ManagedType<?> managedType) {
-        final Class<?> type = managedType.getJavaType();
+    private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(final ManagedTypeWrapper managedTypeWrapper) {
+        final Class<?> type = managedTypeWrapper.getJavaType();
 
         return Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
                 .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getRegistryDataOverrideSearchConfiguration() != null)
                 .map(RegistryOverrideConfigurationHolder::getRegistryDataOverrideSearchConfiguration)
                 .findFirst()
-                .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedType));
+                .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedTypeWrapper));
     }
 
-    private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinFetchList(final ManagedType<?> managedType) {
+    private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinFetchList(final ManagedTypeWrapper managedTypeWrapper) {
         final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
-        final List<SearchJoin<Map<String, Object>>> searchJoinList = managedType.getSingularAttributes().stream()
-                .filter(Attribute::isAssociation)
+        final List<SearchJoin<Map<String, Object>>> searchJoinList = managedTypeWrapper.getSingularAssociationList().stream()
                 .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.<Map<String, Object>>leftJoinFetch(singularAttribute.getName()) : SearchJoin.<Map<String, Object>>innerJoinFetch(singularAttribute.getName()))
                 .collect(Collectors.toList());
 
-        searchConfiguration.setJoinList(searchJoinList);;
+        searchConfiguration.setJoinList(searchJoinList);
+        ;
 
         return searchConfiguration;
     }

@@ -52,6 +52,10 @@ public final class ManagedTypeWrapper {
         singularAssociationList = resolveSingularAssociationList(identifiableType);
     }
 
+    public Class<?> getJavaType() {
+        return identifiableType.getJavaType();
+    }
+
     private EmbeddableType<?> resolveEmbeddedIdentifierType(final IdentifiableType<?> identifiableType) {
         return identifiableType.getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) identifiableType.getIdType() : null;
     }

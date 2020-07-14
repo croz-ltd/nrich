@@ -2,8 +2,8 @@ package net.croz.nrich.registry.core.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 
-import javax.persistence.metamodel.ManagedType;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -12,6 +12,6 @@ public class RegistryCategoryDefinition {
 
     private final String registryGroupId;
 
-    private final List<ManagedType<?>> registryEntityList;
+    private final List<ManagedTypeWrapper> registryEntityList;
 
 }

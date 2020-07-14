@@ -151,8 +151,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService(final ModelMapper registryBaseModelMapper) {
-        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper);
+    public RegistryEntityFinderService registryEntityFinderService(final ModelMapper registryBaseModelMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap());
     }
 
     @Bean

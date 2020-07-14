@@ -72,10 +72,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         return registryCategoryConfigurationList;
     }
 
-    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedType<?> managedType, final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
-        final Class<?> entityType = managedType.getJavaType();
+    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedTypeWrapper managedTypeWrapper, final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
+        final Class<?> entityType = managedTypeWrapper.getJavaType();
         final RegistryOverrideConfiguration registryOverrideConfiguration = resolveRegistryOverrideConfiguration(entityType, registryOverrideConfigurationMap);
-        final ManagedTypeWrapper managedTypeWrapper = new ManagedTypeWrapper(managedType);
 
         final String registryDisplayName = registryDisplayLabel(entityType);
         final boolean isHistoryAvailable = registryOverrideConfiguration.isHistoryAvailable() || isAudited(entityType);

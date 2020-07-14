@@ -46,8 +46,6 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private final Map<String, JpaQueryBuilder<?>> classNameQueryBuilderMap;
 
-    private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
-
     private final RegistryEntityFinderService registryEntityFinderService;
 
     public DefaultRegistryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final List<RegistryDataInterceptor> registryDataInterceptorList, final RegistryEntityFinderService registryEntityFinderService) {
@@ -57,7 +55,6 @@ public class DefaultRegistryDataService implements RegistryDataService {
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.registryDataInterceptorList = registryDataInterceptorList;
         this.classNameQueryBuilderMap = initializeQueryBuilderMap(registryDataConfigurationHolder);
-        this.classNameManagedTypeWrapperMap = initializeManagedTypeMap(registryDataConfigurationHolder);
         this.registryEntityFinderService = registryEntityFinderService;
     }
 
@@ -99,7 +96,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
-        final ManagedTypeWrapper wrapper = classNameManagedTypeWrapperMap.get(request.getClassFullName());
+        final ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
 
         T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
 
@@ -133,11 +130,6 @@ public class DefaultRegistryDataService implements RegistryDataService {
                 .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
 
-    private Map<String, ManagedTypeWrapper> initializeManagedTypeMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new ManagedTypeWrapper(entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType()))));
-    }
-
     private List<RegistryDataInterceptor> interceptorList() {
         return Optional.ofNullable(registryDataInterceptorList).orElse(Collections.emptyList());
     }
@@ -149,7 +141,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         @SuppressWarnings("unchecked")
         final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getRegistryId());
 
-        final ManagedTypeWrapper managedTypeWrapper = classNameManagedTypeWrapperMap.get(request.getRegistryId());
+        final ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getRegistryId());
 
         final String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
 
