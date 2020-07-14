@@ -37,4 +37,11 @@ public class NrichWebMvcAutoConfigurationTest {
             assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class);
         });
     }
+
+    @Test
+    void shouldNotAddAdviceWhenItsDisabled() {
+        webApplicationContextRunner.withPropertyValues("nrich.webmvc.controller-advice-enabled=false").withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context -> {
+            assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class);
+        });
+    }
 }

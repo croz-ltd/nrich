@@ -12,6 +12,8 @@ import java.util.List;
 @ConfigurationProperties("nrich.webmvc")
 public class NrichWebMvcProperties {
 
+    private final boolean controllerAdviceEnabled;
+
     private final boolean exceptionAuxiliaryDataResolvingEnabled;
 
     private final boolean convertEmptyStringsToNull;
@@ -26,7 +28,8 @@ public class NrichWebMvcProperties {
 
     private final List<String> allowedLocaleList;
 
-    public NrichWebMvcProperties(@DefaultValue("true") final boolean exceptionAuxiliaryDataResolvingEnabled, @DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean ignoreTransientFields, @DefaultValue("java.util.concurrent.ExecutionException") final List<String> exceptionToUnwrapList, @DefaultValue("uuid") final List<String> exceptionAuxiliaryDataToIncludeInNotification, final String defaultLocale, final List<String> allowedLocaleList) {
+    public NrichWebMvcProperties(@DefaultValue("true") final boolean controllerAdviceEnabled, @DefaultValue("true") final boolean exceptionAuxiliaryDataResolvingEnabled, @DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean ignoreTransientFields, @DefaultValue("java.util.concurrent.ExecutionException") final List<String> exceptionToUnwrapList, @DefaultValue("uuid") final List<String> exceptionAuxiliaryDataToIncludeInNotification, final String defaultLocale, final List<String> allowedLocaleList) {
+        this.controllerAdviceEnabled = controllerAdviceEnabled;
         this.exceptionAuxiliaryDataResolvingEnabled = exceptionAuxiliaryDataResolvingEnabled;
         this.convertEmptyStringsToNull = convertEmptyStringsToNull;
         this.ignoreTransientFields = ignoreTransientFields;
