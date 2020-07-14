@@ -4,6 +4,7 @@ import net.croz.nrich.validation.api.constraint.ValidFileResolvable;
 import org.springframework.core.env.Environment;
 
 import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import java.util.Optional;
 
 public class ValidFileResolvableValidator extends BaseValidFileValidator implements ConstraintValidator<ValidFileResolvable, Object> {
@@ -19,6 +20,11 @@ public class ValidFileResolvableValidator extends BaseValidFileValidator impleme
         this.allowedContentTypeList = resolvePropertyValue(constraintAnnotation.allowedContentTypeListPropertyName(), String[].class, new String[0]);
         this.allowedExtensionList = resolvePropertyValue(constraintAnnotation.allowedExtensionListPropertyName(), String[].class, new String[0]);
         this.allowedFileNameRegex = resolvePropertyValue(constraintAnnotation.allowedFileNameRegexPropertyName(), String.class, "");
+    }
+
+    @Override
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+        return isValid(value);
     }
 
     private <T> T resolvePropertyValue(final String propertyName, final Class<T> propertyType, final T defaultPropertyValue) {
