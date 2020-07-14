@@ -19,10 +19,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @SuppressWarnings("unused")
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE })
 @Retention(RUNTIME)
-@Repeatable(ValidFile.List.class)
+@Repeatable(ValidFileResolvable.List.class)
 @Documented
-@Constraint(validatedBy = {})
-public @interface ValidFile {
+@Constraint(validatedBy = { })
+public @interface ValidFileResolvable {
 
     String message() default "{nrich.constraint.file.invalid.message}";
 
@@ -30,17 +30,17 @@ public @interface ValidFile {
 
     Class<? extends Payload>[] payload() default { };
 
-    String[] allowedContentTypeList() default { };
+    String allowedContentTypeListPropertyName() default "nrich.constraint.file.allowed-content-type-list";
 
-    String[] allowedExtensionList() default { };
+    String allowedExtensionListPropertyName() default "nrich.constraint.file.allowed-extension-list";
 
-    String allowedFileNameRegex() default "";
+    String allowedFileNameRegexPropertyName() default "nrich.constraint.file.allowed-file-name-regex";
 
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented
     @interface List {
 
-        ValidFile[] value();
+        ValidFileResolvable[] value();
     }
 }

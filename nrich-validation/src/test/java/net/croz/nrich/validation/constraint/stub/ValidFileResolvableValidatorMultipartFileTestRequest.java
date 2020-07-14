@@ -2,14 +2,13 @@ package net.croz.nrich.validation.constraint.stub;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.validation.api.constraint.ValidFile;
+import net.croz.nrich.validation.api.constraint.ValidFileResolvable;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Getter
-public class ValidFileValidatorMultipartFileTestRequest {
+public class ValidFileResolvableValidatorMultipartFileTestRequest {
 
-    @ValidFile(allowedContentTypeList = "text/plain", allowedExtensionList = "txt", allowedFileNameRegex = "(?U)[\\w-.]+")
+    @ValidFileResolvable
     private final MultipartFile file;
-
 }
