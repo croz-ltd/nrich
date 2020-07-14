@@ -38,7 +38,7 @@ public class NrichEncryptAutoConfiguration {
             encryptor = Encryptors.standard(encryptProperties.getEncryptPassword(), encryptProperties.getEncryptSalt());
         }
         else {
-         encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+            encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
         }
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());
