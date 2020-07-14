@@ -3,7 +3,6 @@ package net.croz.nrich.validation.constraint.validator;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -16,7 +15,7 @@ abstract class BaseValidFileValidator {
 
     protected String allowedFileNameRegex;
 
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    protected boolean isValid(final Object value) {
         if (value == null) {
             return true;
         }
