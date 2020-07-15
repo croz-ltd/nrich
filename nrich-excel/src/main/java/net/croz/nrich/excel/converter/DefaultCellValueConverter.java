@@ -1,9 +1,9 @@
 package net.croz.nrich.excel.converter;
 
 import lombok.Value;
-import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.CellHolder;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
@@ -64,10 +64,10 @@ public class DefaultCellValueConverter implements CellValueConverter {
         final String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
 
         return Arrays.asList(
-                new ConverterHolder(Date.class, dateFormat, (cell, value) -> cell.setCellValue((Date) value)),
+                new ConverterHolder(Date.class, dateFormat, CellHolder::setCellValue),
                 new ConverterHolder(Instant.class, dateFormat, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
-                new ConverterHolder(LocalDate.class, dateFormat, (cell, value) -> cell.setCellValue((LocalDate) value)),
-                new ConverterHolder(LocalDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue((LocalDateTime) value)),
+                new ConverterHolder(LocalDate.class, dateFormat, CellHolder::setCellValue),
+                new ConverterHolder(LocalDateTime.class, resolvedDateTimeFormat, CellHolder::setCellValue),
                 new ConverterHolder(ZonedDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue(((ZonedDateTime) value).toLocalDateTime())),
                 new ConverterHolder(OffsetDateTime.class, resolvedDateTimeFormat, (cell, value) -> cell.setCellValue(((OffsetDateTime) value).toLocalDateTime())),
                 new ConverterHolder(Short.class, integerNumberFormat, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
