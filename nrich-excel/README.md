@@ -93,16 +93,21 @@ Method accepts argument of type `CreateExcelReportRequest` that contains followi
 Example usage of `ExcelExportService` is:
 
 ```
-
-
-    final File file = new File("director/excel-report.xlsx");
+    // file where data will be written
+    final File file = new File("directory/excel-report.xlsx");
     // rows in excel
-    final Object[][] rowData = new Object[][] { { 1.1, "value 1" }, { 2.2, "value 2 };
+    final Object[][] rowData = new Object[][] { { 1.1, "value 1", new Date(), new Date() }, { 2.2, "value 2", new Date(), new Date() };
     // no need for batching since we have only two records
     final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
+    // template variable defined in template with value ${templateVariable} will be replaced with resolvedValue
+    final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
+
+    // data format for columns 2 and 3 is overriden one date is written with dd-MM-yyyy format and another with dd-MM-yyyy HH:mm format
+    final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
+            
     // first row index is 3 since first two rows contain column headers
-    final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
+    final CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
    
     final File createdFile = excelExportService.createExcelReport(request);
 
