@@ -10,8 +10,8 @@ Motivation behind this library is masking sensitive data that is sent to client 
 
 Library can be used by using annotations:
 
-* `EncryptResult`
-* `DecryptArgument`
+- `EncryptResult`
+- `DecryptArgument`
 
 `EncryptResult` is used to encrypt result of method execution. Data that is encrypted is specified in
 property named: `resultPathList`, it contains a list of paths to properties that should be encrypted.
@@ -27,11 +27,11 @@ Library can also be used by specifying fully qualified method names and addition
 
 `EncryptionConfiguration` consists of the following data:
 
-* `methodToEncryptDecrypt` - method that should be encrypted/decrypted containing fully qualified method name i.e. for class com.Example and method print it should be com.Example.print
+- `methodToEncryptDecrypt` - method that should be encrypted/decrypted containing fully qualified method name i.e. for class com.Example and method print it should be com.Example.print
 
-* `propertyToEncryptDecryptList` - a list of property paths to encrypt or decrypt
+- `propertyToEncryptDecryptList` - a list of property paths to encrypt or decrypt
 
-* `encryptionOperation` - enum indicating encryption operation can be either `ENCRYPT` or `DECRYPT` 
+- `encryptionOperation` - enum indicating encryption operation can be either `ENCRYPT` or `DECRYPT` 
 
 example configuration is following:
 
