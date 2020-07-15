@@ -33,6 +33,5 @@ public class ConvertEmptyStringToNullDeserializerTest {
 
         // then
         assertThat(deserialized.get(key)).isNull();
-
     }
 }
