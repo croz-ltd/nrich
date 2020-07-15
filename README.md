@@ -11,7 +11,7 @@ Most modules are composed of multiple submodules:
 - implementation - contains actual api implementation
 - spring boot starter - has the `spring-boot-starter` suffix and contains spring boot auto configuration of the specified module 
 
-In spring boot environment only spring boot starter modules should be added as dependencies.
+In Spring Boot environment only spring boot starter modules should be added as dependencies.
 
 nrich is composed of following modules:
 
@@ -75,13 +75,12 @@ nrich is composed of following modules:
   
 - nrich-security-csrf
 
-   Intended as a replacement for spring security csrf functionality. It works with springs 
-   webmvc and webflux libraries. Clients should define initial token url and after that send generated
+   Intended as a replacement for Spring Security csrf functionality. It works with Spring Web MVC and WebFlux libraries. Clients should define initial token url and after that send generated
    token with each request in a header or as a parameter.
 
 - nrich-spring-boot
    
-   Adds additional functionality to spring boot. i.e. `ConditionalOnPropertyNotEmpty` annotation
+   Adds additional functionality to Spring Boot. i.e. `ConditionalOnPropertyNotEmpty` annotation
    that checks if a property is not empty.
    
 - nrich-spring-util
@@ -95,6 +94,6 @@ nrich is composed of following modules:
   
 - nrich-webmvc
 
-  Provides additional functionality built on top of Spring MVC framework. Main purpose is handling exceptions through `NotificationErrorHandlingRestControllerAdvice` that 
+  Provides additional functionality built on top of Spring Web MVC framework. Main purpose is handling exceptions through `NotificationErrorHandlingRestControllerAdvice` that 
   handles exceptions by logging them and sending notifications to client with exception descriptions.
   Also add additional classes handle binding (i.e. transforming empty string to null), locale resolving etc.
