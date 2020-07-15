@@ -28,11 +28,15 @@ public class DefaultExcelExportService implements ExcelExportService {
         final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
         final MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
-        final int limit = request.getBatchSize();
 
+        final int limit = request.getBatchSize();
         int start = 0;
         Object[][] rowBatchData;
         while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
+
+            if (rowBatchData.length == 0) {
+                break;
+            }
 
             Arrays.stream(rowBatchData)
                     .filter(Objects::nonNull)
