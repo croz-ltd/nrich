@@ -86,6 +86,24 @@ Method accepts argument of type `CreateExcelReportRequest` that contains followi
   
   ```
   
-  `ExcelReportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method until it return 
+  `ExcelExportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method until it return 
   empty result starting from zero and incrementing start by batch size.
   
+
+Example usage of `ExcelExportService` is:
+
+```
+
+
+    final File file = new File("director/excel-report.xlsx");
+    // rows in excel
+    final Object[][] rowData = new Object[][] { { 1.1, "value 1" }, { 2.2, "value 2 };
+    // no need for batching since we have only two records
+    final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+
+    // first row index is 3 since first two rows contain column headers
+    final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
+   
+    final File createdFile = excelExportService.createExcelReport(request);
+
+```
