@@ -2,7 +2,7 @@
 
 ## Overview
 nrich-excel is a library intended to simplify excel report generation for simple reports (i.e. exporting search results).
-It uses Apache POI library for excel creation. Excel reports are generated from templates and library also supports
+It uses Apache POI library for excel creation. Excel reports are generated from templates (standard excel files) and library also supports
 template variable resolving.
 
 ## Setting up Spring beans
