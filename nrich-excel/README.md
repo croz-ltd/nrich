@@ -45,49 +45,31 @@ that uses Apache POI library for writing data.
 To be able to create reports users should inject `ExcelExportService` and call `File createExcelReport(CreateExcelReportRequest request)`
 method.
 
-Method accepts argument of type `CreateExcelReportRequest` that contains following properties:
+Method accepts argument of type `CreateExcelReportRequest` when processing report `ExcelExportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method from `MultiRowDataProvider` until it returns 
+and empty result starting from zero and incrementing start by batch size.
 
-- `File outputFile`
+`MultiRowDataProvider` is responsible for resolving data. It can do so by for example invoking directly repository methods.
+So for example a method that resolves data from a repository named `ExampleRepository` for class `Example` with properties `name` and `date` would look like this:
 
-  File where report will be written to.
+```
 
-- `String templatePath`
+@RequiredArgsConstructor
+public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvider {
 
-  Path to template (template is resolved from this path using Springs `ResourceLoader`).
+    private final ExampleRepository exampleRepository;
 
-- `List<TemplateVariable> templateVariableList`
+    @Override
+    public Object[][] resolveMultiRowData(final int start, final int limit) {
+        final Page<Example> exampleList = exampleRepository.findAll(PageableUtil.convertToPageable(start, limit));
 
-  A list of `TemplateVariable` instances consisting of `name` and `value` that will be used to fill variables defined in the template.
-  Variables are defined in template with following synstax: `${varaibleName}` 
-
-- `List<ColumnDataFormat> columnDataFormatList`
-
-  A list of `ColumnDataFormat` instances consisting of `columnIndex` and `dataFormat` that allow for overriding of data format for specific columns. 
-
-- `int firstRowIndex`
-
-  Row index from which data should be written to report.
-
-- `int batchSize`
-
-  Batch size used for data fetch from `MultiRowDataProvider`. 
-
-- `MultiRowDataProvider multiRowDataProvider`
-
-  Interface that is used for fetching data, it should return multiple row data
-  
-  ```
-    @FunctionalInterface
-    public interface MultiRowDataProvider {
-
-        Object[][] resolveMultiRowData(int start, int limit);
-
+        return exampleList.getContent().stream()
+                .map(value -> new Object[] { value.getName(), value.getDate() })
+                .toArray(Object[][]::new);
     }
-  
-  ```
-  
-  `ExcelExportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method until it return 
-  empty result starting from zero and incrementing start by batch size.
+}
+
+
+``` 
   
 
 Example usage of `ExcelExportService` is:
