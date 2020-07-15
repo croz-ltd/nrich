@@ -49,10 +49,23 @@ Method accepts argument of type `CreateExcelReportRequest` when processing repor
 and empty result starting from zero and incrementing start by batch size.
 
 `MultiRowDataProvider` is responsible for resolving data. It can do so by for example invoking directly repository methods.
-So for example a method that resolves data from a repository named `ExampleRepository` for class `Example` with properties `name` and `date` would look like this:
+So for example a method that resolves data from a repository named `ExampleRepository` for class `Example`:
+
+```
+@Setter
+@Getter
+public class Example {
+
+    private String name;
+
+    private Date date;
+}
 
 ```
 
+ would look like this:
+ 
+  ```
 @RequiredArgsConstructor
 public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvider {
 
