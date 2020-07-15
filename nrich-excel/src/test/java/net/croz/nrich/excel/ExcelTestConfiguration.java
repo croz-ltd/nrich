@@ -16,7 +16,7 @@ import java.util.List;
 public class ExcelTestConfiguration {
 
     @Bean
-    public DefaultCellValueConverter defaultCellValueConverter() {
+    public CellValueConverter defaultCellValueConverter() {
         return new DefaultCellValueConverter("dd.MM.yyyy", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true);
     }
 
