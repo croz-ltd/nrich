@@ -70,7 +70,6 @@ public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvid
 
 
 ``` 
-  
 
 Example usage of `ExcelExportService` is:
 
