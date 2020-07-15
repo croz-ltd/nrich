@@ -1,4 +1,4 @@
-package net.croz.nrich.logging.model;
+package net.croz.nrich.logging.api.model;
 
 public enum LoggingVerbosityLevel {
 
