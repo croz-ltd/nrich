@@ -36,6 +36,8 @@ public final class ManagedTypeWrapper {
 
     private final List<SingularAttribute<?, ?>> singularAssociationList;
 
+    private final List<SingularAttribute<?, ?>> singularEmbeddedTypeAssociationList;
+
     private final EmbeddableType<?> embeddableIdType;
 
     public ManagedTypeWrapper(final ManagedType<?> managedType) {
@@ -50,6 +52,7 @@ public final class ManagedTypeWrapper {
         idClassPropertyNameList = new ArrayList<>(idClassPropertyMap.keySet());
         isIdentifierAssigned = resolveIsIdentifierAssigned(identifiableType);
         singularAssociationList = resolveSingularAssociationList(identifiableType);
+        singularEmbeddedTypeAssociationList = isEmbeddedIdentifier ? resolveSingularAssociationList(embeddableIdType) : Collections.emptyList();
     }
 
     public Class<?> getJavaType() {
@@ -69,8 +72,8 @@ public final class ManagedTypeWrapper {
                 .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
     }
 
-    private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> identifiableType) {
-        return identifiableType.getAttributes().stream()
+    private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> managedType) {
+        return managedType.getAttributes().stream()
                 .map(Attribute::getJavaMember)
                 .filter(member -> member instanceof Field)
                 .map(member -> (Field) member)
@@ -78,8 +81,8 @@ public final class ManagedTypeWrapper {
                 .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }
 
-    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(final IdentifiableType<?> identifiableType) {
-        return identifiableType.getSingularAttributes().stream()
+    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(final ManagedType<?> managedType) {
+        return managedType.getSingularAttributes().stream()
                 .filter(Attribute::isAssociation).collect(Collectors.toList());
     }
 }

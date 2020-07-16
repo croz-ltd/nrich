@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class DefaultRegistryConfigurationResolverService implements RegistryConfigurationResolverService {
@@ -167,12 +169,18 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinFetchList(final ManagedTypeWrapper managedTypeWrapper) {
         final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
-        final List<SearchJoin<Map<String, Object>>> searchJoinList = managedTypeWrapper.getSingularAssociationList().stream()
-                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.<Map<String, Object>>leftJoinFetch(singularAttribute.getName()) : SearchJoin.<Map<String, Object>>innerJoinFetch(singularAttribute.getName()))
+        final List<SearchJoin<Map<String, Object>>> searchJoinList = Stream.concat(
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), ""),
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + "."))
                 .collect(Collectors.toList());
 
         searchConfiguration.setJoinList(searchJoinList);
 
         return searchConfiguration;
+    }
+
+    private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(final List<SingularAttribute<?, ?>> associationList, final String prefix) {
+        return associationList.stream()
+                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + singularAttribute.getName()) : SearchJoin.innerJoinFetch(prefix + singularAttribute.getName()));
     }
 }
