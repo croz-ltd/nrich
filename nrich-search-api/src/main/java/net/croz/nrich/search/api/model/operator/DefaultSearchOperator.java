@@ -11,6 +11,13 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public enum DefaultSearchOperator implements SearchOperator {
 
+    LR_ILIKE {
+        @Override
+        public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {
+            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), "%" + Objects.requireNonNull(value).toString().toLowerCase() + "%");
+        }
+    },
+
     ILIKE {
         @Override
         public Predicate asPredicate(final CriteriaBuilder criteriaBuilder, final Path<?> path, final Object value) {

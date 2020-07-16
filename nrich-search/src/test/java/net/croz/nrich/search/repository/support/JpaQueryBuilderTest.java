@@ -485,6 +485,24 @@ public class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldSupportLeftAndRightLikeSearch() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("Rst");
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.LR_ILIKE)))
+                .build();
+
+        // when
+        final List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).hasSize(5);
+    }
+
+    @Test
     void shouldApplyAdditionalRestrictionsToQuery() {
         // given
         generateListForSearch(entityManager);
