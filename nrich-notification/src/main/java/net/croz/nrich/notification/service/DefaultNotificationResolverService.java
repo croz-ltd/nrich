@@ -48,7 +48,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
 
         final String content = notificationMessageResolverService.resolveMessage(toList(NotificationConstants.VALIDATION_FAILED_CONTENT_CODE));
         final List<ValidationError> validationErrorList = convertValidationErrorsToMessageList(errors, validationFailedOwningType);
-        final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData());
+        final List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
         final List<String> validationMessageList = validationErrorList.stream().flatMap(value -> value.getErrorMessageList().stream()).collect(Collectors.toList());
 
         final List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String content = notificationMessageResolverService.resolveMessage(toList(contentCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE), toList(exceptionMessageArgumentList), null);
         final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(resolveExceptionSeverity(severityCode));
 
-        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
+        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     @Override
@@ -90,7 +90,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         final String content = notificationMessageResolverService.resolveMessage(toList(contentCode, NotificationConstants.SUCCESS_DEFAULT_CODE));
         final NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.INFO);
 
-        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListData()), severity, additionalNotificationData.getUxNotificationOptions());
+        return new Notification(title, content, resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap()), severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(final Errors errors, final Class<?> validationFailedOwningType) {

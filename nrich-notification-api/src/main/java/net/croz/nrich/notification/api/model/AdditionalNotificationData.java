@@ -11,7 +11,7 @@ public class AdditionalNotificationData {
 
     private final NotificationSeverity severity;
 
-    private final Map<String, ?> messageListData;
+    private final Map<String, ?> messageListDataMap;
 
     private final Map<String, ?> uxNotificationOptions;
 

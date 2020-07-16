@@ -85,7 +85,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
         }
 
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, AdditionalNotificationData.builder().messageListData(notificationAuxiliaryData).build(), exceptionArgumentList(exception)));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, AdditionalNotificationData.builder().messageListDataMap(notificationAuxiliaryData).build(), exceptionArgumentList(exception)));
     }
 
     private Exception unwrapException(final Exception exception) {
