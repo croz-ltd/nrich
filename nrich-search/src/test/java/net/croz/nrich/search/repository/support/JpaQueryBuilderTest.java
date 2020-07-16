@@ -485,14 +485,14 @@ public class JpaQueryBuilderTest {
     }
 
     @Test
-    void shouldSupportLeftAndRightLikeSearch() {
+    void shouldSupportContainsSearch() {
         // given
         generateListForSearch(entityManager);
 
         final TestEntitySearchRequest request = new TestEntitySearchRequest("Rst");
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.LR_ILIKE)))
+                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.CONTAINS)))
                 .build();
 
         // when
