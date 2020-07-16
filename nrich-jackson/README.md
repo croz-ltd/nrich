@@ -1,6 +1,7 @@
 # nrich-jackson
 
 ## Overview
+
 nrich-jackson is a library containing that adds additional Jacksons serializers and deserializers that have proved to be useful in projects 
 (i.e. serializing empty strings to null, deserializing class property with certain classes etc.)
 

@@ -1,6 +1,7 @@
 # nrich-form-configuration
 
 ## Overview
+
 nrich-form-configuration is a library intended to provide a way of resolving server side defined constraint to client side. It resolves `jakarta-validation-api`
 constraints defined on classes in a form that can be interpreted by the client side. On server side user registers form id (a string) with class holding constraints and then
 resolves defined constraint list from client side using REST API. Messages for constraints are resolved through Springs `MessageSource`.
