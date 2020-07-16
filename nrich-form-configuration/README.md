@@ -3,7 +3,7 @@
 ## Overview
 nrich-form-configuration is a library intended to provide a way of resolving server side defined constraint to client side. It resolves `jakarta-validation-api`
 constraints defined on classes in a form that can be interpreted by the client side. On server side user registers form id (a string) with class holding constraints and then
-resolves defined constraint list from client side using REST API. Messages for constraints are resolved through `message.properties`.
+resolves defined constraint list from client side using REST API. Messages for constraints are resolved through Springs `MessageSource`.
 
 ## Setting up Spring beans
 
@@ -37,7 +37,7 @@ To be able to use this library following configuration is required:
 ```
 
 `FieldErrorMessageResolverService` is responsible for resolving messages for constraints (i.e. 'Value cannot be null' for @NotNull constraint).
-Default implementation is `MessageSourceFieldErrorMessageResolverService` that resolves messages from message source. 
+Default implementation is `MessageSourceFieldErrorMessageResolverService` that resolves messages from `MessageSource`. 
 For example for constraint holding class of type `net.croz.nrich.formconfiguration.stub.MessageSourceFieldErrorMessageResolverServiceTestRequest` and `@NotNull` constraint defined on
 property named `propertyName` following message codes will be searched:
 

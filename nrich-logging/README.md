@@ -1,11 +1,12 @@
 # nrich-logging
 
 ## Overview
-nrich-logging is a library containing that adds logging service logging errors in a standard format and can also resolve verbosity and logging levels for each exception. 
+nrich-logging is a library that adds logging service for logging errors in a standard format. Logging service can also resolve verbosity and logging levels for each exception
+from configuration. 
 
 ## Setting up Spring beans
 
-Setup is simple one only has to define a single bean and then when common logging functionality is required inject that bean.
+Setup is simple, one only has to define a single bean and then when common logging functionality (format, level resolving etc.) is required inject that bean.
 
 ```
     @Bean
@@ -16,7 +17,7 @@ Setup is simple one only has to define a single bean and then when common loggin
 ```   
 
 `LoggingService` is responsible for logging exceptions. Default implementation is `Slf4jLoggingService` that uses `Slf4J` logger for logging exceptions and resolves
-verbosity and logging levels from `messgage.properties`. 
+verbosity and logging levels from Springs `MessageSource`. 
   
 ## Usage
 
