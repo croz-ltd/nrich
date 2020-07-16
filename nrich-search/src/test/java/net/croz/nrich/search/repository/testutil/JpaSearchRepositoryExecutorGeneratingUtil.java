@@ -5,6 +5,7 @@ import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityEmbedded;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
+import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 
@@ -56,4 +57,23 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
         return testEntityList;
     }
+
+    public static List<TestEntityWithEmbeddedId> generateTestEntityWithEmbeddedIdList(final EntityManager entityManager) {
+        return IntStream.range(0, 5).mapToObj(value -> generateTestEntityWithEmbeddedId(entityManager, "name" + value)).collect(Collectors.toList());
+    }
+
+    public static TestEntityWithEmbeddedId generateTestEntityWithEmbeddedId(final EntityManager entityManager, final String name) {
+        final TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
+        final TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
+
+        final TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId primaryKey = new TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId(firstKey, secondKey);
+        final TestEntityWithEmbeddedId entity = new TestEntityWithEmbeddedId(primaryKey, name);
+
+        entityManager.persist(firstKey);
+        entityManager.persist(secondKey);
+        entityManager.persist(entity);
+
+        return entity;
+    }
+
 }

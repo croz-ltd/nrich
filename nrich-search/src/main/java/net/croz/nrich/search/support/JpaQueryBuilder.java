@@ -24,6 +24,8 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -74,7 +76,7 @@ public class JpaQueryBuilder<T> {
 
         final Root<T> root = query.from(rootEntity);
 
-        applyJoinsToQuery(request, root, searchConfiguration.getJoinList());
+        applyJoinsOrFetchesToQuery(request, root, searchConfiguration.getJoinList());
 
         List<SearchProjection<R>> searchProjectionList = searchConfiguration.getProjectionList();
         if (!resultClass.equals(entityType) && CollectionUtils.isEmpty(searchProjectionList)) {
@@ -129,7 +131,7 @@ public class JpaQueryBuilder<T> {
         return searchConfiguration.getResultClass() == null ? (Class<P>) rootEntity : searchConfiguration.getResultClass();
     }
 
-    private <R> void applyJoinsToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList) {
+    private <R> void applyJoinsOrFetchesToQuery(final R request, final Root<?> root, final List<SearchJoin<R>> joinList) {
         if (CollectionUtils.isEmpty(joinList)) {
             return;
         }
@@ -154,14 +156,25 @@ public class JpaQueryBuilder<T> {
         return join.getCondition() == null || join.getCondition().test(request);
     }
 
-    private void applyJoinOrJoinFetch(final Root<?> root, final SearchJoin<?> join) {
-        final JoinType joinType = join.getJoinType() == null ? JoinType.INNER : join.getJoinType();
+    private void applyJoinOrJoinFetch(final Root<?> root, final SearchJoin<?> searchJoin) {
+        final JoinType joinType = searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType();
 
-        if (join.isFetch()) {
-            root.fetch(join.getPath(), joinType);
+        final String[] pathList = PathResolvingUtil.convertToPathList(searchJoin.getPath());
+        if (searchJoin.isFetch()) {
+            Fetch<?, ?> fetch = null;
+            for (final String path : pathList) {
+                fetch = fetch == null ? root.fetch(path, joinType) :  fetch.fetch(path, joinType);
+            }
         }
         else {
-            root.join(join.getPath(), joinType).alias(join.getAlias());
+            Join<?, ?> join = null;
+            for (final String path : pathList) {
+                join = join == null ? root.join(path, joinType) : join.join(path, joinType);
+            }
+
+            if (searchJoin.getAlias().indexOf('.') == -1) {
+                Objects.requireNonNull(join).alias(searchJoin.getAlias());
+            }
         }
     }
 

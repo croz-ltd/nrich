@@ -18,6 +18,7 @@ import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
 import net.croz.nrich.search.repository.stub.TestEntityProjectionDto;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
+import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -624,7 +626,6 @@ public class JpaQueryBuilderTest {
         assertThat(results).hasSize(1);
     }
 
-
     @Test
     void shouldThrowExceptionWhenUsingJoinFetchAndProjection() {
         // given
@@ -647,6 +648,27 @@ public class JpaQueryBuilderTest {
         // then
         assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void shouldSupportNestedJoinFetchList() {
+        // given
+        generateTestEntityWithEmbeddedIdList(entityManager);
+
+        final JpaQueryBuilder<TestEntityWithEmbeddedId> testEntityWithEmbeddedIdJpaQueryBuilder = new JpaQueryBuilder<>(entityManager, TestEntityWithEmbeddedId.class);
+
+        final Map<String, Object> mapSearchRequest = new HashMap<>();
+        mapSearchRequest.put("name", "name0");
+
+        final SearchConfiguration<TestEntityWithEmbeddedId, TestEntityWithEmbeddedId, Map<String, Object>> searchConfiguration = SearchConfiguration.<TestEntityWithEmbeddedId, TestEntityWithEmbeddedId, Map<String, Object>>builder()
+                .joinList(Arrays.asList(SearchJoin.innerJoinFetch("id.firstKey"), SearchJoin.innerJoin("id.secondKey")))
+                .build();
+
+        // when
+        final List<TestEntityWithEmbeddedId> results = entityManager.createQuery(testEntityWithEmbeddedIdJpaQueryBuilder.buildQuery(mapSearchRequest, searchConfiguration, Sort.unsorted())).getResultList();
+
+        // then
+        assertThat(results).hasSize(1);
     }
 
     private <P, R> List<P> executeQuery(final R request, final SearchConfiguration<TestEntity, P, R> searchConfiguration) {
