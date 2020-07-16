@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.history.model;
+package net.croz.nrich.registry.api.history.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.history.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.history.model.EntityWithRevision;
+import net.croz.nrich.registry.api.history.model.EntityWithRevision;
 import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
