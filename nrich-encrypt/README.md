@@ -5,7 +5,8 @@
 nrich-encrypt is a library intended to enable simple encryption and decryption of sensitive data. Property encryption/decryption can be
 enabled by using provided annotations or by specifying fully qualified method names (class name + method name) in configuration classes.
 Default implementation for encryption uses AesBytesEncryptor from Spring Security library but can be overridden if needed.
-Motivation behind this library is masking sensitive data that is sent to client side but is required for integration between the client and server side. 
+Motivation behind this library is masking sensitive data that is sent to client side but is required for integration between the client and server side 
+(i.e. file name in download link, document id from DMS etc.). 
 
 ## Setting up Spring beans
 
