@@ -140,3 +140,5 @@ constraint `NotNull` validation failure messages are resolved from following cod
 Additional notification data (like overridden severity, additional messages, ux notification options) can be specified using `AdditionalNotificationData`.
 Messages defined in `messageListDataMap` are added to notification as messages where message text is resolved from key: `notification.additional-data.mapKey.message` where `mapKey` 
 is key from  `messageListDataMap` and value is passed in as argument for resolving message.
+
+Notification also includes `notificationMessages` files that contain required messages and should be added to `MessageSource` (this is done automatically when using Spring Boot starter).  
