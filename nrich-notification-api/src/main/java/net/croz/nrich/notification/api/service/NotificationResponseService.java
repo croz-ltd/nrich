@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 
 import javax.validation.ConstraintViolationException;
 
-// TODO check if additional method are needed
+// TODO maybe reduce number of methods, this seems a bit complicated?
 public interface NotificationResponseService<T> {
 
     T responseWithValidationFailureNotification(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData);
