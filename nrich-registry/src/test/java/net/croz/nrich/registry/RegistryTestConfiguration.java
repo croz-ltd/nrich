@@ -30,7 +30,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormCon
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
-import net.croz.nrich.registry.history.service.RegistryHistoryService;
+import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;

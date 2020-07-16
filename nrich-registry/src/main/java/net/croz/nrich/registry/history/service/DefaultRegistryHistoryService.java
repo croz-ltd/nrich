@@ -1,5 +1,6 @@
 package net.croz.nrich.registry.history.service;
 
+import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
@@ -8,7 +9,7 @@ import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.history.model.EntityWithRevision;
 import net.croz.nrich.registry.api.history.model.RevisionInfo;
-import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
+import net.croz.nrich.registry.api.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.api.util.PageableUtil;
