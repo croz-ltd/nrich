@@ -109,98 +109,124 @@ public class EmployeeRequest {
 Response sent from server is in following form:
 
 ```json
-
-[{
-	"formId": "demo.EmployeeForm",
-	"constrainedPropertyConfigurationList": [{
-		"path": "firstName",
-		"validatorList": [{
-			"propertyType": "java.lang.String",
-			"name": "NotBlank",
-			"argumentMap": {},
-			"errorMessage": "Cannot be blank"
-		}]
-	}, {
-		"path": "email",
-		"validatorList": [{
-			"propertyType": "java.lang.String",
-			"name": "Email",
-			"argumentMap": {
-				"regexp": ".*",
-				"flags": []
-			},
-			"errorMessage": "Email is not in the correct format"
-		}, {
-			"propertyType": "java.lang.String",
-			"name": "NotBlank",
-			"argumentMap": {},
-			"errorMessage": "Cannot be blank"
-		}]
-	}, {
-		"path": "hours",
-		"validatorList": [{
-			"propertyType": "java.lang.Integer",
-			"name": "Min",
-			"argumentMap": {
-				"value": 0
-			},
-			"errorMessage": "Minimum value is: 0"
-		}, {
-			"propertyType": "java.lang.Integer",
-			"name": "Max",
-			"argumentMap": {
-				"value": 23
-			},
-			"errorMessage": "Maximum value is: 23"
-		}]
-	}, {
-		"path": "income",
-		"validatorList": [{
-			"propertyType": "java.math.BigDecimal",
-			"name": "Digits",
-			"argumentMap": {
-				"integer": 10,
-				"fraction": 2
-			},
-			"errorMessage": "Maximum number of digits is: 10 and scale is: 2"
-		}, {
-			"propertyType": "java.math.BigDecimal",
-			"name": "DecimalMin",
-			"argumentMap": {
-				"inclusive": true,
-				"value": "0.0"
-			},
-			"errorMessage": "Minimum value is: 0.0"
-		}]
-	}, {
-		"path": "endDate",
-		"validatorList": [{
-			"propertyType": "java.util.Date",
-			"name": "NotNull",
-			"argumentMap": {},
-			"errorMessage": "Cannot be null"
-		}]
-	}, {
-		"path": "phone1",
-		"validatorList": [{
-			"propertyType": "java.lang.String",
-			"name": "Size",
-			"argumentMap": {
-				"min": 3,
-				"max": 3
-			},
-			"errorMessage": "Size must be between: 3 and 3"
-		}]
-	}, {
-		"path": "startDate",
-		"validatorList": [{
-			"propertyType": "java.util.Date",
-			"name": "NotNull",
-			"argumentMap": {},
-			"errorMessage": "Cannot be null"
-		}]
-	}]
-}]
+[
+  {
+    "formId": "demo.EmployeeForm",
+    "constrainedPropertyConfigurationList": [
+      {
+        "path": "firstName",
+        "validatorList": [
+          {
+            "propertyType": "java.lang.String",
+            "name": "NotBlank",
+            "argumentMap": {},
+            "errorMessage": "Cannot be blank"
+          }
+        ]
+      },
+      {
+        "path": "email",
+        "validatorList": [
+          {
+            "propertyType": "java.lang.String",
+            "name": "Email",
+            "argumentMap": {
+              "regexp": ".*",
+              "flags": []
+            },
+            "errorMessage": "Email is not in the correct format"
+          },
+          {
+            "propertyType": "java.lang.String",
+            "name": "NotBlank",
+            "argumentMap": {},
+            "errorMessage": "Cannot be blank"
+          }
+        ]
+      },
+      {
+        "path": "hours",
+        "validatorList": [
+          {
+            "propertyType": "java.lang.Integer",
+            "name": "Min",
+            "argumentMap": {
+              "value": 0
+            },
+            "errorMessage": "Minimum value is: 0"
+          },
+          {
+            "propertyType": "java.lang.Integer",
+            "name": "Max",
+            "argumentMap": {
+              "value": 23
+            },
+            "errorMessage": "Maximum value is: 23"
+          }
+        ]
+      },
+      {
+        "path": "income",
+        "validatorList": [
+          {
+            "propertyType": "java.math.BigDecimal",
+            "name": "Digits",
+            "argumentMap": {
+              "integer": 10,
+              "fraction": 2
+            },
+            "errorMessage": "Maximum number of digits is: 10 and scale is: 2"
+          },
+          {
+            "propertyType": "java.math.BigDecimal",
+            "name": "DecimalMin",
+            "argumentMap": {
+              "inclusive": true,
+              "value": "0.0"
+            },
+            "errorMessage": "Minimum value is: 0.0"
+          }
+        ]
+      },
+      {
+        "path": "endDate",
+        "validatorList": [
+          {
+            "propertyType": "java.util.Date",
+            "name": "NotNull",
+            "argumentMap": {},
+            "errorMessage": "Cannot be null"
+          }
+        ]
+      },
+      {
+        "path": "phone1",
+        "validatorList": [
+          {
+            "propertyType": "java.lang.String",
+            "name": "Size",
+            "argumentMap": {
+              "min": 3,
+              "max": 3
+            },
+            "errorMessage": "Size must be between: 3 and 3"
+          }
+        ]
+      },
+      {
+        "path": "startDate",
+        "validatorList": [
+          {
+            "propertyType": "java.util.Date",
+            "name": "NotNull",
+            "argumentMap": {},
+            "errorMessage": "Cannot be null"
+          }
+        ]
+      }
+    ]
+  }
+]
 
 
 ```
