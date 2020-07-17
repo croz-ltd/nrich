@@ -193,7 +193,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     }
 
     private String groupDisplayLabel(final String groupId) {
-        final String[] groupMessageCodeList = { String.format(RegistryConfigurationConstants.REGISTRY_GROUP_DISPLAY_LABEL_FORMAT, groupId) };
+        final String[] groupMessageCodeList = { String.format(RegistryConfigurationConstants.REGISTRY_CATEGORY_DISPLAY_LABEL_FORMAT, groupId) };
         final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(groupMessageCodeList, groupId);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());

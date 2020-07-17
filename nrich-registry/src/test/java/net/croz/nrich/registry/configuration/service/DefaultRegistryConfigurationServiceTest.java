@@ -31,7 +31,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(3);
         assertThat(result).extracting("registryCategoryId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
-        assertThat(result).extracting("registryCategoryIdDisplay").containsExactly("Configuration group", "Data group", "HISTORY");
+        assertThat(result).extracting("registryCategoryIdDisplay").containsExactly("Configuration category", "Data category", "HISTORY");
     }
 
     @Test

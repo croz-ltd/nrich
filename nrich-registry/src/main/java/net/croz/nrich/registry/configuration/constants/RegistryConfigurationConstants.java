@@ -4,7 +4,7 @@ public final class RegistryConfigurationConstants {
 
     public static final String REGISTRY_PROPERTY_PREFIX_FORMAT = "%s.%s";
 
-    public static final String REGISTRY_GROUP_DISPLAY_LABEL_FORMAT = "%s.registryGroupIdDisplay";
+    public static final String REGISTRY_CATEGORY_DISPLAY_LABEL_FORMAT = "%s.registryCategoryIdDisplay";
 
     public static final String REGISTRY_NAME_DISPLAY_LABEL_FORMAT = "%s.registryNameDisplay";
 
