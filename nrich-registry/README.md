@@ -128,11 +128,11 @@ not on classpath then `RegistryDataFormConfigurationResolverService` bean is not
 
 `ModelMapper registryBaseModelMapper` is used for other mappings in library.
 
-`StringToTypeConverter<?>` performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
+`StringToTypeConverter<?>` is an interface from `nrich-search` library that performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
 
-`StringToEntityPropertyMapConverter` is also used for querying registry entities, it is responsible for assembling conditions Map from query string and a list of properties to search (
-conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string) and a list of properties to be searched. 
+`StringToEntityPropertyMapConverter` is also an interface from `nrich-search` library that is used for querying registry entities, it is responsible for assembling conditions Map from query string and a list of properties to search (
+conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties to be searched. 
 
 `RegistryConfigurationResolverService` is a service that parses `RegistryConfiguration` and returns data in format required by other registry services.
 

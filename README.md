@@ -71,7 +71,7 @@ nrich is composed of following modules:
   in a query and a parameter (`SearchConfiguration`) that defines how those values will be added to query (i.e. what operators should be used, mapping of those properties on entities etc.) it also defines what result
   type will be returned, what associations should also be fetched etc. It also allows for using string as an input (instead of class holding the value), and a list of fields that should be searched from the entity (for quick search functionality).
   It was created as a means of simplifying creation of queries for various search forms on client side.
-  `spring-data` module is used in implementation and module functionality is added through two repositories interfaces that users can add to their repository interface.
+  Spring Data JPA library is used in implementation and module functionality is added through two repositories interfaces that users can add to their repository interface.
   
 ### nrich-security-csrf
 
