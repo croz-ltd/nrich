@@ -13,6 +13,6 @@ public class CreateRegistryRequest {
     private String classFullName;
 
     @NotNull
-    private String entityData;
+    private String jsonEntityData;
 
 }

@@ -28,7 +28,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
         final CreateRegistryServiceRequest serviceRequest = new CreateRegistryServiceRequest();
 
         serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
+        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
 
         return serviceRequest;
     }
@@ -41,7 +41,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
 
         serviceRequest.setId(request.getId());
         serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
+        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
 
         return serviceRequest;
     }

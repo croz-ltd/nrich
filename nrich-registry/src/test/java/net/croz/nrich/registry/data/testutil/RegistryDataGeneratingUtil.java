@@ -147,7 +147,7 @@ public final class RegistryDataGeneratingUtil {
         final CreateRegistryRequest request = new CreateRegistryRequest();
 
         request.setClassFullName(classFullName);
-        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
 
         return request;
     }
@@ -177,7 +177,7 @@ public final class RegistryDataGeneratingUtil {
 
         request.setClassFullName(classFullName);
         request.setId(id);
-        request.setEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
 
         return request;
     }
