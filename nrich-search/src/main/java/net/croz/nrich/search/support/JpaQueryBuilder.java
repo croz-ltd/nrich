@@ -163,7 +163,7 @@ public class JpaQueryBuilder<T> {
         if (searchJoin.isFetch()) {
             Fetch<?, ?> fetch = null;
             for (final String path : pathList) {
-                fetch = fetch == null ? root.fetch(path, joinType) :  fetch.fetch(path, joinType);
+                fetch = fetch == null ? root.fetch(path, joinType) : fetch.fetch(path, joinType);
             }
         }
         else {
