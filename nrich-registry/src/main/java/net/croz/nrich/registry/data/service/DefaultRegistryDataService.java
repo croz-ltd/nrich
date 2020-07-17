@@ -5,7 +5,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
+import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;

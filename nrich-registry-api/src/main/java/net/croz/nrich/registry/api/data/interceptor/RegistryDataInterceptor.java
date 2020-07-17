@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.data.interceptor;
+package net.croz.nrich.registry.api.data.interceptor;
 
 import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
