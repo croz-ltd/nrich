@@ -123,8 +123,11 @@ not on classpath then `RegistryDataFormConfigurationResolverService` bean is not
 ```
 
 `RegistryConfiguration` defines for the what entities will the client side configuration be generated for and searching, creating and updating enabled.
+
 `ModelMapper registryDataModelMapper` is used to map request data to entity instances.
+
 `ModelMapper registryBaseModelMapper` is used for other mappings in library.
+
 `StringToTypeConverter<?>` performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
 
