@@ -5,7 +5,7 @@ import net.croz.nrich.registry.configuration.controller.RegistryConfigurationCon
 import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
-import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
+import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;

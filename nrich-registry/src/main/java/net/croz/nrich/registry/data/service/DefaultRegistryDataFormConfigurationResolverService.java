@@ -1,5 +1,6 @@
 package net.croz.nrich.registry.data.service;
 
+import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 
