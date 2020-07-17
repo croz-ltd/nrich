@@ -10,7 +10,7 @@ Motivation behind this library is masking sensitive data that is sent to client 
 
 ## Setting up Spring beans
 
-To be able to use this library AspectJ should be enabled (i.e. `@EnableAspectJAutoProxy`) and following beans should be defined in context:
+To be able to use this library AspectJ should be enabled (i.e. by adding `@EnableAspectJAutoProxy` on `@Configuration` class) and following beans should be defined in context:
 
 ```
 
