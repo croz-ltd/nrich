@@ -17,7 +17,9 @@ public class BytesEncryptorTextEncryptService implements TextEncryptionService {
     @Override
     public String encryptText(final String textToEncrypt) {
         try {
-            return Base64.getUrlEncoder().encodeToString(encryptor.encrypt(textToEncrypt.getBytes(charset)));
+            final byte[] encoded = Base64.getUrlEncoder().encode(encryptor.encrypt(textToEncrypt.getBytes(charset)));
+
+            return new String(encoded, charset);
         }
         catch (final Exception exception) {
             throw new EncryptOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt),  exception);
@@ -27,7 +29,9 @@ public class BytesEncryptorTextEncryptService implements TextEncryptionService {
     @Override
     public String decryptText(final String textToDecrypt) {
         try {
-            return new String(encryptor.decrypt(Base64.getUrlDecoder().decode(textToDecrypt)), charset);
+            final byte[] decoded = Base64.getUrlDecoder().decode(textToDecrypt.getBytes(charset));
+
+            return new String(encryptor.decrypt(decoded), charset);
         }
         catch (final Exception exception) {
             throw new EncryptOperationFailedException(String.format("Error occurred during decryption for data: %s", textToDecrypt), exception);
