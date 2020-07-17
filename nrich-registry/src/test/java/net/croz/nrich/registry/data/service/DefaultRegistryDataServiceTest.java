@@ -6,6 +6,7 @@ import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;

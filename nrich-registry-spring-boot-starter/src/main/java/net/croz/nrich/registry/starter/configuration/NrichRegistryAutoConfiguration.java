@@ -20,7 +20,7 @@ import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversion
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
-import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;

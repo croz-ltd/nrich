@@ -1,5 +1,6 @@
 package net.croz.nrich.registry.data.service;
 
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.service.RegistryEntityFinderService;

@@ -10,7 +10,7 @@ import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
-import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;

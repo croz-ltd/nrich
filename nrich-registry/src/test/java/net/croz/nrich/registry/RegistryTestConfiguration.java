@@ -24,7 +24,7 @@ import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
-import net.croz.nrich.registry.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
