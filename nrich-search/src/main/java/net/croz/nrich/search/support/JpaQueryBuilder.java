@@ -137,7 +137,7 @@ public class JpaQueryBuilder<T> {
         }
 
         joinList.stream()
-                .filter(join -> shouldApplyJoin(join, request))
+                .filter(join -> shouldApplyJoinOrFetch(join, request))
                 .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin));
     }
 
@@ -152,7 +152,7 @@ public class JpaQueryBuilder<T> {
                 .collect(Collectors.toList());
     }
 
-    private <R> boolean shouldApplyJoin(final SearchJoin<R> join, final R request) {
+    private <R> boolean shouldApplyJoinOrFetch(final SearchJoin<R> join, final R request) {
         return join.getCondition() == null || join.getCondition().test(request);
     }
 
