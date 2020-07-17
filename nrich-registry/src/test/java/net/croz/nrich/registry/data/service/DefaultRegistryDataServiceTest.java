@@ -1,11 +1,11 @@
 package net.croz.nrich.registry.data.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
-import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
-import net.croz.nrich.registry.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
+import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;

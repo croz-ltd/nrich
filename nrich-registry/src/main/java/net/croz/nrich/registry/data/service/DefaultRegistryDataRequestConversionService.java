@@ -6,9 +6,9 @@ import lombok.SneakyThrows;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.data.request;
+package net.croz.nrich.registry.api.data.request;
 
 import lombok.Getter;
 import lombok.Setter;
