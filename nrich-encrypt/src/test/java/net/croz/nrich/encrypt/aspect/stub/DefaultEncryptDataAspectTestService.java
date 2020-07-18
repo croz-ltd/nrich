@@ -40,15 +40,13 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
         return Flux.just(new EncryptDataAspectTestServiceResult(value));
     }
 
-    @DecryptArgument(argumentPathList = "value")
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecrypt(final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecrypt(@DecryptArgument(argumentPathList = "value") final EncryptDataAspectTestServiceResult data) {
         return data;
     }
 
-    @DecryptArgument(argumentPathList = {})
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(@DecryptArgument(argumentPathList = {}) final EncryptDataAspectTestServiceResult data) {
         return data;
     }
 

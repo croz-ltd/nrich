@@ -35,8 +35,12 @@ public abstract class BaseEncryptDataAdvice {
 
     public Object[] decryptArguments(final EncryptionContext encryptionContext, final Object[] argumentList, final List<String> pathToDecryptList) {
         return Arrays.stream(argumentList)
-                .map(argument -> getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext))
+                .map(argument -> decryptArgument(encryptionContext, argument, pathToDecryptList))
                 .toArray();
+    }
+
+    public Object decryptArgument(final EncryptionContext encryptionContext, final Object argument, final List<String> pathToDecryptList) {
+       return getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext);
     }
 
     protected abstract DataEncryptionService getDataEncryptionService();

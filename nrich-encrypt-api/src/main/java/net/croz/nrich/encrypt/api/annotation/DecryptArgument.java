@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Method annotation used to enable argument decryption.
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DecryptArgument {
 
