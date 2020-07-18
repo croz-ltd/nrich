@@ -41,18 +41,16 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
 
             final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
 
-            final Object[] decryptedArguments = new Object[arguments.length];
-
-            IntStream.range(0, arguments.length).forEach(index -> {
+            final Object[] decryptedArguments = IntStream.range(0, arguments.length).mapToObj(index -> {
                 final DecryptArgument argumentAnnotation = decryptArgumentAnnotation(parameterAnnotationList[index]);
 
-                if (argumentAnnotation != null) {
-                    decryptedArguments[index] = decryptArgument(context, arguments[index], Arrays.asList(argumentAnnotation.argumentPathList()));
+                if (argumentAnnotation == null) {
+                    return arguments[index];
                 }
-                else {
-                    decryptedArguments[index] = arguments[index];
-                }
-            });
+
+                return decryptArgument(context, arguments[index], Arrays.asList(argumentAnnotation.argumentPathList()));
+
+            }).toArray();
 
             return proceedingJoinPoint.proceed(decryptedArguments);
         }
