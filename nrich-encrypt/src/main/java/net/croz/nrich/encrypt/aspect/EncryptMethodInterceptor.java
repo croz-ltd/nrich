@@ -2,11 +2,11 @@ package net.croz.nrich.encrypt.aspect;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.croz.nrich.encrypt.constants.EncryptConstants;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
+import net.croz.nrich.encrypt.constants.EncryptConstants;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.ProxyMethodInvocation;
