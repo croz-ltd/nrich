@@ -21,6 +21,10 @@ public interface EncryptDataAspectTestService {
 
     EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(EncryptDataAspectTestServiceResult data);
 
+    String textToEncrypt(String value);
+
+    String textToDecrypt(String value, String valueToIgnore);
+
     EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(String value);
 
     EncryptDataAspectTestServiceResult dataToDecryptFromConfiguration(EncryptDataAspectTestServiceResult data);

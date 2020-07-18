@@ -65,14 +65,14 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
         final Signature signature = proceedingJoinPoint.getSignature();
 
         final Object[] arguments = proceedingJoinPoint.getArgs();
+
         final List<Object> argumentList = Arrays.asList(arguments);
+
+        final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
+
         Object result = proceedingJoinPoint.proceed(arguments);
 
-        if (annotation.resultPathList().length > 0) {
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
-
-            result = encryptResult(context, result, Arrays.asList(annotation.resultPathList()));
-        }
+        result = encryptResult(context, result, Arrays.asList(annotation.resultPathList()));
 
         return result;
     }

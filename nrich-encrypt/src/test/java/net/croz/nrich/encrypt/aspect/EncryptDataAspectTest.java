@@ -5,6 +5,7 @@ import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -87,5 +88,23 @@ public class EncryptDataAspectTest {
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
+    }
+
+    @Test
+    void shouldEncryptText() {
+        final String text = "some text";
+
+        // when
+        final String result = encryptDataAspectTestService.textToEncrypt(text);
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result).isNotEqualTo(text);
+
+        // and when
+        final String decryptResult = encryptDataAspectTestService.textToDecrypt(result, "ignored value");
+
+        // then
+        assertThat(decryptResult).isEqualTo(text);
     }
 }

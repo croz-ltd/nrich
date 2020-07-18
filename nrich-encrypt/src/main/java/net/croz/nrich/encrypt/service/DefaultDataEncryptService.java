@@ -7,6 +7,7 @@ import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,6 +27,13 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             return null;
         }
 
+        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
+            @SuppressWarnings("unchecked")
+            final T encryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.ENCRYPT);
+
+            return encryptedText;
+        }
+
         pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.ENCRYPT));
 
         return data;
@@ -35,6 +43,13 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     public <T> T decryptData(final T data, final List<String> pathToEncryptDecryptList, final EncryptionContext encryptionContext) {
         if (data == null) {
             return null;
+        }
+
+        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
+            @SuppressWarnings("unchecked")
+            final T decryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.DECRYPT);
+
+            return decryptedText;
         }
 
         pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.DECRYPT));

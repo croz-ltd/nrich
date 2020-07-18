@@ -6,12 +6,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Method annotation used to enable argument decryption.
+ * Method annotation used to enable method argument decryption.
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DecryptArgument {
 
-  String[] argumentPathList();
+    String[] argumentPathList() default { };
 
 }

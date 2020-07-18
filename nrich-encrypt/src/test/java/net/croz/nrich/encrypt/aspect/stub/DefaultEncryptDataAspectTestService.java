@@ -16,7 +16,7 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
         return new EncryptDataAspectTestServiceResult(value);
     }
 
-    @EncryptResult(resultPathList = {})
+    @EncryptResult
     @Override
     public EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(final String value) {
         return new EncryptDataAspectTestServiceResult(value);
@@ -46,8 +46,19 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(@DecryptArgument(argumentPathList = {}) final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(@DecryptArgument final EncryptDataAspectTestServiceResult data) {
         return data;
+    }
+
+    @EncryptResult
+    @Override
+    public String textToEncrypt(final String value) {
+        return value;
+    }
+
+    @Override
+    public String textToDecrypt(@DecryptArgument final String value, final String valueToIgnore) {
+        return value;
     }
 
     @Override
