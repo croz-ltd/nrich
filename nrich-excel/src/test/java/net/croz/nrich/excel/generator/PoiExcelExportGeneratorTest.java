@@ -56,7 +56,7 @@ public class PoiExcelExportGeneratorTest {
         final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
         final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
-        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, null);
+        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.class, "dd-MM-yyyy")));
 
         excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
@@ -105,7 +105,7 @@ public class PoiExcelExportGeneratorTest {
     void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() throws Exception {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        final Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L };
+        final Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, new Date() };
 
         // when
         excelExportGenerator.writeRowData(rowData);
@@ -116,6 +116,6 @@ public class PoiExcelExportGeneratorTest {
         final Sheet sheet = workbook.getSheetAt(0);
 
         // then
-        assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly("#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0");
+        assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly("#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0", "dd-MM-yyyy");
     }
 }
