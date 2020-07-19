@@ -50,15 +50,14 @@ public class PoiExcelExportGenerator implements ExcelExportGenerator {
 
     private boolean templateOpen = true;
 
-    public PoiExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
+    public PoiExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<TypeDataFormat> typeDataFormatList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
         this.sheet = workbook.getSheetAt(0);
         this.creationHelper = workbook.getCreationHelper();
         this.cellStyleMap = createStyleMap(columnDataFormatList);
-        this.defaultStyleMap = createDefaultStyleMap();
-
+        this.defaultStyleMap = createDefaultStyleMap(typeDataFormatList);
         this.currentRowNumber = startIndex;
     }
 
@@ -162,10 +161,8 @@ public class PoiExcelExportGenerator implements ExcelExportGenerator {
         return new SXSSFWorkbook(xssfWorkbook);
     }
 
-    private Map<Class<?>, CellStyle> createDefaultStyleMap() {
-        return cellValueConverterList.stream()
-                .map(CellValueConverter::typeDataFormatList)
-                .flatMap(List::stream)
+    private Map<Class<?>, CellStyle> createDefaultStyleMap(final List<TypeDataFormat> typeDataFormatList) {
+        return typeDataFormatList.stream()
                 .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
                 .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
     }

@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
 import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.Assert;
@@ -19,6 +20,8 @@ public class PoiExcelExportGeneratorFactory implements ExcelExportGeneratorFacto
 
     private final List<CellValueConverter> cellValueConverterList;
 
+    private final List<TypeDataFormat> typeDataFormatList;
+
     @Override
     public ExcelExportGenerator createReportGenerator(final CreateReportGeneratorRequest request) {
         Assert.isTrue(request.getOutputFile() != null && request.getOutputFile().exists(), "Output file cannot be null");
@@ -27,7 +30,7 @@ public class PoiExcelExportGeneratorFactory implements ExcelExportGeneratorFacto
 
         final InputStream template = resolveTemplate(request.getTemplatePath());
 
-        return new PoiExcelExportGenerator(cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), request.getColumnDataFormatList(), request.getFirstRowIndex());
+        return new PoiExcelExportGenerator(cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex());
     }
 
     @SneakyThrows

@@ -3,7 +3,9 @@ package net.croz.nrich.excel.generator;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.converter.DefaultCellValueConverter;
+import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -49,12 +51,14 @@ public class PoiExcelExportGeneratorTest {
 
     @BeforeEach
     void setup() {
-        final CellValueConverter cellValueConverter = new DefaultCellValueConverter("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true);
+        final CellValueConverter cellValueConverter = new DefaultCellValueConverter();
         final InputStream template = this.getClass().getResourceAsStream("/excel/template.xlsx");
         final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
         final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
-        excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, null);
+
+        excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @Test
