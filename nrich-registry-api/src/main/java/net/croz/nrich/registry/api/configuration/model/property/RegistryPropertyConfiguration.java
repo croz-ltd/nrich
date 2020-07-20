@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.api.configuration.model;
+package net.croz.nrich.registry.api.configuration.model.property;
 
 import lombok.Builder;
 import lombok.Getter;

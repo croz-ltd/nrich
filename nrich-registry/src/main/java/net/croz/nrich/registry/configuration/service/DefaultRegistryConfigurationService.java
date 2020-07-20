@@ -1,10 +1,10 @@
 package net.croz.nrich.registry.configuration.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.api.configuration.model.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
-import net.croz.nrich.registry.api.configuration.model.RegistryPropertyConfiguration;
+import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
+import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;

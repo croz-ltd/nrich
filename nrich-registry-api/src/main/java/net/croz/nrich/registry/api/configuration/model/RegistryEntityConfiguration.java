@@ -2,6 +2,7 @@ package net.croz.nrich.registry.api.configuration.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 
 import java.util.List;
 

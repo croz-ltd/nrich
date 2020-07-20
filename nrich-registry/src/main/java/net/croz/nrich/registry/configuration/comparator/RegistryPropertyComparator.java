@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.configuration.comparator;
 
-import net.croz.nrich.registry.api.configuration.model.RegistryPropertyConfiguration;
+import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
