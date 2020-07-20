@@ -13,12 +13,14 @@ To be able to use this library following configuration is required:
 ```
     @Bean
     public CellValueConverter defaultCellValueConverter() {
-        return new DefaultCellValueConverter("dd.MM.yyyy", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true);
+        return new DefaultCellValueConverter();
     }
 
     @Bean
     public ExcelExportGeneratorFactory excelExportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
-        return new PoiExcelExportGeneratorFactory(resourceLoader, cellValueConverterList);
+        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.clas, "dd-MM-yyyy"));
+
+        return new PoiExcelExportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @Bean
@@ -32,8 +34,8 @@ To be able to use this library following configuration is required:
 `CellValueConverter` is responsible for converting objects to values to be written in excel. Users can provided their own implementations and/or use
 `DefaultCellValueConverter`. 
 
-`DefaultCellValueConverter` accepts a list of formats for value conversion (`dateFormat`, `dateTimeFormat`, `integerNumberFormat`, `decimalNumberFormat`) and option should dates be written with time component or not 
-(`writeDateWithTime`)
+`TypeDataFormat` is reponsible for resolving a list of `TypeDataFormat` instances that decide with what format a specific class will be written to excel. It accepts a list of formats for value conversion (`dateFormat`, `dateTimeFormat`, `integerNumberFormat`, `decimalNumberFormat`), option should dates be written with time component or not 
+(`writeDateWithTime`) and a list of formats that will override defaults for specific class (for example if `Instant` should be written in different format than `Date`)
 
 `ExcelExportGeneratorFactory` is responsible for creating and writing data to actual reports. Default implementation is `PoiExcelExportGeneratorFactory`
 that uses Apache POI library for writing data.
