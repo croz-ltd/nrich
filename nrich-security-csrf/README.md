@@ -72,4 +72,4 @@ excluded list and adding generated token for initial token url. Besides `CsrfTok
 
 Clients should configure initial token url. This is entry point in application i.e. controller action that is executed on a successful login. After that response from initial token action will
 contain CSRF token in the parameter named `csrfInitialToken`. Every call from client to url that is not in the list of excluded urls should contain CSRF token or the call will fail.
-Tokens will periodically be refreshed so users should refresh token value from response header `X-CSRF-Token` (or other name that was specified in the configuration).
+Tokens will periodically be refreshed so users should refresh token value sent from client from received response header `X-CSRF-Token` (or other name that was specified in the configuration).
