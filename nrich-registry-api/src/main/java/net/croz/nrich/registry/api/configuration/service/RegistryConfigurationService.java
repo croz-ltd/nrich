@@ -1,6 +1,6 @@
-package net.croz.nrich.registry.configuration.service;
+package net.croz.nrich.registry.api.configuration.service;
 
-import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
 
 import java.util.List;
 
