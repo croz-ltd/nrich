@@ -66,3 +66,10 @@ excluded list and adding generated token for initial token url. Besides `CsrfTok
  urls or regex that matches urls that will be skipped for CSRF token verification.
 
 `CsrfWebFilter` is used when in Spring WebFlux environment it is an implementation of `WebFilter` it has the same behaviour and arguments as `CsrfInterceptor` with a difference it operates in reactive environment.
+
+
+## Usage
+
+Clients should configure initial token url. This is entry point in application i.e. controller action that is executed on a successful login. After that response from initial token action will
+contain CSRF token in the parameter named `csrfInitialToken`. Every call from client to url that is not in the list of excluded urls should contain CSRF token or the call will fail.
+Tokens will periodically be refreshed so users should refresh token value from response header `X-CSRF-Token` (or other name that was specified in the configuration).
