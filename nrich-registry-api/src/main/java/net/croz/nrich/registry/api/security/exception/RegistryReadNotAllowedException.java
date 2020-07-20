@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.security.exception;
+package net.croz.nrich.registry.api.security.exception;
 
 public class RegistryReadNotAllowedException extends RuntimeException {
 
