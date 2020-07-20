@@ -1,4 +1,4 @@
-package net.croz.nrich.registry.core.service;
+package net.croz.nrich.registry.api.core.service;
 
 import java.util.Map;
 

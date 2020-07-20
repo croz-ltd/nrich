@@ -2,6 +2,7 @@ package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import org.modelmapper.ModelMapper;
