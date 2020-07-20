@@ -4,15 +4,18 @@ import net.croz.nrich.validation.api.constraint.MaxSizeInBytes;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 public class MaxSizeInBytesValidator implements ConstraintValidator<MaxSizeInBytes, String> {
 
-    private long maxSizeInBytes;
+    private int maxSizeInBytes;
+
+    private Charset charset;
 
     @Override
     public void initialize(final MaxSizeInBytes constraintAnnotation) {
         maxSizeInBytes = constraintAnnotation.value();
+        charset = Charset.forName(constraintAnnotation.encoding());
     }
 
     @Override
@@ -21,6 +24,6 @@ public class MaxSizeInBytesValidator implements ConstraintValidator<MaxSizeInByt
             return true;
         }
 
-        return value.getBytes(StandardCharsets.UTF_8).length <= maxSizeInBytes;
+        return value.getBytes(charset).length <= maxSizeInBytes;
     }
 }

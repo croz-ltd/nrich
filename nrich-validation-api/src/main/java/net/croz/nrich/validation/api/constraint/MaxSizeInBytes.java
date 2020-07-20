@@ -27,7 +27,9 @@ public @interface MaxSizeInBytes {
 
     Class<?>[] groups() default { };
 
-    long value();
+    int value();
+
+    String encoding() default "UTF-8";
 
     Class<? extends Payload>[] payload() default { };
 

@@ -8,7 +8,7 @@ import net.croz.nrich.validation.api.constraint.MaxSizeInBytes;
 @Getter
 public class MaxSizeInBytesTestRequest {
 
-    @MaxSizeInBytes(value = 5L)
+    @MaxSizeInBytes(value = 5)
     private final String value;
 
 }
