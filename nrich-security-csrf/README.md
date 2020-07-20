@@ -55,7 +55,7 @@ nrich-security-csrf is a library intended for CSRF protection. It generates a in
 
 ``` 
 
-`CsrfTokenManagerService` is a service that is responsible for generating initial token and validating and refreshing existing tokens. Default implementation `AesCsrfTokenManagerService`
+`CsrfTokenManagerService` is a service responsible for generating initial token and validating and refreshing existing tokens. Default implementation `AesCsrfTokenManagerService`
 uses `AES` algorithm for encryption with key length passed in as argument (in the former configuration it is 128). It also accepts token expiration interval, token future threshold (allows tokes to be in 
 the future because of unsynchronized time between the client and server) and token name.
 
