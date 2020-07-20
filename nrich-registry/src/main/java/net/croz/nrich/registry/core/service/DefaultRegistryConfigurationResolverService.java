@@ -1,9 +1,9 @@
 package net.croz.nrich.registry.core.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.api.model.RegistryConfiguration;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfigurationHolder;
+import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryCategoryDefinition;

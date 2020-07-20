@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.core.service;
 
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;

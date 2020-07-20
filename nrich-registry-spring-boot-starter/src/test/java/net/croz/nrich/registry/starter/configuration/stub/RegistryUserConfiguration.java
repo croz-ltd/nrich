@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.starter.configuration.stub;
 
-import net.croz.nrich.registry.api.model.RegistryConfiguration;
-import net.croz.nrich.registry.api.model.RegistryCategoryDefinitionConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryCategoryDefinitionConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

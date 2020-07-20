@@ -6,7 +6,7 @@ import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfigurati
 import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.api.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;
 import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
