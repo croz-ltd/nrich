@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.history.testutil;
 
-import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.api.history.request.ListRegistryHistoryRequest;
+import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObject;

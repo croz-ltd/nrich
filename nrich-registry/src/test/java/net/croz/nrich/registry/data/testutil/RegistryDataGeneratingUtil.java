@@ -2,14 +2,14 @@ package net.croz.nrich.registry.data.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.request.SearchParameter;
-import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.data.request.CreateRegistryRequest;
+import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUser;
