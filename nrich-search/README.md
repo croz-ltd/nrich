@@ -186,5 +186,24 @@ by using `joinList`. `resolveFieldMappingUsingPrefix` resolves properties by pre
 `propertyMappingList`. Default operators (see `DefaultSearchOperator`) are for String ILIKE (uses `criteriaBuilder.like` with lower call before), for range search GT (uses `criteriaBuilder.greaterThan`), LT (uses `criteriaBuilder.lessThan`), GE (uses `criteriaBuilder.greaterThanOrEqualTo`), LE (uses `criteriaBuilder.lessThanOrEqualTo`) and for all other classes EQ but this cane be overriden
 either on type level or on property level by using `searchOperatorOverrideList`.  Queries on plural associations are done using exists query (to avoid duplicate results) but that can be overriden
 by property `pluralAssociationRestrictionType`.  Additional restrictions (not dependent on data in search request, for example security restrictions) can be specified using `additionalRestrictionResolverList`.
-When searching also by entity that doesn't have a direct assocation to root entity `subqueryConfigurationList` property needs to be defined.
+When searching also by entity that doesn't have a direct association to root entity `subqueryConfigurationList` property needs to be defined.
 `SearchConfigration` also supports matching any value (or operator is used when creating query) by setting `anyMatch` parameter to `true` or matching all values (default behaviour) and operator is used for query. 
+
+`subqueryConfigurationList` is useful when we want to search entities without direct association i.e. if we would like to search User based on a Role and 
+User has no direct association to role instead we mapped that connection by using UserRole entity.
+  
+```
+
+    final SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
+                .rootEntity(UserRole.class)
+                .propertyPrefix("userRole")
+                .joinBy(new SearchPropertyJoin("id", "user.id")).build();
+
+    final SearchConfiguration<User, User, UserSearchRequest> searchConfiguration = SearchConfiguration.<User, User, UserSearchRequest>builder()
+                .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+                .build();
+
+
+```
+
+This configuration will search `UserRole` entity by all properties in `UserSearchRequest` that have a prefix `userRole`.
