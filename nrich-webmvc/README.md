@@ -14,7 +14,6 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 
 ```
 
-
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
        return new DefaultTransientPropertyResolverService();
@@ -41,7 +40,6 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
 
-
 ```
 
 `TransientPropertyResolverService` resolves a list of transient properties for type.
@@ -51,8 +49,29 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 `ExceptionAuxiliaryDataResolverService` resolves additional data for each exception that will be logged and (if configured) sent to client with notification (this can be current time, uuid etc).
 Default implementation returns uuid, current time, request uri and request method. 
 
+`NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client.
+It accepts a list of exceptions that contain original exceptions as cause properties (i.e. `ExecutionException`), a list of exception auxiliary data to be included in notification and services that 
+are used for logging, data resolving and notification creation.  
+
 `ConstrainedSessionLocaleResolver` is used when we want to limit locale selection.
 
 ## Usage
 
-For usage it is enough to add library as dependency and set up beans.
+For usage it is enough to add library as dependency and set up beans. `NotificationErrorHandlingRestControllerAdvice`
+handles all exceptions thrown by user code (including binding and validation exceptions) and it uses `LoggingService` to log errors and `NotificationResponseService`
+to create notifications that are sent to client in JSON format.
+
+Example response on exception is:
+
+```json
+
+ {
+   "notification": {
+     "title": "Error",
+     "content": "Error occurred",
+     "messageList": [],
+     "severity": "ERROR"
+   }
+ }
+
+```
