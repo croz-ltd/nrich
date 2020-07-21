@@ -37,7 +37,6 @@ subprojects {
   apply plugin: "maven-publish"
 
   group = "net.croz.nrich"
-  version = "0.0.1-SNAPSHOT"
 
   sourceCompatibility = "1.8"
 
@@ -73,8 +72,10 @@ subprojects {
           username System.getenv("GRC_GRADLE_USERNAME")
           password System.getenv("GRC_GRADLE_PASSWORD")
         }
-        def releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
-        def snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
+
+        String releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
+        String snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
+
         url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
       }
     }
