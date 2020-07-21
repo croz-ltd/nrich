@@ -30,8 +30,13 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
-        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService);
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+        return new MessageSourceExceptionHttpStatusResolverService(messageSource);
+    }
+
+    @Bean
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 
     @Bean
@@ -48,6 +53,9 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 
 `ExceptionAuxiliaryDataResolverService` resolves additional data for each exception that will be logged and (if configured) sent to client with notification (this can be current time, uuid etc).
 Default implementation returns uuid, current time, request uri and request method. 
+
+`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using 
+Springs `MessageSource`. Message code for resolving is `fullyQualifiedExceptionName.httpStatus`  
 
 `NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client.
 It accepts a list of exceptions that contain original exceptions as cause properties (i.e. `ExecutionException`), a list of exception auxiliary data to be included in notification and services that 
