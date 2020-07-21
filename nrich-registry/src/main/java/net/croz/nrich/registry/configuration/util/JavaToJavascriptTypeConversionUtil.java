@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.configuration.util;
 
-import net.croz.nrich.registry.configuration.model.JavascriptType;
+import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
 
 import java.math.BigDecimal;
 import java.time.temporal.Temporal;

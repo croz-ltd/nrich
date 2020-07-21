@@ -1,15 +1,16 @@
 package net.croz.nrich.registry.data.service;
 
+import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
+import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
+import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
-import net.croz.nrich.registry.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
-import net.croz.nrich.registry.data.request.ListBulkRegistryRequest;
-import net.croz.nrich.registry.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;

@@ -3,12 +3,12 @@ package net.croz.nrich.registry.data.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
         final CreateRegistryServiceRequest serviceRequest = new CreateRegistryServiceRequest();
 
         serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
+        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
 
         return serviceRequest;
     }
@@ -41,7 +41,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
 
         serviceRequest.setId(request.getId());
         serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getEntityData(), type));
+        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
 
         return serviceRequest;
     }

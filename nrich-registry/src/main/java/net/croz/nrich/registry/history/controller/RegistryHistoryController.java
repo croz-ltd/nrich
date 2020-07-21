@@ -1,9 +1,9 @@
 package net.croz.nrich.registry.history.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.history.model.EntityWithRevision;
-import net.croz.nrich.registry.history.request.ListRegistryHistoryRequest;
-import net.croz.nrich.registry.history.service.RegistryHistoryService;
+import net.croz.nrich.registry.api.history.model.EntityWithRevision;
+import net.croz.nrich.registry.api.history.request.ListRegistryHistoryRequest;
+import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

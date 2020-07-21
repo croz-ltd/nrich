@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.security.interceptor;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.security.exception.RegistryUpdateNotAllowedException;
+import net.croz.nrich.registry.api.security.exception.RegistryUpdateNotAllowedException;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.configuration.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

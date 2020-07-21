@@ -1,8 +1,8 @@
 package net.croz.nrich.registry.security.testutil;
 
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 
 public final class RegistrySecurityGeneratingUtil {
 

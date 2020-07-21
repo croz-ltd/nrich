@@ -16,6 +16,6 @@ public class UpdateRegistryRequest {
     private Object id;
 
     @NotNull
-    private String entityData;
+    private String jsonEntityData;
 
 }

@@ -5,4 +5,6 @@ dependencies {
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
+
+  implementation "org.springframework.data:spring-data-commons"
 }

@@ -1,8 +1,8 @@
 package net.croz.nrich.registry.configuration.controller;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.configuration.model.RegistryCategoryConfiguration;
-import net.croz.nrich.registry.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

@@ -1,9 +1,10 @@
 package net.croz.nrich.registry.data.interceptor;
 
-import net.croz.nrich.registry.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
-import net.croz.nrich.registry.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.data.request.UpdateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
+import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
+import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
+import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 
 public abstract class BaseRegistryDataInterceptor implements RegistryDataInterceptor {
 
