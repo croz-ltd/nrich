@@ -73,10 +73,12 @@ subprojects {
           password System.getenv("GRC_GRADLE_PASSWORD")
         }
 
-        String releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
-        String snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
+        afterEvaluate {
+          String releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
+          String snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
 
-        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+          url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+        }
       }
     }
 
