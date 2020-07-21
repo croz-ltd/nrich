@@ -11,27 +11,28 @@ import java.util.stream.Collectors;
 
 public class DefaultTransientPropertyResolverService implements TransientPropertyResolverService {
 
-    private final Map<Class<?>, List<String>> transientClassCache = new ConcurrentHashMap<>();
+    private final Map<Class<?>, List<String>> transientClassPropertyListCache = new ConcurrentHashMap<>();
 
     @Override
     public List<String> resolveTransientPropertyList(final Class<?> type) {
-        if (!transientClassCache.containsKey(type)) {
-            final List<String> transientFieldList = new ArrayList<>();
+        if (!transientClassPropertyListCache.containsKey(type)) {
+            final List<String> transientPropertyList = new ArrayList<>();
             Class<?> currentType = type;
 
             while (currentType != Object.class) {
-                final List<String> currentTransientFIeldList = Arrays.stream(currentType.getDeclaredFields())
+                final List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
                         .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
                         .map(Field::getName)
                         .collect(Collectors.toList());
 
-                transientFieldList.addAll(currentTransientFIeldList);
+                transientPropertyList.addAll(currentTransientPropertyList);
+
                 currentType = currentType.getSuperclass();
             }
 
-            transientClassCache.put(type, transientFieldList);
+            transientClassPropertyListCache.put(type, transientPropertyList);
         }
 
-        return transientClassCache.get(type);
+        return transientClassPropertyListCache.get(type);
     }
 }
