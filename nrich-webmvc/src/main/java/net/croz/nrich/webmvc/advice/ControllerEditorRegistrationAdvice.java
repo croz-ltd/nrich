@@ -26,6 +26,7 @@ public class ControllerEditorRegistrationAdvice {
         }
         if (ignoreTransientFields && binder.getTarget() != null) {
             final List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(binder.getTarget().getClass());
+
             binder.setDisallowedFields(transientPropertyList.toArray(new String[0]));
         }
     }
