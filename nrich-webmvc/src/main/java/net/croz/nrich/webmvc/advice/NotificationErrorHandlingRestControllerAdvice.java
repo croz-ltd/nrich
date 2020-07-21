@@ -84,7 +84,6 @@ public class NotificationErrorHandlingRestControllerAdvice {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
-
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, AdditionalNotificationData.builder().messageListDataMap(notificationAuxiliaryData).build(), exceptionArgumentList(exception)));
     }
 
