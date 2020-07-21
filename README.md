@@ -96,4 +96,4 @@ nrich is composed of following modules:
 
   Provides additional functionality built on top of Spring Web MVC framework. Main purpose is handling exceptions through `NotificationErrorHandlingRestControllerAdvice` that 
   handles exceptions by logging them and sending notifications to client with exception descriptions.
-  Also add additional classes handle binding (i.e. transforming empty string to null), locale resolving etc.
+  It also adds additional classes that handle binding (i.e. transforming empty string to null), locale resolving etc.
