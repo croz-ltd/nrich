@@ -47,11 +47,11 @@ public final class TypeDataFormatUtil {
                 .map(typeDataFormat -> Optional.ofNullable(findTypeDataFormat(nonNullAdditionalDataFormatList, typeDataFormat.getType())).orElse(typeDataFormat))
                 .collect(Collectors.toList());
 
-        final List<TypeDataFormat> notAddedOverriddenFormatList = nonNullAdditionalDataFormatList.stream()
+        final List<TypeDataFormat> notAddedAdditionalTypeDataFormatList = nonNullAdditionalDataFormatList.stream()
                 .filter(typeDataFormat -> findTypeDataFormat(allTypeDataFormatList, typeDataFormat.getType()) == null)
                 .collect(Collectors.toList());
 
-        return Stream.concat(allTypeDataFormatList.stream(), notAddedOverriddenFormatList.stream()).collect(Collectors.toList());
+        return Stream.concat(allTypeDataFormatList.stream(), notAddedAdditionalTypeDataFormatList.stream()).collect(Collectors.toList());
     }
 
     private static TypeDataFormat findTypeDataFormat(final List<TypeDataFormat> typeDataFormatList, final Class<?> type) {
