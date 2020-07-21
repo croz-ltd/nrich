@@ -13,26 +13,48 @@ import java.util.List;
 @ConfigurationProperties("nrich.excel")
 public class NrichExcelProperties {
 
+    /**
+     * Date format used to set excel cell style for date values (i.e. {@link java.time.LocalDate})
+     */
     private final String dateFormat;
 
+    /**
+     * Date time format used to set excel cell style for date time values (i.e. {@link java.time.LocalDateTime})
+     */
     private final String dateTimeFormat;
 
-    private final String integerNumberFormat;
-
-    private final String decimalNumberFormat;
-
+    /**
+     * Whether dateFormat or dateTimeFormat should be used for date time values
+     */
     private final boolean writeDateWithTime;
 
+    /**
+     * Integer number format used to set excel cell style for integer numbers (short, integer, long, BigInteger)
+     */
+    private final String integerNumberFormat;
+
+    /**
+     * Decimal number format used to set excel cell style for decimal numbers (float, double, BigDecimal)
+     */
+    private final String decimalNumberFormat;
+
+    /**
+     * A list of formats that overrides default formats for classes.
+     */
     private final List<TypeDataFormat> typeDataFormatList;
 
+    /**
+     * Whether default converter {@link net.croz.nrich.excel.converter.DefaultCellValueConverter} should be enabled. It handles conversion of objects to values
+     * accepted by excel generator implementation.
+     */
     private final boolean defaultConverterEnabled;
 
-    public NrichExcelProperties(@DefaultValue("dd.MM.yyyy.") final String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") final String dateTimeFormat, @DefaultValue("#,##0") final String integerNumberFormat, @DefaultValue("#,##0.00") final String decimalNumberFormat, @DefaultValue("false") final boolean writeDateWithTime, final List<TypeDataFormat> typeDataFormatList, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichExcelProperties(@DefaultValue("dd.MM.yyyy.") final String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") final String dateTimeFormat, @DefaultValue("false") final boolean writeDateWithTime, @DefaultValue("#,##0") final String integerNumberFormat, @DefaultValue("#,##0.00") final String decimalNumberFormat, final List<TypeDataFormat> typeDataFormatList, @DefaultValue("true") final boolean defaultConverterEnabled) {
         this.dateFormat = dateFormat;
         this.dateTimeFormat = dateTimeFormat;
+        this.writeDateWithTime = writeDateWithTime;
         this.integerNumberFormat = integerNumberFormat;
         this.decimalNumberFormat = decimalNumberFormat;
-        this.writeDateWithTime = writeDateWithTime;
         this.typeDataFormatList = typeDataFormatList;
         this.defaultConverterEnabled = defaultConverterEnabled;
     }

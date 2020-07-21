@@ -10,6 +10,10 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @ConfigurationProperties("nrich.form-configuration")
 public class NrichFormConfigurationProperties {
 
+    /**
+     * Whether default converter service ({@link net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService}) for converting {@link net.croz.nrich.formconfiguration.api.model.ConstrainedProperty} instances
+     * to client {@link net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration} list is enabled
+     */
     private final boolean defaultConverterEnabled;
 
     public NrichFormConfigurationProperties(@DefaultValue("true") final boolean defaultConverterEnabled) {

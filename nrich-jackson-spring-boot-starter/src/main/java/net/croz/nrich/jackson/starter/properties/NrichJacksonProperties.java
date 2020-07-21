@@ -12,12 +12,24 @@ import java.util.List;
 @ConfigurationProperties("nrich.jackson")
 public class NrichJacksonProperties {
 
+    /**
+     * Whether empty strings should be converted to null values
+     */
     private final boolean convertEmptyStringsToNull;
 
+    /**
+     * Whether class name should be serialized
+     */
     private final boolean serializeClassName;
 
+    /**
+     * Whether class name should be serialized for classes annotated with JPA Entity annotation
+     */
     private final boolean serializeClassNameForEntityAnnotatedClasses;
 
+    /**
+     * Package list for which class name should be also be serialized
+     */
     private final List<String> additionalPackageListForClassNameSerialization;
 
     public NrichJacksonProperties(@DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean serializeClassName, @DefaultValue("true") final boolean serializeClassNameForEntityAnnotatedClasses, final List<String> additionalPackageListForClassNameSerialization) {

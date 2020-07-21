@@ -15,20 +15,44 @@ import java.util.List;
 @ConfigurationProperties("nrich.security.csrf")
 public class NrichCsrfProperties {
 
+    /**
+     * If CSRF is active
+     */
     private final boolean active;
 
+    /**
+     * Duration of CSRF token
+     */
     private final Duration tokenExpirationInterval;
 
+    /**
+     * Duration of how long token can be in the future (can happen when server and client time is not in sync)
+     */
     private final Duration tokenFutureThreshold;
 
+    /**
+     * Name of CSRF token
+     */
     private final String tokenKeyName;
 
+    /**
+     * Length of crypto key (128, 256...)
+     */
     private final Integer cryptoKeyLength;
 
+    /**
+     * Initial application url (i.e. url that user is redirected after login). Token will be added to response from this url as <pre>csrfInitialToken</pre> parameter.
+     */
     private final String initialTokenUrl;
 
+    /**
+     * Url used for CSRF ping request.
+     */
     private final String csrfPingUri;
 
+    /**
+     * A list of {@link CsrfExcludeConfig} instances that contain urls or regexps excluded from CSRF check
+     */
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
     public NrichCsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue("X-CSRF-Token") final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUri, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
