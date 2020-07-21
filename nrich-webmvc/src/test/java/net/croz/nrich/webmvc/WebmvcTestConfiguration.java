@@ -14,8 +14,10 @@ import net.croz.nrich.notification.service.WebMvcNotificationResponseService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.api.service.ExceptionHttpStatusResolverService;
 import net.croz.nrich.webmvc.service.DefaultExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.service.DefaultTransientPropertyResolverService;
+import net.croz.nrich.webmvc.service.MessageSourceExceptionHttpStatusResolverService;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -104,7 +106,12 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
-        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService);
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+        return new MessageSourceExceptionHttpStatusResolverService(messageSource);
+    }
+
+    @Bean
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 }

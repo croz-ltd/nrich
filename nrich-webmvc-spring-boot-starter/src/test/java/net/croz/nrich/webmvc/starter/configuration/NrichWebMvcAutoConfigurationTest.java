@@ -4,6 +4,7 @@ import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
+import net.croz.nrich.webmvc.api.service.ExceptionHttpStatusResolverService;
 import net.croz.nrich.webmvc.localeresolver.ConstrainedSessionLocaleResolver;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.starter.configuration.stub.LoggingTestService;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NrichWebMvcAutoConfigurationTest {
@@ -27,6 +29,7 @@ public class NrichWebMvcAutoConfigurationTest {
             assertThat(context).hasSingleBean(ExceptionAuxiliaryDataResolverService.class);
             assertThat(context).hasSingleBean(ControllerEditorRegistrationAdvice.class);
             assertThat(context).hasSingleBean(NotificationErrorHandlingRestControllerAdvice.class);
+            assertThat(context).hasSingleBean(ExceptionHttpStatusResolverService.class);
             assertThat(context).doesNotHaveBean(ConstrainedSessionLocaleResolver.class);
         });
     }

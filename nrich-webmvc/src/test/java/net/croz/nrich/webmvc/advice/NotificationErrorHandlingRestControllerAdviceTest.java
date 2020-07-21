@@ -27,7 +27,7 @@ public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTe
         final String responseString = response.getContentAsString();
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
