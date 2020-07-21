@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 
 public class DefaultTransientPropertyResolverService implements TransientPropertyResolverService {
 
-    private final Map<Class<?>, List<String>> transientClassPropertyListCache = new ConcurrentHashMap<>();
+    private final Map<Class<?>, List<String>> typeTransientPropertyListCache = new ConcurrentHashMap<>();
 
     @Override
     public List<String> resolveTransientPropertyList(final Class<?> type) {
-        if (!transientClassPropertyListCache.containsKey(type)) {
+        if (!typeTransientPropertyListCache.containsKey(type)) {
             final List<String> transientPropertyList = new ArrayList<>();
             Class<?> currentType = type;
 
@@ -30,9 +30,9 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
                 currentType = currentType.getSuperclass();
             }
 
-            transientClassPropertyListCache.put(type, transientPropertyList);
+            typeTransientPropertyListCache.put(type, transientPropertyList);
         }
 
-        return transientClassPropertyListCache.get(type);
+        return typeTransientPropertyListCache.get(type);
     }
 }
