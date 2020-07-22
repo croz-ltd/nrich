@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Holder for validation failure notification data. In addition to all data contained in regular notification it also contains a list of validation errors
+ * (mapping between a property and validation failed message).
+ */
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @Getter
 public class ValidationFailureNotification extends Notification {

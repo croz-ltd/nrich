@@ -20,7 +20,7 @@ public class NotificationResponseTestService implements NotificationResponseServ
     }
 
     @Override
-    public Object responseWithExceptionNotification(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, final Object... additionalMessageArgumentList) {
+    public Object responseWithExceptionNotification(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, final Object... exceptionMessageArgumentList) {
         return null;
     }
 
