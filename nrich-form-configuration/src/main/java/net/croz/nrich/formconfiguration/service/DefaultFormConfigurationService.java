@@ -5,7 +5,6 @@ import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfiguration;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
-import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,10 +32,10 @@ public class DefaultFormConfigurationService implements FormConfigurationService
 
     private final List<ConstrainedPropertyValidatorConverterService> constraintConverterServiceList;
 
-    @Cacheable(value = "nrich.formConfiguration.cache", key = "#request.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
+    @Cacheable(value = "nrich.formConfiguration.cache", key = "#formIdList.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
-    public List<FormConfiguration> fetchFormConfigurationList(final FetchFormConfigurationRequest request) {
-        return request.getFormIdList().stream()
+    public List<FormConfiguration> fetchFormConfigurationList(final List<String> formIdList) {
+        return formIdList.stream()
                 .map(this::resolveFormConfiguration)
                 .collect(Collectors.toList());
     }

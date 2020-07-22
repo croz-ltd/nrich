@@ -1,6 +1,5 @@
 package net.croz.nrich.formconfiguration.api.request;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +7,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Setter
+/**
+ * Holder for a list of form ids for which to fetch form configuration.
+ */
 @Getter
-@EqualsAndHashCode
+@Setter
 public class FetchFormConfigurationRequest {
 
     @NotNull
