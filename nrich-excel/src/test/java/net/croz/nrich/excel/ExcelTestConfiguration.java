@@ -1,12 +1,12 @@
 package net.croz.nrich.excel;
 
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
+import net.croz.nrich.excel.api.generator.ExcelReportGeneratorFactory;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
-import net.croz.nrich.excel.api.service.ExcelExportService;
+import net.croz.nrich.excel.api.service.ExcelReportService;
 import net.croz.nrich.excel.converter.DefaultCellValueConverter;
-import net.croz.nrich.excel.generator.PoiExcelExportGeneratorFactory;
-import net.croz.nrich.excel.service.DefaultExcelExportService;
+import net.croz.nrich.excel.generator.PoiExcelReportGeneratorFactory;
+import net.croz.nrich.excel.service.DefaultExcelReportService;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +23,14 @@ public class ExcelTestConfiguration {
     }
 
     @Bean
-    public ExcelExportGeneratorFactory excelExportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
+    public ExcelReportGeneratorFactory excelReportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
         final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, null);
 
-        return new PoiExcelExportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
+        return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @Bean
-    public ExcelExportService excelExportService(final ExcelExportGeneratorFactory excelExportGeneratorFactory) {
-        return new DefaultExcelExportService(excelExportGeneratorFactory);
+    public ExcelReportService excelReportService(final ExcelReportGeneratorFactory excelReportGeneratorFactory) {
+        return new DefaultExcelReportService(excelReportGeneratorFactory);
     }
 }

@@ -34,13 +34,13 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueL
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class PoiExcelExportGeneratorTest {
+public class PoiExcelReportGeneratorTest {
 
     private static final String REPORT_FILE_NAME = "report.xlsx";
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 
-    private PoiExcelExportGenerator excelExportGenerator;
+    private PoiExcelReportGenerator excelReportGenerator;
 
     @TempDir
     File temporaryDirectory;
@@ -58,7 +58,7 @@ public class PoiExcelExportGeneratorTest {
 
         final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.class, "dd-MM-yyyy")));
 
-        excelExportGenerator = new PoiExcelExportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        excelReportGenerator = new PoiExcelReportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @Test
@@ -70,8 +70,8 @@ public class PoiExcelExportGeneratorTest {
         final Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, null };
 
         // when
-        excelExportGenerator.writeRowData(rowData);
-        excelExportGenerator.flushAndClose();
+        excelReportGenerator.writeRowData(rowData);
+        excelReportGenerator.flushAndClose();
 
         // and when
         final Workbook workbook = new XSSFWorkbook(new File(temporaryDirectory, REPORT_FILE_NAME));
@@ -90,11 +90,11 @@ public class PoiExcelExportGeneratorTest {
         // given
         final Object[] rowData = new Object[] { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
 
-        excelExportGenerator.writeRowData(rowData);
-        excelExportGenerator.flushAndClose();
+        excelReportGenerator.writeRowData(rowData);
+        excelReportGenerator.flushAndClose();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportGenerator.writeRowData(rowData));
+        final Throwable thrown = catchThrowable(() -> excelReportGenerator.writeRowData(rowData));
 
         // then
         assertThat(thrown).isNotNull();
@@ -108,8 +108,8 @@ public class PoiExcelExportGeneratorTest {
         final Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, new Date() };
 
         // when
-        excelExportGenerator.writeRowData(rowData);
-        excelExportGenerator.flushAndClose();
+        excelReportGenerator.writeRowData(rowData);
+        excelReportGenerator.flushAndClose();
 
         // and when
         final Workbook workbook = new XSSFWorkbook(new File(temporaryDirectory, REPORT_FILE_NAME));

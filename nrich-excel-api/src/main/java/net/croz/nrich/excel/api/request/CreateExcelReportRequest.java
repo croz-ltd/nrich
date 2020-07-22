@@ -24,12 +24,12 @@ public class CreateExcelReportRequest {
     private final String templatePath;
 
     /**
-     * A list of {@link TemplateVariable} instances that will be used to fill variables defined in the template.
+     * List of {@link TemplateVariable} instances that will be used to replace variables defined in the template.
      */
     private final List<TemplateVariable> templateVariableList;
 
     /**
-     * A list of {@link ColumnDataFormat} instances that allow for overriding of data format for specific columns.
+     * List of {@link ColumnDataFormat} instances that allow for overriding of data format for specific columns.
      */
     private final List<ColumnDataFormat> columnDataFormatList;
 

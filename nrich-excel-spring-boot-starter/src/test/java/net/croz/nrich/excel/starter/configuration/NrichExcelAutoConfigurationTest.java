@@ -1,8 +1,8 @@
 package net.croz.nrich.excel.starter.configuration;
 
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
-import net.croz.nrich.excel.api.service.ExcelExportService;
+import net.croz.nrich.excel.api.generator.ExcelReportGeneratorFactory;
+import net.croz.nrich.excel.api.service.ExcelReportService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -17,8 +17,8 @@ public class NrichExcelAutoConfigurationTest {
     void shouldConfigureDefaultConfiguration() {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(CellValueConverter.class);
-            assertThat(context).hasSingleBean(ExcelExportGeneratorFactory.class);
-            assertThat(context).hasSingleBean(ExcelExportService.class);
+            assertThat(context).hasSingleBean(ExcelReportGeneratorFactory.class);
+            assertThat(context).hasSingleBean(ExcelReportService.class);
         });
     }
 

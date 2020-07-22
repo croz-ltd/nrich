@@ -1,12 +1,12 @@
 package net.croz.nrich.excel.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
-import net.croz.nrich.excel.api.generator.ExcelExportGeneratorFactory;
+import net.croz.nrich.excel.api.generator.ExcelReportGenerator;
+import net.croz.nrich.excel.api.generator.ExcelReportGeneratorFactory;
 import net.croz.nrich.excel.api.model.MultiRowDataProvider;
 import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
-import net.croz.nrich.excel.api.service.ExcelExportService;
+import net.croz.nrich.excel.api.service.ExcelReportService;
 import org.springframework.util.Assert;
 
 import java.io.File;
@@ -14,9 +14,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class DefaultExcelExportService implements ExcelExportService {
+public class DefaultExcelReportService implements ExcelReportService {
 
-    private final ExcelExportGeneratorFactory excelExportGeneratorFactory;
+    private final ExcelReportGeneratorFactory excelReportGeneratorFactory;
 
     @Override
     public File createExcelReport(final CreateExcelReportRequest request) {
@@ -25,7 +25,7 @@ public class DefaultExcelExportService implements ExcelExportService {
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
         final CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
-        final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
+        final ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
         final MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
 
@@ -40,12 +40,12 @@ public class DefaultExcelExportService implements ExcelExportService {
 
             Arrays.stream(rowBatchData)
                     .filter(Objects::nonNull)
-                    .forEach(excelExportGenerator::writeRowData);
+                    .forEach(excelReportGenerator::writeRowData);
 
             start += limit;
         }
 
-        excelExportGenerator.flushAndClose();
+        excelReportGenerator.flushAndClose();
 
         return request.getOutputFile();
     }

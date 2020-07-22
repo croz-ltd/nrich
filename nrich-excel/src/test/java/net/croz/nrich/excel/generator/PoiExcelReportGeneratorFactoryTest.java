@@ -2,7 +2,7 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.ExcelTestConfiguration;
-import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
+import net.croz.nrich.excel.api.generator.ExcelReportGenerator;
 import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -16,10 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ExcelTestConfiguration.class)
-public class PoiExcelExportGeneratorFactoryTest {
+public class PoiExcelReportGeneratorFactoryTest {
 
     @Autowired
-    private PoiExcelExportGeneratorFactory excelExportGeneratorFactory;
+    private PoiExcelReportGeneratorFactory excelReportGeneratorFactory;
 
     @TempDir
     File temporaryDirectory;
@@ -30,7 +30,7 @@ public class PoiExcelExportGeneratorFactoryTest {
         final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportGeneratorFactory.createReportGenerator(request));
+        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -42,7 +42,7 @@ public class PoiExcelExportGeneratorFactoryTest {
         final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(new File(temporaryDirectory, "output.xlsx")).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportGeneratorFactory.createReportGenerator(request));
+        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -56,7 +56,7 @@ public class PoiExcelExportGeneratorFactoryTest {
         final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(-1).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportGeneratorFactory.createReportGenerator(request));
+        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -70,10 +70,10 @@ public class PoiExcelExportGeneratorFactoryTest {
         final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(1).build();
 
         // when
-        final ExcelExportGenerator excelExportGenerator = excelExportGeneratorFactory.createReportGenerator(request);
+        final ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(request);
 
         // then
-        assertThat(excelExportGenerator).isNotNull();
+        assertThat(excelReportGenerator).isNotNull();
     }
 
     @SneakyThrows

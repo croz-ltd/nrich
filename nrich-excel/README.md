@@ -17,15 +17,15 @@ To be able to use this library following configuration is required:
     }
 
     @Bean
-    public ExcelExportGeneratorFactory excelExportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
+    public ExcelReportGeneratorFactory excelReportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
         final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.clas, "dd-MM-yyyy"));
 
-        return new PoiExcelExportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
+        return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @Bean
-    public ExcelExportService excelExportService(final ExcelExportGeneratorFactory excelExportGeneratorFactory) {
-        return new DefaultExcelExportService(excelExportGeneratorFactory);
+    public ExcelReportService excelReportService(final ExcelReportGeneratorFactory excelReportGeneratorFactory) {
+        return new DefaultExcelReportService(excelReportGeneratorFactory);
     }
 
 ```
@@ -37,18 +37,18 @@ To be able to use this library following configuration is required:
 `TypeDataFormat` is reponsible for resolving a list of `TypeDataFormat` instances that decide with what format a specific class will be written to excel. It accepts a list of formats for value conversion (`dateFormat`, `dateTimeFormat`, `integerNumberFormat`, `decimalNumberFormat`), option should dates be written with time component or not 
 (`writeDateWithTime`) and a list of formats that will override defaults for specific class (for example if `Instant` should be written in different format than `Date`)
 
-`ExcelExportGeneratorFactory` is responsible for creating and writing data to actual reports. Default implementation is `PoiExcelExportGeneratorFactory`
+`ExcelReportGeneratorFactory` is responsible for creating and writing data to actual reports. Default implementation is `PoiExcelReportGeneratorFactory`
 that uses Apache POI library for writing data.
 
-`ExcelExportService` is the interface for users to use when creating reports. 
+`ExcelReportService` is the interface for users to use when creating reports. 
 
 
 ## Usage
 
-To be able to create reports users should inject `ExcelExportService` and call `File createExcelReport(CreateExcelReportRequest request)`
+To be able to create reports users should inject `ExcelReportService` and call `File createExcelReport(CreateExcelReportRequest request)`
 method.
 
-Method accepts argument of type `CreateExcelReportRequest` when processing report `ExcelExportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method from `MultiRowDataProvider` until it returns 
+Method accepts argument of type `CreateExcelReportRequest` when processing report `ExcelReportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method from `MultiRowDataProvider` until it returns 
 and empty result starting from zero and incrementing start by batch size.
 
 `MultiRowDataProvider` is responsible for resolving data. It can do so by for example invoking directly repository methods.
@@ -87,7 +87,7 @@ public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvid
 
 ``` 
 
-Example usage of `ExcelExportService` is:
+Example usage of `ExcelReportService` is:
 
 ```
     // file where data will be written
@@ -106,6 +106,6 @@ Example usage of `ExcelExportService` is:
     // first row index is 3 since first two rows contain column headers
     final CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
    
-    final File createdFile = excelExportService.createExcelReport(request);
+    final File createdFile = ExcelReportService.createExcelReport(request);
 
 ```

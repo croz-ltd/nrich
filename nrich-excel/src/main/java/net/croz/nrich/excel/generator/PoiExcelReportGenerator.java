@@ -2,7 +2,7 @@ package net.croz.nrich.excel.generator;
 
 import lombok.SneakyThrows;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
-import net.croz.nrich.excel.api.generator.ExcelExportGenerator;
+import net.croz.nrich.excel.api.generator.ExcelReportGenerator;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class PoiExcelExportGenerator implements ExcelExportGenerator {
+public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private static final Pattern TEMPLATE_VARIABLE_PATTERN = Pattern.compile("\\$\\{(.*?)}");
 
@@ -50,7 +50,7 @@ public class PoiExcelExportGenerator implements ExcelExportGenerator {
 
     private boolean templateOpen = true;
 
-    public PoiExcelExportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<TypeDataFormat> typeDataFormatList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
+    public PoiExcelReportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<TypeDataFormat> typeDataFormatList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);

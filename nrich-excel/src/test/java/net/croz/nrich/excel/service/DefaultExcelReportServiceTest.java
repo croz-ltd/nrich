@@ -20,12 +20,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ExcelTestConfiguration.class)
-public class DefaultExcelExportServiceTest {
+public class DefaultExcelReportServiceTest {
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 
     @Autowired
-    private DefaultExcelExportService excelExportService;
+    private DefaultExcelReportService excelReportService;
 
     @TempDir
     File temporaryDirectory;
@@ -40,7 +40,7 @@ public class DefaultExcelExportServiceTest {
         final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final File result = excelExportService.createExcelReport(request);
+        final File result = excelReportService.createExcelReport(request);
 
         // then
         final Workbook workbook = new XSSFWorkbook(result);
@@ -63,7 +63,7 @@ public class DefaultExcelExportServiceTest {
         final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportService.createExcelReport(request));
+        final Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -77,7 +77,7 @@ public class DefaultExcelExportServiceTest {
         final CreateExcelReportRequest request = CreateExcelReportRequest.builder().batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelExportService.createExcelReport(request));
+        final Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
