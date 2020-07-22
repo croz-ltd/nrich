@@ -1,9 +1,9 @@
 package net.croz.nrich.formconfiguration.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
+import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.Order;
 

@@ -6,8 +6,8 @@ import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValid
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfiguration;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
-import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverterService;
-import net.croz.nrich.formconfiguration.api.FormConfigurationService;
+import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.Validator;

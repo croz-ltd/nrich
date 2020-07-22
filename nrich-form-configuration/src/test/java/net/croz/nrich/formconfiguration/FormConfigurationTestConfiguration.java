@@ -1,8 +1,8 @@
 package net.croz.nrich.formconfiguration;
 
-import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
-import net.croz.nrich.formconfiguration.api.FormConfigurationService;
+import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;

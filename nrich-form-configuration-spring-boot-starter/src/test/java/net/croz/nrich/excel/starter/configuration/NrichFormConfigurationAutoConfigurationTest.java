@@ -1,7 +1,7 @@
 package net.croz.nrich.excel.starter.configuration;
 
-import net.croz.nrich.formconfiguration.api.ConstrainedPropertyValidatorConverterService;
-import net.croz.nrich.formconfiguration.api.FormConfigurationService;
+import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.configuration.NrichFormConfigurationAutoConfiguration;

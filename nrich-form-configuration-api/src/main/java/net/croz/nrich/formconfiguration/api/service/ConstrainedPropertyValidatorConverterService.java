@@ -1,4 +1,4 @@
-package net.croz.nrich.formconfiguration.api;
+package net.croz.nrich.formconfiguration.api.service;
 
 import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
