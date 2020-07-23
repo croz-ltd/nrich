@@ -25,7 +25,7 @@ public class NrichCsrfAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public CsrfTokenManagerService tokenManagerService(final NrichCsrfProperties csrfProperties) {
-        return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getTokenKeyName(), csrfProperties.getCryptoKeyLength());
+        return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getCryptoKeyLength());
     }
 
     @ConditionalOnProperty(name = "nrich.security.csrf.csrf-ping-url", havingValue = CsrfConstants.CSRF_DEFAULT_PING_URI, matchIfMissing = true)
@@ -37,13 +37,13 @@ public class NrichCsrfAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
     public CsrfInterceptor csrfInterceptor(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
-        return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @Bean
     public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
-        return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 
     @ConditionalOnBean(CsrfInterceptor.class)

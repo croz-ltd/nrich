@@ -12,7 +12,7 @@ nrich-security-csrf is a library intended for CSRF protection. It generates a in
 
     @Bean
     public CsrfTokenManagerService tokenManagerService() {
-        return new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), "X-CSRF-Token", 128);
+        return new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1),, 128);
     }
 
     @Bean
@@ -27,7 +27,7 @@ nrich-security-csrf is a library intended for CSRF protection. It generates a in
 
         csrfExcludeConfig.setUri("app/app");
 
-        return new CsrfInterceptor(csrfTokenManagerService, "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
+        return new CsrfInterceptor(csrfTokenManagerService, "X-CSRF-Token", "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
     }
 
     // when in reactive environment (Spring WebFlux)
@@ -37,7 +37,7 @@ nrich-security-csrf is a library intended for CSRF protection. It generates a in
 
         csrfExcludeConfig.setUri("app/app");
 
-        return new CsrfWebFilter(csrfTokenManagerService, "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
+        return new CsrfWebFilter(csrfTokenManagerService, "X-CSRF-Token", "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
     }
 
     @Bean
@@ -57,12 +57,12 @@ nrich-security-csrf is a library intended for CSRF protection. It generates a in
 
 `CsrfTokenManagerService` is a service responsible for generating initial token and validating and refreshing existing tokens. Default implementation `AesCsrfTokenManagerService`
 uses `AES` algorithm for encryption with key length passed in as argument (in the former configuration it is 128). It also accepts token expiration interval, token future threshold (allows tokes to be in 
-the future because of unsynchronized time between the client and server) and token name.
+the future because of unsynchronized time between the client and server).
 
 `CsrfPingController` is a controller that will be used as a ping call for Csrf token.   
 
 `CsrfInterceptor` is used when in Spring Web MVC environment it is an implementation of `HandlerInterceptorAdapter` and it intercepts every request verifying token for every request except
-excluded list and adding generated token for initial token url. Besides `CsrfTokenManagerService` it accepts initial token url, ping url and a list of `CsrfExcludeConfig` that contains either
+excluded list and adding generated token for initial token url. Besides `CsrfTokenManagerService` it accepts the token name, initial token url, ping url and a list of `CsrfExcludeConfig` that contains either
  urls or regex that matches urls that will be skipped for CSRF token verification.
 
 `CsrfWebFilter` is used when in Spring WebFlux environment it is an implementation of `WebFilter` it has the same behaviour and arguments as `CsrfInterceptor` with a difference it operates in reactive environment.

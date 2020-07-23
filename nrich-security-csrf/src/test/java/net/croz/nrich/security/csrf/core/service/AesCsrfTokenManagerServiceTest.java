@@ -1,7 +1,8 @@
 package net.croz.nrich.security.csrf.core.service;
 
+import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
-import net.croz.nrich.security.csrf.core.service.stub.TesCsrfTokenHolder;
+import net.croz.nrich.security.csrf.core.service.stub.TesCsrfTokenKeyHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,19 +13,19 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 public class AesCsrfTokenManagerServiceTest {
 
-    private static final String CSRF_TOKEN_HEADER_NAME = "X-CSRF-Token";
+    private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
     private AesCsrfTokenManagerService aesCsrfTokenManagerService;
 
     @BeforeEach
     void setup() {
-        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), CSRF_TOKEN_HEADER_NAME, 128);;
+        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), 128);;
     }
 
     @Test
     void shouldThrowExceptionWhenTokenIsNotInTokenHolder() {
         // given
-        final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
+        final TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
 
         // when
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
@@ -38,7 +39,7 @@ public class AesCsrfTokenManagerServiceTest {
     @Test
     void shouldGenerateToken() {
         // given
-        final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
+        final TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
 
         // when
         final String token = aesCsrfTokenManagerService.generateToken(tokenHolder);
@@ -50,8 +51,8 @@ public class AesCsrfTokenManagerServiceTest {
     @Test
     void shouldThrowExceptionOnInvalidTokenLength() {
         // given
-        final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
-        tokenHolder.storeToken(CSRF_TOKEN_HEADER_NAME, "nonvalid");
+        final TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
+        tokenHolder.storeToken("nonvalid");
 
         // when
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
@@ -65,8 +66,8 @@ public class AesCsrfTokenManagerServiceTest {
     @Test
     void shouldThrowExceptionOnInvalidToken() {
         // given
-        final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
-        tokenHolder.storeToken(CSRF_TOKEN_HEADER_NAME, "SqgRJ6bh8uZ4xjpzAUIErg==");
+        final TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
+        tokenHolder.storeToken("SqgRJ6bh8uZ4xjpzAUIErg==");
 
         // when
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
@@ -80,8 +81,8 @@ public class AesCsrfTokenManagerServiceTest {
     @Test
     void shouldThrowExceptionOnInvalidTokenDuration() throws Exception {
         // given
-        final TesCsrfTokenHolder tokenHolder = new TesCsrfTokenHolder();
-        tokenHolder.storeToken(CSRF_TOKEN_HEADER_NAME, aesCsrfTokenManagerService.generateToken(tokenHolder));
+        final TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
+        tokenHolder.storeToken(aesCsrfTokenManagerService.generateToken(tokenHolder));
 
         Thread.sleep(30);
 

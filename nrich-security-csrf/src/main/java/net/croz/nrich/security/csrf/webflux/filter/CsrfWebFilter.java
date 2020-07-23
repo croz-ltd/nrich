@@ -7,7 +7,7 @@ import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
-import net.croz.nrich.security.csrf.webflux.holder.WebFluxCsrfTokenHolder;
+import net.croz.nrich.security.csrf.webflux.holder.WebFluxCsrfTokenKeyHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -21,6 +21,8 @@ import java.util.List;
 public class CsrfWebFilter implements WebFilter {
 
     private final CsrfTokenManagerService csrfTokenManagerService;
+
+    private final String tokenKeyName;
 
     private final String initialTokenUrl;
 
@@ -55,7 +57,7 @@ public class CsrfWebFilter implements WebFilter {
             }
             else if (webSession != null) {
 
-                csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenHolder(exchange, webSession));
+                csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
 
                 updateLastApiCallAttribute(webSession);
             }
@@ -72,7 +74,7 @@ public class CsrfWebFilter implements WebFilter {
 
         if (uri(exchange).endsWith(initialTokenUrl)) {
 
-            exchange.getAttributes().put(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebFluxCsrfTokenHolder(exchange, webSession)));
+            exchange.getAttributes().put(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
 
             updateLastApiCallAttribute(webSession);
         }
@@ -108,7 +110,7 @@ public class CsrfWebFilter implements WebFilter {
 
         updateLastActiveRequestMillis(exchange, 0L);
 
-        return Mono.fromRunnable(() -> csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenHolder(exchange, webSession)));
+        return Mono.fromRunnable(() -> csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
     }
 
     private void updateLastApiCallAttribute(final WebSession webSession) {

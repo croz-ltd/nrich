@@ -7,7 +7,7 @@ import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
-import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenHolder;
+import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenKeyHolder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
@@ -24,6 +24,8 @@ import java.util.Optional;
 public class CsrfInterceptor extends HandlerInterceptorAdapter {
 
     private final CsrfTokenManagerService csrfTokenManagerService;
+
+    private final String tokenKeyName;
 
     private final String initialTokenUrl;
 
@@ -60,7 +62,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         }
         else if (httpSession != null) {
 
-            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenHolder(request, response));
+            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
 
             updateLastApiCallAttribute(httpSession);
         }
@@ -76,7 +78,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
     public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) {
         if (request.getRequestURI().endsWith(initialTokenUrl)) {
 
-            modelAndView.addObject(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebMvcCsrfTokenHolder(request, response)));
+            modelAndView.addObject(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
 
             updateLastApiCallAttribute(request.getSession());
         }
@@ -109,7 +111,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (!sessionJustInvalidated) {
-            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenHolder(request, response));
+            csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
         }
         else {
             log.debug("    sending csrf stop ping header in response");

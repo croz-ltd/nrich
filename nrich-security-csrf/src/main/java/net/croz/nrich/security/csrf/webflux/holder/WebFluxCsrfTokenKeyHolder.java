@@ -1,21 +1,25 @@
 package net.croz.nrich.security.csrf.webflux.holder;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenKeyHolder;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebSession;
 
 import java.security.Key;
 
 @RequiredArgsConstructor
-public class WebFluxCsrfTokenHolder implements CsrfTokenHolder {
+public class WebFluxCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
 
     private final ServerWebExchange exchange;
 
     private final WebSession webSession;
 
+    private final String tokenKeyName;
+
+    private final String cryptoKeyName;
+
     @Override
-    public String getToken(final String tokenKeyName) {
+    public String getToken() {
         String token = exchange.getRequest().getHeaders().getFirst(tokenKeyName);
 
         if (token == null) {
@@ -26,17 +30,17 @@ public class WebFluxCsrfTokenHolder implements CsrfTokenHolder {
     }
 
     @Override
-    public void storeToken(final String tokenKeyName, final String csrfToken) {
+    public void storeToken(final String csrfToken) {
         exchange.getResponse().getHeaders().add(tokenKeyName, csrfToken);
     }
 
     @Override
-    public Key getCryptoKey(String cryptoKeyName) {
+    public Key getCryptoKey() {
         return (Key) webSession.getAttributes().get(cryptoKeyName);
     }
 
     @Override
-    public void storeCryptoKey(final String cryptoKeyName, final Key cryptoKey) {
+    public void storeCryptoKey(final Key cryptoKey) {
         webSession.getAttributes().put(cryptoKeyName, cryptoKey);
     }
 }

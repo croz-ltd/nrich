@@ -4,7 +4,7 @@ public final class CsrfConstants {
 
     public static final String EMPTY_PATH = "/";
 
-    public static final String CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE_NAME = "CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE";
+    public static final String CSRF_CRYPTO_KEY_NAME = "CSRF_CRYPTO_KEY_ATTRIBUTE";
 
     public static final String CSRF_DEFAULT_PING_URI = "/nrich/csrf/ping";
 

@@ -2,9 +2,8 @@ package net.croz.nrich.security.csrf.core.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.security.csrf.api.holder.CsrfTokenHolder;
+import net.croz.nrich.security.csrf.api.holder.CsrfTokenKeyHolder;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
-import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 
 import javax.crypto.Cipher;
@@ -25,36 +24,34 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
     private final Duration tokenFutureThreshold;
 
-    private final String tokenKeyName;
-
     private final Integer cryptoKeyLength;
 
-    public void validateAndRefreshToken(final CsrfTokenHolder csrfTokenHolder) {
-        final String csrfToken = csrfTokenHolder.getToken(tokenKeyName);
+    public void validateAndRefreshToken(final CsrfTokenKeyHolder csrfTokenKeyHolder) {
+        final String csrfToken = csrfTokenKeyHolder.getToken();
 
         if (csrfToken == null) {
             throw new CsrfTokenException("Csrf token is not available!");
         }
 
-        final Key cryptoKey = fetchCryptoKey(csrfTokenHolder, cryptoKeyLength);
+        final Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
 
         validateToken(csrfToken, cryptoKey);
 
-        csrfTokenHolder.storeToken(tokenKeyName, generateToken(cryptoKey));
+        csrfTokenKeyHolder.storeToken(generateToken(cryptoKey));
     }
 
-    public String generateToken(final CsrfTokenHolder csrfTokenHolder) {
-        final Key cryptoKey = fetchCryptoKey(csrfTokenHolder, cryptoKeyLength);
+    public String generateToken(final CsrfTokenKeyHolder csrfTokenKeyHolder) {
+        final Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
 
         return generateToken(cryptoKey);
     }
 
-    private Key fetchCryptoKey(final CsrfTokenHolder csrfTokenHolder, final Integer cryptoKeyLength) {
-        Key cryptoKey = csrfTokenHolder.getCryptoKey(CsrfConstants.CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE_NAME);
+    private Key fetchCryptoKey(final CsrfTokenKeyHolder csrfTokenKeyHolder, final Integer cryptoKeyLength) {
+        Key cryptoKey = csrfTokenKeyHolder.getCryptoKey();
 
         if (cryptoKey == null) {
             cryptoKey = generateCryptoKey(cryptoKeyLength);
-            csrfTokenHolder.storeCryptoKey(CsrfConstants.CSRF_CRYPTO_KEY_SESSION_ATTRIBUTE_NAME, cryptoKey);
+            csrfTokenKeyHolder.storeCryptoKey(cryptoKey);
         }
 
         return cryptoKey;
