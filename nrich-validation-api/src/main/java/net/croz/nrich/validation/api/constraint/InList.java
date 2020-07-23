@@ -15,6 +15,11 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+
+/**
+ * The annotated element must be in the specified list of values. toString method is called on annotated element and
+ * it is validated against allowed list of values.
+ */
 @SuppressWarnings("unused")
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
@@ -27,10 +32,20 @@ public @interface InList {
 
     Class<?>[] groups() default { };
 
+    /**
+     * List of allowed values.
+     *
+     * @return list of allowed values
+     */
     String[] value();
 
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Defines several {@link InList} annotations on the same element.
+     *
+     * @see InList
+     */
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
     @Retention(RUNTIME)
     @Documented

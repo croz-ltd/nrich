@@ -13,6 +13,10 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+
+/**
+ * Annotated element property must not be null when condition is satisfied.
+ */
 @SuppressWarnings("unused")
 @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
 @Retention(RUNTIME)
@@ -27,10 +31,25 @@ public @interface NullWhen {
 
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Property name that must be null.
+     *
+     * @return property name
+     */
     String property();
 
+    /**
+     * Condition that if satisfied requires property not to be null.
+     *
+     * @return condition
+     */
     Class<? extends Predicate<?>> condition();
 
+    /**
+     * Defines several {@link NullWhen} annotations on the same element.
+     *
+     * @see NullWhen
+     */
     @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented

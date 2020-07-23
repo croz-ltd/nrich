@@ -12,6 +12,9 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Annotated element from property must be less than (or equal to if inclusive is true) to to property.
+ */
 @SuppressWarnings("unused")
 @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
 @Retention(RUNTIME)
@@ -26,12 +29,32 @@ public @interface ValidRange {
 
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Name of from property.
+     *
+     * @return name of from property
+     */
     String fromPropertyName();
 
+    /**
+     * Name of to property.
+     *
+     * @return name of to property
+     */
     String toPropertyName();
 
+    /**
+     * Whether from property can be equal to to property.
+     *
+     * @return whether property from can be equal to to property
+     */
     boolean inclusive() default false;
 
+    /**
+     * Defines several {@link ValidRange} annotations on the same element.
+     *
+     * @see ValidRange
+     */
     @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented

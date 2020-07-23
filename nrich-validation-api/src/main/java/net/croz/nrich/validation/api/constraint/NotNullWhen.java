@@ -13,6 +13,9 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Annotated element property must not be null when condition is satisfied.
+ */
 @SuppressWarnings("unused")
 @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
 @Retention(RUNTIME)
@@ -27,10 +30,25 @@ public @interface NotNullWhen {
 
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Property name that must not be null.
+     *
+     * @return property name
+     */
     String property();
 
+    /**
+     * Condition that if satisfied requires property not to be null.
+     *
+     * @return condition
+     */
     Class<? extends Predicate<?>> condition();
 
+    /**
+     * Defines several {@link NotNullWhen} annotations on the same element.
+     *
+     * @see NotNullWhen
+     */
     @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented

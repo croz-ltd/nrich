@@ -16,6 +16,9 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Annotated element must be a valida OIB (Personal Identification Number).
+ */
 @SuppressWarnings("unused")
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE })
 @Retention(RUNTIME)
@@ -30,6 +33,11 @@ public @interface ValidOib {
 
     Class<? extends Payload>[] payload() default { };
 
+    /**
+     * Defines several {@link ValidOib} annotations on the same element.
+     *
+     * @see ValidOib
+     */
     @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE, TYPE })
     @Retention(RUNTIME)
     @Documented
