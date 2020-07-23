@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.Objects;
 
 // TODO check if other operators are required
+
+/**
+ * Contains default operators that will be used when building queries.
+ */
 @SuppressWarnings("unchecked")
 public enum DefaultSearchOperator implements SearchOperator {
 

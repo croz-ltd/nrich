@@ -12,35 +12,77 @@ import java.util.List;
 import java.util.function.Function;
 
 // TODO allow for easier initialization of search configuration and sync all classes (static vs builder etc)
-// T -> root persistent entity, P -> projection class (can be same as root), R -> search request instance
+/**
+ * Holds search configuration that decides how query should be build from conditions defined in search request.
+ *
+ * @param <T> root persistent entity
+ * @param <P> projection class (can be same as root)
+ * @param <R> holder for conditions
+ */
 @Setter
 @Getter
 @Builder
 public class SearchConfiguration<T, P, R> {
 
+    /**
+     * Function that resolves root entity. Can be null if root entity is same as repository entity. Useful when we want to query only subclass.
+     */
     private Function<R, Class<T>> rootEntityResolver;
 
+    /**
+     * List of joins and/or fetches to be applied to query.
+     */
     private List<SearchJoin<R>> joinList;
 
+    /**
+     * List of projections. Can also be resolved from result class. Useful when no result class exists, in that case Tuples are returned.
+     */
     private List<SearchProjection<R>> projectionList;
 
+    /**
+     * Result class (optional). If defined only properties defined in result class are fetched.
+     */
     private Class<P> resultClass;
 
-    private boolean resolveFieldMappingUsingPrefix;
+    /**
+     * Whether property prefix from request will be used to match properties defined on root entity (i.e. if entity has association to user request userName property will search for user.name).
+     */
+    private boolean resolvePropertyMappingUsingPrefix;
 
+    /**
+     * Explicit property mapping. Allows for defining for custom property mapping (i.e. if request userName should match userList.name).
+     */
     private List<SearchPropertyMapping> propertyMappingList;
 
+    /**
+     * List of search operators override (i.e. if strings are to be searched by equality instead of like).
+     */
     private List<SearchOperatorOverride> searchOperatorOverrideList;
 
     // TODO enable restriction type by association name
+    /**
+     * Decides if join or exist subquery should be used for plural associations (default is subquery).
+     */
     private PluralAssociationRestrictionType pluralAssociationRestrictionType;
 
+    /**
+     * Configuration for subquery. Allows for specifying conditions for entity that don't have a direct association from root entity.
+     */
     private List<SubqueryConfiguration> subqueryConfigurationList;
 
+    /**
+     * Additional restrictions to be applied to query (i.e. security restrictions).
+     */
     private List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList;
 
+    /**
+     * Whether distinct operator should be applied.
+     */
     private boolean distinct;
 
+    /**
+     * Whether OR operator should be used when building query (default is AND).
+     */
     private boolean anyMatch;
 
     @Builder.Default
@@ -55,6 +97,6 @@ public class SearchConfiguration<T, P, R> {
     }
 
     public static <T, P, R> SearchConfiguration<T, P, R> emptyConfigurationWithDefaultMappingResolve() {
-        return SearchConfiguration.<T, P, R>builder().searchPropertyConfiguration(SearchPropertyConfiguration.defaultSearchPropertyConfiguration()).resolveFieldMappingUsingPrefix(true).build();
+        return SearchConfiguration.<T, P, R>builder().searchPropertyConfiguration(SearchPropertyConfiguration.defaultSearchPropertyConfiguration()).resolvePropertyMappingUsingPrefix(true).build();
     }
 }

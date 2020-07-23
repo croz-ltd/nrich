@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 public class SearchDataParserConfiguration {
 
-    private final boolean resolveFieldMappingUsingPrefix;
+    private final boolean resolvePropertyMappingUsingPrefix;
 
     private final List<SearchPropertyMapping> propertyMappingList;
 
@@ -22,7 +22,7 @@ public class SearchDataParserConfiguration {
     private final SearchPropertyConfiguration searchPropertyConfiguration;
 
     public static SearchDataParserConfiguration fromSearchConfiguration(final SearchConfiguration<?, ?, ?> searchConfiguration) {
-        return new SearchDataParserConfiguration(searchConfiguration.isResolveFieldMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchPropertyConfiguration());
+        return new SearchDataParserConfiguration(searchConfiguration.isResolvePropertyMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchPropertyConfiguration());
     }
 
 }

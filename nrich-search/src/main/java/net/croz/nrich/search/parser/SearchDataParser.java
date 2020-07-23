@@ -89,7 +89,7 @@ public class SearchDataParser {
     }
 
     private List<String> resolveFieldNameList(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
-        final List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredFieldList();
+        final List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList();
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
@@ -185,7 +185,7 @@ public class SearchDataParser {
     }
 
     private boolean searchUsingPropertyMapping(final SearchDataParserConfiguration searchConfiguration) {
-        return searchConfiguration.isResolveFieldMappingUsingPrefix() || searchConfiguration.getPropertyMappingList() != null;
+        return searchConfiguration.isResolvePropertyMappingUsingPrefix() || searchConfiguration.getPropertyMappingList() != null;
     }
 
     private SearchOperator resolveFromSearchConfiguration(final SearchDataParserConfiguration searchConfiguration, final String path, final Class<?> attributeType) {

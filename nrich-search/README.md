@@ -157,13 +157,13 @@ public class CarSearchDemoService {
     private final CarRepository carRepository;
 
     public Page<CarSearchResult> search(final SearchCarRequest request) {
-        final SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder().resolveFieldMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+        final SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
 
         return carRepository.findAll(request, searchConfiguration, PageableUtil.convertToPageable(request));
     }
 
     public List<CarSearchResult> simpleSearch(final String query) {
-        final SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder().resolveFieldMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+        final SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
 
         return carSearchRepository.findAll(query, Arrays.asList("registrationNumber", "price"), searchConfiguration);
     }
@@ -182,7 +182,7 @@ conversion is attempted using `StringToTypeConverter` and if it succeeds then pr
 `SearchConfiguration` has a lot of options that users can customize searching and result resolving. For instance if we will be returning a regular class instead of 
 projection `.resultClass(CarSearchResult.class)` can be omitted and return class will be resolved from repository type parameter.
 Instead of a result class users can also manully define a list of projections using `projectionList` property, users can define joins (fetches) (so no data is fetched in one select) 
-by using `joinList`. `resolveFieldMappingUsingPrefix` resolves properties by prefix but it is also possible to write explicit property mapping from search request to searched entity by using
+by using `joinList`. `resolvePropertyMappingUsingPrefix` resolves properties by prefix but it is also possible to write explicit property mapping from search request to searched entity by using
 `propertyMappingList`. Default operators (see `DefaultSearchOperator`) are for String ILIKE (uses `criteriaBuilder.like` with lower call before), for range search GT (uses `criteriaBuilder.greaterThan`), LT (uses `criteriaBuilder.lessThan`), GE (uses `criteriaBuilder.greaterThanOrEqualTo`), LE (uses `criteriaBuilder.lessThanOrEqualTo`) and for all other classes EQ but this cane be overriden
 either on type level or on property level by using `searchOperatorOverrideList`.  Queries on plural associations are done using exists query (to avoid duplicate results) but that can be overriden
 by property `pluralAssociationRestrictionType`.  Additional restrictions (not dependent on data in search request, for example security restrictions) can be specified using `additionalRestrictionResolverList`.

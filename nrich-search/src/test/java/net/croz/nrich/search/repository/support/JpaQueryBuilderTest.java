@@ -1,7 +1,6 @@
 package net.croz.nrich.search.repository.support;
 
 import net.croz.nrich.search.SearchTestConfiguration;
-import net.croz.nrich.search.api.model.DefaultRootEntityResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
@@ -188,7 +187,7 @@ public class JpaQueryBuilderTest {
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
-                .resolveFieldMappingUsingPrefix(true)
+                .resolvePropertyMappingUsingPrefix(true)
                 .build();
 
         final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
@@ -389,7 +388,7 @@ public class JpaQueryBuilderTest {
         final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver(new DefaultRootEntityResolver<>(TestEntity.class))
+                .rootEntityResolver((requestInstance) -> TestEntity.class)
                 .build();
 
         // when
