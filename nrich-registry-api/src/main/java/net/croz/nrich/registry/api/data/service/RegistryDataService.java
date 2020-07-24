@@ -27,7 +27,7 @@ public interface RegistryDataService {
      *
      * @param request {@link ListRegistryRequest} instance holding query information
      * @param <P> registry query return value (if no override is specified this is registry type, but can be a projection instance)
-     * @return  {@link Page} instance holding found registry instances
+     * @return {@link Page} instance holding found registry instances
      */
     <P> Page<P> list(ListRegistryRequest request);
 
