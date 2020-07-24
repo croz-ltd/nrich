@@ -1,6 +1,5 @@
-package net.croz.nrich.registry.data.interceptor;
+package net.croz.nrich.registry.api.data.interceptor;
 
-import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 
 public abstract class BaseRegistryDataInterceptor implements RegistryDataInterceptor {
