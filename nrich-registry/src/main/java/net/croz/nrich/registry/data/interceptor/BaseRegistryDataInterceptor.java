@@ -1,10 +1,7 @@
 package net.croz.nrich.registry.data.interceptor;
 
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 
 public abstract class BaseRegistryDataInterceptor implements RegistryDataInterceptor {
 
@@ -14,17 +11,17 @@ public abstract class BaseRegistryDataInterceptor implements RegistryDataInterce
     }
 
     @Override
-    public void beforeRegistryCreate(final CreateRegistryServiceRequest request) {
+    public void beforeRegistryCreate(final String classFullName, final Object entityData) {
 
     }
 
     @Override
-    public void beforeRegistryUpdate(final UpdateRegistryServiceRequest request) {
+    public void beforeRegistryUpdate(final String classFullName, final Object id, final Object entityData) {
 
     }
 
     @Override
-    public void beforeRegistryDelete(final DeleteRegistryRequest request) {
+    public void beforeRegistryDelete(final String classFullName, final Object id) {
 
     }
 }

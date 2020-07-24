@@ -2,12 +2,10 @@ package net.croz.nrich.registry.data.testutil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.request.SearchParameter;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
@@ -21,7 +19,6 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
-import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -152,25 +149,6 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
-    public static CreateRegistryServiceRequest createRegistryServiceRequest(final String classFullName) {
-        final CreateRegistryServiceRequest request = new CreateRegistryServiceRequest();
-
-        request.setClassFullName(classFullName);
-        request.setEntityData(new CreateRegistryTestEntityRequest("name 1", 50));
-
-        return request;
-    }
-
-    public static UpdateRegistryServiceRequest updateRegistryServiceRequest(final String classFullName, final Long id) {
-        final UpdateRegistryServiceRequest request = new UpdateRegistryServiceRequest();
-
-        request.setClassFullName(classFullName);
-        request.setId(id);
-        request.setEntityData(new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
-
-        return request;
-    }
-
     @SneakyThrows
     public static UpdateRegistryRequest updateRegistryRequest(final ObjectMapper objectMapper, final String classFullName, final Long id, final String name) {
         final UpdateRegistryRequest request = new UpdateRegistryRequest();
@@ -230,28 +208,14 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
-    public static UpdateRegistryServiceRequest createUpdateEmbeddedUserGroupRequest(final RegistryTestEmbeddedUserGroupId id, final RegistryTestEmbeddedUserGroupId updateId, final String updateName) {
-        final UpdateRegistryServiceRequest request = new UpdateRegistryServiceRequest();
-
-        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
-        request.setId(id);
-        request.setEntityData(new RegistryTestEmbeddedUserGroup(updateId, updateName));
-
-        return request;
-    }
-
-    public static DeleteRegistryRequest createDeleteRegistryTestEntityWithIdClassRequest(final RegistryTestEntityWithIdClass entity) {
-        final DeleteRegistryRequest request = new DeleteRegistryRequest();
+    public static Map<String, Object> registryTestEntityWithIdClassId(final RegistryTestEntityWithIdClass entity) {
 
         final Map<String, Object> idMap = new HashMap<>();
 
         idMap.put("firstId", entity.getFirstId());
         idMap.put("secondId", entity.getSecondId());
 
-        request.setClassFullName(RegistryTestEntityWithIdClass.class.getName());
-        request.setId(idMap);
-
-        return request;
+        return idMap;
     }
 
 }

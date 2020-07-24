@@ -1,9 +1,6 @@
 package net.croz.nrich.registry.api.data.interceptor;
 
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 
 /**
  * Intercepts operations on registry entities.
@@ -20,22 +17,26 @@ public interface RegistryDataInterceptor {
     /**
      * Executed before registry create operation.
      *
-     * @param request {@link CreateRegistryServiceRequest} instance
+     * @param classFullName Class name of registry entity.
+     * @param entityData entity creation data
      */
-    void beforeRegistryCreate(CreateRegistryServiceRequest request);
+    void beforeRegistryCreate(String classFullName, Object entityData);
 
     /**
      * Executed before registry update operation.
      *
-     * @param request {@link UpdateRegistryServiceRequest} instance
+     * @param classFullName Class name of registry entity.
+     * @param id registry entity id.
+     * @param entityData entity creation data
      */
-    void beforeRegistryUpdate(UpdateRegistryServiceRequest request);
+    void beforeRegistryUpdate(String classFullName, Object id, Object entityData);
 
     /**
      * Executed before registry delete operation.
      *
-     * @param request {@link DeleteRegistryRequest} instance
+     * @param classFullName Class name of registry entity.
+     * @param id registry entity id.
      */
-    void beforeRegistryDelete(DeleteRegistryRequest request);
+    void beforeRegistryDelete(String classFullName, Object id);
 
 }

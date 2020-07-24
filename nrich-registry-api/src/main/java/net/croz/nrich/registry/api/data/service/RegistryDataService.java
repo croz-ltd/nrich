@@ -1,10 +1,7 @@
 package net.croz.nrich.registry.api.data.service;
 
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
@@ -34,28 +31,32 @@ public interface RegistryDataService {
     /**
      * Returns created registry entity.
      *
-     * @param request holding create registry information.
+     * @param classFullName Class name of registry entity.
+     * @param entityData entity creation data
      * @param <T> registry entity type
      * @return created registry instance.
      */
-    <T> T create(CreateRegistryServiceRequest request);
+    <T> T create(String classFullName, Object entityData);
 
     /**
      * Returns update registry entity.
      *
-     * @param request holding update registry information.
+     * @param classFullName Class name of registry entity.
+     * @param id registry entity id.
+     * @param entityData entity creation data
      * @param <T> registry entity type
      * @return updated registry instance.
      */
-    <T> T update(UpdateRegistryServiceRequest request);
+    <T> T update(String classFullName, Object id, Object entityData);
 
     /**
      * Returns deleted registry entity.
      *
-     * @param request holding delete registry information.
+     * @param classFullName Class name of registry entity.
+     * @param id registry entity id.
      * @param <T> registry entity type
      * @return deleted registry instance.
      */
-    <T> T delete(DeleteRegistryRequest request);
+    <T> T delete(String classFullName, Object id);
 
 }

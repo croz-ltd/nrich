@@ -2,11 +2,9 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
@@ -47,32 +45,32 @@ public class RegistryDataController {
 
     @PostMapping("delete")
     public <T> T delete(@RequestBody @Valid final DeleteRegistryRequest request) {
-        return registryDataService.delete(request);
+        return registryDataService.delete(request.getClassFullName(), request.getId());
     }
 
     @PostMapping("create")
     public <T> T create(@RequestBody @Valid final CreateRegistryRequest request) {
-        final CreateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
+        final Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
-        validateServiceRequest(serviceRequest);
+        validateEntityData(entityData);
 
-        return registryDataService.create(serviceRequest);
+        return registryDataService.create(request.getClassFullName(), entityData);
     }
 
     @PostMapping("update")
     public <T> T update(@RequestBody @Valid final UpdateRegistryRequest request) {
-        final UpdateRegistryServiceRequest serviceRequest = registryDataRequestConversionService.convertToServiceRequest(request);
+        final Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
-        validateServiceRequest(serviceRequest);
+        validateEntityData(entityData);
 
-        return registryDataService.update(serviceRequest);
+        return registryDataService.update(request.getClassFullName(), request.getId(), entityData);
     }
 
     @SneakyThrows
-    private void validateServiceRequest(final Object serviceRequest) {
-        final BindingResult errors = new BeanPropertyBindingResult(serviceRequest, "serviceRequest");
+    private void validateEntityData(final Object entityData) {
+        final BindingResult errors = new BeanPropertyBindingResult(entityData, "entityData");
 
-        validator.validate(serviceRequest, errors);
+        validator.validate(entityData, errors);
 
         if (errors.hasErrors()) {
             throw new BindException(errors);

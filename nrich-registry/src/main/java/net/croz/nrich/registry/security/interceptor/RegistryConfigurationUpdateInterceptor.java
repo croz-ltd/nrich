@@ -1,9 +1,6 @@
 package net.croz.nrich.registry.security.interceptor;
 
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.api.security.exception.RegistryUpdateNotAllowedException;
 import net.croz.nrich.registry.data.interceptor.BaseRegistryDataInterceptor;
 
@@ -20,24 +17,24 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
     }
 
     @Override
-    public void beforeRegistryCreate(final CreateRegistryServiceRequest request) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(request.getClassFullName());
+    public void beforeRegistryCreate(final String classFullName, final Object entityData) {
+        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
-        verifyRegistryOperation(request.getClassFullName(), registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isCreatable());
+        verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isCreatable());
     }
 
     @Override
-    public void beforeRegistryUpdate(final UpdateRegistryServiceRequest request) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(request.getClassFullName());
+    public void beforeRegistryUpdate(final String classFullName, final Object id, final Object entityData) {
+        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
-        verifyRegistryOperation(request.getClassFullName(), registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isUpdateable());
+        verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isUpdateable());
     }
 
     @Override
-    public void beforeRegistryDelete(final DeleteRegistryRequest request) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(request.getClassFullName());
+    public void beforeRegistryDelete(final String classFullName, final Object id) {
+        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
-        verifyRegistryOperation(request.getClassFullName(), registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isDeletable());
+        verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isDeletable());
     }
 
     private RegistryOverrideConfiguration resolveConfiguration(final String classFullName) {

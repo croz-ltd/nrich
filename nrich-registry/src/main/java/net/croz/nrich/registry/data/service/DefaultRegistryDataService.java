@@ -2,11 +2,8 @@ package net.croz.nrich.registry.data.service;
 
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
@@ -76,50 +73,50 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T create(final CreateRegistryServiceRequest request) {
-        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryCreate(request));
+    public <T> T create(final String classFullName, final Object entityData) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryCreate(classFullName, entityData));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), request.getEntityData());
+        final T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
 
-        modelMapper.map(request.getEntityData(), instance);
+        modelMapper.map(entityData, instance);
 
         return entityManager.merge(instance);
     }
 
     @Transactional
     @Override
-    public <T> T update(final UpdateRegistryServiceRequest request) {
-        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryUpdate(request));
+    public <T> T update(final String classFullName, final Object id, final Object entityData) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryUpdate(classFullName, id, entityData));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
+        final ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(classFullName);
 
-        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
+        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
 
         if (wrapper.isIdClassIdentifier() || wrapper.isEmbeddedIdentifier()) {
             entityManager.remove(instance);
-            instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), request.getEntityData());
+            instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
         }
 
-        modelMapper.map(request.getEntityData(), instance);
+        modelMapper.map(entityData, instance);
 
         return entityManager.merge(instance);
     }
 
     @Transactional
     @Override
-    public <T> T delete(final DeleteRegistryRequest request) {
-        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryDelete(request));
+    public <T> T delete(final String classFullName, final Object id) {
+        interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryDelete(classFullName, id));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), request.getId());
+        final T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
 
         entityManager.remove(instance);
 

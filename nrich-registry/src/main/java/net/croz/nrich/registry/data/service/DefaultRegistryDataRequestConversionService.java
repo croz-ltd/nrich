@@ -3,8 +3,6 @@ package net.croz.nrich.registry.data.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.api.data.request.CreateRegistryServiceRequest;
-import net.croz.nrich.registry.api.data.request.UpdateRegistryServiceRequest;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
@@ -22,28 +20,17 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
     private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
 
     @Override
-    public CreateRegistryServiceRequest convertToServiceRequest(final CreateRegistryRequest request) {
+    public Object convertEntityDataToTyped(final CreateRegistryRequest request) {
         final Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.CREATE_REQUEST_SUFFIX);
 
-        final CreateRegistryServiceRequest serviceRequest = new CreateRegistryServiceRequest();
-
-        serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
-
-        return serviceRequest;
+        return convertStringToInstance(request.getJsonEntityData(), type);
     }
 
     @Override
-    public UpdateRegistryServiceRequest convertToServiceRequest(final UpdateRegistryRequest request) {
+    public Object convertEntityDataToTyped(final UpdateRegistryRequest request) {
         final Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.UPDATE_REQUEST_SUFFIX);
 
-        final UpdateRegistryServiceRequest serviceRequest = new UpdateRegistryServiceRequest();
-
-        serviceRequest.setId(request.getId());
-        serviceRequest.setClassFullName(request.getClassFullName());
-        serviceRequest.setEntityData(convertStringToInstance(request.getJsonEntityData(), type));
-
-        return serviceRequest;
+        return convertStringToInstance(request.getJsonEntityData(), type);
     }
 
     private Class<?> resolveClassWithConfigurationVerification(final String classFullName, final String classLoadingInitialPrefix) {
