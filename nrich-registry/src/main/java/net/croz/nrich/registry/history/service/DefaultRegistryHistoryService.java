@@ -91,7 +91,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private <T> AuditQuery createAuditQuery(final ListRegistryHistoryRequest request) {
         @SuppressWarnings("unchecked")
-        final Class<T> type = (Class<T>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getRegistryId()).getRegistryType();
+        final Class<T> type = (Class<T>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName()).getRegistryType();
 
         final AuditQuery auditQuery = AuditReaderFactory.get(entityManager).createQuery().forRevisionsOfEntity(type, false, true);
 

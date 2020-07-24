@@ -1,6 +1,6 @@
 package net.croz.nrich.registry.starter.configuration.stub;
 
-import net.croz.nrich.registry.api.core.model.RegistryCategoryDefinitionConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +14,12 @@ public class RegistryUserConfiguration {
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryCategoryDefinitionConfiguration registryDataConfigurationGroup = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
-        registryDataConfigurationGroup.setRegistryCategoryId("DATA");
+        registryDataConfigurationGroup.setGroupId("DATA");
         registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
 
-        registryConfiguration.setRegistryCategoryDefinitionConfigurationList(Collections.singletonList(registryDataConfigurationGroup));
+        registryConfiguration.setGroupDefinitionConfigurationList(Collections.singletonList(registryDataConfigurationGroup));
 
         return registryConfiguration;
     }

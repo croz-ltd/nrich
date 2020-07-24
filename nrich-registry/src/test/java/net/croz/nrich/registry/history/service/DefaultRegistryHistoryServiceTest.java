@@ -142,7 +142,7 @@ public class DefaultRegistryHistoryServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionOnInvalidRegistryId() {
+    void shouldThrowExceptionOnInvalidClassFullName() {
         // given
         final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), new Object());
 

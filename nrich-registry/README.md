@@ -15,17 +15,16 @@ To be able to use this library following configuration is required. If Jacksons 
 not on classpath then `RegistryDataFormConfigurationResolverService` bean is not needed. History requires `hibernate-envers` dependency and if history is not needed then all beans with history suffix can be omitted.
 
 ```
-
     @Bean
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryCategoryDefinitionConfiguration RegistryCategoryDefinitionConfiguration = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryGroupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
 
-        RegistryCategoryDefinitionConfiguration.setRegistryCategoryId("DEFAULT");
-        RegistryCategoryDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^.*\\.demoregistry\\..*$"));
+        registryGroupDefinitionConfiguration.setGroupId("DEFAULT");
+        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^.*\\.demoregistry\\..*$"));
 
-        registryConfiguration.setRegistryCategoryDefinitionConfigurationList(Collections.singletonList(RegistryCategoryDefinitionConfiguration));
+        registryConfiguration.setGroupDefinitionConfigurationList(Collections.singletonList(registryGroupDefinitionConfiguration));
 
         return registryConfiguration;
     }
@@ -141,7 +140,7 @@ that checks if these operations are permitted according to defined `RegistryConf
 
 `RegistryConfigurationService` transforms `RegistryConfiguration` in a format that clients can use for creating dynamic forms and grids.
 
-`RegistryConfigurationController` is a REST endpoint with single url `nrich/registry/configuration/fetch` that returns transformed `RegistryConfiguration` (a list of `RegistryCategoryConfiguration` instances)
+`RegistryConfigurationController` is a REST endpoint with single url `nrich/registry/configuration/fetch` that returns transformed `RegistryConfiguration` (a list of `RegistryGroupConfiguration` instances)
 to client.
 
 `RegistryEntityFinderService` is used by `RegistryDataService` and `RegistryHistoryService` for resolving primary key of entity instances and/or finding them.
@@ -182,12 +181,12 @@ Central configuration clients should define is:
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryCategoryDefinitionConfiguration RegistryCategoryDefinitionConfiguration = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryGroupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
 
-        RegistryCategoryDefinitionConfiguration.setRegistryCategoryId("DEFAULT");
-        RegistryCategoryDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^.*\\.demoregistry\\..*$"));
+        registryGroupDefinitionConfiguration.setGroupId("DEFAULT");
+        registryGroupDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList("^.*\\.demoregistry\\..*$"));
 
-        registryConfiguration.setRegistryCategoryDefinitionConfigurationList(Collections.singletonList(RegistryCategoryDefinitionConfiguration));
+        registryConfiguration.setGroupDefinitionConfigurationList(Collections.singletonList(registryGroupDefinitionConfiguration));
 
         return registryConfiguration;
     }
@@ -204,9 +203,9 @@ After that if localization is required for registry name, form labels and column
 
 `DefaultRegistryConfigurationService` resolves messages from following key:
 
-`registryCategoryId.registryCategoryIdDisplay` - text displayed for registry category (a list of registry entities)
+`groupId.registryGroupIdDisplayName` - text displayed for registry group (a list of registry entities)
 
-`net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.registryNameDisplay` - text displayed as `RegistryConfigurationTestEntity` name
+`net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.registryEntityDisplayName` - text displayed as `RegistryConfigurationTestEntity` name
 
 `net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.name.label` - form label for name property of `RegistryConfigurationTestEntity` entity 
 
@@ -220,20 +219,20 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
 
 [
   {
-    "registryCategoryId": "DEFAULT",
-    "registryCategoryIdDisplay": "Registry default category",
-    "registryEntityConfigurationList": [
+    "groupId": "DEFAULT",
+    "groupIdDisplayName": "Registry default group",
+    "entityConfigurationList": [
       {
-        "registryId": "net.croz.demoregistry.model.Author",
-        "registryName": "Author",
-        "registryDisplayName": "Author",
+        "classFullName": "net.croz.demoregistry.model.Author",
+        "name": "Author",
+        "displayName": "Author",
         "category": "DEFAULT",
         "readOnly": false,
         "creatable": true,
         "updateable": true,
         "deletable": true,
         "idClassPropertyNameList": [],
-        "registryPropertyConfigurationList": [
+        "propertyConfigurationList": [
           {
             "name": "id",
             "javascriptType": "NUMBER",
@@ -288,8 +287,8 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
             "id": false
           }
         ],
-        "registryEmbeddedIdPropertyConfigurationList": [],
-        "registryHistoryPropertyConfigurationList": [
+        "embeddedIdPropertyConfigurationList": [],
+        "historyPropertyConfigurationList": [
           {
             "name": "revisionNumber",
             "javascriptType": "NUMBER",
@@ -336,16 +335,16 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
         "identifierAssigned": false
       },
       {
-        "registryId": "net.croz.demoregistry.model.Book",
-        "registryName": "Book",
-        "registryDisplayName": "Book",
+        "classFullName": "net.croz.demoregistry.model.Book",
+        "name": "Book",
+        "displayName": "Book",
         "category": "DEFAULT",
         "readOnly": false,
         "creatable": true,
         "updateable": true,
         "deletable": true,
         "idClassPropertyNameList": [],
-        "registryPropertyConfigurationList": [
+        "propertyConfigurationList": [
           {
             "name": "id",
             "javascriptType": "NUMBER",
@@ -386,8 +385,8 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
             "id": false
           }
         ],
-        "registryEmbeddedIdPropertyConfigurationList": [],
-        "registryHistoryPropertyConfigurationList": [
+        "embeddedIdPropertyConfigurationList": [],
+        "historyPropertyConfigurationList": [
           {
             "name": "revisionNumber",
             "javascriptType": "NUMBER",
@@ -448,7 +447,7 @@ requests for searching Author:
 ```json
 
 {
-  "registryId": "net.croz.demoregistry.model.Author",
+  "classFullName": "net.croz.demoregistry.model.Author",
   "searchParameter": {
     "propertyNameList": [
       "firstName",
@@ -469,7 +468,7 @@ requests for searching Author:
 
 ```
 
-`registryId` is class name to search, `propertyNameList` is a list of properties to search on that class. `searchParameter` and  `sortPropertyList` are not required but paging parameters are.
+`classFullName` is class name to search, `propertyNameList` is a list of properties to search on that class. `searchParameter` and  `sortPropertyList` are not required but paging parameters are.
 
 Response sent from server returns Springs pageable with list of entity instances: 
 

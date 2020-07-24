@@ -14,7 +14,7 @@ import java.util.List;
 public class ListRegistryRequest {
 
     @NotNull
-    private String registryId;
+    private String classFullName;
 
     @Min(0)
     @NotNull

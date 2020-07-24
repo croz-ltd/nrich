@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.api.core.model.RegistryCategoryDefinitionConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
@@ -169,24 +169,24 @@ public class RegistryTestConfiguration {
     public RegistryConfiguration registryConfiguration() {
         final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryCategoryDefinitionConfiguration registryDataConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryDataConfiguratinGroup = new RegistryGroupDefinitionConfiguration();
 
-        registryDataConfigurationCategory.setRegistryCategoryId("DATA");
-        registryDataConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
-        registryDataConfigurationCategory.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+        registryDataConfiguratinGroup.setGroupId("DATA");
+        registryDataConfiguratinGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryDataConfiguratinGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
-        final RegistryCategoryDefinitionConfiguration registryConfigurationConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
-        registryConfigurationConfigurationCategory.setRegistryCategoryId("CONFIGURATION");
-        registryConfigurationConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
+        registryConfigurationConfigurationGroup.setGroupId("CONFIGURATION");
+        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
 
-        final RegistryCategoryDefinitionConfiguration registryHistoryConfigurationCategory = new RegistryCategoryDefinitionConfiguration();
+        final RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
-        registryHistoryConfigurationCategory.setRegistryCategoryId("HISTORY");
-        registryHistoryConfigurationCategory.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
+        registryHistoryConfigurationGroup.setGroupId("HISTORY");
+        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
 
-        registryConfiguration.setRegistryCategoryDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
-        registryConfiguration.setRegistryCategoryDefinitionConfigurationList(Arrays.asList(registryDataConfigurationCategory, registryConfigurationConfigurationCategory, registryHistoryConfigurationCategory));
+        registryConfiguration.setGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
+        registryConfiguration.setGroupDefinitionConfigurationList(Arrays.asList(registryDataConfiguratinGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup));
 
         final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
@@ -201,18 +201,18 @@ public class RegistryTestConfiguration {
         registryInterceptorTestOverrideConfiguration.setReadOnly(true);
 
         final RegistryOverrideConfigurationHolder registryTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationTestEntity.class).registryOverrideConfiguration(registryOverrideConfiguration).build();
+                .type(RegistryConfigurationTestEntity.class).overrideConfiguration(registryOverrideConfiguration).build();
 
         final RegistryOverrideConfigurationHolder registryInterceptorTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).registryOverrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
+                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
 
         final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
         final RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).registryDataOverrideSearchConfiguration(searchConfiguration).build();
+                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
-        registryConfiguration.setRegistryOverrideConfigurationHolderList(Arrays.asList(registryOverrideConfigurationHolder, registryTestEntityOverrideConfiguration, registryInterceptorTestEntityOverrideConfiguration));
+        registryConfiguration.setOverrideConfigurationHolderList(Arrays.asList(registryOverrideConfigurationHolder, registryTestEntityOverrideConfiguration, registryInterceptorTestEntityOverrideConfiguration));
 
         return registryConfiguration;
     }

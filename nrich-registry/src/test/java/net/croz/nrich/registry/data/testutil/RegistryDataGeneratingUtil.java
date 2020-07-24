@@ -125,7 +125,7 @@ public final class RegistryDataGeneratingUtil {
 
         final ListRegistryRequest request = new ListRegistryRequest();
 
-        request.setRegistryId(classFullName);
+        request.setClassFullName(classFullName);
         request.setPageNumber(0);
         request.setPageSize(10);
         request.setSearchParameter(searchParameter);

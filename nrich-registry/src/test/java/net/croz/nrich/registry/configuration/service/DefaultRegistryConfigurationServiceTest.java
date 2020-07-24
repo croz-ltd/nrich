@@ -1,7 +1,7 @@
 package net.croz.nrich.registry.configuration.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
+import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
@@ -25,32 +25,32 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfiguration() {
         // when
-        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
 
         // then
         assertThat(result).isNotEmpty();
         assertThat(result).hasSize(3);
-        assertThat(result).extracting("registryCategoryId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
-        assertThat(result).extracting("registryCategoryIdDisplay").containsExactly("Configuration category", "Data category", "HISTORY");
+        assertThat(result).extracting("groupId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
+        assertThat(result).extracting("groupIdDisplayName").containsExactly("Configuration group", "Data group", "HISTORY");
     }
 
     @Test
     void shouldResolveConfigurationWithOverrideDefined() {
         // when
-        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
-        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getRegistryId()))
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+                .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);
 
         // then
         assertThat(registryEntityConfiguration).isNotNull();
 
-        assertThat(registryEntityConfiguration.getCategory()).isEqualTo("CONFIGURATION");
+        assertThat(registryEntityConfiguration.getGroupId()).isEqualTo("CONFIGURATION");
 
-        assertThat(registryEntityConfiguration.getRegistryName()).isEqualTo(RegistryConfigurationTestEntity.class.getSimpleName());
-        assertThat(registryEntityConfiguration.getRegistryDisplayName()).isEqualTo("Test entity");
+        assertThat(registryEntityConfiguration.getName()).isEqualTo(RegistryConfigurationTestEntity.class.getSimpleName());
+        assertThat(registryEntityConfiguration.getDisplayName()).isEqualTo("Test entity");
         assertThat(registryEntityConfiguration.isReadOnly()).isFalse();
         assertThat(registryEntityConfiguration.isCreatable()).isTrue();
         assertThat(registryEntityConfiguration.isUpdateable()).isTrue();
@@ -61,12 +61,12 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isNullOrEmpty();
         assertThat(registryEntityConfiguration.isHistoryAvailable()).isFalse();
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).hasSize(5);
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber");
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isDecimal").containsExactly(false, false, false, true, true);
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).hasSize(5);
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("isDecimal").containsExactly(false, false, false, true, true);
 
         // and when
-        final RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(0);
+        final RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(0);
 
         // then
         assertThat(nameConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
@@ -80,13 +80,13 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(nameConfiguration.isSortable()).isTrue();
 
         // and when
-        final RegistryPropertyConfiguration idPropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(1);
+        final RegistryPropertyConfiguration idPropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
 
         // then
         assertThat(idPropertyConfiguration.isId()).isTrue();
 
         // and when
-        final RegistryPropertyConfiguration nonEditablePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(2);
+        final RegistryPropertyConfiguration nonEditablePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
 
         // then
         assertThat(nonEditablePropertyConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
@@ -98,7 +98,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
 
         // and when
-        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryEntityConfiguration.getRegistryHistoryPropertyConfigurationList();
+        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryEntityConfiguration.getHistoryPropertyConfigurationList();
 
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
@@ -110,10 +110,10 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndEmbeddedId() {
         // when
-        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
-        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getRegistryId()))
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+                .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);
 
@@ -126,25 +126,25 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isEmpty();
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
-        assertThat(registryEntityConfiguration.getRegistryEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
+        assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
         // and when
-        final RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(1);
+        final RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
 
         // then
         assertThat(numberRegistryConfiguration.isDecimal()).isTrue();
         assertThat(numberRegistryConfiguration.getJavascriptType()).isEqualTo(JavascriptType.NUMBER);
 
         // and when
-        final RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(2);
+        final RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
 
         // then
         assertThat(manyToOnePropertyConfiguration.isSingularAssociation()).isTrue();
         assertThat(manyToOnePropertyConfiguration.getSingularAssociationReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
 
         // and when
-        final RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getRegistryPropertyConfigurationList().get(3);
+        final RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(3);
 
         // then
         assertThat(oneToOnePropertyConfiguration.isSingularAssociation()).isTrue();
@@ -154,10 +154,10 @@ public class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithIdClass() {
         // when
-        final List<RegistryCategoryConfiguration> result = registryConfigurationService.fetchRegistryCategoryConfigurationList();
-        final RegistryCategoryConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getRegistryEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getRegistryId()))
+        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+                .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);
 
@@ -170,7 +170,7 @@ public class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isIdClassIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
 
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("firstId", "secondId", "name");
-        assertThat(registryEntityConfiguration.getRegistryPropertyConfigurationList()).extracting("isId").containsExactlyInAnyOrder(true, true, false);
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("firstId", "secondId", "name");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("isId").containsExactlyInAnyOrder(true, true, false);
     }
 }

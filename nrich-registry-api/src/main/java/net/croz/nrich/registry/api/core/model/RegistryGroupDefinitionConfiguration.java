@@ -7,9 +7,9 @@ import java.util.List;
 
 @Setter
 @Getter
-public class RegistryCategoryDefinitionConfiguration {
+public class RegistryGroupDefinitionConfiguration {
 
-    private String registryCategoryId;
+    private String groupId;
 
     private List<String> includeEntityPatternList;
 

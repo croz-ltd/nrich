@@ -1,6 +1,8 @@
 package net.croz.nrich.registry.api.configuration.model.property;
 
-// date is not a type but for easier handling on client making it one
+/**
+ * Enum representing Javascript type, even though date is not a type it is added for easier handling on client.
+ */
 public enum JavascriptType {
 
     STRING, BOOLEAN, NUMBER, DATE, OBJECT;

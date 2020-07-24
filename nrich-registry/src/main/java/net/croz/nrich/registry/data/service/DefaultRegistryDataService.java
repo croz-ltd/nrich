@@ -63,7 +63,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
     @Override
     public <P> Map<String, Page<P>> listBulk(final ListBulkRegistryRequest request) {
         return request.getRegistryRequestList().stream()
-                .collect(Collectors.toMap(ListRegistryRequest::getRegistryId, this::list));
+                .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
     }
 
     @Transactional(readOnly = true)
@@ -137,12 +137,12 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getRegistryId());
+        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
         @SuppressWarnings("unchecked")
-        final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getRegistryId());
+        final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getRegistryId());
+        final ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
 
         final String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
 

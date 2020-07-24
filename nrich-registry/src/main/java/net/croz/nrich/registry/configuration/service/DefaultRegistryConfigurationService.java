@@ -1,8 +1,8 @@
 package net.croz.nrich.registry.configuration.service;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.registry.api.configuration.model.RegistryCategoryConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
+import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
@@ -13,7 +13,7 @@ import net.croz.nrich.registry.configuration.constants.RegistryConfigurationCons
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
-import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
@@ -42,7 +42,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
     private final List<String> readOnlyPropertyList;
 
-    private final RegistryCategoryDefinitionHolder registryCategoryDefinitionHolder;
+    private final RegistryGroupDefinitionHolder registryGroupDefinitionHolder;
 
     private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
 
@@ -50,30 +50,30 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
     @Cacheable("nrich.registryConfiguration.cache")
     @Override
-    public List<RegistryCategoryConfiguration> fetchRegistryCategoryConfigurationList() {
-        final List<RegistryCategoryConfiguration> registryCategoryConfigurationList = new ArrayList<>();
+    public List<RegistryGroupConfiguration> fetchRegistryGroupConfigurationList() {
+        final List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
 
         final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList = resolveHistoryPropertyList(registryHistoryConfiguration);
 
-        registryCategoryDefinitionHolder.getRegistryCategoryDefinitionList().forEach(registryGroupDefinition -> {
-            final String registryGroupIdDisplay = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
+        registryGroupDefinitionHolder.getGroupDefinitionList().forEach(registryGroupDefinition -> {
+            final String registryGroupIdDisplayName = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
             final List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
                     .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
-                    .sorted(Comparator.comparing(RegistryEntityConfiguration::getRegistryId))
+                    .sorted(Comparator.comparing(RegistryEntityConfiguration::getClassFullName))
                     .collect(Collectors.toList());
 
-            final RegistryCategoryConfiguration registryConfiguration = new RegistryCategoryConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplay, registryEntityConfigurationList);
+            final RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplayName, registryEntityConfigurationList);
 
-            registryCategoryConfigurationList.add(registryConfiguration);
+            registryGroupConfigurationList.add(registryConfiguration);
         });
 
-        registryCategoryConfigurationList.sort(new RegistryGroupConfigurationComparator(registryCategoryDefinitionHolder.getRegistryCategoryDisplayOrderList()));
+        registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.getGroupDisplayOrderList()));
 
-        return registryCategoryConfigurationList;
+        return registryGroupConfigurationList;
     }
 
-    private RegistryEntityConfiguration resolveRegistryConfiguration(final String registryGroupId, final ManagedTypeWrapper managedTypeWrapper, final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
+    private RegistryEntityConfiguration resolveRegistryConfiguration(final String groupId, final ManagedTypeWrapper managedTypeWrapper, final List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
         final Class<?> entityType = managedTypeWrapper.getJavaType();
         final RegistryOverrideConfiguration registryOverrideConfiguration = resolveRegistryOverrideConfiguration(entityType, registryOverrideConfigurationMap);
 
@@ -86,13 +86,13 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         registryPropertyConfigurationList.sort(new RegistryPropertyComparator(registryPropertyDisplayOrderList));
 
         return RegistryEntityConfiguration.builder()
-                .category(registryGroupId)
-                .registryId(entityType.getName())
-                .registryName(entityType.getSimpleName())
-                .registryDisplayName(registryDisplayName)
-                .registryPropertyConfigurationList(registryPropertyConfigurationList)
-                .registryEmbeddedIdPropertyConfigurationList(registryEmbeddedIdPropertyConfigurationList)
-                .registryHistoryPropertyConfigurationList(registryPropertyHistoryConfigurationList)
+                .groupId(groupId)
+                .classFullName(entityType.getName())
+                .name(entityType.getSimpleName())
+                .displayName(registryDisplayName)
+                .propertyConfigurationList(registryPropertyConfigurationList)
+                .embeddedIdPropertyConfigurationList(registryEmbeddedIdPropertyConfigurationList)
+                .historyPropertyConfigurationList(registryPropertyHistoryConfigurationList)
                 .readOnly(registryOverrideConfiguration.isReadOnly())
                 .creatable(registryOverrideConfiguration.isCreatable())
                 .updateable(registryOverrideConfiguration.isUpdateable())
@@ -194,7 +194,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     }
 
     private String groupDisplayLabel(final String groupId) {
-        final String[] groupMessageCodeList = { String.format(RegistryConfigurationConstants.REGISTRY_CATEGORY_DISPLAY_LABEL_FORMAT, groupId) };
+        final String[] groupMessageCodeList = { String.format(RegistryConfigurationConstants.REGISTRY_GROUP_DISPLAY_LABEL_FORMAT, groupId) };
         final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(groupMessageCodeList, groupId);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());

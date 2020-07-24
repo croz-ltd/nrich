@@ -105,7 +105,7 @@ public final class RegistryHistoryGeneratingUtil {
 
         request.setSortPropertyList(Collections.singletonList(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC)));
 
-        request.setRegistryId(className);
+        request.setClassFullName(className);
         request.setRegistryRecordId(id);
         request.setPageNumber(0);
         request.setPageSize(10);

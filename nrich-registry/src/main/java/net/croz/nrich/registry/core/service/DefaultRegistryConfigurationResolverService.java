@@ -6,8 +6,8 @@ import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
-import net.croz.nrich.registry.core.model.RegistryCategoryDefinition;
-import net.croz.nrich.registry.core.model.RegistryCategoryDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
@@ -42,12 +42,12 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     private final RegistryConfiguration registryConfiguration;
 
     @Override
-    public RegistryCategoryDefinitionHolder resolveRegistryGroupDefinition() {
+    public RegistryGroupDefinitionHolder resolveRegistryGroupDefinition() {
         final Set<ManagedType<?>> managedTypeList = entityManager.getMetamodel().getManagedTypes();
 
-        final List<RegistryCategoryDefinition> registryCategoryDefinitionList = new ArrayList<>();
+        final List<RegistryGroupDefinition> registryGroupDefinitionList = new ArrayList<>();
 
-        registryConfiguration.getRegistryCategoryDefinitionConfigurationList().forEach(registryGroupDefinition -> {
+        registryConfiguration.getGroupDefinitionConfigurationList().forEach(registryGroupDefinition -> {
             final List<ManagedTypeWrapper> includedManagedTypeList = managedTypeList.stream()
                     .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
                     .map(ManagedTypeWrapper::new)
@@ -57,26 +57,26 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 return;
             }
 
-            registryCategoryDefinitionList.add(new RegistryCategoryDefinition(registryGroupDefinition.getRegistryCategoryId(), includedManagedTypeList));
+            registryGroupDefinitionList.add(new RegistryGroupDefinition(registryGroupDefinition.getGroupId(), includedManagedTypeList));
         });
 
-        return new RegistryCategoryDefinitionHolder(registryCategoryDefinitionList, registryConfiguration.getRegistryCategoryDisplayOrderList());
+        return new RegistryGroupDefinitionHolder(registryGroupDefinitionList, registryConfiguration.getGroupDisplayOrderList());
     }
 
     @Override
     public Map<Class<?>, RegistryOverrideConfiguration> resolveRegistryOverrideConfigurationMap() {
-        return Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList())
+        return Optional.ofNullable(registryConfiguration.getOverrideConfigurationHolderList()).orElse(Collections.emptyList())
                 .stream()
-                .filter(registryOverrideConfigurationHolder -> registryOverrideConfigurationHolder.getRegistryOverrideConfiguration() != null)
-                .collect(Collectors.toMap(RegistryOverrideConfigurationHolder::getType, RegistryOverrideConfigurationHolder::getRegistryOverrideConfiguration));
+                .filter(registryOverrideConfigurationHolder -> registryOverrideConfigurationHolder.getOverrideConfiguration() != null)
+                .collect(Collectors.toMap(RegistryOverrideConfigurationHolder::getType, RegistryOverrideConfigurationHolder::getOverrideConfiguration));
     }
 
     @Override
     public RegistryDataConfigurationHolder resolveRegistryDataConfiguration() {
-        final RegistryCategoryDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
+        final RegistryGroupDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
 
-        final List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.getRegistryCategoryDefinitionList().stream()
-                .map(RegistryCategoryDefinition::getRegistryEntityList)
+        final List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.getGroupDefinitionList().stream()
+                .map(RegistryGroupDefinition::getRegistryEntityList)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
@@ -137,7 +137,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         final PropertyWithType revisionTimestampProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, revisionTimestampPropertyName, revisionTimestampPropertyType);
         final PropertyWithType revisionTypeProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, String.class);
 
-        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, revisionTypeProperty, additionalPropertyList, registryConfiguration.getRegistryHistoryDisplayList());
+        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, revisionTypeProperty, additionalPropertyList, registryConfiguration.getHistoryDisplayList());
     }
 
     private boolean includeManagedType(final ManagedType<?> managedType, final List<String> includeDomainPatternList, final List<String> excludeDomainPatternList) {
@@ -159,9 +159,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(final ManagedTypeWrapper managedTypeWrapper) {
         final Class<?> type = managedTypeWrapper.getJavaType();
 
-        return Optional.ofNullable(registryConfiguration.getRegistryOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
-                .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getRegistryDataOverrideSearchConfiguration() != null)
-                .map(RegistryOverrideConfigurationHolder::getRegistryDataOverrideSearchConfiguration)
+        return Optional.ofNullable(registryConfiguration.getOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
+                .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getOverrideSearchConfiguration() != null)
+                .map(RegistryOverrideConfigurationHolder::getOverrideSearchConfiguration)
                 .findFirst()
                 .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedTypeWrapper));
     }
