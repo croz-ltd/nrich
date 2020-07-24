@@ -2,7 +2,7 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;

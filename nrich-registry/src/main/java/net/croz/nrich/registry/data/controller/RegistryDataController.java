@@ -2,11 +2,11 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.api.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import org.springframework.data.domain.Page;
