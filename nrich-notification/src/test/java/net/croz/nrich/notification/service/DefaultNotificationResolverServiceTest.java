@@ -33,7 +33,7 @@ import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.in
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(NotificationTestConfiguration.class)
-public class DefaultNotificationResolverServiceTest {
+class DefaultNotificationResolverServiceTest {
 
     @Autowired
     private DefaultNotificationResolverService defaultNotificationResolverService;

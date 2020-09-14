@@ -16,7 +16,7 @@ import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.d
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(SearchTestConfiguration.class)
-public class DefaultStringToEntityPropertyMapConverterTest {
+class DefaultStringToEntityPropertyMapConverterTest {
 
     @Autowired
     private DefaultStringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
@@ -33,9 +33,9 @@ public class DefaultStringToEntityPropertyMapConverterTest {
         final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity());
 
         // then
-        assertThat(result.get("name")).isEqualTo(value);
-        assertThat(result.get("date")).isEqualTo(dateOf(value));
-        assertThat(result.get("nestedEntity.nestedName")).isEqualTo(value);
+        assertThat(result).containsEntry("name", value);
+        assertThat(result).containsEntry("date", dateOf(value));
+        assertThat(result).containsEntry("nestedEntity.nestedName", value);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class DefaultStringToEntityPropertyMapConverterTest {
         final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
 
         // then
-        assertThat(result.get("name")).isEqualTo(value);
+        assertThat(result).containsEntry("name", value);
         assertThat(result.get("nonExisting")).isNull();
     }
 

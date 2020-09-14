@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
-public class DefaultFormConfigurationServiceTest {
+class DefaultFormConfigurationServiceTest {
 
     @Autowired
     private DefaultFormConfigurationService formConfigurationService;
@@ -30,7 +30,6 @@ public class DefaultFormConfigurationServiceTest {
         final Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(formIdList));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 

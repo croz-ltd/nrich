@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ValidationTestConfiguration.class)
-public class ValidRangeValidatorTest {
+class ValidRangeValidatorTest {
 
     @Autowired
     private Validator validator;

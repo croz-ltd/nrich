@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class BytesEncryptorTextEncryptServiceTest {
+class BytesEncryptorTextEncryptServiceTest {
 
     @Autowired
     private BytesEncryptorTextEncryptService textEncryptionService;
@@ -42,7 +42,6 @@ public class BytesEncryptorTextEncryptServiceTest {
         final Throwable thrown = catchThrowable(() -> textEncryptionService.encryptText(textToEncrypt));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
     }
 
@@ -55,7 +54,6 @@ public class BytesEncryptorTextEncryptServiceTest {
         final Throwable thrown = catchThrowable(() -> textEncryptionService.decryptText(textToDecrypt));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
     }
 

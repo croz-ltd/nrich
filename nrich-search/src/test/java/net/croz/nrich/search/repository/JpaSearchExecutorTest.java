@@ -30,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringJUnitConfig(SearchTestConfiguration.class)
-public class JpaSearchExecutorTest {
+class JpaSearchExecutorTest {
 
     @Autowired
     private TestEntitySearchRepository testEntitySearchRepository;
@@ -234,8 +234,8 @@ public class JpaSearchExecutorTest {
 
         // then
         assertThat(result).isEmpty();
-        assertThat(result.getTotalPages()).isEqualTo(0);
-        assertThat(result.getContent()).hasSize(0);
+        assertThat(result.getTotalPages()).isZero();
+        assertThat(result.getContent()).isEmpty();
     }
 
     @Test

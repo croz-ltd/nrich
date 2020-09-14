@@ -11,7 +11,7 @@ import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConstrainedSessionLocaleResolverTest {
+class ConstrainedSessionLocaleResolverTest {
 
     @Test
     void shouldOnlyAllowSettingOfAllowedLocale() {

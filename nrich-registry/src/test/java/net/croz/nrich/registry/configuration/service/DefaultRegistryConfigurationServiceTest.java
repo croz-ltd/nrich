@@ -1,8 +1,8 @@
 package net.croz.nrich.registry.configuration.service;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
-import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
+import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
-public class DefaultRegistryConfigurationServiceTest {
+class DefaultRegistryConfigurationServiceTest {
 
     @Autowired
     private DefaultRegistryConfigurationService registryConfigurationService;
@@ -28,7 +28,6 @@ public class DefaultRegistryConfigurationServiceTest {
         final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
 
         // then
-        assertThat(result).isNotEmpty();
         assertThat(result).hasSize(3);
         assertThat(result).extracting("groupId").containsExactly("CONFIGURATION", "DATA", "HISTORY");
         assertThat(result).extracting("groupIdDisplayName").containsExactly("Configuration group", "Data group", "HISTORY");

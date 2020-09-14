@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
-public class DefaultRegistryHistoryServiceTest {
+class DefaultRegistryHistoryServiceTest {
 
     @Autowired
     private RegistryHistoryService registryHistoryService;

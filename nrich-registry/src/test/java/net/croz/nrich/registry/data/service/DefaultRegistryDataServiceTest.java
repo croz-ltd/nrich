@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 @Transactional
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
-public class DefaultRegistryDataServiceTest {
+class DefaultRegistryDataServiceTest {
 
     @Autowired
     private RegistryDataService registryDataService;

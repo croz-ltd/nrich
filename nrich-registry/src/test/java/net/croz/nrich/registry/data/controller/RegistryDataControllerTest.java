@@ -2,10 +2,10 @@ package net.croz.nrich.registry.data.controller;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
+import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
@@ -37,7 +37,7 @@ import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTran
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class RegistryDataControllerTest extends BaseWebTest {
+class RegistryDataControllerTest extends BaseWebTest {
 
     @PersistenceContext
     private EntityManager entityManager;

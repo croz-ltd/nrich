@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
-public class DefaultRegistryDataFormConfigurationResolverServiceTest {
+class DefaultRegistryDataFormConfigurationResolverServiceTest {
 
     @Autowired
     private DefaultRegistryDataFormConfigurationResolverService registryDataFormConfigurationResolverService;

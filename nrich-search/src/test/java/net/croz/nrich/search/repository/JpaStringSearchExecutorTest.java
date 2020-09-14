@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SpringJUnitConfig(SearchTestConfiguration.class)
-public class JpaStringSearchExecutorTest {
+class JpaStringSearchExecutorTest {
 
     @Autowired
     private TestEntityStringSearchRepository testEntityStringSearchRepository;
@@ -142,7 +142,7 @@ public class JpaStringSearchExecutorTest {
         final long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isZero();
     }
 
     @Test

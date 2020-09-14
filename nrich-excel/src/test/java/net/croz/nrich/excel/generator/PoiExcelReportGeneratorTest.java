@@ -34,7 +34,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueL
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class PoiExcelReportGeneratorTest {
+class PoiExcelReportGeneratorTest {
 
     private static final String REPORT_FILE_NAME = "report.xlsx";
 
@@ -97,7 +97,6 @@ public class PoiExcelReportGeneratorTest {
         final Throwable thrown = catchThrowable(() -> excelReportGenerator.writeRowData(rowData));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 

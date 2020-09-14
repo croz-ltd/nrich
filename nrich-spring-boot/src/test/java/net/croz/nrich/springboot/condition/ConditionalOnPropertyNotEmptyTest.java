@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ConditionalOnPropertyNotEmptyTest {
+class ConditionalOnPropertyNotEmptyTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(ConditionalOnPropertyNotEmptyConfiguration.class));
 

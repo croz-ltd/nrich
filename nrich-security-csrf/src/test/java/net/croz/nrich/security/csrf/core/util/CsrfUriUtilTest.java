@@ -8,7 +8,7 @@ import java.util.Collections;
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CsrfUriUtilTest {
+class CsrfUriUtilTest {
 
     @Test
     void shouldReturnFalseWhenExcludedUriConfigurationIsEmpty() {

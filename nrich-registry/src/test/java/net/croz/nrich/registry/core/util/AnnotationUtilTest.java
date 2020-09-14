@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnnotationUtilTest {
+class AnnotationUtilTest {
 
     @Test
     void shouldReturnFalseWhenAnnotationClassIsNotOnClassPath() {

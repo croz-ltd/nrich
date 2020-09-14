@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidatorContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class ValidOibValidatorTest {
+class ValidOibValidatorTest {
 
     private final ValidOibValidator validOibValidator = new ValidOibValidator();
 

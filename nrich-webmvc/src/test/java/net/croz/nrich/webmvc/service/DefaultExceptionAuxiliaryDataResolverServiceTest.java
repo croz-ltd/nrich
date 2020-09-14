@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(WebmvcTestConfiguration.class)
-public class DefaultExceptionAuxiliaryDataResolverServiceTest {
+class DefaultExceptionAuxiliaryDataResolverServiceTest {
 
     @Autowired
     private DefaultExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService;
@@ -29,7 +29,7 @@ public class DefaultExceptionAuxiliaryDataResolverServiceTest {
         assertThat(additionalExceptionData).isNotNull();
         assertThat(additionalExceptionData.get("uuid")).isNotNull();
         assertThat(additionalExceptionData.get("occurrenceTime")).isNotNull();
-        assertThat(additionalExceptionData.get("requestUri")).isEqualTo("uri");
-        assertThat(additionalExceptionData.get("requestMethod")).isEqualTo("POST");
+        assertThat(additionalExceptionData).containsEntry("requestUri", "uri");
+        assertThat(additionalExceptionData).containsEntry("requestMethod", "POST");
     }
 }

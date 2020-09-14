@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ValidationTestConfiguration.class)
 @TestPropertySource("classpath:application.properties")
-public class ValidFileResolvableValidatorTest {
+class ValidFileResolvableValidatorTest {
 
     @Autowired
     private Validator validator;

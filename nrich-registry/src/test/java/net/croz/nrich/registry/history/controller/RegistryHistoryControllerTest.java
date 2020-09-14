@@ -24,7 +24,7 @@ import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTran
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class RegistryHistoryControllerTest extends BaseWebTest {
+class RegistryHistoryControllerTest extends BaseWebTest {
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -25,7 +25,7 @@ import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class CsrfInterceptorTest {
+class CsrfInterceptorTest {
 
     private CsrfInterceptor csrfInterceptor;
 
@@ -124,7 +124,6 @@ public class CsrfInterceptorTest {
         final Throwable thrown = catchThrowable(() -> csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object()));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(CsrfTokenException.class);
     }
 

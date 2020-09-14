@@ -11,7 +11,7 @@ import java.time.Duration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class AesCsrfTokenManagerServiceTest {
+class AesCsrfTokenManagerServiceTest {
 
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
@@ -31,7 +31,6 @@ public class AesCsrfTokenManagerServiceTest {
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(CsrfTokenException.class);
         assertThat(thrown.getMessage()).isEqualTo("Csrf token is not available!");
     }
@@ -58,7 +57,6 @@ public class AesCsrfTokenManagerServiceTest {
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(CsrfTokenException.class);
         assertThat(thrown.getMessage()).isEqualTo("Csrf token is not valid.");
     }
@@ -73,7 +71,6 @@ public class AesCsrfTokenManagerServiceTest {
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(CsrfTokenException.class);
         assertThat(thrown.getMessage()).isEqualTo("Csrf token can't be decrypted.");
     }
@@ -90,7 +87,6 @@ public class AesCsrfTokenManagerServiceTest {
         final Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(CsrfTokenException.class);
         assertThat(thrown.getMessage()).isEqualTo("Csrf token is too old.");
     }

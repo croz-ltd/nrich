@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ExcelTestConfiguration.class)
-public class DefaultExcelReportServiceTest {
+class DefaultExcelReportServiceTest {
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 

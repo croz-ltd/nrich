@@ -13,7 +13,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(ValidationTestConfiguration.class)
-public class InListValidatorTest {
+class InListValidatorTest {
 
     @Autowired
     private Validator validator;

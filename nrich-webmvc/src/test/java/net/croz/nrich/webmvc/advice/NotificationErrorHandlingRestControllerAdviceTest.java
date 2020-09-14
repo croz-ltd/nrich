@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
+class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
 
     private static final String DEFAULT_ERROR_MESSAGE = "Error message";
 

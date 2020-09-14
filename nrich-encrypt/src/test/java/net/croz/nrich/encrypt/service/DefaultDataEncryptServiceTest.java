@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class DefaultDataEncryptServiceTest {
+class DefaultDataEncryptServiceTest {
 
     @Autowired
     private DefaultDataEncryptService dataEncryptionService;
@@ -228,15 +228,13 @@ public class DefaultDataEncryptServiceTest {
         final Map<String, String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
-        assertThat(result).isNotNull();
-        assertThat(result.get(key)).isNotEqualTo(textToEncrypt);
+        assertThat(result).doesNotContainEntry(key, textToEncrypt);
 
         // and when
         final Map<String, String> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
-        assertThat(decryptResult).isNotNull();
-        assertThat(decryptResult.get(key)).isEqualTo(textToEncrypt);
+        assertThat(decryptResult).containsEntry(key, textToEncrypt);
     }
 
     @Test
@@ -257,13 +255,13 @@ public class DefaultDataEncryptServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.get(key).get(key)).isNotEqualTo(textToEncrypt);
+        assertThat(result.get(key)).doesNotContainEntry(key, textToEncrypt);
 
         // and when
         final Map<String, Map<String, String>> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
-        assertThat(result.get(key).get(key)).isEqualTo(textToEncrypt);
+        assertThat(result.get(key)).containsEntry(key, textToEncrypt);
     }
 }

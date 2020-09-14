@@ -11,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitWebConfig(WebmvcTestConfiguration.class)
-public class DefaultTransientPropertyResolverServiceTest {
+class DefaultTransientPropertyResolverServiceTest {
 
     @Autowired
     private DefaultTransientPropertyResolverService transientPropertyResolverService;

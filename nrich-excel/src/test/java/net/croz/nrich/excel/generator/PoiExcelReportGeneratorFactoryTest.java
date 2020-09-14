@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ExcelTestConfiguration.class)
-public class PoiExcelReportGeneratorFactoryTest {
+class PoiExcelReportGeneratorFactoryTest {
 
     @Autowired
     private PoiExcelReportGeneratorFactory excelReportGeneratorFactory;

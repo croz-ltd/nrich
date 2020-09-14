@@ -10,7 +10,7 @@ import static net.croz.nrich.search.support.testutil.MapSupportingDirectFieldAcc
 import static net.croz.nrich.search.support.testutil.MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUtil.mapOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
+class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
 
     @Test
     void shouldGetPropertyValueFromMap() {
@@ -34,7 +34,7 @@ public class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
         wrapper.setPropertyValue("key", "value");
 
         // then
-        assertThat(map.get("key")).isEqualTo("value");
+        assertThat(map).containsEntry("key", "value");
     }
 
     @Test

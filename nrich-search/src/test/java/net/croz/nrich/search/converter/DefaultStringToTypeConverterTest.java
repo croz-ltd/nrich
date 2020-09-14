@@ -19,7 +19,7 @@ import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.l
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(SearchTestConfiguration.class)
-public class DefaultStringToTypeConverterTest {
+class DefaultStringToTypeConverterTest {
 
     @Autowired
     private DefaultStringToTypeConverter defaultStringToTypeConverter;

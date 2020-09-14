@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
-public class RegistryConfigurationUpdateInterceptorTest {
+class RegistryConfigurationUpdateInterceptorTest {
 
     private static final String CLASS_NAME_OF_NON_READ_ONLY_ENTITY = "some.class.name";
 
@@ -31,7 +31,6 @@ public class RegistryConfigurationUpdateInterceptorTest {
         final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryCreate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);
     }
 
@@ -47,7 +46,6 @@ public class RegistryConfigurationUpdateInterceptorTest {
         final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryUpdate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null, null));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);
     }
 
@@ -63,7 +61,6 @@ public class RegistryConfigurationUpdateInterceptorTest {
         final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryDelete(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);
     }
 }

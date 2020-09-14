@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
-public class DefaultConstrainedPropertyValidatorConverterServiceTest {
+class DefaultConstrainedPropertyValidatorConverterServiceTest {
 
     @Autowired
     private DefaultConstrainedPropertyValidatorConverterService defaultConstrainedPropertyValidatorConverterService;

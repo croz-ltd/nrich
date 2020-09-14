@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -17,7 +16,7 @@ import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGenerat
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
-public class MessageSourceFieldErrorMessageResolverServiceTest {
+class MessageSourceFieldErrorMessageResolverServiceTest {
 
     @Autowired
     private MessageSourceFieldErrorMessageResolverService fieldErrorMessageResolverService;

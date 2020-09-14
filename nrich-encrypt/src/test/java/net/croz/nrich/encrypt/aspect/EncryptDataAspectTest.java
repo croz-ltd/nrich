@@ -5,13 +5,12 @@ import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestService;
 import net.croz.nrich.encrypt.aspect.stub.EncryptDataAspectTestServiceResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
-public class EncryptDataAspectTest {
+class EncryptDataAspectTest {
 
     @Autowired
     private EncryptDataAspectTestService encryptDataAspectTestService;
@@ -98,7 +97,6 @@ public class EncryptDataAspectTest {
         final String result = encryptDataAspectTestService.textToEncrypt(text);
 
         // then
-        assertThat(result).isNotNull();
         assertThat(result).isNotEqualTo(text);
 
         // and when

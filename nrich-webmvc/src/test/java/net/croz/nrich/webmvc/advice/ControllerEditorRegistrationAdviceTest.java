@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-public class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
+class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
 
     @Test
     void shouldConvertEmptyStringsToNull() throws Exception {

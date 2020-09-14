@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 @Transactional
 @SpringJUnitConfig(SearchTestConfiguration.class)
-public class JpaQueryBuilderTest {
+class JpaQueryBuilderTest {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -645,7 +645,6 @@ public class JpaQueryBuilderTest {
         final Throwable thrown = catchThrowable(() -> executeQuery(request, searchConfiguration));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 

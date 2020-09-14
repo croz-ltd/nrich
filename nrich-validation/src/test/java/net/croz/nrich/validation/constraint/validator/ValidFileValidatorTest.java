@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(ValidationTestConfiguration.class)
-public class ValidFileValidatorTest {
+class ValidFileValidatorTest {
 
     @Autowired
     private Validator validator;
