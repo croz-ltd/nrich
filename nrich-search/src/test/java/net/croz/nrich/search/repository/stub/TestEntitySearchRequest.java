@@ -46,6 +46,8 @@ public class TestEntitySearchRequest {
 
     private String nestedEntityNestedEntityAliasName;
 
+    private String testEntityEmbeddedEmbeddedName;
+
     public TestEntitySearchRequest(final String name) {
         this.name = name;
     }

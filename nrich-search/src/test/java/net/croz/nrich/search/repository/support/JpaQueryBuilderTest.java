@@ -181,7 +181,7 @@ class JpaQueryBuilderTest {
     }
 
     @Test
-    void shouldSearchByCollectionAssociationValuesByUsingFieldPrefix() {
+    void shouldSearchCollectionAssociationPropertiesByUsingPropertyPrefix() {
         // given
         generateListForSearch(entityManager);
 
@@ -201,6 +201,27 @@ class JpaQueryBuilderTest {
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getCollectionEntityList()).isNotEmpty();
         assertThat(results.get(0).getCollectionEntityList().get(0).getName()).isEqualTo("collection2");
+    }
+
+    @Test
+    void shouldSearchEmbeddedPropertiesByUsingPropertyPrefix() {
+        // given
+        generateListForSearch(entityManager);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+                .resolvePropertyMappingUsingPrefix(true)
+                .build();
+
+        final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+                .testEntityEmbeddedEmbeddedName("embedded1")
+                .build();
+
+        // when
+        final List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getTestEntityEmbedded().getEmbeddedName()).isEqualTo("embedded1");
     }
 
     @Test

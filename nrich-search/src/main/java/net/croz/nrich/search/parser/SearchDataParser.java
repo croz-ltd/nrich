@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -173,7 +174,7 @@ public class SearchDataParser {
 
     private String findPathUsingAttributePrefix(final String originalFieldName, final ManagedType<?> managedType) {
         final List<String> attributeNameList = managedType.getAttributes().stream()
-                .filter(Attribute::isAssociation)
+                .filter(attribute -> attribute.isAssociation() || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED)
                 .map(Attribute::getName)
                 .collect(Collectors.toList());
 
