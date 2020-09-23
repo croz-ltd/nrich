@@ -2,6 +2,7 @@ package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.ValidationTestConfiguration;
 import net.croz.nrich.validation.constraint.stub.NullWhenTestRequest;
+import net.croz.nrich.validation.constraint.stub.NullWhenTestRequestWithAutowiredService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -54,4 +55,15 @@ class NullWhenValidatorTest {
         assertThat(constraintViolationList).isNotEmpty();
     }
 
+    @Test
+    void shouldUseAutowiredServiceAndReportError() {
+        // given
+        final NullWhenTestRequestWithAutowiredService request = new NullWhenTestRequestWithAutowiredService("value", "not null");
+
+        // when
+        final Set<ConstraintViolation<NullWhenTestRequestWithAutowiredService>> constraintViolationList = validator.validate(request);
+
+        // then
+        assertThat(constraintViolationList).isNotEmpty();
+    }
 }

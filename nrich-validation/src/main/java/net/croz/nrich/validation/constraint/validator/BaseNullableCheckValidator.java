@@ -1,11 +1,16 @@
 package net.croz.nrich.validation.constraint.validator;
 
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.constraint.util.ValidationReflectionUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+@RequiredArgsConstructor
 abstract class BaseNullableCheckValidator {
+
+    private final AutowireCapableBeanFactory beanFactory;
 
     protected abstract boolean isPropertyValueValid(Object propertyValue);
 
@@ -15,7 +20,7 @@ abstract class BaseNullableCheckValidator {
         }
 
         @SuppressWarnings("unchecked")
-        final Predicate<Object> condition = (Predicate<Object>) ValidationReflectionUtil.instantiateClass(conditionClass);
+        final Predicate<Object> condition = (Predicate<Object>) beanFactory.autowire(conditionClass, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
 
         final boolean conditionEvaluationResult = condition.test(value);
 

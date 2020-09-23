@@ -1,5 +1,6 @@
 package net.croz.nrich.validation;
 
+import net.croz.nrich.validation.constraint.stub.NullWhenTestService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
@@ -13,4 +14,8 @@ public class ValidationTestConfiguration {
         return new LocalValidatorFactoryBean();
     }
 
+    @Bean
+    public NullWhenTestService nullWhenTestService() {
+        return new NullWhenTestService();
+    }
 }

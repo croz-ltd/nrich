@@ -1,6 +1,7 @@
 package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.api.constraint.NullWhen;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,6 +12,10 @@ public class NullWhenValidator extends BaseNullableCheckValidator implements Con
     private String propertyName;
 
     private Class<? extends Predicate<?>> conditionClass;
+
+    public NullWhenValidator(final AutowireCapableBeanFactory beanFactory) {
+        super(beanFactory);
+    }
 
     @Override
     public void initialize(final NullWhen constraintAnnotation) {
