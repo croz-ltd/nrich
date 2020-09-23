@@ -1,6 +1,5 @@
 package net.croz.nrich.validation.constraint.util;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,9 +29,5 @@ public final class ValidationReflectionUtil {
 
     public static Object invokeMethod(final Method method, final Object target) {
         return ReflectionUtils.invokeMethod(method, target);
-    }
-
-    public static  <T> T instantiateClass(final Class<T> type) {
-        return BeanUtils.instantiateClass(type);
     }
 }
