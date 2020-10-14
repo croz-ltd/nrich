@@ -57,7 +57,7 @@ class DefaultNotificationResolverServiceTest {
 
         assertThat(notification.getMessageList()).isNotEmpty();
         assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
-                "name: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
+                "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
@@ -116,7 +116,7 @@ class DefaultNotificationResolverServiceTest {
         // then
         assertThat(notification).isNotNull();
         assertThat(notification.getMessageList()).isNotEmpty();
-        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("name: must not be null");
+        assertThat(notification.getMessageList()).containsExactlyInAnyOrder("Name description: must not be null");
     }
 
     @Test
@@ -294,7 +294,7 @@ class DefaultNotificationResolverServiceTest {
 
         assertThat(notification.getMessageList()).isNotEmpty();
         assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
-                "name: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
+                "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
