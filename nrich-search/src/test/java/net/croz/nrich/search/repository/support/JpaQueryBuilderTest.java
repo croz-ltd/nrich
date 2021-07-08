@@ -507,6 +507,26 @@ class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldNotFailWhenOverridingWithMultipleSearchParameters() {
+        // given
+        generateListForSearch(entityManager);
+
+        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
+        request.setAgeFrom(-1);
+
+        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+            .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
+            .build();
+
+        // when
+        final List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).isNotEmpty();
+    }
+
+    @Test
     void shouldSupportContainsSearch() {
         // given
         generateListForSearch(entityManager);

@@ -194,7 +194,7 @@ public class SearchDataParser {
         SearchOperatorOverride operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
 
         if (operatorOverride == null) {
-            operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> attributeType.isAssignableFrom(value.getPropertyType()));
+            operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> value.getPropertyType() != null && attributeType.isAssignableFrom(value.getPropertyType()));
         }
 
         if (operatorOverride != null) {
