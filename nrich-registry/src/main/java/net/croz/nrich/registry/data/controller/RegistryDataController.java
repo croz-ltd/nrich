@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RequestMapping("nrich/registry/data")
+@RequestMapping("${croz.nrich.registry.domain:}/nrich/registry/data")
 @ResponseBody
 public class RegistryDataController {
 
