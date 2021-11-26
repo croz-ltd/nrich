@@ -21,7 +21,7 @@ public interface RegistryEntityFinderService {
     <T> T findEntityInstance(Class<T> type, Object id);
 
     /**
-     * Converts id to parameter map where keys are id names and values are id values (i.e. for single id of type long it will be id -> 1L)
+     * Converts id to parameter map where keys are id names and values are id values (i.e. for single id of type long it will be {@literal id -> 1L})
      *
      * @param type entity type
      * @param id id of entity, can be a map, embedded id or simple object (Long, String)
