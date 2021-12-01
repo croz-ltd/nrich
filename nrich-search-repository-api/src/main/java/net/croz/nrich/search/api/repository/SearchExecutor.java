@@ -18,19 +18,23 @@ public interface SearchExecutor<T> {
     /**
      * Returns a single entity that matches conditions applied from search request or {@link Optional#empty()} if none was found.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return a single entity matching conditions or {@link Optional#empty()} if none was found.
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the query returns more than one
-     *           result.
+     *                                                                        result.
      */
     <R, P> Optional<P> findOne(R request, SearchConfiguration<T, P, R> searchConfiguration);
 
     /**
      * Returns all entities matching conditions applied from search request.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return all entities matching the given conditions applied from search request
      */
     <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration);
@@ -38,9 +42,11 @@ public interface SearchExecutor<T> {
     /**
      * Returns all entities matching conditions applied from search request sorted by sort parameter.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
-     * @param sort the {@link Sort} specification to sort the results by, must not be {@literal null}.
+     * @param sort                the {@link Sort} specification to sort the results by, must not be {@literal null}.
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return all entities matching the given conditions applied from search request
      */
     <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration, Sort sort);
@@ -48,9 +54,11 @@ public interface SearchExecutor<T> {
     /**
      * Returns a {@link Page} of entities matching conditions applied from search request. In case no match could be found, an empty {@link Page} is returned.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
-     * @param pageable can be {@literal null}.
+     * @param pageable            can be {@literal null}.
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return a {@link Page} of entities matching the given conditions applied from search request
      */
     <R, P> Page<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration, Pageable pageable);
@@ -58,8 +66,10 @@ public interface SearchExecutor<T> {
     /**
      * Returns the number of instances matching conditions applied from search request.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return the number of instances matching conditions applied from search request.
      */
     <R, P> long count(R request, SearchConfiguration<T, P, R> searchConfiguration);
@@ -67,8 +77,10 @@ public interface SearchExecutor<T> {
     /**
      * Whether the data store contains elements matching conditions applied from search request.
      *
-     * @param request search request that contains query values
+     * @param request             search request that contains query values
      * @param searchConfiguration configuration that decides how query should be built
+     * @param <R>                 type of request
+     * @param <P>                 projection class
      * @return {@literal true} if the data store contains elements matching conditions applied from search request.
      */
     <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration);

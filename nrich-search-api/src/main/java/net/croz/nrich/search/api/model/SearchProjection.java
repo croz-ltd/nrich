@@ -9,7 +9,8 @@ import java.util.function.Predicate;
 
 /**
  * Projection that will be applied to query. Prefer using result class but if result class is not needed this can be used as an alternative.
- * @param <R>
+ *
+ * @param <R> search request
  */
 @RequiredArgsConstructor
 @AllArgsConstructor

@@ -11,16 +11,22 @@ public interface SortablePageableRequest {
 
     /**
      * Page number.
+     *
+     * @return page number
      */
     Integer getPageNumber();
 
     /**
      * Number of elements to fetch.
+     *
+     * @return number of elements
      */
     Integer getPageSize();
 
     /**
      * List of properties to sort by.
+     *
+     * @return list of properties
      */
     List<SortProperty> getSortPropertyList();
 
