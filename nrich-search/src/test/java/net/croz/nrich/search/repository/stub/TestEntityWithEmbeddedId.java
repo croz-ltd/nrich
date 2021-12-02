@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @NoArgsConstructor
 @AllArgsConstructor
