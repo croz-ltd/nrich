@@ -23,8 +23,7 @@ public interface SearchExecutor<T> {
      * @param <R>                 type of request
      * @param <P>                 projection class
      * @return a single entity matching conditions or {@link Optional#empty()} if none was found.
-     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the query returns more than one
-     *                                                                        result.
+     * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the query returns more than one result.
      */
     <R, P> Optional<P> findOne(R request, SearchConfiguration<T, P, R> searchConfiguration);
 

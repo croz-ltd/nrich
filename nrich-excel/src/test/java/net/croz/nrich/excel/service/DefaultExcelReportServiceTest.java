@@ -13,8 +13,8 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 
+import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAndResolveSheet;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
-import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getSheet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -42,7 +42,7 @@ class DefaultExcelReportServiceTest {
         final File result = excelReportService.createExcelReport(request);
 
         // then
-        final Sheet sheet = getSheet(result);
+        final Sheet sheet = createWorkbookAndResolveSheet(result);
 
         // then
         assertThat(sheet).isNotNull();

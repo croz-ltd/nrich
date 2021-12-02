@@ -61,7 +61,7 @@ public final class PoiDataResolverUtil {
     }
 
     @SneakyThrows
-    public static Sheet getSheet(final File file) {
+    public static Sheet createWorkbookAndResolveSheet(final File file) {
         // it is necessary to close the workbook, i.e. unlock the file, in order to avoid an IOException (on some OSs)
         // in case the file is inside a @TempDir which gets automatically deleted afterwards
         try (final Workbook workbook = new XSSFWorkbook(file)) {

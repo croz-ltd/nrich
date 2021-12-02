@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAndResolveSheet;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
-import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getSheet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -73,7 +73,7 @@ class PoiExcelReportGeneratorTest {
         excelReportGenerator.flushAndClose();
 
         // and when
-        final Sheet sheet = getSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
+        final Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
 
         // then
         assertThat(sheet).isNotNull();
@@ -109,7 +109,7 @@ class PoiExcelReportGeneratorTest {
         excelReportGenerator.flushAndClose();
 
         // and when
-        final Sheet sheet = getSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
+        final Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
 
         // then
         assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly("#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0", "dd-MM-yyyy");

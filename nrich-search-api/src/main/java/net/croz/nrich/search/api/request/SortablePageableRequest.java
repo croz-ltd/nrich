@@ -26,7 +26,7 @@ public interface SortablePageableRequest {
     /**
      * List of properties to sort by.
      *
-     * @return list of properties
+     * @return list of sort properties
      */
     List<SortProperty> getSortPropertyList();
 
