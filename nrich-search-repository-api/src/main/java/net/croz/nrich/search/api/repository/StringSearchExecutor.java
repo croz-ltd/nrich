@@ -14,9 +14,10 @@ public interface StringSearchExecutor<T> {
     /**
      * Returns a single entity that matches conditions applied from search term and property to search list or {@link Optional#empty()} if none was found.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param <P>                  projection class
      * @return a single entity matching conditions or {@link Optional#empty()} if none was found.
      * @throws org.springframework.dao.IncorrectResultSizeDataAccessException if the query returns more than one
      */
@@ -25,9 +26,10 @@ public interface StringSearchExecutor<T> {
     /**
      * Returns all entities matching conditions applied from search term and property to search list.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param <P>                  projection class
      * @return all entities matching the given conditions applied from search term and property to search list
      */
     <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
@@ -35,10 +37,11 @@ public interface StringSearchExecutor<T> {
     /**
      * Returns all entities matching conditions applied from search term and property to search list sorted by sort parameter.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
-     * @param sort the {@link Sort} specification to sort the results by, must not be {@literal null}.
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param sort                 the {@link Sort} specification to sort the results by, must not be {@literal null}.
+     * @param <P>                  projection class
      * @return all entities matching the given conditions applied from search term and property to search list
      */
     <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Sort sort);
@@ -46,10 +49,11 @@ public interface StringSearchExecutor<T> {
     /**
      * Returns a {@link Page} of entities matching conditions applied from search term and property to search list. In case no match could be found, an empty {@link Page} is returned.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
-     * @param pageable can be {@literal null}.
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param pageable             can be {@literal null}.
+     * @param <P>                  projection class
      * @return a {@link Page} of entities matching the given conditions applied from search term and property to search list
      */
     <P> Page<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Pageable pageable);
@@ -57,9 +61,10 @@ public interface StringSearchExecutor<T> {
     /**
      * Returns the number of instances matching conditions applied from search term and property to search list.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param <P>                  projection class
      * @return the number of instances matching conditions applied from search term and property to search list.
      */
     <P> long count(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
@@ -67,9 +72,10 @@ public interface StringSearchExecutor<T> {
     /**
      * Whether the data store contains elements matching conditions applied from search term and property to search list.
      *
-     * @param searchTerm  search term to search
+     * @param searchTerm           search term to search
      * @param propertyToSearchList properties to search
-     * @param searchConfiguration configuration that decides how query should be built
+     * @param searchConfiguration  configuration that decides how query should be built
+     * @param <P>                  projection class
      * @return {@literal true} if the data store contains elements matching conditions applied from search term and property to search list.
      */
     <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);

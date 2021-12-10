@@ -1,4 +1,7 @@
-# nrich 
+[![License](https://img.shields.io/badge/License-Apache%202.0-success.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Continuous Integration](https://github.com/croz-ltd/nrich/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/croz-ltd/nrich/actions/workflows/ci.yml)
+
+# nrich
 
 Nrich is a Java library developed at CROZ whose purpose is to make development of applications on JVM a little easier.
 It contains modules that were found useful on projects and as such were extracted to a common library.

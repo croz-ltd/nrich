@@ -7,8 +7,6 @@ import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -28,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAndResolveSheet;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
@@ -62,7 +61,7 @@ class PoiExcelReportGeneratorTest {
     }
 
     @Test
-    void shouldExportDataToExcel() throws Exception {
+    void shouldExportDataToExcel() {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         final Object[] rowData = new Object[] { 1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null };
@@ -74,8 +73,7 @@ class PoiExcelReportGeneratorTest {
         excelReportGenerator.flushAndClose();
 
         // and when
-        final Workbook workbook = new XSSFWorkbook(new File(temporaryDirectory, REPORT_FILE_NAME));
-        final Sheet sheet = workbook.getSheetAt(0);
+        final Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
 
         // then
         assertThat(sheet).isNotNull();
@@ -101,7 +99,7 @@ class PoiExcelReportGeneratorTest {
     }
 
     @Test
-    void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() throws Exception {
+    void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() {
         // given
         final Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         final Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, new Date() };
@@ -111,8 +109,7 @@ class PoiExcelReportGeneratorTest {
         excelReportGenerator.flushAndClose();
 
         // and when
-        final Workbook workbook = new XSSFWorkbook(new File(temporaryDirectory, REPORT_FILE_NAME));
-        final Sheet sheet = workbook.getSheetAt(0);
+        final Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
 
         // then
         assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly("#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0", "dd-MM-yyyy");

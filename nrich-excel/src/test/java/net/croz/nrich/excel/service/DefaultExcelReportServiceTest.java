@@ -5,8 +5,6 @@ import net.croz.nrich.excel.ExcelTestConfiguration;
 import net.croz.nrich.excel.api.model.MultiRowDataProvider;
 import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.util.Assert;
 
 import java.io.File;
 
+import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAndResolveSheet;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -31,7 +30,7 @@ class DefaultExcelReportServiceTest {
     File temporaryDirectory;
 
     @Test
-    void shouldCreateExcelReport() throws Exception {
+    void shouldCreateExcelReport() {
         // given
         final File file = createFileInTemporaryDirectory();
         final Object[][] rowData = new Object[][] { { 1.1, "value" } };
@@ -43,8 +42,7 @@ class DefaultExcelReportServiceTest {
         final File result = excelReportService.createExcelReport(request);
 
         // then
-        final Workbook workbook = new XSSFWorkbook(result);
-        final Sheet sheet = workbook.getSheetAt(0);
+        final Sheet sheet = createWorkbookAndResolveSheet(result);
 
         // then
         assertThat(sheet).isNotNull();

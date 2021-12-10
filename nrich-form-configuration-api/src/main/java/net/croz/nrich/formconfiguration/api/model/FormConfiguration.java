@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 /**
- * Hold configuration for specific form id. Form id is registered through <pre>Map<String, Class<?> formIdConstraintHolderMap</pre> map and maps received
+ * Hold configuration for specific form id. Form id is registered through <pre>{@code Map<String, Class<?>> formIdConstraintHolderMap}</pre> map and maps received
  * form id from client to a class that holds constrained properties.
  */
 @RequiredArgsConstructor

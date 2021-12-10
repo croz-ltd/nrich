@@ -1,32 +1,20 @@
-# Main Continuous Integration workflow.
+# Workflow that builds packages using Gradle and then publishes them to Maven Central OSSRH
+# currently, it can only be triggered manually
 
-name: Continuous Integration
+name: Publish to Maven Central
 
-on:
-  push:
-    branches:
-      - master
-      - feature_*
-  pull_request:
-    branches:
-      - master
-      - feature_*
+on: workflow_dispatch
 
 jobs:
-  build:
+  build-and-publish:
     strategy:
       matrix:
         java: ["8"]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} - JDK ${{ matrix.java }}
-
     steps:
-      - name: Support long paths for Windows
-        if: ${{ matrix.os == 'windows-latest' }}
-        run: git config --system core.longpaths true
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -56,3 +44,12 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean build
+
+      - name: Publish
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publish --info -Dorg.gradle.internal.http.socketTimeout=180000 -Dorg.gradle.internal.http.connectionTimeout=180000
+        env:
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE  }}

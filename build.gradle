@@ -15,8 +15,6 @@ allprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://repository.dmz.croz.net/repository/releases/" }
-    maven { url "https://repository.dmz.croz.net/repository/snapshots/" }
   }
 
   configurations {
@@ -35,6 +33,7 @@ subprojects {
   apply plugin: "java"
   apply plugin: "java-library"
   apply plugin: "maven-publish"
+  apply plugin: "signing"
 
   group = "net.croz.nrich"
 
@@ -48,6 +47,7 @@ subprojects {
     }
 
     withSourcesJar()
+    withJavadocJar()
   }
 
   dependencies {
@@ -66,27 +66,70 @@ subprojects {
   }
 
   publishing {
-    repositories {
-      maven {
-        credentials {
-          username System.getenv("GRC_GRADLE_USERNAME")
-          password System.getenv("GRC_GRADLE_PASSWORD")
-        }
-
-        afterEvaluate {
-          String releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
-          String snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
-
-          url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
-        }
-      }
-    }
-
     publications {
       mavenJava(MavenPublication) {
         from components.java
         suppressAllPomMetadataWarnings()
+
+        pom {
+          name = getProject().getName()
+          description = "$projectDescription"
+          url = "$projectRepositoryUrl"
+
+          licenses {
+            license {
+              name = "$licenseName"
+              url = "$licenseUrl"
+            }
+          }
+
+          developers {
+            developer {
+              name = "$developerName"
+              email = "$developerEmail"
+              organization = "$developerOrganization"
+              organizationUrl = "$developerOrganizationUrl"
+            }
+          }
+
+          def gitRepositoryUrl = "scm:git:${projectRepositoryUrl}.git"
+          scm {
+            connection = gitRepositoryUrl
+            developerConnection = gitRepositoryUrl
+            url = "$projectRepositoryUrl"
+          }
+        }
       }
+    }
+
+    repositories {
+      maven {
+        def releasesRepoUrl = "$sonatypeNexusUrl/service/local/staging/deploy/maven2/"
+        def snapshotsRepoUrl = "$sonatypeNexusUrl/content/repositories/snapshots/"
+
+        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+
+        credentials {
+          username "$sonatypeUsername"
+          password System.getenv("SONATYPE_PASSWORD")
+        }
+      }
+    }
+  }
+
+  signing {
+    // The gpg private needs to be stored in ascii-armored format
+    useInMemoryPgpKeys(System.getenv("GPG_PRIVATE_KEY"), System.getenv("GPG_PASSPHRASE"))
+    sign publishing.publications.mavenJava
+  }
+
+  tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+  }
+
+  tasks.withType(Sign) {
+    onlyIf {
+      System.getenv("GPG_PRIVATE_KEY") && System.getenv("GPG_PASSPHRASE")
     }
   }
 }
