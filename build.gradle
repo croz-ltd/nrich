@@ -67,6 +67,42 @@ subprojects {
   }
 
   publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
+        suppressAllPomMetadataWarnings()
+
+        pom {
+          name = getProject().getName()
+          description = "$projectDescription"
+          url = "$projectRepositoryUrl"
+
+          licenses {
+            license {
+              name = "$licenseName"
+              url = "$licenseUrl"
+            }
+          }
+
+          developers {
+            developer {
+              name = "$developerName"
+              email = "$developerEmail"
+              organization = "$developerOrganization"
+              organizationUrl = "$developerOrganizationUrl"
+            }
+          }
+
+          def gitRepositoryUrl = "scm:git:${projectRepositoryUrl}.git"
+          scm {
+            connection = gitRepositoryUrl
+            developerConnection = gitRepositoryUrl
+            url = "$projectRepositoryUrl"
+          }
+        }
+      }
+    }
+
     repositories {
       maven {
         credentials {
@@ -83,12 +119,6 @@ subprojects {
       }
     }
 
-    publications {
-      mavenJava(MavenPublication) {
-        from components.java
-        suppressAllPomMetadataWarnings()
-      }
-    }
   }
 
   tasks.withType(JavaCompile) {
