@@ -1,6 +1,6 @@
-# Main Continuous Integration workflow.
+# Main Continuous Integration workflow
 
-name: Continuous Integration
+name: Build
 
 on:
   push:
