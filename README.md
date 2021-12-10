@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-success.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Continuous Integration](https://github.com/croz-ltd/nrich/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/croz-ltd/nrich/actions/workflows/ci.yml)
+[![Build](https://github.com/croz-ltd/nrich/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/croz-ltd/nrich/actions/workflows/build.yml)
 
 # nrich
 
