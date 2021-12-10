@@ -15,8 +15,6 @@ allprojects {
   repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://repository.dmz.croz.net/repository/releases/" }
-    maven { url "https://repository.dmz.croz.net/repository/snapshots/" }
   }
 
   configurations {
@@ -106,16 +104,14 @@ subprojects {
 
     repositories {
       maven {
+        def releasesRepoUrl = "$sonatypeNexusUrl/service/local/staging/deploy/maven2/"
+        def snapshotsRepoUrl = "$sonatypeNexusUrl/content/repositories/snapshots/"
+
+        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+
         credentials {
-          username System.getenv("GRC_GRADLE_USERNAME")
-          password System.getenv("GRC_GRADLE_PASSWORD")
-        }
-
-        afterEvaluate {
-          String releasesRepoUrl = "https://repository.dmz.croz.net/repository/releases/"
-          String snapshotsRepoUrl = "https://repository.dmz.croz.net/repository/snapshots/"
-
-          url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+          username "$sonatypeUsername"
+          password System.getenv("SONATYPE_PASSWORD")
         }
       }
     }
