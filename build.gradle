@@ -35,6 +35,7 @@ subprojects {
   apply plugin: "java"
   apply plugin: "java-library"
   apply plugin: "maven-publish"
+  apply plugin: "signing"
 
   group = "net.croz.nrich"
 
@@ -118,10 +119,21 @@ subprojects {
         }
       }
     }
+  }
 
+  signing {
+    // The gpg private needs to be stored in ascii-armored format
+    useInMemoryPgpKeys(System.getenv("GPG_PRIVATE_KEY"), System.getenv("GPG_PASSPHRASE"))
+    sign publishing.publications.mavenJava
   }
 
   tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+  }
+
+  tasks.withType(Sign) {
+    onlyIf {
+      System.getenv("GPG_PRIVATE_KEY") && System.getenv("GPG_PASSPHRASE")
+    }
   }
 }
