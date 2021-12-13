@@ -107,7 +107,7 @@ subprojects {
         def releasesRepoUrl = "$sonatypeNexusUrl/service/local/staging/deploy/maven2/"
         def snapshotsRepoUrl = "$sonatypeNexusUrl/content/repositories/snapshots/"
 
-        url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+        url = version.toString().endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
 
         credentials {
           username "$sonatypeUsername"
