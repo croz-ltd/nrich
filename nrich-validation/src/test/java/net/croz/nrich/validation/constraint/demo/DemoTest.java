@@ -11,10 +11,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
  */
 public class DemoTest {
 
-  @SuppressWarnings("ConstantConditions")
   @Test
   void shouldFail() {
     // expect
-    assertThat("demo").isEmpty();
+    assertThat("demo").isNotEmpty();
   }
 }
