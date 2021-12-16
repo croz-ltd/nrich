@@ -1,1 +1,2 @@
 Added to test force of rebase on PR.
+Update file to test "Dismiss stale pull request approvals when new commits are pushed" rule.
