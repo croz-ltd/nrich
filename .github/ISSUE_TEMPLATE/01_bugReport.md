@@ -17,12 +17,12 @@ assignees: ""
 ## Basic information
 * nrich version:
   <!-- released version or snapshot version -->
-  <!-- for snapshot version include main branch commit SHA (i.e. as given from "git rev-parse HEAD" command) -->
-* Gradle version info:
-  <!-- output of "./gradlew --version" command -->
 * Module:
   <!-- Please, include name(s) of relevant nrich's module(s). If not related to any specific module, specify "project" instead. -->
 * Link to the complete executable reproducer if available (e.g. GitHub Repo):
+
+## Additional information
+<!-- Please, include any additional information that could be relevant (e.g. Java, Gradle/Maven, OS version). -->
 
 ## Bug description
 <!--
