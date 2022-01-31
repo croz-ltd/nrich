@@ -124,7 +124,7 @@ subprojects {
 nexusPublishing {
   repositories {
     sonatype {
-      nexusUrl = uri("$sonatypeNexusUrl/service/local/staging/deploy/maven2/")
+      nexusUrl = uri("$sonatypeNexusUrl/service/local/")
       snapshotRepositoryUrl = uri("$sonatypeNexusUrl/content/repositories/snapshots/")
 
       username = "$sonatypeUsername"
