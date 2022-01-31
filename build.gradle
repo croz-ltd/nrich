@@ -118,7 +118,7 @@ subprojects {
   }
 
   signing {
-    // The gpg private needs to be stored in ascii-armored format
+    // The gpg private key needs to be stored in ascii-armored format
     useInMemoryPgpKeys(System.getenv("GPG_PRIVATE_KEY"), System.getenv("GPG_PASSPHRASE"))
     sign publishing.publications.mavenJava
   }
