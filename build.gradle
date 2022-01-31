@@ -124,8 +124,8 @@ subprojects {
 nexusPublishing {
   repositories {
     sonatype {
-      nexusUrl.set(uri("$sonatypeNexusUrl/service/local/staging/deploy/maven2/"))
-      snapshotRepositoryUrl.set(uri("$sonatypeNexusUrl/content/repositories/snapshots/"))
+      nexusUrl = uri("$sonatypeNexusUrl/service/local/staging/deploy/maven2/")
+      snapshotRepositoryUrl = uri("$sonatypeNexusUrl/content/repositories/snapshots/")
 
       username = "$sonatypeUsername"
       password = System.getenv("SONATYPE_PASSWORD")
