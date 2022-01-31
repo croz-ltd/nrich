@@ -1,5 +1,7 @@
 # nrich-spring-util
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-util/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-util)
+
 ## Overview
 
 nrich-encrypt is a library containing add-ons on Spring framework. Currently, no additional configuration is needed, just adding the library as dependency is enough.

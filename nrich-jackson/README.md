@@ -1,5 +1,7 @@
 # nrich-jackson
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-jackson/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-jackson)
+
 ## Overview
 
 nrich-jackson is a library containing that adds additional Jacksons serializers and deserializers that have proved to be useful in projects 

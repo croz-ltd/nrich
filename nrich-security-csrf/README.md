@@ -1,5 +1,7 @@
 # nrich-security-csrf
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-security-csrf/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-security-csrf)
+
 ## Overview
 
 nrich-security-csrf is a library intended for CSRF protection. It generates a initial token from parameter initial token url and later expects token to be present in each request either

@@ -1,5 +1,7 @@
 # nrich-spring-boot
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-boot/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-boot)
+
 ## Overview
 
 nrich-encrypt is a library containing add-ons on Spring Boot framework. Currently, no additional configuration is needed, just adding the library as dependency is enough.

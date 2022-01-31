@@ -1,5 +1,7 @@
 # nrich-webmvc
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-webmvc/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-webmvc)
+
 ## Overview
 
 nrich-webmvc library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
