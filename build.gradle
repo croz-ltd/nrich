@@ -129,6 +129,10 @@ nexusPublishing {
 
       username = "$sonatypeUsername"
       password = System.getenv("SONATYPE_PASSWORD")
+
+      // Specifying the configuration property explicitly rather than relying on the API call
+      // is considered a performance optimization and can reduce execution time by several seconds
+      stagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID")
     }
   }
 }
