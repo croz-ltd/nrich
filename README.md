@@ -1,5 +1,6 @@
-[![License](https://img.shields.io/badge/License-Apache%202.0-success.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build](https://github.com/croz-ltd/nrich/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/croz-ltd/nrich/actions/workflows/build.yml)
+[![License](https://img.shields.io/github/license/croz-ltd/nrich?color=yellow&logo=apache)](https://github.com/croz-ltd/nrich/blob/master/LICENSE)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-core-api/badge.svg?color=blue)](https://search.maven.org/search?q=net.croz.nrich)
 
 # nrich
 

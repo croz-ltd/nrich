@@ -1,8 +1,10 @@
 # nrich-spring-boot
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-boot/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-spring-boot)
+
 ## Overview
 
-nrich-encrypt is a library containing add-ons on Spring Boot framework. Currently, no additional configuration is needed, just adding the library as dependency is enough.
+nrich-spring-boot is a library containing add-ons on Spring Boot framework. Currently, no additional configuration is needed, just adding the library as dependency is enough.
 This library contains only `ConditionalOnPropertyNotEmpty` annotation (for now). It is used to register beans only when property is not empty, it supports strings, list of strings and lists of
 objects.
 

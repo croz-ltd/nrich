@@ -1,5 +1,7 @@
 # nrich-search
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-search/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-search)
+
 ## Overview
 
 nrich-search is a library whose purpose is to make querying of JPA entities easier. Motivation for it creation were complex search form

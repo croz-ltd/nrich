@@ -1,5 +1,7 @@
 # nrich-registry
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-registry/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-registry)
+
 ## Overview
 
 nrich-registry is a library whose purpose is to make editing of registry entities from client side easier.

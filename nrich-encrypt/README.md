@@ -1,5 +1,7 @@
 # nrich-encrypt
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-encrypt/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-encrypt)
+
 ## Overview
 
 This library can help in situations when sensitive data needs to be encrypted before it is returned (to the client side of a webapp for example) and then decrypted before it is used again. It provides the possibilty of encrypting and decrypting whole objects of data or only parts of them.

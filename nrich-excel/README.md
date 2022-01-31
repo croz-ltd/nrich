@@ -1,5 +1,7 @@
 # nrich-excel
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-excel/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-excel)
+
 ## Overview
 
 nrich-excel is a library intended to simplify excel report generation for simple reports (i.e. exporting search results).

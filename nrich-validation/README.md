@@ -1,5 +1,7 @@
 # nrich-validation
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-validation/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-validation)
+
 ## Overview
 
 nrich-validation is a library intended to add additional `jakarta.validation-api` constraints that have proved to be useful on projects.

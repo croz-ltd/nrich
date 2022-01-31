@@ -1,5 +1,7 @@
 # nrich-notification
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-notification/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-notification)
+
 ## Overview
 
 nrich-notification is a library intended for creation of notifications on server side which are shown on the client side.

@@ -1,5 +1,7 @@
 # nrich-logging
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-logging/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-logging)
+
 ## Overview
 
 nrich-logging is a library that adds logging service for logging errors in a standard format. Logging service can also resolve verbosity and logging levels for each exception

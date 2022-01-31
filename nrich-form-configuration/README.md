@@ -1,5 +1,7 @@
 # nrich-form-configuration
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-form-configuration/badge.svg?color=blue)](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-form-configuration)
+
 ## Overview
 
 nrich-form-configuration is a library intended to provide a way of resolving server side defined constraint to client side. It resolves `jakarta-validation-api`
