@@ -1,13 +1,12 @@
 package net.croz.nrich.validation.starter.configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
-
-import javax.annotation.PostConstruct;
 
 @Configuration(proxyBeanMethods = false)
 public class NrichValidationAutoConfiguration {
@@ -21,12 +20,12 @@ public class NrichValidationAutoConfiguration {
     }
 
     @RequiredArgsConstructor
-    public static class ValidationMessageSourceRegistrar {
+    public static class ValidationMessageSourceRegistrar implements InitializingBean {
 
         private final MessageSource messageSource;
 
-        @PostConstruct
-        void registerValidationMessages() {
+        @Override
+        public void afterPropertiesSet() {
             if (messageSource instanceof AbstractResourceBasedMessageSource) {
                 ((AbstractResourceBasedMessageSource) messageSource).addBasenames(VALIDATION_MESSAGES_NAME);
             }
