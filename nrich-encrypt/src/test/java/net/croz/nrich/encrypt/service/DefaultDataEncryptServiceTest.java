@@ -153,7 +153,7 @@ class DefaultDataEncryptServiceTest {
 
     @ValueSource(strings = { "nestedTestObject.parent.nestedFieldToEncrypt", "nonExistingProperty", "nestedTestObject.nonExistingProperty" })
     @ParameterizedTest
-    void shouldNotFailOnNestedNullOrInvalidValuesValues() {
+    void shouldNotFailOnNestedNullOrInvalidValues() {
         // given
         final List<String> propertyList = Collections.singletonList("nestedTestObject.parent.nestedFieldToEncrypt");
         final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
