@@ -23,7 +23,7 @@ public abstract class BaseEncryptDataAdvice {
         if (isCompletableFutureResult(result)) {
             encryptedResult = encryptCompletableFuture(encryptionContext, pathToEncryptList, result);
         }
-        else if (isReactorResult(result)) {
+        else if (Boolean.TRUE.equals(isReactorResult(result))) {
             encryptedResult = new ReactorEncryptor(getDataEncryptionService()).encryptReactorResult(encryptionContext, pathToEncryptList, result);
         }
         else {

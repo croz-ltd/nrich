@@ -96,7 +96,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
                 deltaMillis = System.currentTimeMillis() - lastRealApiRequestMillis;
                 log.debug("    deltaMillis: {}", deltaMillis);
 
-                final long maxInactiveIntervalMillis = httpSession.getMaxInactiveInterval() * 1000;
+                final long maxInactiveIntervalMillis = httpSession.getMaxInactiveInterval() * 1000L;
                 log.debug("    maxInactiveIntervalMillis: {}", maxInactiveIntervalMillis);
 
                 if ((maxInactiveIntervalMillis > 0) && (deltaMillis > maxInactiveIntervalMillis)) {
@@ -118,7 +118,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
             response.setHeader(CsrfConstants.CSRF_PING_STOP_HEADER_NAME, "stopPing");
         }
 
-        response.setHeader(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.valueOf(deltaMillis).toString());
+        response.setHeader(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.toString(deltaMillis));
     }
 
     private void updateLastApiCallAttribute(final HttpSession httpSession) {

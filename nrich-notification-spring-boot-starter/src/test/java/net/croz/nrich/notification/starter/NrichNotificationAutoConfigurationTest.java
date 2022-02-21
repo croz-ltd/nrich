@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichNotificationAutoConfigurationTest {
+class NrichNotificationAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichNotificationAutoConfiguration.class));
 

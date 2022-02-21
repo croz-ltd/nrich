@@ -124,6 +124,6 @@ public class CsrfWebFilter implements WebFilter {
     }
 
     private void updateLastActiveRequestMillis(final ServerWebExchange exchange, final long deltaMillis) {
-        exchange.getResponse().getHeaders().add(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.valueOf(deltaMillis).toString());
+        exchange.getResponse().getHeaders().add(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.toString(deltaMillis));
     }
 }

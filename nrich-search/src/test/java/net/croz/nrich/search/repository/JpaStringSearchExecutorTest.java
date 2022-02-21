@@ -132,7 +132,6 @@ class JpaStringSearchExecutorTest {
         assertThat(result).isEqualTo(1);
     }
 
-
     @Test
     void shouldReturnZeroWhenThereAreNoResults() {
         // given

@@ -12,7 +12,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichFormConfigurationAutoConfigurationTest {
+class NrichFormConfigurationAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichFormConfigurationAutoConfiguration.class));
 

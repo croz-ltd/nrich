@@ -100,9 +100,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
             final String constraintFieldName = constraintFieldNameOrDefault(objectError);
             final String message = notificationMessageResolverService.resolveMessageForObjectError(validationFailedOwningType, objectError);
 
-            if (!resultMap.containsKey(constraintFieldName)) {
-                resultMap.put(constraintFieldName, new ArrayList<>());
-            }
+            resultMap.computeIfAbsent(constraintFieldName, key -> new ArrayList<>());
 
             resultMap.get(constraintFieldName).add(message);
         }
@@ -142,7 +140,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     @SafeVarargs
     private final <T> List<T> toList(final T... codeList) {
         if (codeList == null) {
-            return null;
+            return Collections.emptyList();
         }
 
         return Arrays.asList(codeList);

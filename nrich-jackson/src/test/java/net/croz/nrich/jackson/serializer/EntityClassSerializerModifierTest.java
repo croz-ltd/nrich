@@ -11,7 +11,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EntityClassSerializerModifierTest {
+class EntityClassSerializerModifierTest {
 
     @Test
     void shouldSerializeClassNameForEntityClassWhenEnabled() throws Exception {
@@ -23,7 +23,7 @@ public class EntityClassSerializerModifierTest {
         final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {});
 
         // then
-        assertThat(deserialized.get("class")).isEqualTo(EntityClassSerializerModifierTestEntity.class.getName());
+        assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());
     }
 
     @Test
@@ -49,6 +49,6 @@ public class EntityClassSerializerModifierTest {
         final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {});
 
         // then
-        assertThat(deserialized.get("class")).isEqualTo(EntityClassSerializerModifierTestEntity.class.getName());
+        assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());
     }
 }

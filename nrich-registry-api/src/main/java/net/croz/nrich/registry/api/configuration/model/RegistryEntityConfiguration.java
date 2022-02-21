@@ -51,7 +51,7 @@ public class RegistryEntityConfiguration {
     /**
      * Whether this entity can be deleted.
      */
-    private final boolean deletable;;
+    private final boolean deletable;
 
     /**
      * Whether this entity has identifier assigned.

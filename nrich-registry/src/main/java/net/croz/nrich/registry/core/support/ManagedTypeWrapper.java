@@ -75,8 +75,8 @@ public final class ManagedTypeWrapper {
     private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> managedType) {
         return managedType.getAttributes().stream()
                 .map(Attribute::getJavaMember)
-                .filter(member -> member instanceof Field)
-                .map(member -> (Field) member)
+                .filter(Field.class::isInstance)
+                .map(Field.class::cast)
                 .map(Field::getDeclaredAnnotations)
                 .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }

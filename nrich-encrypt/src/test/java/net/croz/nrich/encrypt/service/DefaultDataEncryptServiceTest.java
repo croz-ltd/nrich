@@ -5,6 +5,8 @@ import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceNestedTestObject;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceTestObject;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -149,36 +151,11 @@ class DefaultDataEncryptServiceTest {
         assertThatCode(() -> dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
     }
 
-    @Test
-    void shouldNotFailOnNestedNullValues() {
+    @ValueSource(strings = { "nestedTestObject.parent.nestedFieldToEncrypt", "nonExistingProperty", "nestedTestObject.nonExistingProperty" })
+    @ParameterizedTest
+    void shouldNotFailOnNestedNullOrInvalidValues() {
         // given
         final List<String> propertyList = Collections.singletonList("nestedTestObject.parent.nestedFieldToEncrypt");
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
-
-        // then
-        assertThatCode(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
-
-        // then
-        assertThatCode(() -> dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
-    }
-
-    @Test
-    void shouldNotFailOnPropertiesThatDontExist() {
-        // given
-        final List<String> propertyList = Collections.singletonList("nonExistingProperty");
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
-
-        // then
-        assertThatCode(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
-
-        // then
-        assertThatCode(() -> dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
-    }
-
-    @Test
-    void shouldNotFailOnNestedPropertiesThatDontExist() {
-        // given
-        final List<String> propertyList = Collections.singletonList("nestedTestObject.nonExistingProperty");
         final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then

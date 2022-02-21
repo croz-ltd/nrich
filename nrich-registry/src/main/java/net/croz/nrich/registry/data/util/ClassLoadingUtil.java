@@ -16,6 +16,7 @@ public final class ClassLoadingUtil {
                 foundClass = Class.forName(className, true, classLoader);
             }
             catch (final Exception ignored) {
+                // ignored
             }
 
             if (foundClass != null) {

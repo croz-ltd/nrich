@@ -19,8 +19,8 @@ public class ConstrainedSessionLocaleResolver extends SessionLocaleResolver {
         this.supportedLocaleCodeList = supportedLocaleCodeList;
     }
 
+    @Override
     public void setLocale(final HttpServletRequest request, final HttpServletResponse response, final Locale locale) {
-
         Locale localeToSet = locale;
         if (locale == null || !supportedLocaleCodeList.contains(locale.toString())) {
             localeToSet = Locale.forLanguageTag(defaultLocaleCode);

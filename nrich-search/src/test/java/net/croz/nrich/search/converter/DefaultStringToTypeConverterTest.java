@@ -17,6 +17,7 @@ import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.d
 import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.localDateOf;
 import static net.croz.nrich.search.converter.testutil.ConverterGeneratingUtil.localDateTimeOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @SpringJUnitConfig(SearchTestConfiguration.class)
 class DefaultStringToTypeConverterTest {
@@ -36,24 +37,24 @@ class DefaultStringToTypeConverterTest {
 
     private static Stream<Arguments> shouldConvertStringValueToRequiredValueMethodSource() {
         return Stream.of(
-                Arguments.of(null, Boolean.class, null),
-                Arguments.of(null, DefaultStringToTypeConverterTest.class, null),
-                Arguments.of("true", Boolean.class, Boolean.TRUE),
-                Arguments.of("yes", Boolean.class, Boolean.TRUE),
-                Arguments.of("no", Boolean.class, Boolean.FALSE),
-                Arguments.of("1", Long.class, 1L),
-                Arguments.of("D", Long.class, null),
-                Arguments.of("5", Integer.class, 5),
-                Arguments.of("5", Short.class, Short.valueOf("5")),
-                Arguments.of("ONE", Value.class, Value.ONE),
-                Arguments.of("01.01.1970", Date.class, dateOf("01.01.1970")),
-                Arguments.of("not a date", Date.class, null),
-                Arguments.of("01.01.1970", LocalDate.class, localDateOf("01.01.1970")),
-                Arguments.of("2020-01-01T11:11", LocalDateTime.class, localDateTimeOf("2020-01-01T11:11")),
-                Arguments.of("1.1", BigDecimal.class, new BigDecimal("1.1")),
-                Arguments.of("1.1", Float.class, Double.valueOf("1.1")),
-                Arguments.of("1.1", Double.class, Double.valueOf("1.1")),
-                Arguments.of("nn", Double.class, null)
+                arguments(null, Boolean.class, null),
+                arguments(null, DefaultStringToTypeConverterTest.class, null),
+                arguments("true", Boolean.class, Boolean.TRUE),
+                arguments("yes", Boolean.class, Boolean.TRUE),
+                arguments("no", Boolean.class, Boolean.FALSE),
+                arguments("1", Long.class, 1L),
+                arguments("D", Long.class, null),
+                arguments("5", Integer.class, 5),
+                arguments("5", Short.class, Short.valueOf("5")),
+                arguments("ONE", Value.class, Value.ONE),
+                arguments("01.01.1970", Date.class, dateOf("01.01.1970")),
+                arguments("not a date", Date.class, null),
+                arguments("01.01.1970", LocalDate.class, localDateOf("01.01.1970")),
+                arguments("2020-01-01T11:11", LocalDateTime.class, localDateTimeOf("2020-01-01T11:11")),
+                arguments("1.1", BigDecimal.class, new BigDecimal("1.1")),
+                arguments("1.1", Float.class, Double.valueOf("1.1")),
+                arguments("1.1", Double.class, Double.valueOf("1.1")),
+                arguments("nn", Double.class, null)
         );
     }
 
