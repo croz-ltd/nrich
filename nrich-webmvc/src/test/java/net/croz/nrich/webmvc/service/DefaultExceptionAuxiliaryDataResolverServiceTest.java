@@ -29,7 +29,6 @@ class DefaultExceptionAuxiliaryDataResolverServiceTest {
         assertThat(additionalExceptionData).isNotNull();
         assertThat(additionalExceptionData.get("uuid")).isNotNull();
         assertThat(additionalExceptionData.get("occurrenceTime")).isNotNull();
-        assertThat(additionalExceptionData).containsEntry("requestUri", "uri");
-        assertThat(additionalExceptionData).containsEntry("requestMethod", "POST");
+        assertThat(additionalExceptionData).containsEntry("requestUri", "uri").containsEntry("requestMethod", "POST");
     }
 }

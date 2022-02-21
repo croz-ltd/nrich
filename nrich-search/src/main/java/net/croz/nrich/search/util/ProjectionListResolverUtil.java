@@ -33,7 +33,7 @@ public final class ProjectionListResolverUtil {
         final Annotation[] annotationList = field.getAnnotations();
 
         String path = alias;
-        Predicate<R> condition = (request) -> true;
+        Predicate<R> condition = request -> true;
         if (annotationList != null) {
             final Projection projectionAnnotation = findProjectionAnnotation(annotationList);
 

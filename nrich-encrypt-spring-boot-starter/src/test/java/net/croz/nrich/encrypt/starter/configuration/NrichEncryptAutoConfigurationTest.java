@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichEncryptAutoConfigurationTest {
+class NrichEncryptAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichEncryptAutoConfiguration.class));
 

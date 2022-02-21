@@ -1,12 +1,10 @@
 package net.croz.nrich.formconfiguration.testutil;
 
 import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
-import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
@@ -17,14 +15,6 @@ import static org.mockito.Mockito.when;
 public final class FormConfigurationGeneratingUtil {
 
     private FormConfigurationGeneratingUtil() {
-    }
-
-    public static FetchFormConfigurationRequest fetchFormConfigurationRequest(final String... formIdList) {
-        final FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
-
-        request.setFormIdList(Arrays.asList(formIdList));
-
-        return request;
     }
 
     public static ConstrainedProperty createConstrainedProperty(final Class<?> parentType) {

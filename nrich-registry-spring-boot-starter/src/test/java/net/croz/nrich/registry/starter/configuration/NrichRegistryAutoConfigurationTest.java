@@ -23,7 +23,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichRegistryAutoConfigurationTest {
+class NrichRegistryAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class));
 

@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichCsrfAutoConfigurationTest {
+class NrichCsrfAutoConfigurationTest {
 
     private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(NrichCsrfAutoConfiguration.class));
 

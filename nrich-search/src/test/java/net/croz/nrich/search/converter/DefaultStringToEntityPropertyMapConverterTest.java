@@ -33,9 +33,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
         final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity());
 
         // then
-        assertThat(result).containsEntry("name", value);
-        assertThat(result).containsEntry("date", dateOf(value));
-        assertThat(result).containsEntry("nestedEntity.nestedName", value);
+        assertThat(result).containsEntry("name", value).containsEntry("date", dateOf(value)).containsEntry("nestedEntity.nestedName", value);
     }
 
     @Test

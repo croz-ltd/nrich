@@ -91,7 +91,7 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValue);
 
         }
-        else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(element -> element instanceof String)) {
+        else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
             @SuppressWarnings("unchecked")
             final Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
 

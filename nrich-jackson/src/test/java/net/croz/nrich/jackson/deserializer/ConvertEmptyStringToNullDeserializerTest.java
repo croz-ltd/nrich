@@ -3,7 +3,6 @@ package net.croz.nrich.jackson.deserializer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -13,13 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ConvertEmptyStringToNullDeserializerTest {
 
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setup() {
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
 
     @Test
     void shouldConvertEmptyStringsToNull() throws Exception {

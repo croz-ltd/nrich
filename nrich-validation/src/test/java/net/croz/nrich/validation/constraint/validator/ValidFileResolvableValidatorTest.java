@@ -6,6 +6,8 @@ import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorInv
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorMultipartFileCustomTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorMultipartFileTestRequest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -64,18 +66,6 @@ class ValidFileResolvableValidatorTest {
     }
 
     @Test
-    void shouldNotReportErrorForValidMultipartFile() {
-        // given
-        final ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("someFile.txt", "content".getBytes()));
-
-        // when
-        final Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
-
-        // then
-        assertThat(constraintViolationList).isEmpty();
-    }
-
-    @Test
     void shouldNotReportErrorForValidMultipartFileWithCustomConstraints() {
         // given
         final ValidFileResolvableValidatorMultipartFileCustomTestRequest request = new ValidFileResolvableValidatorMultipartFileCustomTestRequest(new MockMultipartFile("someFile.pdf", "someFile.pdf", MediaType.APPLICATION_PDF_VALUE, "content".getBytes()));
@@ -112,34 +102,11 @@ class ValidFileResolvableValidatorTest {
         assertThat(thrown.getCause()).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
-    void shouldNotReportExtensionErrorForFileWithoutExtensionMultipartFile() {
+    @ValueSource(strings = { "someFile.txt", "someFile", "c:\\someFile.txt", "c:/someFile.txt" })
+    @ParameterizedTest
+    void shouldValidateMultipartFilename(String fileName) {
         // given
-        final ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("someFile", "content".getBytes()));
-
-        // when
-        final Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
-
-        // then
-        assertThat(constraintViolationList).isEmpty();
-    }
-
-    @Test
-    void shouldExtractFileNameWithoutWindowsStylePath() {
-        // given
-        final ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("c:\\someFile.txt", "content".getBytes()));
-
-        // when
-        final Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
-
-        // then
-        assertThat(constraintViolationList).isEmpty();
-    }
-
-    @Test
-    void shouldExtractFileNameWithoutUnixStylePath() {
-        // given
-        final ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("c:/someFile.txt", "content".getBytes()));
+        final ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile(fileName, "content".getBytes()));
 
         // when
         final Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);

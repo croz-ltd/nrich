@@ -35,7 +35,6 @@ class RegistryHistoryControllerTest extends BaseWebTest {
     @Test
     void shouldFetchRegistryHistoryList() throws Exception {
         // given
-        // given
         final RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
         final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
 

@@ -297,7 +297,6 @@ class DefaultRegistryDataServiceTest {
         final Throwable thrown = catchThrowable(() -> registryDataService.list(request));
 
         // then
-        assertThat(thrown).isNotNull();
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
     }
 

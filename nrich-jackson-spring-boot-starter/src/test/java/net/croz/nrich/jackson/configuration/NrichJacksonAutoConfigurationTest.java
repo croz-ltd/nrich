@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NrichJacksonAutoConfigurationTest {
+class NrichJacksonAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(JacksonAutoConfiguration.class, NrichJacksonAutoConfiguration.class));
 

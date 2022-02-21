@@ -157,7 +157,7 @@ class JpaSearchExecutorTest {
         final long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
 
         // then
-        assertThat(result).isEqualTo(0L);
+        assertThat(result).isZero();
     }
 
     @Test

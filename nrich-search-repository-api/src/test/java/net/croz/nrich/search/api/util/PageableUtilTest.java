@@ -11,7 +11,7 @@ import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PageableUtilTest {
+class PageableUtilTest {
 
     @Test
     void shouldConvertPageableSortableRequestWithUniqueSortPropertyToPageable() {

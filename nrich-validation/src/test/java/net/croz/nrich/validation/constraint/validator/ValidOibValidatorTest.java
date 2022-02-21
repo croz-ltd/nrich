@@ -2,6 +2,8 @@ package net.croz.nrich.validation.constraint.validator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -17,23 +19,9 @@ class ValidOibValidatorTest {
     @Mock
     private ConstraintValidatorContext constraintValidatorContext;
 
-    @Test
-    void shouldSkipValidationOfNullValue() {
-        // given
-        final String oib = null;
-
-        // when
-        final boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
-
-        // then
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void shouldSkipValidationOfBlankValue() {
-        // given
-        final String oib = "";
-
+    @NullAndEmptySource
+    @ParameterizedTest
+    void shouldSkipValidationOfNullOrEmptyValue(String oib) {
         // when
         final boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
 

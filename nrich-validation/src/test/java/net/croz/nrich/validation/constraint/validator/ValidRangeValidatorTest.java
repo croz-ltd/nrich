@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @SpringJUnitConfig(ValidationTestConfiguration.class)
 class ValidRangeValidatorTest {
@@ -83,12 +84,12 @@ class ValidRangeValidatorTest {
         final Instant now = Instant.now();
 
         return Stream.of(
-                Arguments.of(null, null, true),
-                Arguments.of(now, null, true),
-                Arguments.of(null, now, true),
-                Arguments.of(now, now.plus(1, ChronoUnit.DAYS), true),
-                Arguments.of(now.plus(1, ChronoUnit.DAYS), now, false),
-                Arguments.of(now, now, false)
+                arguments(null, null, true),
+                arguments(now, null, true),
+                arguments(null, now, true),
+                arguments(now, now.plus(1, ChronoUnit.DAYS), true),
+                arguments(now.plus(1, ChronoUnit.DAYS), now, false),
+                arguments(now, now, false)
         );
     }
 }
