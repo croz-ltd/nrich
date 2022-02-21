@@ -45,12 +45,12 @@ public class Slf4jLoggingService implements LoggingService {
         final String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception));
         final LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(fetchClassNameForException(exception));
 
-        logOnLevel(loggingLevel,  "Exception occurred", exception);
+        logOnLevel(loggingLevel, "Exception occurred", exception);
 
         final String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
         final String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
-        logOnLevel(loggingLevel,  exceptionLogMessage);
+        logOnLevel(loggingLevel, exceptionLogMessage);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Slf4jLoggingService implements LoggingService {
 
         final LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(exceptionClassName);
 
-        logOnLevel(loggingLevel,  exceptionLogMessage);
+        logOnLevel(loggingLevel, exceptionLogMessage);
     }
 
     private LoggingVerbosityLevel fetchConfiguredLoggingVerbosityLevelForException(final Exception exception) {

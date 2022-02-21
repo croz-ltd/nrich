@@ -23,7 +23,7 @@ public interface RegistryDataService {
      * Returns Springs {@link Page} instance holding found registry instances.
      *
      * @param request {@link ListRegistryRequest} instance holding query information
-     * @param <P> registry query return value (if no override is specified this is registry type, but can be a projection instance)
+     * @param <P>     registry query return value (if no override is specified this is registry type, but can be a projection instance)
      * @return {@link Page} instance holding found registry instances
      */
     <P> Page<P> list(ListRegistryRequest request);
@@ -32,8 +32,8 @@ public interface RegistryDataService {
      * Returns created registry entity.
      *
      * @param classFullName Class name of registry entity.
-     * @param entityData entity creation data
-     * @param <T> registry entity type
+     * @param entityData    entity creation data
+     * @param <T>           registry entity type
      * @return created registry instance.
      */
     <T> T create(String classFullName, Object entityData);
@@ -42,9 +42,9 @@ public interface RegistryDataService {
      * Returns update registry entity.
      *
      * @param classFullName Class name of registry entity.
-     * @param id registry entity id.
-     * @param entityData entity creation data
-     * @param <T> registry entity type
+     * @param id            registry entity id.
+     * @param entityData    entity creation data
+     * @param <T>           registry entity type
      * @return updated registry instance.
      */
     <T> T update(String classFullName, Object id, Object entityData);
@@ -53,8 +53,8 @@ public interface RegistryDataService {
      * Returns deleted registry entity.
      *
      * @param classFullName Class name of registry entity.
-     * @param id registry entity id.
-     * @param <T> registry entity type
+     * @param id            registry entity id.
+     * @param <T>           registry entity type
      * @return deleted registry instance.
      */
     <T> T delete(String classFullName, Object id);

@@ -19,7 +19,7 @@ public class RegistryPropertyComparator extends DisplayOrderComparator implement
 
         if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
             if (firstProperty.isId()) {
-                return  -1;
+                return -1;
             }
             if (secondProperty.isId()) {
                 return 1;

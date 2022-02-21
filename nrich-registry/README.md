@@ -4,17 +4,17 @@
 
 ## Overview
 
-nrich-registry is a library whose purpose is to make editing of registry entities from client side easier.
-It transforms JPA entities in a format that client can interpret to create dynamic forms and grids for editing of entities without additional implementation on server side.
-Library provides REST API for searching, creating, updating and deleting entities. Users are only required to provide regexes for including entities and optionally provide display labels and headers for forms
-and grids in `messages.properties` files. For searching, it relies on `nrich-search` and provides capability of overriding
-`SearchConfiguration` for each entity (default configuration performs a join fetch on each association attribute). 
- 
+nrich-registry is a library whose purpose is to make editing of registry entities from client side easier. It transforms JPA entities in a format that client can interpret to create dynamic forms and
+grids for editing of entities without additional implementation on server side. Library provides REST API for searching, creating, updating and deleting entities. Users are only required to provide
+regexes for including entities and optionally provide display labels and headers for forms and grids in `messages.properties` files. For searching, it relies on `nrich-search` and provides capability
+of overriding
+`SearchConfiguration` for each entity (default configuration performs a join fetch on each association attribute).
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required. If Jacksons `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side validation of registry entities) libary is
-not on classpath then `RegistryDataFormConfigurationResolverService` bean is not needed. History requires `hibernate-envers` dependency and if history is not needed then all beans with history suffix can be omitted.
+To be able to use this library following configuration is required. If Jacksons `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
+validation of registry entities) libary is not on classpath then `RegistryDataFormConfigurationResolverService` bean is not needed. History requires `hibernate-envers` dependency and if history is not
+needed then all beans with history suffix can be omitted.
 
 ```
     @Bean
@@ -129,29 +129,32 @@ not on classpath then `RegistryDataFormConfigurationResolverService` bean is not
 
 `ModelMapper registryBaseModelMapper` is used for other mappings in library.
 
-`StringToTypeConverter<?>` is an interface from `nrich-search` library that performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
+`StringToTypeConverter<?>` is an interface from `nrich-search` library that performs conversion from string to typed instances and is used when querying registry entities. Default
+implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
 
-`StringToEntityPropertyMapConverter` is also an interface from `nrich-search` library that is used for querying registry entities, it is responsible for assembling conditions Map from query string and a list of properties to search (
-conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties to be searched. 
+`StringToEntityPropertyMapConverter` is also an interface from `nrich-search` library that is used for querying registry entities, it is responsible for assembling conditions Map from query string and
+a list of properties to search (
+conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties to be searched.
 
 `RegistryConfigurationResolverService` is a service that parses `RegistryConfiguration` and returns data in format required by other registry services.
 
-`RegistryConfigurationUpdateInterceptor` is an interface that is invoked before registry entity is created, updated or deleted. `RegistryConfigurationUpdateInterceptor` is a implementation
-that checks if these operations are permitted according to defined `RegistryConfiguration`. Users can define their own interceptors since `RegistryDataService` accepts a list of interceptors.
+`RegistryConfigurationUpdateInterceptor` is an interface that is invoked before registry entity is created, updated or deleted. `RegistryConfigurationUpdateInterceptor` is a implementation that checks
+if these operations are permitted according to defined `RegistryConfiguration`. Users can define their own interceptors since `RegistryDataService` accepts a list of interceptors.
 
 `RegistryConfigurationService` transforms `RegistryConfiguration` in a format that clients can use for creating dynamic forms and grids.
 
-`RegistryConfigurationController` is a REST endpoint with single url `nrich/registry/configuration/fetch` that returns transformed `RegistryConfiguration` (a list of `RegistryGroupConfiguration` instances)
+`RegistryConfigurationController` is a REST endpoint with single url `nrich/registry/configuration/fetch` that returns transformed `RegistryConfiguration` (a list of `RegistryGroupConfiguration`
+instances)
 to client.
 
 `RegistryEntityFinderService` is used by `RegistryDataService` and `RegistryHistoryService` for resolving primary key of entity instances and/or finding them.
 
 `RegistryDataService` is used for searching, creating, updating and deleting entity instances.
 
-`RegistryDataRequestConversionService` is used to convert raw json data received from client to typed instances. It binds either to registry entity or (when defined) it can bind 
-to other class instances (for example when wanting to update only part of properties), it searches for classes in same package as registry entity with same name and following 
-suffixes `CreateRequest`, `UpdateRequest`  and `Request`.  
+`RegistryDataRequestConversionService` is used to convert raw json data received from client to typed instances. It binds either to registry entity or (when defined) it can bind to other class
+instances (for example when wanting to update only part of properties), it searches for classes in same package as registry entity with same name and following suffixes `CreateRequest`
+, `UpdateRequest`  and `Request`.
 
 `RegistryDataController` is REST API for `RegistryDataService` it has five POST methods:
 
@@ -165,13 +168,11 @@ suffixes `CreateRequest`, `UpdateRequest`  and `Request`.
 
 - `nrich/registry/data/delete`  - deletes registry entity
 
-
-`RegistryHistoryService` is service that is reponsible for listing changes on an entity, default implementation uses `hibernate-envers` to find changes. 
+`RegistryHistoryService` is service that is reponsible for listing changes on an entity, default implementation uses `hibernate-envers` to find changes.
 
 `RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity  (a list of `EntityWithRevision`) to client.
 
 `RegistryDataFormConfigurationResolverService` is used to register registry entities with `nrich-form-configuration` library so clients can fetch validations for specific entities.
-
 
 ## Usage
 
@@ -193,15 +194,15 @@ Central configuration clients should define is:
         return registryConfiguration;
     }
 
-``` 
+```
 
-this defines configuration that will scan JPA entities in package containing `demoregistry` string. It will make available all entities in that package for resolving configuration, 
-searching, creating, updating and deleting. For each registry entity override configuration `RegistryOverrideConfiguration` can be defined deciding if 
-a property is editable, sortable, property display order etc. Similarly custom `SearchConfiguration` can be defined for each entity overriding default 
+this defines configuration that will scan JPA entities in package containing `demoregistry` string. It will make available all entities in that package for resolving configuration, searching,
+creating, updating and deleting. For each registry entity override configuration `RegistryOverrideConfiguration` can be defined deciding if a property is editable, sortable, property display order
+etc. Similarly custom `SearchConfiguration` can be defined for each entity overriding default
 `SearchConfiguration` for that entity.
 
 After that if localization is required for registry name, form labels and column headers etc. (by default class names and property names are used) they should be defined in appropriate
-`messages.properties` files. 
+`messages.properties` files.
 
 `DefaultRegistryConfigurationService` resolves messages from following key:
 
@@ -209,14 +210,12 @@ After that if localization is required for registry name, form labels and column
 
 `net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.registryEntityDisplayName` - text displayed as `RegistryConfigurationTestEntity` name
 
-`net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.name.label` - form label for name property of `RegistryConfigurationTestEntity` entity 
+`net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.name.label` - form label for name property of `RegistryConfigurationTestEntity` entity
 
 `net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity.name.header` - column header for name property of `RegistryConfigurationTestEntity` entity
 
-
 Client then invokes REST API POST method `nrich/registry/configuration/fetch` and receives configuration in following form (client is then responsible for building forms and grids):
- 
- 
+
 ```json
 
 [
@@ -472,7 +471,7 @@ requests for searching Author:
 
 `classFullName` is class name to search, `propertyNameList` is a list of properties to search on that class. `searchParameter` and  `sortPropertyList` are not required but paging parameters are.
 
-Response sent from server returns Springs pageable with list of entity instances: 
+Response sent from server returns Springs pageable with list of entity instances:
 
 ```json
 
@@ -518,7 +517,7 @@ For creating entity instance following POST url is used:
 
 `nrich/registry/data/create`
 
-Request for creating Author is: 
+Request for creating Author is:
 
 ```json
 
@@ -535,7 +534,7 @@ For update entity instance following POST url is used:
 
 `nrich/registry/data/update`
 
-Request for updating Author is: 
+Request for updating Author is:
 
 ```json
 
@@ -551,7 +550,7 @@ For deleting entity instance following POST url is used:
 
 `nrich/registry/data/delete`
 
-Request for deleting Author is: 
+Request for deleting Author is:
 
 ```json
 

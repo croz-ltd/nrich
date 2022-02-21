@@ -33,10 +33,6 @@ import static org.mockito.Mockito.when;
 
 class CsrfWebFilterTest {
 
-    private CsrfWebFilter csrfFilter;
-
-    private WebFilterChain chain;
-
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
     private static final String CSRF_PING_URL = "/csrf/ping";
@@ -46,6 +42,10 @@ class CsrfWebFilterTest {
     private static final String CSRF_EXCLUDED_URI = "/excluded/uri";
 
     private static final String CSRF_SECURED_ENDPOINT = "/secured/url";
+
+    private CsrfWebFilter csrfFilter;
+
+    private WebFilterChain chain;
 
     @BeforeEach
     void setup() {

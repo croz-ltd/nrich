@@ -27,8 +27,6 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 class CsrfInterceptorTest {
 
-    private CsrfInterceptor csrfInterceptor;
-
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
     private static final String CSRF_PING_URL = "/csrf/ping";
@@ -38,6 +36,8 @@ class CsrfInterceptorTest {
     private static final String CSRF_EXCLUDED_URI = "/excluded/uri";
 
     private static final String CSRF_SECURED_ENDPOINT = "/secured/url";
+
+    private CsrfInterceptor csrfInterceptor;
 
     @BeforeEach
     void setup() {

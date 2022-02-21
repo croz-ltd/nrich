@@ -22,7 +22,7 @@ class DefaultFormConfigurationServiceTest {
     private DefaultFormConfigurationService formConfigurationService;
 
     @Test
-    void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId(){
+    void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId() {
         // given
         final List<String> formIdList = Collections.singletonList("invalidFormId");
 
@@ -34,7 +34,7 @@ class DefaultFormConfigurationServiceTest {
     }
 
     @Test
-    void shouldResolveSimpleFormFieldConfiguration(){
+    void shouldResolveSimpleFormFieldConfiguration() {
         // given
         final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
 
@@ -68,7 +68,7 @@ class DefaultFormConfigurationServiceTest {
     }
 
     @Test
-    void shouldResolveNestedFormConfiguration(){
+    void shouldResolveNestedFormConfiguration() {
         // given
         final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
 
@@ -102,7 +102,7 @@ class DefaultFormConfigurationServiceTest {
     }
 
     @Test
-    void shouldIgnoreNestedFieldConfigurationWhenFieldIsNotValidated(){
+    void shouldIgnoreNestedFieldConfigurationWhenFieldIsNotValidated() {
         // given
         final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
 

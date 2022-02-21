@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EncryptResult {
 
-    String[] resultPathList() default { };
+    String[] resultPathList() default {};
 
 }

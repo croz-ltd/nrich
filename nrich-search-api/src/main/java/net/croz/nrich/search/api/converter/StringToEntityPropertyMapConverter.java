@@ -13,9 +13,9 @@ public interface StringToEntityPropertyMapConverter {
     /**
      * Returns a map containing property name and property value. Resolved from propertyToSearchList found on {@link ManagedType} that can be converted from passed in string.
      *
-     * @param value value to convert
+     * @param value                value to convert
      * @param propertyToSearchList list of properties to convert to
-     * @param managedType entity managed type
+     * @param managedType          entity managed type
      * @return map with all properties for which conversion succeeded
      */
     Map<String, Object> convert(String value, List<String> propertyToSearchList, ManagedType<?> managedType);

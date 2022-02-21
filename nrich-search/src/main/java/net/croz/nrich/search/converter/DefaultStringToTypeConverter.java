@@ -101,7 +101,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         if (value.matches(booleanTrueRegexPattern)) {
             convertedValue = Boolean.TRUE;
         }
-        else if(value.matches(booleanFalseRegexPattern)) {
+        else if (value.matches(booleanFalseRegexPattern)) {
             convertedValue = Boolean.FALSE;
         }
 

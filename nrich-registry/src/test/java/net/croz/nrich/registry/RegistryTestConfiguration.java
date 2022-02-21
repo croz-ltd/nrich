@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
@@ -223,7 +223,7 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(final  RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(final RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new RegistryConfigurationUpdateInterceptor(registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 

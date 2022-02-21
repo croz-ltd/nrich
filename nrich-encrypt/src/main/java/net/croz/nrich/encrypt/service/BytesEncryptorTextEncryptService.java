@@ -22,7 +22,7 @@ public class BytesEncryptorTextEncryptService implements TextEncryptionService {
             return new String(encoded, charset);
         }
         catch (final Exception exception) {
-            throw new EncryptOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt),  exception);
+            throw new EncryptOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt), exception);
         }
     }
 

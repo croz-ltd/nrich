@@ -92,7 +92,7 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
-       return new DefaultTransientPropertyResolverService();
+        return new DefaultTransientPropertyResolverService();
     }
 
     @Bean

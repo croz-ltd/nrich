@@ -18,7 +18,7 @@ public interface RegistryDataInterceptor {
      * Executed before registry create operation.
      *
      * @param classFullName Class name of registry entity.
-     * @param entityData entity creation data
+     * @param entityData    entity creation data
      */
     void beforeRegistryCreate(String classFullName, Object entityData);
 
@@ -26,8 +26,8 @@ public interface RegistryDataInterceptor {
      * Executed before registry update operation.
      *
      * @param classFullName Class name of registry entity.
-     * @param id registry entity id.
-     * @param entityData entity creation data
+     * @param id            registry entity id.
+     * @param entityData    entity creation data
      */
     void beforeRegistryUpdate(String classFullName, Object id, Object entityData);
 
@@ -35,7 +35,7 @@ public interface RegistryDataInterceptor {
      * Executed before registry delete operation.
      *
      * @param classFullName Class name of registry entity.
-     * @param id registry entity id.
+     * @param id            registry entity id.
      */
     void beforeRegistryDelete(String classFullName, Object id);
 

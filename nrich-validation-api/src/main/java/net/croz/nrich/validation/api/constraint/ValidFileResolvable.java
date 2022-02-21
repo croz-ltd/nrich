@@ -25,14 +25,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Repeatable(ValidFileResolvable.List.class)
 @Documented
-@Constraint(validatedBy = { })
+@Constraint(validatedBy = {})
 public @interface ValidFileResolvable {
 
     String message() default "{nrich.constraint.file.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Property name from which allowed content type list is resolved (empty value allows all content types).

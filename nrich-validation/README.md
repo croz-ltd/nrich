@@ -4,15 +4,13 @@
 
 ## Overview
 
-nrich-validation is a library intended to add additional `jakarta.validation-api` constraints that have proved to be useful on projects.
-It contains a list of constraints and corresponding validators. Registration of validators is tied to `hibernate-validator` implementation.
-It also contains a list of messages for standard and additional constraints in english and croatian (`validationMessages`).
-
+nrich-validation is a library intended to add additional `jakarta.validation-api` constraints that have proved to be useful on projects. It contains a list of constraints and corresponding validators.
+Registration of validators is tied to `hibernate-validator` implementation. It also contains a list of messages for standard and additional constraints in english and croatian (`validationMessages`).
 
 ## Setting up Spring beans
-If automatic registration of messages is required then following configuration is required 
-(this can also be registered through application.properties by manually including `validationMessages` when using Spring Boot):
 
+If automatic registration of messages is required then following configuration is required
+(this can also be registered through application.properties by manually including `validationMessages` when using Spring Boot):
 
 ```
 
@@ -35,8 +33,6 @@ If automatic registration of messages is required then following configuration i
     }
 
 ```
-
-
 
 ## Usage
 
@@ -127,13 +123,12 @@ public class CreateBusinessEntityRequest {
 
 ```
 
-will validate that either companyName is filled or firstName or lastName are filled. 
+will validate that either companyName is filled or firstName or lastName are filled.
 
 #### ValidFile
 
-Validates that file (either Springs `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list
-and/or satisfies regex. All constraints properties are optional so defining a constraint without any will always pass validation.
-
+Validates that file (either Springs `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list and/or satisfies regex. All constraints properties
+are optional so defining a constraint without any will always pass validation.
 
 ```
 
@@ -147,8 +142,8 @@ will validate that file has content type of `text/plain`, extension `txt` and ma
 
 #### ValidFileResolvable
 
-Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Springs `Environment` bean.
-Allowing those properties to be defined in property files.
+Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Springs `Environment` bean. Allowing those properties to be
+defined in property files.
 
 ```
 
@@ -161,7 +156,7 @@ Allowing those properties to be defined in property files.
 
 ```
 
-will resolve  allowedContentTypeList from `my.custom.validation.file.allowed-content-type-list`, allowedExtensionList from `my.custom.validation.file.allowed-extension-list`
+will resolve allowedContentTypeList from `my.custom.validation.file.allowed-content-type-list`, allowedExtensionList from `my.custom.validation.file.allowed-extension-list`
 and allowedFileNameRegex from `my.custom.validation.file.allowed-file-name-regex` properties and perform validation while skipping resolved empty or null property values.
 
 ### ValidOib
@@ -171,15 +166,15 @@ Validates that a property is a valida OIB (personal identification number in Cro
 ```
 
     @ValidOib
-    String value; 
+    String value;
 
 
 ```
 
 #### ValidRange
 
-Validates that from property (resolved from validated class through `fromPropertyName`) is less than (or equal to if `inclusive` flag has been set) than
-to property (resolved from validated class through `toPropertyName`) i.e:
+Validates that from property (resolved from validated class through `fromPropertyName`) is less than (or equal to if `inclusive` flag has been set) than to property (resolved from validated class
+through `toPropertyName`) i.e:
 
 ```
 
@@ -195,7 +190,7 @@ public class ValidRangeValidatorDifferentTypeTestRequest {
 }
 
 
-```   
+```
 
 validates that dateFrom is less than dateTo.
 

@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DecryptArgument {
 
-    String[] argumentPathList() default { };
+    String[] argumentPathList() default {};
 
 }

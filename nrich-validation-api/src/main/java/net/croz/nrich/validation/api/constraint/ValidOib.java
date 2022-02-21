@@ -29,9 +29,9 @@ public @interface ValidOib {
 
     String message() default "{nrich.constraint.oib.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Defines several {@link ValidOib} annotations on the same element.

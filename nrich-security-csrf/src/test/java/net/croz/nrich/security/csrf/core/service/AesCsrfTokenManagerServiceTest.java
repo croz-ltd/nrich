@@ -19,7 +19,7 @@ class AesCsrfTokenManagerServiceTest {
 
     @BeforeEach
     void setup() {
-        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), 128);;
+        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), 128);
     }
 
     @Test

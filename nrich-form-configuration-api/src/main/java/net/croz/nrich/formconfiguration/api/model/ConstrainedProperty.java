@@ -43,6 +43,7 @@ public class ConstrainedProperty {
 
     /**
      * Returns constraint annotation name (i.e for @NotNull constraint it will return NotNull)
+     *
      * @return constraint name
      */
     public String getConstraintName() {

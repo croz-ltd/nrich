@@ -515,9 +515,9 @@ class JpaQueryBuilderTest {
         request.setAgeFrom(-1);
 
         final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-            .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-            .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
-            .build();
+                .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
+                .build();
 
         // when
         final List<TestEntity> results = executeQuery(request, searchConfiguration);

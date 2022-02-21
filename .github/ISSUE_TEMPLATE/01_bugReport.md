@@ -1,7 +1,5 @@
 ---
-name: Bug report
-about: Report a bug in nrich
-title: ""
+name: Bug report about: Report a bug in nrich title: ""
 labels: "bug"
 assignees: ""
 ---
@@ -15,6 +13,7 @@ assignees: ""
 -->
 
 ## Basic information
+
 * nrich version:
   <!-- released version or snapshot version -->
 * Module:
@@ -22,21 +21,26 @@ assignees: ""
 * Link to the complete executable reproducer if available (e.g. GitHub Repo):
 
 ## Additional information
+
 <!-- Please, include any additional information that could be relevant (e.g. Java, Gradle/Maven, OS version). -->
 
 ## Bug description
+
 <!--
   Please, describe the bug as clear and concisely as possible.
   If relevant and possible, also fill out the sub-sections below.
 -->
 
 ### Steps to reproduce
+
 <!-- Please, share all steps to reproduce the bug. -->
 
 ### Expected behavior
+
 <!-- Please, describe the expected behavior. -->
 
 ### Actual behavior
+
 <!--
   Please, describe the actual behavior as discovered.
   If available, provide the entire stack trace inside Markdown code block (```).

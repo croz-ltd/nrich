@@ -30,23 +30,23 @@ public @interface ValidFile {
 
     String message() default "{nrich.constraint.file.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Allowed content type list (empty value allows all content types).
      *
      * @return allowed content type list
      */
-    String[] allowedContentTypeList() default { };
+    String[] allowedContentTypeList() default {};
 
     /**
      * Allowed extension list (case insensitive, empty value allows all content types).
      *
      * @return allowed extension list
      */
-    String[] allowedExtensionList() default { };
+    String[] allowedExtensionList() default {};
 
     /**
      * Allowed file name regex (empty value allows all file names).

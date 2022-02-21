@@ -40,7 +40,7 @@ public abstract class BaseEncryptDataAdvice {
     }
 
     public Object decryptArgument(final EncryptionContext encryptionContext, final Object argument, final List<String> pathToDecryptList) {
-       return getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext);
+        return getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext);
     }
 
     protected abstract DataEncryptionService getDataEncryptionService();

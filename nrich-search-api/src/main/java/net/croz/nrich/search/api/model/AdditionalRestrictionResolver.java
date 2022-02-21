@@ -20,9 +20,9 @@ public interface AdditionalRestrictionResolver<T, P, R> {
      * Returns a list of predicates that will be applied to main query.
      *
      * @param criteriaBuilder criteria builder
-     * @param query criteria query
-     * @param root root query entity
-     * @param request search request
+     * @param query           criteria query
+     * @param root            root query entity
+     * @param request         search request
      * @return list of predicates
      */
     List<Predicate> resolvePredicateList(CriteriaBuilder criteriaBuilder, CriteriaQuery<P> query, Root<T> root, R request);

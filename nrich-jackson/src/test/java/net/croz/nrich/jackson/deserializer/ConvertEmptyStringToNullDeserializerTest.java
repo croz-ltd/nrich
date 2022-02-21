@@ -22,7 +22,8 @@ class ConvertEmptyStringToNullDeserializerTest {
         testMap.put(key, "");
 
         // when
-        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), new TypeReference<Map<String, String>>() {});
+        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), new TypeReference<Map<String, String>>() {
+        });
 
         // then
         assertThat(deserialized.get(key)).isNull();

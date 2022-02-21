@@ -39,7 +39,7 @@ public class CreateExcelReportRequest {
     private final int firstRowIndex;
 
     /**
-     *   Batch size used for data fetch from {@link MultiRowDataProvider}.
+     * Batch size used for data fetch from {@link MultiRowDataProvider}.
      */
     private final int batchSize;
 

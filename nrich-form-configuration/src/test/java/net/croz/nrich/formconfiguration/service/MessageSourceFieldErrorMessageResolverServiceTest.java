@@ -37,7 +37,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
     void shouldConvertArraysToStringWhenResolvingMessage() {
         // given
         final Map<String, Object> argumentMap = new HashMap<>();
-        argumentMap.put("value", new String[] { "one", "two "});
+        argumentMap.put("value", new String[] { "one", "two " });
 
         final ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 

@@ -24,7 +24,8 @@ class RegistryConfigurationControllerTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
         // and when
-        final List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {});
+        final List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();

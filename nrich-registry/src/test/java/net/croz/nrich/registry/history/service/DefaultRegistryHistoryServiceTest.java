@@ -156,8 +156,8 @@ class DefaultRegistryHistoryServiceTest {
     @AfterEach
     void cleanup() {
         executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()).executeUpdate());
-        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()  + "_AUD").executeUpdate());
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName() + "_AUD").executeUpdate());
         executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntityWithEmbeddedId.class.getName()).executeUpdate());
-        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntityWithEmbeddedId.class.getName()  + "_AUD").executeUpdate());
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntityWithEmbeddedId.class.getName() + "_AUD").executeUpdate());
     }
 }

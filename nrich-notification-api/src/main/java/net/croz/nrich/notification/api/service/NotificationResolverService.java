@@ -16,7 +16,7 @@ public interface NotificationResolverService {
      * Returns {@link ValidationFailureNotification} instance. Default severity is <pre>WARNING</pre>. Resolved validation failure messages are added to notification messageList.
      * Title of notification is resolved from code <pre>notification.validation-failed.title</pre> and content of notification is resolved from code: <pre>notification.validation-failed.content</pre>.
      *
-     * @param errors Springs {@link Errors} that will be used to resolve validation notification messages.
+     * @param errors                     Springs {@link Errors} that will be used to resolve validation notification messages.
      * @param validationFailedOwningType class on which validation errors were found
      * @param additionalNotificationData additional notification data to add to notification
      * @return {@link ValidationFailureNotification} instance
@@ -27,7 +27,7 @@ public interface NotificationResolverService {
      * Returns {@link ValidationFailureNotification} instance. Default severity is <pre>WARNING</pre>. Resolved validation failure messages are added to notification messageList.
      * Title of notification is resolved from code <pre>notification.validation-failed.title</pre> and content of notification is resolved from code: <pre>notification.validation-failed.content</pre>.
      *
-     * @param exception validation exception that will be used to resolve validation notification messages.
+     * @param exception                  validation exception that will be used to resolve validation notification messages.
      * @param additionalNotificationData additional notification data to add to notification
      * @return {@link ValidationFailureNotification} instance
      */
@@ -37,8 +37,8 @@ public interface NotificationResolverService {
      * Returns {@link Notification} instance for exception. Default severity is <pre>ERROR</pre>. Resolved error message is added as notification content.
      * Title of notification is resolved from code <pre>fullyQualifiedExceptionClass.title</pre> and content of notification is resolved from code: <pre>fullyQualifiedExceptionClass.code</pre>.
      *
-     * @param throwable exception for which to resolve notification
-     * @param additionalNotificationData additional notification data to add to notification
+     * @param throwable                    exception for which to resolve notification
+     * @param additionalNotificationData   additional notification data to add to notification
      * @param exceptionMessageArgumentList optional exception argument list, will be used when resolving exception message
      * @return {@link Notification} instance
      */
@@ -48,7 +48,7 @@ public interface NotificationResolverService {
      * Returns {@link Notification} instance for action. Default severity is <pre>INFO</pre>. Resolved action message is added as notification content.
      * Title of notification is resolved from code <pre>actionName.title</pre> and content of notification is resolved from code: <pre>actionName.code</pre>.
      *
-     * @param actionName name of the action for which to resolve notification
+     * @param actionName                 name of the action for which to resolve notification
      * @param additionalNotificationData additional notification data to add to notification
      * @return {@link Notification} instance
      */

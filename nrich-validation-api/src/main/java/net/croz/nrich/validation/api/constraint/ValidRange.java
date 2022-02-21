@@ -25,9 +25,9 @@ public @interface ValidRange {
 
     String message() default "{nrich.constraint.range.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Name of from property.

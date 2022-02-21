@@ -31,7 +31,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() { });
+        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -55,7 +56,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotNull();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() { });
+        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -79,7 +81,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() { });
+        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -105,7 +108,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() { });
+        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -131,7 +135,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() { });
+        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -177,7 +182,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() { });
+        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();

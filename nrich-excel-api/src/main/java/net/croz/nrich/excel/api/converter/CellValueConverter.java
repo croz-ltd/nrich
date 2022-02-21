@@ -10,7 +10,7 @@ public interface CellValueConverter {
     /**
      * Set cell value, perform conversion if necessary
      *
-     * @param cell cell to set value on
+     * @param cell  cell to set value on
      * @param value value to set
      */
     void setCellValue(CellHolder cell, Object value);
@@ -18,7 +18,7 @@ public interface CellValueConverter {
     /**
      * Returns true if this converter supports cell and value combination
      *
-     * @param cell cell that value will be set
+     * @param cell  cell that value will be set
      * @param value value to be set
      * @return whether cell and value combination is supported
      */
