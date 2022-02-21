@@ -22,14 +22,14 @@ If automatic registration of messages is required then following configuration i
     }
 
     @RequiredArgsConstructor
-    public static class ValidationMessageSourceRegistrar {
+    public static class ValidationMessageSourceRegistrar implements InitializingBean {
 
         private final MessageSource messageSource;
 
-        @PostConstruct
-        void registerValidationMessages() {
+        @Override
+        public void afterPropertiesSet() {
             if (messageSource instanceof AbstractResourceBasedMessageSource) {
-                ((AbstractResourceBasedMessageSource) messageSource).addBasenames("validationMessages");
+                ((AbstractResourceBasedMessageSource) messageSource).addBasenames(VALIDATION_MESSAGES_NAME);
             }
         }
     }
