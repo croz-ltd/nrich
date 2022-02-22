@@ -1,5 +1,5 @@
 dependencies {
-  api project (":nrich-search-api")
+  api project(":nrich-search-api")
 
   api "jakarta.validation:jakarta.validation-api"
 

@@ -21,10 +21,10 @@ class MaxSizeInBytesValidatorTest {
     @Test
     void shouldNotReportErrorForNullValue() {
         // given
-        final MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest(null);
+        MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest(null);
 
         // when
-        final Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -33,10 +33,10 @@ class MaxSizeInBytesValidatorTest {
     @Test
     void shouldNotReportErrorWhenSizeInBytesIsLessThanMax() {
         // given
-        final MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest("size");
+        MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest("size");
 
         // when
-        final Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -45,10 +45,10 @@ class MaxSizeInBytesValidatorTest {
     @Test
     void shouldReportErrorWhenSizeIsGreaterThanMax() {
         // given
-        final MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest("size greater than max allowed");
+        MaxSizeInBytesTestRequest request = new MaxSizeInBytesTestRequest("size greater than max allowed");
 
         // when
-        final Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<MaxSizeInBytesTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();

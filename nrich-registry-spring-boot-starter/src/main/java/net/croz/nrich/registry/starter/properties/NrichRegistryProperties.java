@@ -27,7 +27,7 @@ public class NrichRegistryProperties {
      */
     private final boolean defaultConverterEnabled;
 
-    public NrichRegistryProperties(final List<String> defaultReadOnlyPropertyList, @DefaultValue final RegistrySearchProperties registrySearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue RegistrySearchProperties registrySearch, @DefaultValue("true") boolean defaultConverterEnabled) {
         this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
         this.registrySearch = registrySearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
@@ -56,7 +56,7 @@ public class NrichRegistryProperties {
          */
         private final String booleanFalseRegexPattern;
 
-        public RegistrySearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern) {
+        public RegistrySearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
             this.dateFormatList = dateFormatList;
             this.decimalNumberFormatList = decimalNumberFormatList;
             this.booleanTrueRegexPattern = booleanTrueRegexPattern;

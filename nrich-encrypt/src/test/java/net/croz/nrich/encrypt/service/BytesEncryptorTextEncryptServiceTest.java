@@ -18,16 +18,16 @@ class BytesEncryptorTextEncryptServiceTest {
     @Test
     void shouldEncryptDecryptData() {
         // given
-        final String textToEncrypt = "My text with different characters, for example: čćžšzp []{}%^*()(!@# 1";
+        String textToEncrypt = "My text with different characters, for example: čćžšzp []{}%^*()(!@# 1";
 
         // when
-        final String encryptedText = textEncryptionService.encryptText(textToEncrypt);
+        String encryptedText = textEncryptionService.encryptText(textToEncrypt);
 
         // then
         assertThat(encryptedText).isNotEqualTo(textToEncrypt);
 
         // and when
-        final String decryptedText = textEncryptionService.decryptText(encryptedText);
+        String decryptedText = textEncryptionService.decryptText(encryptedText);
 
         // then
         assertThat(decryptedText).isEqualTo(textToEncrypt);
@@ -36,10 +36,10 @@ class BytesEncryptorTextEncryptServiceTest {
     @Test
     void shouldThrowEncryptionOperationFailedExceptionWhenEncryptingInvalidData() {
         // given
-        final String textToEncrypt = null;
+        String textToEncrypt = null;
 
         // when
-        final Throwable thrown = catchThrowable(() -> textEncryptionService.encryptText(textToEncrypt));
+        Throwable thrown = catchThrowable(() -> textEncryptionService.encryptText(textToEncrypt));
 
         // then
         assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
@@ -48,10 +48,10 @@ class BytesEncryptorTextEncryptServiceTest {
     @Test
     void shouldThrowEncryptionOperationFailedExceptionWhenDecryptingInvalidData() {
         // given
-        final String textToDecrypt = "Non encrypted text";
+        String textToDecrypt = "Non encrypted text";
 
         // when
-        final Throwable thrown = catchThrowable(() -> textEncryptionService.decryptText(textToDecrypt));
+        Throwable thrown = catchThrowable(() -> textEncryptionService.decryptText(textToDecrypt));
 
         // then
         assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);

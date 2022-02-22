@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Getter
-public final class ManagedTypeWrapper {
+public class ManagedTypeWrapper {
 
     private final IdentifiableType<?> identifiableType;
 
@@ -40,7 +40,7 @@ public final class ManagedTypeWrapper {
 
     private final EmbeddableType<?> embeddableIdType;
 
-    public ManagedTypeWrapper(final ManagedType<?> managedType) {
+    public ManagedTypeWrapper(ManagedType<?> managedType) {
         Assert.isTrue(managedType instanceof IdentifiableType, "Managed type has no id attribute, no operations will be possible!");
 
         identifiableType = (IdentifiableType<?>) managedType;
@@ -59,20 +59,20 @@ public final class ManagedTypeWrapper {
         return identifiableType.getJavaType();
     }
 
-    private EmbeddableType<?> resolveEmbeddedIdentifierType(final IdentifiableType<?> identifiableType) {
+    private EmbeddableType<?> resolveEmbeddedIdentifierType(IdentifiableType<?> identifiableType) {
         return identifiableType.getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) identifiableType.getIdType() : null;
     }
 
-    private String resolveIdAttributeName(final IdentifiableType<?> identifiableType) {
+    private String resolveIdAttributeName(IdentifiableType<?> identifiableType) {
         return identifiableType.hasSingleIdAttribute() ? identifiableType.getId(identifiableType.getIdType().getJavaType()).getName() : null;
     }
 
-    private Map<String, Class<?>> resolveIdClassPropertyMap(final IdentifiableType<?> identifiableType) {
+    private Map<String, Class<?>> resolveIdClassPropertyMap(IdentifiableType<?> identifiableType) {
         return identifiableType.hasSingleIdAttribute() ? Collections.emptyMap() : identifiableType.getIdClassAttributes().stream()
                 .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
     }
 
-    private boolean resolveIsIdentifierAssigned(final IdentifiableType<?> managedType) {
+    private boolean resolveIsIdentifierAssigned(IdentifiableType<?> managedType) {
         return managedType.getAttributes().stream()
                 .map(Attribute::getJavaMember)
                 .filter(Field.class::isInstance)
@@ -81,7 +81,7 @@ public final class ManagedTypeWrapper {
                 .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }
 
-    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(final ManagedType<?> managedType) {
+    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(ManagedType<?> managedType) {
         return managedType.getSingularAttributes().stream()
                 .filter(Attribute::isAssociation).collect(Collectors.toList());
     }

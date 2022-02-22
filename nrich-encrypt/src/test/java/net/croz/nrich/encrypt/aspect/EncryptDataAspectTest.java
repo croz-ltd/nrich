@@ -18,16 +18,16 @@ class EncryptDataAspectTest {
     @Test
     void shouldEncryptDecryptData() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
 
         // then
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
@@ -36,16 +36,16 @@ class EncryptDataAspectTest {
     @Test
     void shouldEncryptCompletableFutureData() throws Exception {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithCompletableFuture(text).get();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithCompletableFuture(text).get();
 
         // then
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
@@ -54,17 +54,17 @@ class EncryptDataAspectTest {
     @Test
     void shouldEncryptMonoData() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithMono(text).block();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithMono(text).block();
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
@@ -73,17 +73,17 @@ class EncryptDataAspectTest {
     @Test
     void shouldEncryptFluxData() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithFlux(text).blockFirst();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithFlux(text).blockFirst();
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
@@ -91,16 +91,16 @@ class EncryptDataAspectTest {
 
     @Test
     void shouldEncryptText() {
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final String result = encryptDataAspectTestService.textToEncrypt(text);
+        String result = encryptDataAspectTestService.textToEncrypt(text);
 
         // then
         assertThat(result).isNotEqualTo(text);
 
         // and when
-        final String decryptResult = encryptDataAspectTestService.textToDecrypt(result, "ignored value");
+        String decryptResult = encryptDataAspectTestService.textToDecrypt(result, "ignored value");
 
         // then
         assertThat(decryptResult).isEqualTo(text);

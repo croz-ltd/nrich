@@ -12,26 +12,26 @@ public final class RegistryDataResolvingUtil {
     private RegistryDataResolvingUtil() {
     }
 
-    public static RegistryTestEntityWithIdClass findRegistryTestEntityWithIdClass(final EntityManager entityManager, final RegistryTestEntityWithIdClass registryTestEntityWithIdClass) {
+    public static RegistryTestEntityWithIdClass findRegistryTestEntityWithIdClass(EntityManager entityManager, RegistryTestEntityWithIdClass registryTestEntityWithIdClass) {
         try {
             return (RegistryTestEntityWithIdClass) entityManager.createQuery("from RegistryTestEntityWithIdClass where firstId = :firstId and secondId = :secondId")
                     .setParameter("firstId", registryTestEntityWithIdClass.getFirstId())
                     .setParameter("secondId", registryTestEntityWithIdClass.getSecondId())
                     .getSingleResult();
         }
-        catch (final NoResultException ignored) {
+        catch (NoResultException ignored) {
             return null;
         }
     }
 
-    public static RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(final EntityManager entityManager, final RegistryTestEmbeddedUserGroupId groupId) {
+    public static RegistryTestEmbeddedUserGroup findRegistryTestEmbeddedUserGroup(EntityManager entityManager, RegistryTestEmbeddedUserGroupId groupId) {
         try {
             return (RegistryTestEmbeddedUserGroup) entityManager.createQuery("from RegistryTestEmbeddedUserGroup where userGroupId.user.id = :userId and userGroupId.group.id = :groupId")
                     .setParameter("userId", groupId.getUser().getId())
                     .setParameter("groupId", groupId.getGroup().getId())
                     .getSingleResult();
         }
-        catch (final NoResultException ignored) {
+        catch (NoResultException ignored) {
             return null;
         }
     }

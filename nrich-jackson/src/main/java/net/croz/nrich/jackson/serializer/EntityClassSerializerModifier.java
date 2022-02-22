@@ -29,19 +29,19 @@ public class EntityClassSerializerModifier extends BeanSerializerModifier {
 
     @SneakyThrows
     @Override
-    public List<BeanPropertyWriter> changeProperties(final SerializationConfig serializationConfig, final BeanDescription beanDescription, final List<BeanPropertyWriter> beanPropertyList) {
+    public List<BeanPropertyWriter> changeProperties(SerializationConfig serializationConfig, BeanDescription beanDescription, List<BeanPropertyWriter> beanPropertyList) {
 
-        final Class<?> type = beanDescription.getType().getRawClass();
+        Class<?> type = beanDescription.getType().getRawClass();
 
         if (serializeEntityAnnotatedClasses && isEntity(type) || packageList != null && packageList.contains(type.getPackage().getName())) {
-            final Method method = type.getMethod("getClass");
-            final AnnotatedMethod annotatedMethod = new AnnotatedMethod(null, method, null, null);
+            Method method = type.getMethod("getClass");
+            AnnotatedMethod annotatedMethod = new AnnotatedMethod(null, method, null, null);
 
-            final BeanPropertyDefinition beanPropertyDefinition = SimpleBeanPropertyDefinition.construct(serializationConfig, annotatedMethod, PropertyName.construct("class"));
-            final JavaType javaType = SimpleType.constructUnsafe(String.class);
-            final JsonSerializer<Class<?>> myJsonSerializer = new EntityClassNameSerializer();
+            BeanPropertyDefinition beanPropertyDefinition = SimpleBeanPropertyDefinition.construct(serializationConfig, annotatedMethod, PropertyName.construct("class"));
+            JavaType javaType = SimpleType.constructUnsafe(String.class);
+            JsonSerializer<Class<?>> myJsonSerializer = new EntityClassNameSerializer();
 
-            final BeanPropertyWriter beanPropertyWriter = new BeanPropertyWriter(beanPropertyDefinition, annotatedMethod, null, javaType, myJsonSerializer, null, null, true, null, null);
+            BeanPropertyWriter beanPropertyWriter = new BeanPropertyWriter(beanPropertyDefinition, annotatedMethod, null, javaType, myJsonSerializer, null, null, true, null, null);
 
             beanPropertyList.add(beanPropertyWriter);
         }
@@ -49,7 +49,7 @@ public class EntityClassSerializerModifier extends BeanSerializerModifier {
         return beanPropertyList;
     }
 
-    private boolean isEntity(final Class<?> type) {
+    private boolean isEntity(Class<?> type) {
         return Arrays.stream(type.getAnnotations())
                 .anyMatch(annotation -> ENTITY_ANNOTATION.equals(annotation.annotationType().getName()));
     }

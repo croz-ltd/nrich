@@ -33,10 +33,6 @@ import static org.mockito.Mockito.when;
 
 class CsrfWebFilterTest {
 
-    private CsrfWebFilter csrfFilter;
-
-    private WebFilterChain chain;
-
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
     private static final String CSRF_PING_URL = "/csrf/ping";
@@ -47,9 +43,13 @@ class CsrfWebFilterTest {
 
     private static final String CSRF_SECURED_ENDPOINT = "/secured/url";
 
+    private CsrfWebFilter csrfFilter;
+
+    private WebFilterChain chain;
+
     @BeforeEach
     void setup() {
-        final CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
+        CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
 
         csrfFilter = new CsrfWebFilter(csrfTokenManagerService, CSRF_TOKEN_KEY_NAME, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
 
@@ -61,10 +61,10 @@ class CsrfWebFilterTest {
     @Test
     void shouldPassThroughRequestWithoutPath() {
         // given
-        final MockServerWebExchange emptyRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CsrfConstants.EMPTY_PATH));
+        MockServerWebExchange emptyRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CsrfConstants.EMPTY_PATH));
 
         // when
-        final Mono<Void> result = csrfFilter.filter(emptyRequest, chain);
+        Mono<Void> result = csrfFilter.filter(emptyRequest, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -73,10 +73,10 @@ class CsrfWebFilterTest {
     @Test
     void shouldUpdateLastRealApiCallForExcludedUrl() {
         // given
-        final MockServerWebExchange excludedRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_EXCLUDED_URI));
+        MockServerWebExchange excludedRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_EXCLUDED_URI));
 
         // when
-        final Mono<Void> result = csrfFilter.filter(excludedRequest, chain);
+        Mono<Void> result = csrfFilter.filter(excludedRequest, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -86,12 +86,12 @@ class CsrfWebFilterTest {
     @Test
     void shouldInvalidateSessionWhenMaxInactiveTimeIsReachedForPingUri() {
         // given
-        final MockServerWebExchange pingRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_PING_URL));
+        MockServerWebExchange pingRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_PING_URL));
 
         Objects.requireNonNull(pingRequest.getSession().block()).getAttributes().put(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, 0L);
 
         // when
-        final Mono<Void> result = csrfFilter.filter(pingRequest, chain);
+        Mono<Void> result = csrfFilter.filter(pingRequest, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -101,10 +101,10 @@ class CsrfWebFilterTest {
     @Test
     void shouldReturnInitialTokenWhenAccessingInitialTokenUrl() {
         // given
-        final MockServerWebExchange initialTokenRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
+        MockServerWebExchange initialTokenRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
 
         // when
-        final Mono<Void> result = csrfFilter.filter(initialTokenRequest, chain);
+        Mono<Void> result = csrfFilter.filter(initialTokenRequest, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -114,10 +114,10 @@ class CsrfWebFilterTest {
     @Test
     void shouldReturnErrorWhenTokenDoesntExist() {
         // given
-        final MockServerWebExchange securedUrlRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT));
+        MockServerWebExchange securedUrlRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT));
 
         // when
-        final Mono<Void> result = csrfFilter.filter(securedUrlRequest, chain);
+        Mono<Void> result = csrfFilter.filter(securedUrlRequest, chain);
 
         // then
         StepVerifier.create(result).verifyError(CsrfTokenException.class);
@@ -126,16 +126,16 @@ class CsrfWebFilterTest {
     @Test
     void shouldReturnSuccessWhenTokenExistsInHeader() {
         // given
-        final MockServerWebExchange initialTokenRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
+        MockServerWebExchange initialTokenRequest = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
 
         csrfFilter.filter(initialTokenRequest, chain).block();
 
-        final String csrfToken = initialTokenRequest.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
+        String csrfToken = initialTokenRequest.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        final ServerWebExchange securedUrlRequest = initialTokenRequest.mutate().request(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT).header(CSRF_TOKEN_KEY_NAME, csrfToken).build()).build();
+        ServerWebExchange securedUrlRequest = initialTokenRequest.mutate().request(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT).header(CSRF_TOKEN_KEY_NAME, csrfToken).build()).build();
 
         // when
-        final Mono<Void> result = csrfFilter.filter(securedUrlRequest, chain);
+        Mono<Void> result = csrfFilter.filter(securedUrlRequest, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -144,16 +144,16 @@ class CsrfWebFilterTest {
     @Test
     void shouldReturnSuccessWhenCsrfTokenExistsInParameters() {
         // given
-        final MockServerWebExchange initialTokenUrl = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
+        MockServerWebExchange initialTokenUrl = MockServerWebExchange.from(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL));
 
         csrfFilter.filter(initialTokenUrl, chain).block();
 
-        final String csrfToken = initialTokenUrl.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
+        String csrfToken = initialTokenUrl.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        final ServerWebExchange securedUrl = initialTokenUrl.mutate().request(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT).queryParam(CSRF_TOKEN_KEY_NAME, csrfToken).build()).build();
+        ServerWebExchange securedUrl = initialTokenUrl.mutate().request(MockServerHttpRequest.post(CSRF_SECURED_ENDPOINT).queryParam(CSRF_TOKEN_KEY_NAME, csrfToken).build()).build();
 
         // when
-        final Mono<Void> result = csrfFilter.filter(securedUrl, chain);
+        Mono<Void> result = csrfFilter.filter(securedUrl, chain);
 
         // then
         StepVerifier.create(result).verifyComplete();
@@ -162,17 +162,17 @@ class CsrfWebFilterTest {
     @Test
     void shouldReturnResultWhenAccessingResourceWithToken() {
         // given
-        final WebSession webSession = new MockWebSession();
-        final MockServerWebExchange initialTokenUrl = MockServerWebExchange.builder(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL)).session(webSession).build();
+        WebSession webSession = new MockWebSession();
+        MockServerWebExchange initialTokenUrl = MockServerWebExchange.builder(MockServerHttpRequest.post(CSRF_INITIAL_TOKEN_URL)).session(webSession).build();
 
         csrfFilter.filter(initialTokenUrl, chain).block();
 
-        final String csrfToken = initialTokenUrl.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
+        String csrfToken = initialTokenUrl.getAttribute(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        final WebTestClient client = WebTestClient.bindToController(new CsrfTestController()).webSessionManager(new TestWebSessionManager(webSession)).webFilter(csrfFilter).build();
+        WebTestClient client = WebTestClient.bindToController(new CsrfTestController()).webSessionManager(new TestWebSessionManager(webSession)).webFilter(csrfFilter).build();
 
         // when
-        final EntityExchangeResult<byte[]> result = client.post()
+        EntityExchangeResult<byte[]> result = client.post()
                 .uri(CSRF_SECURED_ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(CSRF_TOKEN_KEY_NAME, csrfToken)

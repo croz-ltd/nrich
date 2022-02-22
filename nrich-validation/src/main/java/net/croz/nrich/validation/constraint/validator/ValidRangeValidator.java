@@ -16,24 +16,24 @@ public class ValidRangeValidator implements ConstraintValidator<ValidRange, Obje
     private boolean inclusive;
 
     @Override
-    public void initialize(final ValidRange constraintAnnotation) {
+    public void initialize(ValidRange constraintAnnotation) {
         fromPropertyName = constraintAnnotation.fromPropertyName();
         toPropertyName = constraintAnnotation.toPropertyName();
         inclusive = constraintAnnotation.inclusive();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }
 
-        final Class<?> type = value.getClass();
-        final Method fromFieldGetter = ValidationReflectionUtil.findGetterMethod(type, fromPropertyName);
-        final Method toFieldGetter = ValidationReflectionUtil.findGetterMethod(type, toPropertyName);
+        Class<?> type = value.getClass();
+        Method fromFieldGetter = ValidationReflectionUtil.findGetterMethod(type, fromPropertyName);
+        Method toFieldGetter = ValidationReflectionUtil.findGetterMethod(type, toPropertyName);
 
-        final Object fromFieldValue = ValidationReflectionUtil.invokeMethod(fromFieldGetter, value);
-        final Object toFieldValue = ValidationReflectionUtil.invokeMethod(toFieldGetter, value);
+        Object fromFieldValue = ValidationReflectionUtil.invokeMethod(fromFieldGetter, value);
+        Object toFieldValue = ValidationReflectionUtil.invokeMethod(toFieldGetter, value);
 
         if (fromFieldValue == null || toFieldValue == null) {
             return true;
@@ -44,7 +44,7 @@ public class ValidRangeValidator implements ConstraintValidator<ValidRange, Obje
         }
 
         @SuppressWarnings("unchecked")
-        final int compareResult = ((Comparable<Object>) fromFieldValue).compareTo(toFieldValue);
+        int compareResult = ((Comparable<Object>) fromFieldValue).compareTo(toFieldValue);
 
         return compareResult < 0 || inclusive && compareResult == 0;
     }

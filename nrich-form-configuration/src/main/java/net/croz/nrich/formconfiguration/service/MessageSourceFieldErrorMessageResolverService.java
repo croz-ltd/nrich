@@ -18,21 +18,21 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
     private final MessageSource messageSource;
 
     @Override
-    public String resolveErrorMessage(final ConstrainedProperty constrainedProperty, final Locale locale) {
-        final List<String> messageCodeList = resolveConstraintMessageCodeList(constrainedProperty);
-        final Object[] argumentList = convertArraysInArgumentList(constrainedProperty.getConstraintArgumentList());
-        final DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentList, constrainedProperty.getConstraintMessage());
+    public String resolveErrorMessage(ConstrainedProperty constrainedProperty, Locale locale) {
+        List<String> messageCodeList = resolveConstraintMessageCodeList(constrainedProperty);
+        Object[] argumentList = convertArraysInArgumentList(constrainedProperty.getConstraintArgumentList());
+        DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentList, constrainedProperty.getConstraintMessage());
 
         return messageSource.getMessage(defaultMessageSourceResolvable, locale);
     }
 
-    private List<String> resolveConstraintMessageCodeList(final ConstrainedProperty constrainedProperty) {
-        final String constraintOwningClassName = StringUtils.uncapitalize(constrainedProperty.getParentType().getName());
-        final String constraintOwningClassShortName = StringUtils.uncapitalize(constrainedProperty.getParentType().getSimpleName());
-        final String constraintPropertyName = constrainedProperty.getName();
-        final String constraintName = constrainedProperty.getConstraintName();
+    private List<String> resolveConstraintMessageCodeList(ConstrainedProperty constrainedProperty) {
+        String constraintOwningClassName = StringUtils.uncapitalize(constrainedProperty.getParentType().getName());
+        String constraintOwningClassShortName = StringUtils.uncapitalize(constrainedProperty.getParentType().getSimpleName());
+        String constraintPropertyName = constrainedProperty.getName();
+        String constraintName = constrainedProperty.getConstraintName();
 
-        final List<String> codeList = new ArrayList<>();
+        List<String> codeList = new ArrayList<>();
 
         codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
         codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_FULL_CLIENT_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
@@ -47,14 +47,14 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         return codeList;
     }
 
-    private String resolveMessageCode(final String messageFormat, final String... argumentList) {
+    private String resolveMessageCode(String messageFormat, String... argumentList) {
         @SuppressWarnings("RedundantCast")
-        final String messageCode = String.format(messageFormat, (Object[]) argumentList);
+        String messageCode = String.format(messageFormat, (Object[]) argumentList);
 
         return messageCode;
     }
 
-    private Object[] convertArraysInArgumentList(final Object[] argumentList) {
+    private Object[] convertArraysInArgumentList(Object[] argumentList) {
         if (argumentList == null) {
             return null;
         }
@@ -64,7 +64,7 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
                 .toArray();
     }
 
-    private String convertToString(final Object[] value) {
+    private String convertToString(Object[] value) {
         return Arrays.toString(value).replace('[', ' ').replace(']', ' ').trim();
     }
 }

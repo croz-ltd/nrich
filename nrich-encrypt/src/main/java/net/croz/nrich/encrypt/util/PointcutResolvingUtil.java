@@ -14,7 +14,7 @@ public final class PointcutResolvingUtil {
     private PointcutResolvingUtil() {
     }
 
-    public static String resolvePointcutFromEncryptionConfigurationList(final List<EncryptionConfiguration> encryptionConfigurationList) {
+    public static String resolvePointcutFromEncryptionConfigurationList(List<EncryptionConfiguration> encryptionConfigurationList) {
         return encryptionConfigurationList.stream()
                 .map(EncryptionConfiguration::getMethodToEncryptDecrypt)
                 .map(method -> String.format(EXECUTION_METHOD_POINTCUT, method))

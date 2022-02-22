@@ -29,10 +29,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
         // given
-        final ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("**.txt", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("**.txt", "content".getBytes()));
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();
@@ -41,10 +41,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
         // given
-        final ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.exe", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.exe", "content".getBytes()));
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();
@@ -53,10 +53,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenContentTypeIsNotValidForMultipartFile() {
         // given
-        final ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.txt", "1.txt", "application/json", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.txt", "1.txt", "application/json", "content".getBytes()));
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();
@@ -66,10 +66,10 @@ class ValidFileValidatorTest {
     @ParameterizedTest
     void shouldNotReportErrorForValidMultipartFile(String filename) {
         // given
-        final ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile(filename, "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile(filename, "content".getBytes()));
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -78,10 +78,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldNotReportErrorForNullFile() {
         // given
-        final ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(null);
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(null);
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -90,10 +90,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldThrowExceptionForUnrecognizedFileType() {
         // given
-        final ValidFileValidatorInvalidTypeFileTestRequest request = new ValidFileValidatorInvalidTypeFileTestRequest(new Object());
+        ValidFileValidatorInvalidTypeFileTestRequest request = new ValidFileValidatorInvalidTypeFileTestRequest(new Object());
 
         // when
-        final Throwable thrown = catchThrowable(() -> validator.validate(request));
+        Throwable thrown = catchThrowable(() -> validator.validate(request));
 
         // then
         assertThat(thrown).isNotNull();
@@ -103,10 +103,10 @@ class ValidFileValidatorTest {
     @Test
     void shouldValidateFilePart() {
         // given
-        final ValidFileValidatorFilePartTestRequest request = new ValidFileValidatorFilePartTestRequest(filePart("1.txt", MediaType.TEXT_PLAIN));
+        ValidFileValidatorFilePartTestRequest request = new ValidFileValidatorFilePartTestRequest(filePart("1.txt", MediaType.TEXT_PLAIN));
 
         // when
-        final Set<ConstraintViolation<ValidFileValidatorFilePartTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidFileValidatorFilePartTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();

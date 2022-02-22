@@ -32,17 +32,17 @@ class DefaultExcelReportServiceTest {
     @Test
     void shouldCreateExcelReport() {
         // given
-        final File file = createFileInTemporaryDirectory();
-        final Object[][] rowData = new Object[][] { { 1.1, "value" } };
-        final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+        File file = createFileInTemporaryDirectory();
+        Object[][] rowData = new Object[][] { { 1.1, "value" } };
+        MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final File result = excelReportService.createExcelReport(request);
+        File result = excelReportService.createExcelReport(request);
 
         // then
-        final Sheet sheet = createWorkbookAndResolveSheet(result);
+        Sheet sheet = createWorkbookAndResolveSheet(result);
 
         // then
         assertThat(sheet).isNotNull();
@@ -54,14 +54,14 @@ class DefaultExcelReportServiceTest {
     @Test
     void shouldThrowExceptionOnInvalidBatchSize() {
         // given
-        final File file = createFileInTemporaryDirectory();
-        final Object[][] rowData = new Object[][] { { 1.1, "value" } };
-        final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+        File file = createFileInTemporaryDirectory();
+        Object[][] rowData = new Object[][] { { 1.1, "value" } };
+        MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
-        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        CreateExcelReportRequest request = CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider).batchSize(-1).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
+        Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -70,12 +70,12 @@ class DefaultExcelReportServiceTest {
     @Test
     void shouldThrowExceptionOnMissingRowDataProvider() {
         // given
-        final File file = createFileInTemporaryDirectory();
+        File file = createFileInTemporaryDirectory();
 
-        final CreateExcelReportRequest request = CreateExcelReportRequest.builder().batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
+        CreateExcelReportRequest request = CreateExcelReportRequest.builder().batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(TEMPLATE_DATA_FIRST_ROW_INDEX).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
+        Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -83,7 +83,7 @@ class DefaultExcelReportServiceTest {
 
     @SneakyThrows
     private File createFileInTemporaryDirectory() {
-        final File file = new File(temporaryDirectory, "export.xlxs");
+        File file = new File(temporaryDirectory, "export.xlxs");
 
         Assert.isTrue(file.createNewFile(), "File has not been created for test");
 

@@ -20,11 +20,13 @@ class NrichJacksonAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.run(context -> assertThat(context).hasBean("convertEmptyStringsToNullModule"));
     }
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
+        // expect
         contextRunner.withPropertyValues("nrich.jackson.convert-empty-strings-to-null=false").run(context -> assertThat(context).doesNotHaveBean("convertEmptyStringsToNullModule"));
     }
 
@@ -32,7 +34,7 @@ class NrichJacksonAutoConfigurationTest {
     void shouldConfigureJacksonProperties() {
         contextRunner.run(context -> {
             // when
-            final ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
 
             // then
             assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isTrue();
@@ -54,7 +56,7 @@ class NrichJacksonAutoConfigurationTest {
     void shouldSupportStandardOverrideOfJacksonProperties() {
         contextRunner.withPropertyValues("spring.jackson.parser.ALLOW_COMMENTS=false").run(context -> {
             // when
-            final ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
 
             // then
             assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isFalse();

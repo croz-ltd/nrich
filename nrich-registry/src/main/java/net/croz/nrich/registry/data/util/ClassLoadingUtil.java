@@ -7,15 +7,15 @@ public final class ClassLoadingUtil {
     private ClassLoadingUtil() {
     }
 
-    public static Class<?> loadClassFromList(final List<String> classNameList) {
-        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    public static Class<?> loadClassFromList(List<String> classNameList) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         Class<?> foundClass = null;
-        for (final String className : classNameList) {
+        for (String className : classNameList) {
             try {
                 foundClass = Class.forName(className, true, classLoader);
             }
-            catch (final Exception ignored) {
+            catch (Exception ignored) {
                 // ignored
             }
 

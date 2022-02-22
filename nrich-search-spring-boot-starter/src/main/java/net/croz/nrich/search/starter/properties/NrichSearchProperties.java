@@ -22,7 +22,7 @@ public class NrichSearchProperties {
      */
     private final boolean defaultConverterEnabled;
 
-    public NrichSearchProperties(@DefaultValue final StringSearchProperties stringSearch, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichSearchProperties(@DefaultValue StringSearchProperties stringSearch, @DefaultValue("true") boolean defaultConverterEnabled) {
         this.stringSearch = stringSearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
     }
@@ -50,7 +50,7 @@ public class NrichSearchProperties {
          */
         private final String booleanFalseRegexPattern;
 
-        public StringSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) final List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) final List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") final String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") final String booleanFalseRegexPattern) {
+        public StringSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
             this.dateFormatList = dateFormatList;
             this.decimalNumberFormatList = decimalNumberFormatList;
             this.booleanTrueRegexPattern = booleanTrueRegexPattern;

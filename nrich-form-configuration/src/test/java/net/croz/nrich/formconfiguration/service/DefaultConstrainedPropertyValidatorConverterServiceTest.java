@@ -23,16 +23,16 @@ class DefaultConstrainedPropertyValidatorConverterServiceTest {
     @Test
     void shouldConvertConstrainedPropertyToValidatorConfiguration() {
         // given
-        final ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceTestRequest.class);
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceTestRequest.class);
 
         // when
-        final List<ConstrainedPropertyClientValidatorConfiguration> validationConfigurationList = defaultConstrainedPropertyValidatorConverterService.convert(constrainedProperty);
+        List<ConstrainedPropertyClientValidatorConfiguration> validationConfigurationList = defaultConstrainedPropertyValidatorConverterService.convert(constrainedProperty);
 
         // then
         assertThat(validationConfigurationList).hasSize(1);
 
         // and when
-        final ConstrainedPropertyClientValidatorConfiguration validatorConfiguration = validationConfigurationList.get(0);
+        ConstrainedPropertyClientValidatorConfiguration validatorConfiguration = validationConfigurationList.get(0);
 
         // then
         assertThat(validatorConfiguration).isNotNull();
@@ -44,10 +44,10 @@ class DefaultConstrainedPropertyValidatorConverterServiceTest {
     @Test
     void shouldSupportAll() {
         // given
-        final ConstrainedProperty property = mock(ConstrainedProperty.class);
+        ConstrainedProperty property = mock(ConstrainedProperty.class);
 
         // when
-        final boolean result = defaultConstrainedPropertyValidatorConverterService.supports(property);
+        boolean result = defaultConstrainedPropertyValidatorConverterService.supports(property);
 
         // then
         assertThat(result).isTrue();

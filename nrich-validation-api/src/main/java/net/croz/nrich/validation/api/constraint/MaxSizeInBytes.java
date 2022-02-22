@@ -28,7 +28,7 @@ public @interface MaxSizeInBytes {
 
     String message() default "{nrich.constraint.maxSizeInBytes.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
     /**
      * Maximum number of allowed bytes.
@@ -44,7 +44,7 @@ public @interface MaxSizeInBytes {
      */
     String encoding() default "UTF-8";
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Defines several {@link List} annotations on the same element.

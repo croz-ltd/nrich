@@ -17,15 +17,15 @@ public class DefaultConstrainedPropertyValidatorConverterService implements Cons
     private final FieldErrorMessageResolverService fieldErrorMessageResolverService;
 
     @Override
-    public List<ConstrainedPropertyClientValidatorConfiguration> convert(final ConstrainedProperty constrainedProperty) {
-        final String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, LocaleContextHolder.getLocale());
-        final ConstrainedPropertyClientValidatorConfiguration validator = new ConstrainedPropertyClientValidatorConfiguration(constrainedProperty.getType(), constrainedProperty.getConstraintName(), constrainedProperty.getConstraintArgumentMap(), message);
+    public List<ConstrainedPropertyClientValidatorConfiguration> convert(ConstrainedProperty constrainedProperty) {
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, LocaleContextHolder.getLocale());
+        ConstrainedPropertyClientValidatorConfiguration validator = new ConstrainedPropertyClientValidatorConfiguration(constrainedProperty.getType(), constrainedProperty.getConstraintName(), constrainedProperty.getConstraintArgumentMap(), message);
 
         return Collections.singletonList(validator);
     }
 
     @Override
-    public boolean supports(final ConstrainedProperty constrainedProperty) {
+    public boolean supports(ConstrainedProperty constrainedProperty) {
         return true;
     }
 }

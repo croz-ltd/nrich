@@ -8,14 +8,14 @@ import java.util.List;
 
 public class RegistryGroupConfigurationComparator extends DisplayOrderComparator implements Comparator<RegistryGroupConfiguration> {
 
-    public RegistryGroupConfigurationComparator(final List<String> propertyDisplayOrderList) {
+    public RegistryGroupConfigurationComparator(List<String> propertyDisplayOrderList) {
         super(propertyDisplayOrderList);
     }
 
     @Override
-    public int compare(final RegistryGroupConfiguration firstConfiguration, final RegistryGroupConfiguration secondConfiguration) {
-        final String firstGroupId = firstConfiguration.getGroupId();
-        final String secondGroupId = secondConfiguration.getGroupId();
+    public int compare(RegistryGroupConfiguration firstConfiguration, RegistryGroupConfiguration secondConfiguration) {
+        String firstGroupId = firstConfiguration.getGroupId();
+        String secondGroupId = secondConfiguration.getGroupId();
 
         if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
             return firstGroupId.compareTo(secondGroupId);

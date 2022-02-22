@@ -7,8 +7,8 @@ public final class CsrfCoreGeneratingUtil {
     private CsrfCoreGeneratingUtil() {
     }
 
-    public static CsrfExcludeConfig csrfExcludeConfig(final String uri, final String regex) {
-        final CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
+    public static CsrfExcludeConfig csrfExcludeConfig(String uri, String regex) {
+        CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
 
         csrfExcludeConfig.setUri(uri);
         csrfExcludeConfig.setRegex(regex);

@@ -16,7 +16,7 @@ class RegistryConfigurationControllerEndpointTest extends BaseWebTest {
     @Test
     void shouldFetchRegistryConfiguration() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/domain/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/domain/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

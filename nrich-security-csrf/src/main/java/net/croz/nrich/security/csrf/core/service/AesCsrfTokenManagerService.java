@@ -26,27 +26,27 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
     private final Integer cryptoKeyLength;
 
-    public void validateAndRefreshToken(final CsrfTokenKeyHolder csrfTokenKeyHolder) {
-        final String csrfToken = csrfTokenKeyHolder.getToken();
+    public void validateAndRefreshToken(CsrfTokenKeyHolder csrfTokenKeyHolder) {
+        String csrfToken = csrfTokenKeyHolder.getToken();
 
         if (csrfToken == null) {
             throw new CsrfTokenException("Csrf token is not available!");
         }
 
-        final Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
+        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
 
         validateToken(csrfToken, cryptoKey);
 
         csrfTokenKeyHolder.storeToken(generateToken(cryptoKey));
     }
 
-    public String generateToken(final CsrfTokenKeyHolder csrfTokenKeyHolder) {
-        final Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
+    public String generateToken(CsrfTokenKeyHolder csrfTokenKeyHolder) {
+        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
 
         return generateToken(cryptoKey);
     }
 
-    private Key fetchCryptoKey(final CsrfTokenKeyHolder csrfTokenKeyHolder, final Integer cryptoKeyLength) {
+    private Key fetchCryptoKey(CsrfTokenKeyHolder csrfTokenKeyHolder, Integer cryptoKeyLength) {
         Key cryptoKey = csrfTokenKeyHolder.getCryptoKey();
 
         if (cryptoKey == null) {
@@ -57,32 +57,32 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
         return cryptoKey;
     }
 
-    private Key generateCryptoKey(final Integer cryptoKeyLength) {
-        final KeyGenerator keyGenerator = getKeyGenerator();
+    private Key generateCryptoKey(Integer cryptoKeyLength) {
+        KeyGenerator keyGenerator = getKeyGenerator();
 
         keyGenerator.init(cryptoKeyLength);
 
         return keyGenerator.generateKey();
     }
 
-    private void validateToken(final String csrfToken, final Key key) {
-        final byte[] csrfTokenEncryptedBytes = Base64.getUrlDecoder().decode(csrfToken);
+    private void validateToken(String csrfToken, Key key) {
+        byte[] csrfTokenEncryptedBytes = Base64.getUrlDecoder().decode(csrfToken);
 
         if (csrfTokenEncryptedBytes.length != 16) {
             throw new CsrfTokenException("Csrf token is not valid.");
         }
 
-        final Cipher cipher = initCipher(key, Cipher.DECRYPT_MODE);
-        final byte[] csrfTokenDecryptedBytes;
+        Cipher cipher = initCipher(key, Cipher.DECRYPT_MODE);
+        byte[] csrfTokenDecryptedBytes;
         try {
             csrfTokenDecryptedBytes = cipher.doFinal(csrfTokenEncryptedBytes);
         }
-        catch (final Exception exception) {
+        catch (Exception exception) {
             throw new CsrfTokenException("Csrf token can't be decrypted.", exception);
         }
 
-        final Long csrfTokenTimeMillis = new BigInteger(csrfTokenDecryptedBytes).longValue();
-        final Long currentTimeMillis = Instant.now().toEpochMilli();
+        Long csrfTokenTimeMillis = new BigInteger(csrfTokenDecryptedBytes).longValue();
+        Long currentTimeMillis = Instant.now().toEpochMilli();
 
         // If token time is in future, tolerate that case to some extent (for example, to avoid issues around unsynchronized computer times in cluster)
         if (currentTimeMillis < csrfTokenTimeMillis) {
@@ -96,18 +96,18 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
     }
 
-    private String generateToken(final Key key) {
-        final long time = Instant.now().toEpochMilli();
-        final byte[] currentTimeBytes = BigInteger.valueOf(time).toByteArray();
+    private String generateToken(Key key) {
+        long time = Instant.now().toEpochMilli();
+        byte[] currentTimeBytes = BigInteger.valueOf(time).toByteArray();
 
-        final byte[] encryptedCurrentTimeBytes = encryptedCurrentTimeBytes(key, currentTimeBytes);
+        byte[] encryptedCurrentTimeBytes = encryptedCurrentTimeBytes(key, currentTimeBytes);
 
         return new String(Base64.getUrlEncoder().encode(encryptedCurrentTimeBytes), StandardCharsets.ISO_8859_1);
     }
 
     @SneakyThrows
-    private Cipher initCipher(final Key key, final Integer mode) {
-        final Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+    private Cipher initCipher(Key key, Integer mode) {
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
 
         cipher.init(mode, key);
 
@@ -120,8 +120,8 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
     }
 
     @SneakyThrows
-    private byte[] encryptedCurrentTimeBytes(final Key key, final byte[] currentTimeBytes) {
-        final Cipher cipher = initCipher(key, Cipher.ENCRYPT_MODE);
+    private byte[] encryptedCurrentTimeBytes(Key key, byte[] currentTimeBytes) {
+        Cipher cipher = initCipher(key, Cipher.ENCRYPT_MODE);
 
         return cipher.doFinal(currentTimeBytes);
     }

@@ -16,18 +16,18 @@ public class JpaEntityAttributeResolver {
 
     private final ManagedType<?> managedType;
 
-    public AttributeHolder resolveAttributeByPath(final String path) {
+    public AttributeHolder resolveAttributeByPath(String path) {
         Assert.notNull(path, "Path must be defined when searching for attribute!");
 
-        final String[] pathList = PathResolvingUtil.convertToPathList(path);
+        String[] pathList = PathResolvingUtil.convertToPathList(path);
 
         Attribute<?, ?> attribute = resolveAttributeByName(managedType, pathList[0]);
         boolean isPlural = attribute instanceof PluralAttribute;
         ManagedType<?> currentManagedType = resolveManagedTypeFromAttribute(attribute);
 
         if (currentManagedType != null && pathList.length > 1) {
-            final String[] restOfPathList = Arrays.copyOfRange(pathList, 1, pathList.length);
-            for (final String currentPath : restOfPathList) {
+            String[] restOfPathList = Arrays.copyOfRange(pathList, 1, pathList.length);
+            for (String currentPath : restOfPathList) {
                 if (currentManagedType == null) {
                     attribute = null;
                     isPlural = false;
@@ -42,7 +42,7 @@ public class JpaEntityAttributeResolver {
         return new AttributeHolder(attribute, currentManagedType, isPlural);
     }
 
-    private ManagedType<?> resolveManagedTypeFromAttribute(final Attribute<?, ?> attribute) {
+    private ManagedType<?> resolveManagedTypeFromAttribute(Attribute<?, ?> attribute) {
         ManagedType<?> currentManagedType = null;
 
         if (attribute instanceof SingularAttribute && ((SingularAttribute<?, ?>) attribute).getType() instanceof ManagedType) {
@@ -55,7 +55,7 @@ public class JpaEntityAttributeResolver {
         return currentManagedType;
     }
 
-    private Attribute<?, ?> resolveAttributeByName(final ManagedType<?> managedType, final String attributeName) {
+    private Attribute<?, ?> resolveAttributeByName(ManagedType<?> managedType, String attributeName) {
         return managedType.getAttributes().stream()
                 .filter(attribute -> attribute.getName().equals(attributeName))
                 .findFirst()

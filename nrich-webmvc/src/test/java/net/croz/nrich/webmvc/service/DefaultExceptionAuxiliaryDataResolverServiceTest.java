@@ -19,11 +19,11 @@ class DefaultExceptionAuxiliaryDataResolverServiceTest {
     @Test
     void shouldResolveExceptionAuxiliaryData() {
         // given
-        final RuntimeException exception = new RuntimeException("Exception");
-        final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "uri");
+        RuntimeException exception = new RuntimeException("Exception");
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "uri");
 
         // when
-        final Map<String, Object> additionalExceptionData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, mockHttpServletRequest);
+        Map<String, Object> additionalExceptionData = exceptionAuxiliaryDataResolverService.resolveRequestExceptionAuxiliaryData(exception, mockHttpServletRequest);
 
         // then
         assertThat(additionalExceptionData).isNotNull();

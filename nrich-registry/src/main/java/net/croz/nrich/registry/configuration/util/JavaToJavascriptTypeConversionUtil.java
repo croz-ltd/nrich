@@ -26,7 +26,7 @@ public final class JavaToJavascriptTypeConversionUtil {
     private JavaToJavascriptTypeConversionUtil() {
     }
 
-    public static JavascriptType fromJavaType(final Class<?> type) {
+    public static JavascriptType fromJavaType(Class<?> type) {
         return CLASS_JAVASCRIPT_TYPE_MAP.entrySet().stream()
                 .filter(entry -> entry.getKey().isAssignableFrom(type))
                 .findFirst()
@@ -34,7 +34,7 @@ public final class JavaToJavascriptTypeConversionUtil {
                 .orElse(JavascriptType.OBJECT);
     }
 
-    public static boolean isDecimal(final Class<?> type) {
+    public static boolean isDecimal(Class<?> type) {
         return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
     }
 }

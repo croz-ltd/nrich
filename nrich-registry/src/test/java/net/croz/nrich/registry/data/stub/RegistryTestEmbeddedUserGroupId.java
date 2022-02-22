@@ -24,7 +24,7 @@ public class RegistryTestEmbeddedUserGroupId implements Serializable {
     private RegistryTestEmbeddedGroup group;
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -32,7 +32,7 @@ public class RegistryTestEmbeddedUserGroupId implements Serializable {
             return false;
         }
 
-        final RegistryTestEmbeddedUserGroupId that = (RegistryTestEmbeddedUserGroupId) o;
+        RegistryTestEmbeddedUserGroupId that = (RegistryTestEmbeddedUserGroupId) o;
 
         return user.getId().equals(that.user.getId()) && group.getId().equals(that.group.getId());
     }

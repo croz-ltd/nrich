@@ -20,7 +20,7 @@ public class FormConfigurationController {
 
     @ResponseBody
     @PostMapping("fetch")
-    public List<FormConfiguration> fetch(@RequestBody @Valid final FetchFormConfigurationRequest request) {
+    public List<FormConfiguration> fetch(@RequestBody @Valid FetchFormConfigurationRequest request) {
         return formConfigurationService.fetchFormConfigurationList(request.getFormIdList());
     }
 }

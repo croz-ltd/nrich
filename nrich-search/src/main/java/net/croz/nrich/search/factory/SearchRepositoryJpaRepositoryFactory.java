@@ -20,25 +20,25 @@ public class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
-    public SearchRepositoryJpaRepositoryFactory(final EntityManager entityManager, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public SearchRepositoryJpaRepositoryFactory(EntityManager entityManager, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         super(entityManager);
         this.entityManager = entityManager;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
     }
 
     @Override
-    protected RepositoryComposition.RepositoryFragments getRepositoryFragments(final RepositoryMetadata metadata) {
+    protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
 
         if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-            final SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
+            SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
 
             fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
         }
         if (StringSearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-            final JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
+            JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-            final StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
+            StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
 
             fragments = fragments.append(RepositoryFragment.implemented(StringSearchExecutor.class, stringSearchExecutorFragment));
         }

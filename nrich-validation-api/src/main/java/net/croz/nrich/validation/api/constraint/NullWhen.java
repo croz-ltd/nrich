@@ -27,9 +27,9 @@ public @interface NullWhen {
 
     String message() default "{nrich.constraint.nullWhen.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Property name that must be null.

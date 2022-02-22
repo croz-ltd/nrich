@@ -30,7 +30,7 @@ public @interface InList {
 
     String message() default "{nrich.constraint.InList.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
     /**
      * List of allowed values.
@@ -39,7 +39,7 @@ public @interface InList {
      */
     String[] value();
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * Defines several {@link InList} annotations on the same element.

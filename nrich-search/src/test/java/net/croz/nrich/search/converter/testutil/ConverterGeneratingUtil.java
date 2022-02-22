@@ -14,15 +14,15 @@ public final class ConverterGeneratingUtil {
     }
 
     @SneakyThrows
-    public static Date dateOf(final String value) {
+    public static Date dateOf(String value) {
         return new SimpleDateFormat("dd.MM.yyyy").parse(value);
     }
 
-    public static LocalDate localDateOf(final String value) {
+    public static LocalDate localDateOf(String value) {
         return DateTimeFormatter.ofPattern("dd.MM.yyyy").parse(value, LocalDate::from);
     }
 
-    public static LocalDateTime localDateTimeOf(final String value) {
+    public static LocalDateTime localDateTimeOf(String value) {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm").parse(value, LocalDateTime::from);
     }
 }

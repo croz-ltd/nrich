@@ -7,13 +7,13 @@ public final class PathResolvingUtil {
     private PathResolvingUtil() {
     }
 
-    public static String[] convertToPathList(final String path) {
+    public static String[] convertToPathList(String path) {
         return path.split("\\.");
     }
 
-    public static Path<?> calculateFullPath(final Path<?> rootPath, final String[] pathList) {
+    public static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList) {
         Path<?> calculatedPath = rootPath;
-        for (final String currentPath : pathList) {
+        for (String currentPath : pathList) {
             calculatedPath = calculatedPath.get(currentPath);
         }
 

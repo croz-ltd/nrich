@@ -39,7 +39,7 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public MessageSource messageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
         messageSource.setBasename("messages");
 
@@ -53,7 +53,7 @@ public class WebmvcTestConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.findAndRegisterModules();
 
@@ -71,32 +71,32 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+    public NotificationMessageResolverService notificationMessageResolverService(MessageSource messageSource) {
         return new MessageSourceNotificationMessageResolverService(messageSource);
     }
 
     @Bean
-    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+    public NotificationResolverService notificationResolverService(NotificationMessageResolverService notificationMessageResolverService, ConstraintConversionService constraintConversionService) {
         return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 
     @Bean
-    public NotificationResponseService<?> notificationResponseService(final NotificationResolverService notificationResolverService) {
+    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
     @Bean
-    public LoggingService loggingService(final MessageSource messageSource) {
+    public LoggingService loggingService(MessageSource messageSource) {
         return new Slf4jLoggingService(messageSource);
     }
 
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
-       return new DefaultTransientPropertyResolverService();
+        return new DefaultTransientPropertyResolverService();
     }
 
     @Bean
-    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final TransientPropertyResolverService transientPropertyResolverService) {
+    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(true, true, transientPropertyResolverService);
     }
 
@@ -106,12 +106,12 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(MessageSource messageSource) {
         return new MessageSourceExceptionHttpStatusResolverService(messageSource);
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService, ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 }

@@ -9,6 +9,7 @@ public interface ExcelReportGeneratorFactory {
 
     /**
      * Returns configured {@link ExcelReportGenerator} instance for specified request parameters.
+     *
      * @param request containing configuration options for  {@link ExcelReportGenerator} instance.
      * @return configured {@link ExcelReportGenerator} instance
      */

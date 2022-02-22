@@ -14,8 +14,8 @@ public interface SearchOperator {
      * Returns predicate for query.
      *
      * @param criteriaBuilder criteria builder
-     * @param path property path in relation to root query entity
-     * @param value property value
+     * @param path            property path in relation to root query entity
+     * @param value           property value
      * @return predicate that will be added to query
      */
     Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value);

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 // TODO allow for easier initialization of search configuration and sync all classes (static vs builder etc)
+
 /**
  * Holds search configuration that decides how query should be build from conditions defined in search request.
  *

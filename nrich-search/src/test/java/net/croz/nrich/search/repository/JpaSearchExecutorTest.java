@@ -48,10 +48,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("first0");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("first0");
 
         // when
-        final Optional<TestEntity> result = testEntitySearchRepository.findOne(request, SearchConfiguration.emptyConfiguration());
+        Optional<TestEntity> result = testEntitySearchRepository.findOne(request, SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isNotEmpty();
@@ -62,10 +62,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
 
         // when
-        final Optional<TestEntity> result = testEntitySearchRepository.findOne(request, SearchConfiguration.emptyConfiguration());
+        Optional<TestEntity> result = testEntitySearchRepository.findOne(request, SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isEmpty();
@@ -76,10 +76,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
-        final List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
+        List<TestEntity> results = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(results).hasSize(1);
@@ -90,10 +90,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final List<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("age")));
+        List<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("age")));
 
         // then
         assertThat(result).isNotEmpty();
@@ -105,10 +105,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
+        Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
 
         // then
         assertThat(result).isNotEmpty();
@@ -121,10 +121,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
-        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
+        Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
 
         // then
         assertThat(result).isNotEmpty();
@@ -137,10 +137,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
-        final long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
+        long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isEqualTo(1L);
@@ -151,10 +151,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("second non existing name");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("second non existing name");
 
         // when
-        final long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
+        long result = testEntitySearchRepository.count(request, SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isZero();
@@ -165,15 +165,15 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager, 2);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
-        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+        SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
                 .distinct(true)
                 .joinList(Collections.singletonList(SearchJoin.leftJoin("collectionEntityList")))
                 .build();
 
         // when
-        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+        long result = testEntitySearchRepository.count(request, searchConfiguration);
 
         // then
         assertThat(result).isEqualTo(5L);
@@ -184,14 +184,14 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager, 2);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
-        final SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+        SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
                 .distinct(true)
                 .joinList(Collections.singletonList(SearchJoin.innerJoinFetch("collectionEntityList")))
                 .build();
         // when
-        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+        long result = testEntitySearchRepository.count(request, searchConfiguration);
 
         // then
         assertThat(result).isEqualTo(5L);
@@ -202,21 +202,21 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
+        SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
                 .rootEntity(TestEntityCollectionWithReverseAssociation.class)
                 .propertyPrefix("subqueryRestriction")
                 .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
-        final SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
                 .build();
 
-        final TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
                 .subqueryRestrictionName("first0-association-1")
                 .build();
 
         // when
-        final long result = testEntitySearchRepository.count(request, searchConfiguration);
+        long result = testEntitySearchRepository.count(request, searchConfiguration);
 
         // then
         assertThat(result).isEqualTo(1L);
@@ -227,10 +227,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
 
         // when
-        final Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
+        Page<TestEntity> result = testEntitySearchRepository.findAll(request, SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
 
         // then
         assertThat(result).isEmpty();
@@ -243,10 +243,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("first1");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("first1");
 
         // when
-        final boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+        boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
 
         // then
         assertThat(result).isTrue();
@@ -257,10 +257,10 @@ class JpaSearchExecutorTest {
         // given
         generateListForSearch(entityManager);
 
-        final TestEntitySearchRequest request = new TestEntitySearchRequest("first non existing entity");
+        TestEntitySearchRequest request = new TestEntitySearchRequest("first non existing entity");
 
         // when
-        final boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+        boolean result = testEntitySearchRepository.exists(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
 
         // then
         assertThat(result).isFalse();

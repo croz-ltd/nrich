@@ -17,7 +17,7 @@ public class NotNullWhenTestRequest {
 
     public static class Condition implements Predicate<NotNullWhenTestRequest> {
         @Override
-        public boolean test(final NotNullWhenTestRequest notNullWhenTestRequest) {
+        public boolean test(NotNullWhenTestRequest notNullWhenTestRequest) {
             return "not null".equals(notNullWhenTestRequest.getDifferentProperty());
         }
     }

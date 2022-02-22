@@ -15,10 +15,10 @@ class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
     @Test
     void shouldGetPropertyValueFromMap() {
         // given
-        final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(mapOf("key", "value"));
+        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(mapOf("key", "value"));
 
         // when
-        final Object value = wrapper.getPropertyValue("key");
+        Object value = wrapper.getPropertyValue("key");
 
         // then
         assertThat(value).isEqualTo("value");
@@ -27,8 +27,8 @@ class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
     @Test
     void shouldSetPropertyValueToMap() {
         // given
-        final Map<String, Object> map = new HashMap<>();
-        final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(map);
+        Map<String, Object> map = new HashMap<>();
+        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(map);
 
         // when
         wrapper.setPropertyValue("key", "value");
@@ -40,10 +40,10 @@ class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
     @Test
     void shouldGetPropertyFromObject() {
         // given
-        final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entityWithPropertyValue("value"));
+        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entityWithPropertyValue("value"));
 
         // when
-        final Object value = wrapper.getPropertyValue("name");
+        Object value = wrapper.getPropertyValue("name");
 
         // then
         assertThat(value).isEqualTo("value");
@@ -52,7 +52,7 @@ class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
     @Test
     void shouldSetPropertyToObject() {
         // given
-        final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entityWithPropertyValue("value"));
+        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(entityWithPropertyValue("value"));
 
         // when
         wrapper.setPropertyValue("name", "new value");

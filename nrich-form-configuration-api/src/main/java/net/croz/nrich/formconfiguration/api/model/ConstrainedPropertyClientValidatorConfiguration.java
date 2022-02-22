@@ -12,24 +12,24 @@ import java.util.Map;
 @Getter
 public class ConstrainedPropertyClientValidatorConfiguration {
 
-  /**
-   * Type of constrained property
-   */
-  private final Class<?> propertyType;
+    /**
+     * Type of constrained property
+     */
+    private final Class<?> propertyType;
 
-  /**
-   * Constraint name (i.e. NotNull)
-   */
-  private final String name;
+    /**
+     * Constraint name (i.e. NotNull)
+     */
+    private final String name;
 
-  /**
-   * Constraint arguments as a map
-   */
-  private final Map<String, Object> argumentMap;
+    /**
+     * Constraint arguments as a map
+     */
+    private final Map<String, Object> argumentMap;
 
-  /**
-   * Error message that should be shown if validation fails
-   */
-  private final String errorMessage;
+    /**
+     * Error message that should be shown if validation fails
+     */
+    private final String errorMessage;
 
 }

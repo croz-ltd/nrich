@@ -12,9 +12,9 @@ public class RegistryUserConfiguration {
 
     @Bean
     public RegistryConfiguration registryConfiguration() {
-        final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
+        RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryDataConfigurationGroup.setGroupId("DATA");
         registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));

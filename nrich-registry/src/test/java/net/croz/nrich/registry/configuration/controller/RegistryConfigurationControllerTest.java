@@ -18,13 +18,14 @@ class RegistryConfigurationControllerTest extends BaseWebTest {
     @Test
     void shouldFetchRegistryConfiguration() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
         // and when
-        final List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {});
+        List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {
+        });
 
         // then
         assertThat(convertedResponse).isNotNull();

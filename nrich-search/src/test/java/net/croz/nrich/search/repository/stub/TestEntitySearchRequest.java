@@ -48,7 +48,7 @@ public class TestEntitySearchRequest {
 
     private String testEntityEmbeddedEmbeddedName;
 
-    public TestEntitySearchRequest(final String name) {
+    public TestEntitySearchRequest(String name) {
         this.name = name;
     }
 

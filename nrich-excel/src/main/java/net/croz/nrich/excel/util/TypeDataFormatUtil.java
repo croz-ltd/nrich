@@ -22,12 +22,12 @@ public final class TypeDataFormatUtil {
     private TypeDataFormatUtil() {
     }
 
-    public static List<TypeDataFormat> resolveTypeDataFormatList(final String dateFormat, final String dateTimeFormat, final String integerNumberFormat, final String decimalNumberFormat, final boolean writeDateWithTime, final List<TypeDataFormat> additionalTypeDataFormatList) {
-        final String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
+    public static List<TypeDataFormat> resolveTypeDataFormatList(String dateFormat, String dateTimeFormat, String integerNumberFormat, String decimalNumberFormat, boolean writeDateWithTime, List<TypeDataFormat> additionalTypeDataFormatList) {
+        String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
 
-        final List<TypeDataFormat> nonNullAdditionalDataFormatList = Optional.ofNullable(additionalTypeDataFormatList).orElse(Collections.emptyList());
+        List<TypeDataFormat> nonNullAdditionalDataFormatList = Optional.ofNullable(additionalTypeDataFormatList).orElse(Collections.emptyList());
 
-        final List<TypeDataFormat> typeDataFormatList = Arrays.asList(
+        List<TypeDataFormat> typeDataFormatList = Arrays.asList(
                 new TypeDataFormat(Date.class, dateFormat),
                 new TypeDataFormat(Instant.class, dateFormat),
                 new TypeDataFormat(LocalDate.class, dateFormat),
@@ -43,18 +43,18 @@ public final class TypeDataFormatUtil {
                 new TypeDataFormat(BigDecimal.class, decimalNumberFormat)
         );
 
-        final List<TypeDataFormat> allTypeDataFormatList = typeDataFormatList.stream()
+        List<TypeDataFormat> allTypeDataFormatList = typeDataFormatList.stream()
                 .map(typeDataFormat -> Optional.ofNullable(findTypeDataFormat(nonNullAdditionalDataFormatList, typeDataFormat.getType())).orElse(typeDataFormat))
                 .collect(Collectors.toList());
 
-        final List<TypeDataFormat> notAddedAdditionalTypeDataFormatList = nonNullAdditionalDataFormatList.stream()
+        List<TypeDataFormat> notAddedAdditionalTypeDataFormatList = nonNullAdditionalDataFormatList.stream()
                 .filter(typeDataFormat -> findTypeDataFormat(allTypeDataFormatList, typeDataFormat.getType()) == null)
                 .collect(Collectors.toList());
 
         return Stream.concat(allTypeDataFormatList.stream(), notAddedAdditionalTypeDataFormatList.stream()).collect(Collectors.toList());
     }
 
-    private static TypeDataFormat findTypeDataFormat(final List<TypeDataFormat> typeDataFormatList, final Class<?> type) {
+    private static TypeDataFormat findTypeDataFormat(List<TypeDataFormat> typeDataFormatList, Class<?> type) {
         return typeDataFormatList.stream()
                 .filter(typeDataFormat -> type.equals(typeDataFormat.getType()))
                 .findFirst()

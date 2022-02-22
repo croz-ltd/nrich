@@ -22,14 +22,14 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     private final TextEncryptionService textEncryptionService;
 
     @Override
-    public <T> T encryptData(final T data, final List<String> pathToEncryptDecryptList, final EncryptionContext encryptionContext) {
+    public <T> T encryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
         if (data == null) {
             return null;
         }
 
         if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
             @SuppressWarnings("unchecked")
-            final T encryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.ENCRYPT);
+            T encryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.ENCRYPT);
 
             return encryptedText;
         }
@@ -40,14 +40,14 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     }
 
     @Override
-    public <T> T decryptData(final T data, final List<String> pathToEncryptDecryptList, final EncryptionContext encryptionContext) {
+    public <T> T decryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
         if (data == null) {
             return null;
         }
 
         if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
             @SuppressWarnings("unchecked")
-            final T decryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.DECRYPT);
+            T decryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.DECRYPT);
 
             return decryptedText;
         }
@@ -57,11 +57,11 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         return data;
     }
 
-    private void executeEncryptionOperation(final EncryptionContext encryptionContext, final Object object, final String targetPath, final EncryptionOperation operation) {
-        final String[] pathList = targetPath.split("\\.");
+    private void executeEncryptionOperation(EncryptionContext encryptionContext, Object object, String targetPath, EncryptionOperation operation) {
+        String[] pathList = targetPath.split("\\.");
 
         if (pathList.length > 1) {
-            final String[] remainingPath = Arrays.copyOfRange(pathList, 0, pathList.length - 1);
+            String[] remainingPath = Arrays.copyOfRange(pathList, 0, pathList.length - 1);
 
             encryptDecryptNestedValue(encryptionContext, getPropertyValueByPath(object, String.join(".", remainingPath)), pathList[pathList.length - 1], operation);
         }
@@ -70,7 +70,7 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         }
     }
 
-    private void encryptDecryptNestedValue(final EncryptionContext encryptionContext, final Object objectContainingFieldsToEncryptOrDecrypt, final String propertyName, final EncryptionOperation operation) {
+    private void encryptDecryptNestedValue(EncryptionContext encryptionContext, Object objectContainingFieldsToEncryptOrDecrypt, String propertyName, EncryptionOperation operation) {
         if (objectContainingFieldsToEncryptOrDecrypt != null && propertyName != null) {
             if (objectContainingFieldsToEncryptOrDecrypt instanceof Collection) {
                 ((Collection<?>) objectContainingFieldsToEncryptOrDecrypt).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
@@ -81,21 +81,21 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         }
     }
 
-    private void encryptDecryptValue(final EncryptionContext encryptionContext, final Object objectContainingFieldsToEncryptOrDecrypt, final String propertyName, final EncryptionOperation operation) {
-        final Object value = getPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName);
+    private void encryptDecryptValue(EncryptionContext encryptionContext, Object objectContainingFieldsToEncryptOrDecrypt, String propertyName, EncryptionOperation operation) {
+        Object value = getPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName);
 
         if (value instanceof String) {
-            final String textToEncryptOrDecrypt = (String) value;
-            final String encryptedValue = encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
+            String textToEncryptOrDecrypt = (String) value;
+            String encryptedValue = encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
 
             setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValue);
 
         }
         else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
             @SuppressWarnings("unchecked")
-            final Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
+            Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
 
-            final Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
+            Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
                     .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
                     .collect(Collectors.toList());
 
@@ -104,7 +104,7 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     }
 
     @SuppressWarnings("unchecked")
-    protected Object getPropertyValueByPath(final Object holder, final String path) {
+    protected Object getPropertyValueByPath(Object holder, String path) {
         if (holder instanceof Map) {
             return ((Map<String, Object>) holder).get(path);
         }
@@ -112,13 +112,13 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         try {
             return PropertyAccessorFactory.forDirectFieldAccess(holder).getPropertyValue(path);
         }
-        catch (final Exception ignored) {
+        catch (Exception ignored) {
             return null;
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected void setPropertyValueByPath(final Object holder, final String path, final Object value) {
+    protected void setPropertyValueByPath(Object holder, String path, Object value) {
         if (holder instanceof Map) {
             ((Map<String, Object>) holder).put(path, value);
         }
@@ -127,7 +127,7 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         }
     }
 
-    private String encryptDecryptText(final EncryptionContext encryptionContext, final String text, final EncryptionOperation operation) {
+    private String encryptDecryptText(EncryptionContext encryptionContext, String text, EncryptionOperation operation) {
         log.debug("Starting encryption operation: {} for method: {}", operation.name(), encryptionContext.getFullyQualifiedMethodName());
 
         return operation == EncryptionOperation.ENCRYPT ? textEncryptionService.encryptText(text) : textEncryptionService.decryptText(text);

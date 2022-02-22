@@ -13,23 +13,23 @@ public class NotNullWhenValidator extends BaseNullableCheckValidator implements 
 
     private Class<? extends Predicate<?>> conditionClass;
 
-    public NotNullWhenValidator(final AutowireCapableBeanFactory beanFactory) {
+    public NotNullWhenValidator(AutowireCapableBeanFactory beanFactory) {
         super(beanFactory);
     }
 
     @Override
-    public void initialize(final NotNullWhen constraintAnnotation) {
+    public void initialize(NotNullWhen constraintAnnotation) {
         propertyName = constraintAnnotation.property();
         conditionClass = constraintAnnotation.condition();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         return isValid(value, conditionClass, propertyName);
     }
 
     @Override
-    protected boolean isPropertyValueValid(final Object propertyValue) {
+    protected boolean isPropertyValueValid(Object propertyValue) {
         return propertyValue != null;
     }
 }

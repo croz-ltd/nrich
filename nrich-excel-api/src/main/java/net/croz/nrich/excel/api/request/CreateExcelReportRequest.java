@@ -34,12 +34,12 @@ public class CreateExcelReportRequest {
     private final List<ColumnDataFormat> columnDataFormatList;
 
     /**
-     * Row index from which data should be written to report (if for example template holds column headers in first couple of rows).
+     * Row indexes from which data should be written to report (if for example template holds column headers in first couple of rows).
      */
     private final int firstRowIndex;
 
     /**
-     *   Batch size used for data fetch from {@link MultiRowDataProvider}.
+     * Batch size used for data fetch from {@link MultiRowDataProvider}.
      */
     private final int batchSize;
 

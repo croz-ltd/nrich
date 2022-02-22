@@ -33,32 +33,32 @@ public class EncryptTestConfiguration {
 
     @Bean
     public TextEncryptionService textEncryptionService() {
-        final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+        BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
         return new BytesEncryptorTextEncryptService(encryptor, "UTF-8");
     }
 
     @Bean
-    public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
+    public DataEncryptionService dataEncryptionService(TextEncryptionService textEncryptionService) {
         return new DefaultDataEncryptService(textEncryptionService);
     }
 
     @Bean
-    public EncryptDataAspect encryptDataAspect(final DataEncryptionService dataEncryptionService) {
+    public EncryptDataAspect encryptDataAspect(DataEncryptionService dataEncryptionService) {
         return new EncryptDataAspect(dataEncryptionService);
     }
 
     @Bean
-    public Advisor encryptorAdvisor(final DataEncryptionService dataEncryptionService) {
-        final List<String> propertyList = Collections.singletonList("value");
-        final List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
+    public Advisor encryptorAdvisor(DataEncryptionService dataEncryptionService) {
+        List<String> propertyList = Collections.singletonList("value");
+        List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
                 new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToEncryptFromConfiguration", propertyList, EncryptionOperation.ENCRYPT),
                 new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration", propertyList, EncryptionOperation.DECRYPT),
                 new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.ENCRYPT),
                 new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.DECRYPT)
         );
 
-        final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
         pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptionConfigurationList));
 

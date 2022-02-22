@@ -20,12 +20,14 @@ public class ControllerEditorRegistrationAdvice {
     private final TransientPropertyResolverService transientPropertyResolverService;
 
     @InitBinder
-    public void initBinder(final WebDataBinder binder) {
+    public void initBinder(WebDataBinder binder) {
         if (convertEmptyStringsToNull) {
             binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         }
-        if (ignoreTransientFields && binder.getTarget() != null) {
-            final List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(binder.getTarget().getClass());
+
+        Object target = binder.getTarget();
+        if (ignoreTransientFields && target != null) {
+            List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(target.getClass());
 
             binder.setDisallowedFields(transientPropertyList.toArray(new String[0]));
         }

@@ -16,14 +16,14 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageableSortableRequestWithUniqueSortPropertyToPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
-        final String sortProperty = "name";
-        final String uniqueSortProperty = "id";
-        final DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
+        int pageNumber = 0;
+        int pageSize = 10;
+        String sortProperty = "name";
+        String uniqueSortProperty = "id";
+        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(request, new SortProperty(uniqueSortProperty, SortDirection.ASC));
+        Pageable pageable = PageableUtil.convertToPageable(request, new SortProperty(uniqueSortProperty, SortDirection.ASC));
 
         // then
         assertThat(pageable).isNotNull();
@@ -37,13 +37,13 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageableSortableRequestToPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
-        final String sortProperty = "name";
-        final DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
+        int pageNumber = 0;
+        int pageSize = 10;
+        String sortProperty = "name";
+        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(request);
+        Pageable pageable = PageableUtil.convertToPageable(request);
 
         // then
         assertThat(pageable).isNotNull();
@@ -56,11 +56,11 @@ class PageableUtilTest {
     @Test
     void shouldConvertUnsortedPageDataToPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
+        int pageNumber = 0;
+        int pageSize = 10;
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize);
+        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize);
 
         // then
         assertThat(pageable).isNotNull();
@@ -71,12 +71,12 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyToPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
-        final String uniqueSortProperty = "id";
+        int pageNumber = 0;
+        int pageSize = 10;
+        String uniqueSortProperty = "id";
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, new SortProperty(uniqueSortProperty, SortDirection.ASC));
+        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, new SortProperty(uniqueSortProperty, SortDirection.ASC));
 
         // then
         assertThat(pageable).isNotNull();
@@ -89,12 +89,12 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithSortPropertyToListPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
-        final String sortProperty = "name";
+        int pageNumber = 0;
+        int pageSize = 10;
+        String sortProperty = "name";
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
+        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
 
         // then
         assertThat(pageable).isNotNull();
@@ -107,13 +107,13 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyAndSortPropertyToListPageable() {
         // given
-        final int pageNumber = 0;
-        final int pageSize = 10;
-        final String uniqueSortProperty = "id";
-        final String sortProperty = "name";
+        int pageNumber = 0;
+        int pageSize = 10;
+        String uniqueSortProperty = "id";
+        String sortProperty = "name";
 
         // when
-        final Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, new SortProperty(uniqueSortProperty, SortDirection.ASC), Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
+        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, new SortProperty(uniqueSortProperty, SortDirection.ASC), Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC)));
 
         // then
         assertThat(pageable).isNotNull();

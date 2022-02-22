@@ -5,8 +5,8 @@
 ## Overview
 
 nrich-webmvc library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
-`NotificationErrorHandlingRestControllerAdvice` and providing notification response to client. It also contains additional utility
-classes that disable binding of transient properties, convert empty strings to null etc.
+`NotificationErrorHandlingRestControllerAdvice` and providing notification response to client. It also contains additional utility classes that disable binding of transient properties, convert empty
+strings to null etc.
 
 nrich-webmvc
 
@@ -22,7 +22,7 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
     @Bean
-    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final TransientPropertyResolverService transientPropertyResolverService) {
+    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(true, true, transientPropertyResolverService);
     }
 
@@ -32,12 +32,12 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
     @Bean
-    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(MessageSource messageSource) {
         return new MessageSourceExceptionHttpStatusResolverService(messageSource);
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService, ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 
@@ -51,17 +51,18 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 
 `TransientPropertyResolverService` resolves a list of transient properties for type.
 
-`ControllerEditorRegistrationAdvice` converts empty strings to null and disables binding of transient properties (it accepts arguments that decide if binding should be disabled and if empty strings should be converted to null).
+`ControllerEditorRegistrationAdvice` converts empty strings to null and disables binding of transient properties (it accepts arguments that decide if binding should be disabled and if empty strings
+should be converted to null).
 
 `ExceptionAuxiliaryDataResolverService` resolves additional data for each exception that will be logged and (if configured) sent to client with notification (this can be current time, uuid etc).
-Default implementation returns uuid, current time, request uri and request method. 
+Default implementation returns uuid, current time, request uri and request method.
 
-`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using 
-Springs `MessageSource`. Message code for resolving is `fullyQualifiedExceptionName.httpStatus`  
+`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using Springs `MessageSource`.
+Message code for resolving is `fullyQualifiedExceptionName.httpStatus`
 
-`NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client.
-It accepts a list of exceptions that contain original exceptions as cause properties (i.e. `ExecutionException`), a list of exception auxiliary data to be included in notification and services that 
-are used for logging, data resolving and notification creation.  
+`NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client. It
+accepts a list of exceptions that contain original exceptions as cause properties (i.e. `ExecutionException`), a list of exception auxiliary data to be included in notification and services that are
+used for logging, data resolving and notification creation.
 
 `ConstrainedSessionLocaleResolver` is used when we want to limit locale selection.
 

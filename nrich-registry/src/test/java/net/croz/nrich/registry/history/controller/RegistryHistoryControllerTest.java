@@ -35,17 +35,17 @@ class RegistryHistoryControllerTest extends BaseWebTest {
     @Test
     void shouldFetchRegistryHistoryList() throws Exception {
         // given
-        final RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
-        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
+        RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
+        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
 
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/history/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/history/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
         // and when
-        final PageHolder convertedResponse = objectMapper.readValue(response.getContentAsString(), PageHolder.class);
+        PageHolder convertedResponse = objectMapper.readValue(response.getContentAsString(), PageHolder.class);
 
         // then
         assertThat(convertedResponse).isNotNull();
@@ -55,7 +55,7 @@ class RegistryHistoryControllerTest extends BaseWebTest {
     @AfterEach
     void cleanup() {
         executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()).executeUpdate());
-        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName()  + "_AUD").executeUpdate());
+        executeInTransaction(platformTransactionManager, () -> entityManager.createQuery("delete from " + RegistryHistoryTestEntity.class.getName() + "_AUD").executeUpdate());
     }
 
     @Setter

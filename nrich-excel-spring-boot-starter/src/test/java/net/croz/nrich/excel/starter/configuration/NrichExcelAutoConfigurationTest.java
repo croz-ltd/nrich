@@ -15,6 +15,7 @@ class NrichExcelAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(CellValueConverter.class);
             assertThat(context).hasSingleBean(ExcelReportGeneratorFactory.class);
@@ -24,6 +25,7 @@ class NrichExcelAutoConfigurationTest {
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
+        // expect
         contextRunner.withPropertyValues("nrich.excel.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(CellValueConverter.class));
     }
 }

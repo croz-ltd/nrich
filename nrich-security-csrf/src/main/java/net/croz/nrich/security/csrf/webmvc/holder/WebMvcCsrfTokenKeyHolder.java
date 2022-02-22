@@ -30,7 +30,7 @@ public class WebMvcCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeToken(final String csrfToken) {
+    public void storeToken(String csrfToken) {
         response.setHeader(tokenKeyName, csrfToken);
     }
 
@@ -40,7 +40,7 @@ public class WebMvcCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeCryptoKey(final Key cryptoKey) {
+    public void storeCryptoKey(Key cryptoKey) {
         request.getSession().setAttribute(cryptoKeyName, cryptoKey);
     }
 }

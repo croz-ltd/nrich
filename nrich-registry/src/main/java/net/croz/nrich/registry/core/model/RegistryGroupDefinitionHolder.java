@@ -9,8 +9,8 @@ import java.util.List;
 @Getter
 public class RegistryGroupDefinitionHolder {
 
-   private final List<RegistryGroupDefinition> groupDefinitionList;
+    private final List<RegistryGroupDefinition> groupDefinitionList;
 
-   private final List<String> groupDisplayOrderList;
+    private final List<String> groupDisplayOrderList;
 
 }

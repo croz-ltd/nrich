@@ -20,12 +20,11 @@ public class RegistryHistoryTestRevisionEntity extends DefaultRevisionEntity {
 
     private String revisionProperty;
 
-
     static class CustomRevisionListener implements RevisionListener {
 
         @Override
-        public void newRevision(final Object revisionEntity) {
-            final RegistryHistoryTestRevisionEntity registryHistoryTestRevisionEntity = (RegistryHistoryTestRevisionEntity) revisionEntity;
+        public void newRevision(Object revisionEntity) {
+            RegistryHistoryTestRevisionEntity registryHistoryTestRevisionEntity = (RegistryHistoryTestRevisionEntity) revisionEntity;
 
             registryHistoryTestRevisionEntity.revisionProperty = "revision property value";
         }

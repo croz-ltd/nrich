@@ -12,7 +12,7 @@ public interface ExceptionAuxiliaryDataResolverService {
      * Returns map containing auxiliary data for exception and request.
      *
      * @param exception for which to resolve auxiliary data
-     * @param request current http request
+     * @param request   current http request
      * @return map of auxiliary data
      */
     Map<String, Object> resolveRequestExceptionAuxiliaryData(Exception exception, HttpServletRequest request);

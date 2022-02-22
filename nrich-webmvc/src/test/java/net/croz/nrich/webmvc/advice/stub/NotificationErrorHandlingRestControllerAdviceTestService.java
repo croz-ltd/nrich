@@ -9,7 +9,7 @@ import javax.validation.Valid;
 @Service
 public class NotificationErrorHandlingRestControllerAdviceTestService {
 
-    public String validationFailedResolving(@Valid final NotificationErrorHandlingRestControllerAdviceTestRequest request) {
+    public String validationFailedResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 

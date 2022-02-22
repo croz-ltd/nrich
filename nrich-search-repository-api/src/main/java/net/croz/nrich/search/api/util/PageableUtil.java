@@ -22,33 +22,33 @@ public final class PageableUtil {
     private PageableUtil() {
     }
 
-    public static Pageable convertToPageable(final SortablePageableRequest request, final SortProperty uniqueSortProperty) {
+    public static Pageable convertToPageable(SortablePageableRequest request, SortProperty uniqueSortProperty) {
         return convertToPageable(request.getPageNumber(), request.getPageSize(), uniqueSortProperty, request.getSortPropertyList());
     }
 
-    public static Pageable convertToPageable(final SortablePageableRequest request) {
+    public static Pageable convertToPageable(SortablePageableRequest request) {
         return convertToPageable(request.getPageNumber(), request.getPageSize(), request.getSortPropertyList());
     }
 
-    public static Pageable convertToPageable(final Integer pageNumber, final Integer pageSize) {
+    public static Pageable convertToPageable(Integer pageNumber, Integer pageSize) {
         return convertToPageable(pageNumber, pageSize, null, null);
     }
 
-    public static Pageable convertToPageable(final Integer pageNumber, final Integer pageSize, final SortProperty uniqueSortProperty) {
+    public static Pageable convertToPageable(Integer pageNumber, Integer pageSize, SortProperty uniqueSortProperty) {
         return convertToPageable(pageNumber, pageSize, uniqueSortProperty, null);
     }
 
-    public static Pageable convertToPageable(final Integer pageNumber, final Integer pageSize, final List<SortProperty> sortPropertyList) {
+    public static Pageable convertToPageable(Integer pageNumber, Integer pageSize, List<SortProperty> sortPropertyList) {
         return convertToPageable(pageNumber, pageSize, null, sortPropertyList);
     }
 
-    public static Pageable convertToPageable(final Integer pageNumber, final Integer pageSize, final SortProperty uniqueSortProperty, final List<SortProperty> sortPropertyList) {
+    public static Pageable convertToPageable(Integer pageNumber, Integer pageSize, SortProperty uniqueSortProperty, List<SortProperty> sortPropertyList) {
         Sort.Order uniqueSortOrder = null;
         if (uniqueSortProperty != null) {
             uniqueSortOrder = convertToSortOrder(uniqueSortProperty);
         }
 
-        final Sort sort;
+        Sort sort;
         if (CollectionUtils.isEmpty(sortPropertyList)) {
             if (uniqueSortOrder == null) {
                 sort = Sort.unsorted();
@@ -58,7 +58,7 @@ public final class PageableUtil {
             }
         }
         else {
-            final List<Sort.Order> orderList = sortPropertyList.stream()
+            List<Sort.Order> orderList = sortPropertyList.stream()
                     .map(PageableUtil::convertToSortOrder)
                     .collect(Collectors.toList());
 
@@ -72,7 +72,7 @@ public final class PageableUtil {
         return PageRequest.of(pageNumber, pageSize, sort);
     }
 
-    private static Sort.Order convertToSortOrder(final SortProperty sortProperty) {
+    private static Sort.Order convertToSortOrder(SortProperty sortProperty) {
         return sortProperty.getDirection() == SortDirection.ASC ? Sort.Order.asc(sortProperty.getProperty()) : Sort.Order.desc(sortProperty.getProperty());
     }
 }

@@ -15,13 +15,13 @@ abstract class BaseValidFileValidator {
 
     protected String allowedFileNameRegex;
 
-    protected boolean isValid(final Object value) {
+    protected boolean isValid(Object value) {
         if (value == null) {
             return true;
         }
 
-        final String fileName;
-        final String fileContentType;
+        String fileName;
+        String fileContentType;
         if (value instanceof MultipartFile) {
             fileName = extractFileName(((MultipartFile) value).getName());
             fileContentType = ((MultipartFile) value).getContentType();
@@ -42,9 +42,9 @@ abstract class BaseValidFileValidator {
             valid &= fileName.matches(allowedFileNameRegex);
         }
         if (allowedExtensionList.length > 0) {
-            final String[] fileNameList = fileName.split("\\.");
+            String[] fileNameList = fileName.split("\\.");
 
-            final String extension;
+            String extension;
             if (fileNameList.length > 1) {
                 extension = fileNameList[fileNameList.length - 1];
             }
@@ -60,7 +60,7 @@ abstract class BaseValidFileValidator {
         return valid;
     }
 
-    private String extractFileName(final String fileName) {
+    private String extractFileName(String fileName) {
         if (fileName == null) {
             return "";
         }

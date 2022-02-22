@@ -44,7 +44,7 @@ public class RegistryHistoryTestEntityWithEmbeddedObject {
         private RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey;
 
         public Map<String, Object> asMap() {
-            final Map<String, Object> mapKey = new HashMap<>();
+            Map<String, Object> mapKey = new HashMap<>();
 
             mapKey.put("firstKey", firstKey);
             mapKey.put("secondKey", secondKey);

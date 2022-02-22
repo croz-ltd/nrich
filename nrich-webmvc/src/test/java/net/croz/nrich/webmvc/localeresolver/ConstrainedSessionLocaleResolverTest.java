@@ -16,12 +16,12 @@ class ConstrainedSessionLocaleResolverTest {
     @Test
     void shouldOnlyAllowSettingOfAllowedLocale() {
         // given
-        final MockHttpSession session = new MockHttpSession();
-        final MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpSession session = new MockHttpSession();
+        MockHttpServletRequest request = new MockHttpServletRequest();
 
         request.setSession(session);
 
-        final ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver("hr", Arrays.asList("hr", "en"));
+        ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver("hr", Arrays.asList("hr", "en"));
 
         // when
         constrainedSessionLocaleResolver.setLocale(request, new MockHttpServletResponse(), Locale.CHINA);

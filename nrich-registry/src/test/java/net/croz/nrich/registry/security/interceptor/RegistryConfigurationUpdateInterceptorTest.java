@@ -28,7 +28,7 @@ class RegistryConfigurationUpdateInterceptorTest {
     @Test
     void shouldThrowExceptionWhenTryingToCreateReadOnlyEntity() {
         // when
-        final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryCreate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
+        Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryCreate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
 
         // then
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);
@@ -43,7 +43,7 @@ class RegistryConfigurationUpdateInterceptorTest {
     @Test
     void shouldThrowExceptionWhenTryingToUpdateReadOnlyEntity() {
         // when
-        final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryUpdate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null, null));
+        Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryUpdate(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null, null));
 
         // then
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);
@@ -58,7 +58,7 @@ class RegistryConfigurationUpdateInterceptorTest {
     @Test
     void shouldThrowExceptionWhenTryingToDeleteReadOnlyEntity() {
         // when
-        final Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryDelete(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
+        Throwable thrown = catchThrowable(() -> registryConfigurationUpdateInterceptor.beforeRegistryDelete(RegistryConfigurationUpdateInterceptorTestEntity.class.getName(), null));
 
         // then
         assertThat(thrown).isInstanceOf(RegistryUpdateNotAllowedException.class);

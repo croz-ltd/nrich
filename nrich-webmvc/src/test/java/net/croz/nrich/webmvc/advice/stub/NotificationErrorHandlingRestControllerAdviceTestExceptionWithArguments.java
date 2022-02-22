@@ -8,7 +8,7 @@ public class NotificationErrorHandlingRestControllerAdviceTestExceptionWithArgum
 
     private final transient Object[] argumentList;
 
-    public NotificationErrorHandlingRestControllerAdviceTestExceptionWithArguments(final String message, final Object... argumentList) {
+    public NotificationErrorHandlingRestControllerAdviceTestExceptionWithArguments(String message, Object... argumentList) {
         super(message);
         this.argumentList = argumentList;
     }

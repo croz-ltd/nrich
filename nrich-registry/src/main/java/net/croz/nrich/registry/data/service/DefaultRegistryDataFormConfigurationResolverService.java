@@ -14,7 +14,7 @@ public class DefaultRegistryDataFormConfigurationResolverService implements Regi
 
     private final Map<String, Class<?>> formConfigurationMap;
 
-    public DefaultRegistryDataFormConfigurationResolverService(final List<Class<?>> registryClassList, final Map<String, Class<?>> formConfigurationMap) {
+    public DefaultRegistryDataFormConfigurationResolverService(List<Class<?>> registryClassList, Map<String, Class<?>> formConfigurationMap) {
         this.registryClassList = registryClassList;
         this.formConfigurationMap = formConfigurationMap;
 
@@ -26,27 +26,27 @@ public class DefaultRegistryDataFormConfigurationResolverService implements Regi
         return formConfigurationMap;
     }
 
-    private void registerRegistryFormConfiguration(final Map<String, Class<?>> formConfigurationMap) {
+    private void registerRegistryFormConfiguration(Map<String, Class<?>> formConfigurationMap) {
         registryClassList.forEach(registryClass -> {
-            final String registryClassName = registryClass.getName();
-            final String registryCreateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
-            final String registryUpdateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
+            String registryClassName = registryClass.getName();
+            String registryCreateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
+            String registryUpdateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
 
             if (formConfigurationMap.get(registryCreateFormId) == null) {
-                final Class<?> createClass = resolveClass(registryClassName, RegistryDataConstants.CREATE_REQUEST_SUFFIX);
+                Class<?> createClass = resolveClass(registryClassName, RegistryDataConstants.CREATE_REQUEST_SUFFIX);
 
                 formConfigurationMap.put(registryCreateFormId, createClass);
             }
             if (formConfigurationMap.get(registryUpdateFormId) == null) {
-                final Class<?> updateClass = resolveClass(registryClassName, RegistryDataConstants.UPDATE_REQUEST_SUFFIX);
+                Class<?> updateClass = resolveClass(registryClassName, RegistryDataConstants.UPDATE_REQUEST_SUFFIX);
 
                 formConfigurationMap.put(registryUpdateFormId, updateClass);
             }
         });
     }
 
-    private Class<?> resolveClass(final String classFullName, final String classLoadingInitialPrefix) {
-        final List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_SUFFIX, classFullName), classFullName);
+    private Class<?> resolveClass(String classFullName, String classLoadingInitialPrefix) {
+        List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_SUFFIX, classFullName), classFullName);
 
         return ClassLoadingUtil.loadClassFromList(classNameList);
     }

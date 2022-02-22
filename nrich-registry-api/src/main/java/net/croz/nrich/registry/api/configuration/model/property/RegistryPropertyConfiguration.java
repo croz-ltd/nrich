@@ -26,7 +26,7 @@ public class RegistryPropertyConfiguration {
     private final String originalType;
 
     /**
-     *  Whether this property is id.
+     * Whether this property is id.
      */
     private final boolean isId;
 

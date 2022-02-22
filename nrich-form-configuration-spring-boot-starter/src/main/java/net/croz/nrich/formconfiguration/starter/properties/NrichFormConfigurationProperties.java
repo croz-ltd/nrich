@@ -16,7 +16,7 @@ public class NrichFormConfigurationProperties {
      */
     private final boolean defaultConverterEnabled;
 
-    public NrichFormConfigurationProperties(@DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled) {
         this.defaultConverterEnabled = defaultConverterEnabled;
     }
 }

@@ -31,19 +31,19 @@ public class CsrfWebFilter implements WebFilter {
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
     @Override
-    public Mono<Void> filter(final ServerWebExchange exchange, final WebFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         log.debug("csrfFilter.filter()");
 
-        final String pathWithinApplication = exchange.getRequest().getPath().pathWithinApplication().value();
+        String pathWithinApplication = exchange.getRequest().getPath().pathWithinApplication().value();
 
-        final Mono<Void> result = chain.filter(exchange);
+        Mono<Void> result = chain.filter(exchange);
         if (CsrfConstants.EMPTY_PATH.equals(pathWithinApplication)) {
             return result;
         }
 
         return exchange.getSession().flatMap(webSession -> {
             Mono<Void> csrfActionResult = result;
-            final String requestUri = uri(exchange);
+            String requestUri = uri(exchange);
 
             if (CsrfUriUtil.excludeUri(csrfExcludeConfigList, requestUri)) {
 
@@ -70,7 +70,7 @@ public class CsrfWebFilter implements WebFilter {
         });
     }
 
-    private void addInitialToken(final ServerWebExchange exchange, final WebSession webSession) {
+    private void addInitialToken(ServerWebExchange exchange, WebSession webSession) {
 
         if (uri(exchange).endsWith(initialTokenUrl)) {
 
@@ -80,16 +80,16 @@ public class CsrfWebFilter implements WebFilter {
         }
     }
 
-    private Mono<Void> handleCsrfPingUrl(final ServerWebExchange exchange, final WebSession webSession) {
+    private Mono<Void> handleCsrfPingUrl(ServerWebExchange exchange, WebSession webSession) {
         if (webSession != null) {
-            final Long lastRealApiRequestMillis = webSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
+            Long lastRealApiRequestMillis = webSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
             log.debug("    lastRealApiRequestMillis: {}", lastRealApiRequestMillis);
 
             if (lastRealApiRequestMillis != null) {
-                final long deltaMillis = System.currentTimeMillis() - lastRealApiRequestMillis;
+                long deltaMillis = System.currentTimeMillis() - lastRealApiRequestMillis;
                 log.debug("    deltaMillis: {}", deltaMillis);
 
-                final long maxInactiveIntervalMillis = webSession.getMaxIdleTime().toMillis();
+                long maxInactiveIntervalMillis = webSession.getMaxIdleTime().toMillis();
                 log.debug("    maxInactiveIntervalMillis: {}", maxInactiveIntervalMillis);
 
                 if ((maxInactiveIntervalMillis > 0) && (deltaMillis > maxInactiveIntervalMillis)) {
@@ -113,17 +113,17 @@ public class CsrfWebFilter implements WebFilter {
         return Mono.fromRunnable(() -> csrfTokenManagerService.validateAndRefreshToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
     }
 
-    private void updateLastApiCallAttribute(final WebSession webSession) {
+    private void updateLastApiCallAttribute(WebSession webSession) {
         if (webSession != null) {
             webSession.getAttributes().put(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, System.currentTimeMillis());
         }
     }
 
-    private String uri(final ServerWebExchange exchange) {
+    private String uri(ServerWebExchange exchange) {
         return exchange.getRequest().getURI().toString();
     }
 
-    private void updateLastActiveRequestMillis(final ServerWebExchange exchange, final long deltaMillis) {
+    private void updateLastActiveRequestMillis(ServerWebExchange exchange, long deltaMillis) {
         exchange.getResponse().getHeaders().add(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.toString(deltaMillis));
     }
 }

@@ -24,16 +24,16 @@ public final class RegistryHistoryGeneratingUtil {
     private RegistryHistoryGeneratingUtil() {
     }
 
-    public static RegistryHistoryTestEntity creteRegistryHistoryTestEntityRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
-        final RegistryHistoryTestEntity parent = new RegistryHistoryTestEntity(null, "parent", null, null);
-        final RegistryHistoryTestEntity related = new RegistryHistoryTestEntity(null, "related", null, null);
-        final RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first", parent, related);
+    public static RegistryHistoryTestEntity creteRegistryHistoryTestEntityRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
+        RegistryHistoryTestEntity parent = new RegistryHistoryTestEntity(null, "parent", null, null);
+        RegistryHistoryTestEntity related = new RegistryHistoryTestEntity(null, "related", null, null);
+        RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first", parent, related);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 
         IntStream.range(0, 20).forEach(value -> {
             executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                final RegistryHistoryTestEntity loadedEntity = entityManager.find(RegistryHistoryTestEntity.class, entity.getId());
+                RegistryHistoryTestEntity loadedEntity = entityManager.find(RegistryHistoryTestEntity.class, entity.getId());
 
                 loadedEntity.setName("name " + value);
 
@@ -44,15 +44,15 @@ public final class RegistryHistoryGeneratingUtil {
         return entity;
     }
 
-    public static RegistryHistoryTestEntityWithEmbeddedId creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
-        final RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey(1L, 1L);
-        final RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId(primaryKey, BigDecimal.ONE);
+    public static RegistryHistoryTestEntityWithEmbeddedId creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
+        RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey(1L, 1L);
+        RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId(primaryKey, BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 
         IntStream.range(0, 20).forEach(value -> {
             executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                final RegistryHistoryTestEntityWithEmbeddedId loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedId.class, entity.getId());
+                RegistryHistoryTestEntityWithEmbeddedId loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedId.class, entity.getId());
 
                 loadedEntity.setAmount(BigDecimal.valueOf(value));
 
@@ -63,12 +63,12 @@ public final class RegistryHistoryGeneratingUtil {
         return entity;
     }
 
-    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(final EntityManager entityManager, final PlatformTransactionManager platformTransactionManager) {
-        final RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
-        final RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
+    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
+        RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
+        RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
 
-        final RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId primaryKey = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId(firstKey, secondKey);
-        final RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject(primaryKey, BigDecimal.ONE);
+        RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId primaryKey = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId(firstKey, secondKey);
+        RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject(primaryKey, BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> {
             entityManager.persist(firstKey);
@@ -78,7 +78,7 @@ public final class RegistryHistoryGeneratingUtil {
 
         IntStream.range(0, 20).forEach(value -> {
             executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                final RegistryHistoryTestEntityWithEmbeddedObject loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedObject.class, entity.getId());
+                RegistryHistoryTestEntityWithEmbeddedObject loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedObject.class, entity.getId());
 
                 loadedEntity.setAmount(BigDecimal.valueOf(value));
 
@@ -89,8 +89,8 @@ public final class RegistryHistoryGeneratingUtil {
         return entity;
     }
 
-    public static ListRegistryHistoryRequest listRegistryHistoryRequestWithSort(final String className, final Object id) {
-        final ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
+    public static ListRegistryHistoryRequest listRegistryHistoryRequestWithSort(String className, Object id) {
+        ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
 
         request.setSortPropertyList(Arrays.asList(
                 new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
@@ -100,8 +100,8 @@ public final class RegistryHistoryGeneratingUtil {
         return request;
     }
 
-    public static ListRegistryHistoryRequest listRegistryHistoryRequest(final String className, final Object id) {
-        final ListRegistryHistoryRequest request = new ListRegistryHistoryRequest();
+    public static ListRegistryHistoryRequest listRegistryHistoryRequest(String className, Object id) {
+        ListRegistryHistoryRequest request = new ListRegistryHistoryRequest();
 
         request.setSortPropertyList(Collections.singletonList(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC)));
 

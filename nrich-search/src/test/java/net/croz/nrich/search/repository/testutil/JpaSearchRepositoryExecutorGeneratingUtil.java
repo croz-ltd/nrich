@@ -22,15 +22,15 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     private JpaSearchRepositoryExecutorGeneratingUtil() {
     }
 
-    public static List<TestEntity> generateListForSearch(final EntityManager entityManager) {
+    public static List<TestEntity> generateListForSearch(EntityManager entityManager) {
         return generateListForSearch(entityManager, 1);
     }
 
-    public static List<TestEntity> generateListForSearch(final EntityManager entityManager, final int numberOfCollectionEntities) {
-        final List<TestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> {
-            final TestNestedEntity nestedEntity = new TestNestedEntity(null, "nested" + value, "nested alias" + value);
-            final List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities).mapToObj(counter -> new TestCollectionEntity(null, "collection" + (value + counter))).collect(Collectors.toList());
-            final TestEntityEmbedded testEntityEmbedded = new TestEntityEmbedded("embedded" + value);
+    public static List<TestEntity> generateListForSearch(EntityManager entityManager, int numberOfCollectionEntities) {
+        List<TestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> {
+            TestNestedEntity nestedEntity = new TestNestedEntity(null, "nested" + value, "nested alias" + value);
+            List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities).mapToObj(counter -> new TestCollectionEntity(null, "collection" + (value + counter))).collect(Collectors.toList());
+            TestEntityEmbedded testEntityEmbedded = new TestEntityEmbedded("embedded" + value);
 
             return new TestEntity(null, "first" + value, 24 + value, nestedEntity, collectionEntityList, TestEntityEnum.FIRST, testEntityEmbedded);
 
@@ -41,7 +41,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         testEntityList.forEach(entityManager::persist);
 
         testEntityList.forEach(testEntity -> IntStream.range(0, 2).forEach(value -> {
-            final TestEntityCollectionWithReverseAssociation association = new TestEntityCollectionWithReverseAssociation(null, testEntity.getName() + "-association-" + value, testEntity);
+            TestEntityCollectionWithReverseAssociation association = new TestEntityCollectionWithReverseAssociation(null, testEntity.getName() + "-association-" + value, testEntity);
 
             entityManager.persist(association);
         }));
@@ -49,25 +49,25 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         return testEntityList;
     }
 
-    public static List<TestStringSearchEntity> generateListForStringSearch(final EntityManager entityManager) {
-        final LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        final List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new TestStringSearchEntity(null, "name " + value, 50 + value, TestEntityEnum.SECOND, date.plus(value, ChronoUnit.DAYS))).collect(Collectors.toList());
+    public static List<TestStringSearchEntity> generateListForStringSearch(EntityManager entityManager) {
+        LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new TestStringSearchEntity(null, "name " + value, 50 + value, TestEntityEnum.SECOND, date.plus(value, ChronoUnit.DAYS))).collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 
         return testEntityList;
     }
 
-    public static List<TestEntityWithEmbeddedId> generateTestEntityWithEmbeddedIdList(final EntityManager entityManager) {
+    public static List<TestEntityWithEmbeddedId> generateTestEntityWithEmbeddedIdList(EntityManager entityManager) {
         return IntStream.range(0, 5).mapToObj(value -> generateTestEntityWithEmbeddedId(entityManager, "name" + value)).collect(Collectors.toList());
     }
 
-    public static TestEntityWithEmbeddedId generateTestEntityWithEmbeddedId(final EntityManager entityManager, final String name) {
-        final TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
-        final TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
+    public static TestEntityWithEmbeddedId generateTestEntityWithEmbeddedId(EntityManager entityManager, String name) {
+        TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
+        TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new TestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
 
-        final TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId primaryKey = new TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId(firstKey, secondKey);
-        final TestEntityWithEmbeddedId entity = new TestEntityWithEmbeddedId(primaryKey, name);
+        TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId primaryKey = new TestEntityWithEmbeddedId.TestEntityWithEmbeddedIdObjectId(firstKey, secondKey);
+        TestEntityWithEmbeddedId entity = new TestEntityWithEmbeddedId(primaryKey, name);
 
         entityManager.persist(firstKey);
         entityManager.persist(secondKey);

@@ -19,6 +19,7 @@ class NrichNotificationAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(ConstraintConversionService.class);
             assertThat(context).hasSingleBean(NotificationResolverService.class);
@@ -29,13 +30,14 @@ class NrichNotificationAutoConfigurationTest {
 
     @Test
     void shouldNotRegisterMessagesWhenExplicitlyDisalbed() {
-        contextRunner.withPropertyValues("nrich.notification.register-messages=false").run(context -> {
-            assertThat(context).doesNotHaveBean(NrichNotificationAutoConfiguration.NotificationMessageSourceRegistrar.class);
-        });
+        // expect
+        contextRunner.withPropertyValues("nrich.notification.register-messages=false")
+                .run(context -> assertThat(context).doesNotHaveBean(NrichNotificationAutoConfiguration.NotificationMessageSourceRegistrar.class));
     }
 
     @Test
     void shouldIncludeNotificationResponseServiceWhenRunningInWebEnvironment() {
+        // expect
         webContextRunner.run(context -> assertThat(context).hasSingleBean(NotificationResponseService.class));
     }
 }

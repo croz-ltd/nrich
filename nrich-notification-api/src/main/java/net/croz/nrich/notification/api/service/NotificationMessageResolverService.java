@@ -14,8 +14,8 @@ public interface NotificationMessageResolverService {
      * If no message is found for any code default message is returned.
      *
      * @param messageCodeList message code list for which to resolve message for
-     * @param argumentList arguments for message resolving
-     * @param defaultMessage if no message has been found for message code list this message is returned
+     * @param argumentList    arguments for message resolving
+     * @param defaultMessage  if no message has been found for message code list this message is returned
      * @return resolved message or default if none has been found
      */
     String resolveMessage(List<String> messageCodeList, List<Object> argumentList, String defaultMessage);
@@ -24,7 +24,7 @@ public interface NotificationMessageResolverService {
      * Resolves message for Springs {@link ObjectError}.
      *
      * @param validationFailedOwningType class on which {@link ObjectError} has been found
-     * @param objectError validation failure error
+     * @param objectError                validation failure error
      * @return resolved message
      */
     String resolveMessageForObjectError(Class<?> validationFailedOwningType, ObjectError objectError);

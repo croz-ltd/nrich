@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Holds entity with its revision data.
+ *
  * @param <T> entity type
  */
 @RequiredArgsConstructor

@@ -13,7 +13,7 @@ public final class NotificationGeneratingUtil {
     }
 
     public static Map<String, Object> invalidNotificationResolverServiceRequestBindingMap() {
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
+        Map<String, Object> invalidBindingMap = new HashMap<>();
 
         invalidBindingMap.put("lastName", "too long last name");
         invalidBindingMap.put("timestamp", Instant.now().minus(1, ChronoUnit.DAYS));
@@ -22,8 +22,8 @@ public final class NotificationGeneratingUtil {
         return invalidBindingMap;
     }
 
-    public static Map<String, Object> additionalDataMap(final String key, final String value) {
-        final Map<String, Object> additionalDataMap = new HashMap<>();
+    public static Map<String, Object> additionalDataMap(String key, String value) {
+        Map<String, Object> additionalDataMap = new HashMap<>();
 
         additionalDataMap.put(key, value);
 
@@ -31,7 +31,7 @@ public final class NotificationGeneratingUtil {
     }
 
     public static NotificationResolverServiceTestRequest invalidNotificationResolverServiceTestRequest() {
-        final NotificationResolverServiceTestRequest request = new NotificationResolverServiceTestRequest();
+        NotificationResolverServiceTestRequest request = new NotificationResolverServiceTestRequest();
 
         request.setLastName("too long last name");
         request.setTimestamp(Instant.now().minus(1, ChronoUnit.DAYS));

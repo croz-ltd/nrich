@@ -33,17 +33,17 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
     }
 
     @PostMapping("validationFailedResolving")
-    public String validationFailedResolving(@Valid @RequestBody final NotificationErrorHandlingRestControllerAdviceTestRequest request) {
+    public String validationFailedResolving(@Valid @RequestBody NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 
     @PostMapping("bindValidationFailedResolving")
-    public String bindValidationFailedResolving(@Valid final NotificationErrorHandlingRestControllerAdviceTestRequest request) {
+    public String bindValidationFailedResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 
     @PostMapping("validationFailedBindExceptionResolving")
-    public String validationFailedBindExceptionResolving(@Valid final NotificationErrorHandlingRestControllerAdviceTestRequest request) {
+    public String validationFailedBindExceptionResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 
@@ -55,15 +55,15 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
 
     @PostMapping("unwrappedExceptionValidationFailedResolving")
     public void unwrappedExceptionValidationFailedResolving() throws Exception {
-        final MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[1], -1);
-        final MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, mock(BindingResult.class));
+        MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[1], -1);
+        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, mock(BindingResult.class));
 
         throw new ExecutionException(exception);
     }
 
     @PostMapping("unwrappedExceptionBindExceptionResolving")
     public void unwrappedExceptionBindExceptionResolving() throws Exception {
-        final BindException exception = new BindException(mock(BindingResult.class));
+        BindException exception = new BindException(mock(BindingResult.class));
 
         throw new ExecutionException(exception);
     }

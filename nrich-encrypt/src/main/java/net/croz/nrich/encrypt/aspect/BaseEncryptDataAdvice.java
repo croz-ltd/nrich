@@ -18,8 +18,8 @@ public abstract class BaseEncryptDataAdvice {
 
     private static final String REACTOR_PACKAGE_NAME = "reactor.core.publisher";
 
-    public <T> T encryptResult(final EncryptionContext encryptionContext, final T result, final List<String> pathToEncryptList) {
-        final T encryptedResult;
+    public <T> T encryptResult(EncryptionContext encryptionContext, T result, List<String> pathToEncryptList) {
+        T encryptedResult;
         if (isCompletableFutureResult(result)) {
             encryptedResult = encryptCompletableFuture(encryptionContext, pathToEncryptList, result);
         }
@@ -33,14 +33,14 @@ public abstract class BaseEncryptDataAdvice {
         return encryptedResult;
     }
 
-    public Object[] decryptArguments(final EncryptionContext encryptionContext, final Object[] argumentList, final List<String> pathToDecryptList) {
+    public Object[] decryptArguments(EncryptionContext encryptionContext, Object[] argumentList, List<String> pathToDecryptList) {
         return Arrays.stream(argumentList)
                 .map(argument -> decryptArgument(encryptionContext, argument, pathToDecryptList))
                 .toArray();
     }
 
-    public Object decryptArgument(final EncryptionContext encryptionContext, final Object argument, final List<String> pathToDecryptList) {
-       return getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext);
+    public Object decryptArgument(EncryptionContext encryptionContext, Object argument, List<String> pathToDecryptList) {
+        return getDataEncryptionService().decryptData(argument, pathToDecryptList, encryptionContext);
     }
 
     protected abstract DataEncryptionService getDataEncryptionService();
@@ -49,17 +49,17 @@ public abstract class BaseEncryptDataAdvice {
         return Optional.ofNullable(SecurityContextHolder.getContext()).map(SecurityContext::getAuthentication).orElse(null);
     }
 
-    private boolean isCompletableFutureResult(final Object forEncryption) {
+    private boolean isCompletableFutureResult(Object forEncryption) {
         return forEncryption instanceof CompletableFuture;
     }
 
-    private Boolean isReactorResult(final Object forEncryption) {
+    private Boolean isReactorResult(Object forEncryption) {
         return forEncryption != null && forEncryption.getClass().getPackage().getName().equals(REACTOR_PACKAGE_NAME);
     }
 
-    private <T> T encryptCompletableFuture(final EncryptionContext encryptionContext, final List<String> pathToEncryptList, final T forEncryption) {
+    private <T> T encryptCompletableFuture(EncryptionContext encryptionContext, List<String> pathToEncryptList, T forEncryption) {
         @SuppressWarnings("unchecked")
-        final T encryptedFuture = (T) ((CompletableFuture<?>) forEncryption).thenApply(completedResult -> getDataEncryptionService().encryptData(completedResult, pathToEncryptList, encryptionContext));
+        T encryptedFuture = (T) ((CompletableFuture<?>) forEncryption).thenApply(completedResult -> getDataEncryptionService().encryptData(completedResult, pathToEncryptList, encryptionContext));
 
         return encryptedFuture;
     }
@@ -69,16 +69,16 @@ public abstract class BaseEncryptDataAdvice {
 
         private final DataEncryptionService dataEncryptionService;
 
-        public <T> T encryptReactorResult(final EncryptionContext encryptionContext, final List<String> pathToEncryptList, final T forEncryption) {
+        public <T> T encryptReactorResult(EncryptionContext encryptionContext, List<String> pathToEncryptList, T forEncryption) {
             if (forEncryption instanceof Mono) {
                 @SuppressWarnings("unchecked")
-                final T encryptedMono = (T) ((Mono<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
+                T encryptedMono = (T) ((Mono<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
 
                 return encryptedMono;
             }
             else if (forEncryption instanceof Flux) {
                 @SuppressWarnings("unchecked")
-                final T encryptedFlux = (T) ((Flux<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
+                T encryptedFlux = (T) ((Flux<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
 
                 return encryptedFlux;
             }

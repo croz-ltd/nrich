@@ -25,7 +25,7 @@ class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfiguration() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
 
         // then
         assertThat(result).hasSize(3);
@@ -36,9 +36,9 @@ class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveConfigurationWithOverrideDefined() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);
@@ -65,7 +65,7 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("isDecimal").containsExactly(false, false, false, true, true);
 
         // and when
-        final RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(0);
+        RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(0);
 
         // then
         assertThat(nameConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
@@ -79,13 +79,13 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(nameConfiguration.isSortable()).isTrue();
 
         // and when
-        final RegistryPropertyConfiguration idPropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
+        RegistryPropertyConfiguration idPropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
 
         // then
         assertThat(idPropertyConfiguration.isId()).isTrue();
 
         // and when
-        final RegistryPropertyConfiguration nonEditablePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
+        RegistryPropertyConfiguration nonEditablePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
 
         // then
         assertThat(nonEditablePropertyConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
@@ -97,7 +97,7 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
 
         // and when
-        final List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryEntityConfiguration.getHistoryPropertyConfigurationList();
+        List<RegistryPropertyConfiguration> registryHistoryPropertyConfigurationList = registryEntityConfiguration.getHistoryPropertyConfigurationList();
 
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
@@ -109,9 +109,9 @@ class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithAssociationsAndEmbeddedId() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);
@@ -129,21 +129,21 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
         // and when
-        final RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
+        RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
 
         // then
         assertThat(numberRegistryConfiguration.isDecimal()).isTrue();
         assertThat(numberRegistryConfiguration.getJavascriptType()).isEqualTo(JavascriptType.NUMBER);
 
         // and when
-        final RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
+        RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
 
         // then
         assertThat(manyToOnePropertyConfiguration.isSingularAssociation()).isTrue();
         assertThat(manyToOnePropertyConfiguration.getSingularAssociationReferencedClass()).isEqualTo(RegistryConfigurationTestEntity.class.getName());
 
         // and when
-        final RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(3);
+        RegistryPropertyConfiguration oneToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(3);
 
         // then
         assertThat(oneToOnePropertyConfiguration.isSingularAssociation()).isTrue();
@@ -153,9 +153,9 @@ class DefaultRegistryConfigurationServiceTest {
     @Test
     void shouldResolveRegistryConfigurationForComplexEntitiesWithIdClass() {
         // when
-        final List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
-        final RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        final RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
                 .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
                 .findFirst()
                 .orElse(null);

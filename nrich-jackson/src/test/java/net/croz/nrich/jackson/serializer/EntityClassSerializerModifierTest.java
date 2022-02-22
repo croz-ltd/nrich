@@ -16,11 +16,12 @@ class EntityClassSerializerModifierTest {
     @Test
     void shouldSerializeClassNameForEntityClassWhenEnabled() throws Exception {
         // given
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(true, null));
 
         // when
-        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {});
+        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {
+        });
 
         // then
         assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());
@@ -29,11 +30,12 @@ class EntityClassSerializerModifierTest {
     @Test
     void shouldSerializeClassNameForEntityClassWhenDisabled() throws Exception {
         // given
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(false, null));
 
         // when
-        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {});
+        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {
+        });
 
         // then
         assertThat(deserialized.get("class")).isNull();
@@ -42,11 +44,12 @@ class EntityClassSerializerModifierTest {
     @Test
     void shouldSerializeClassNameForPackage() throws Exception {
         // given
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(false, Collections.singletonList(EntityClassSerializerModifierTestEntity.class.getPackage().getName())));
 
         // when
-        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {});
+        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), new TypeReference<Map<String, String>>() {
+        });
 
         // then
         assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());

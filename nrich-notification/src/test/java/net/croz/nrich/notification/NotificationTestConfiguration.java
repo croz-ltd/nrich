@@ -18,7 +18,7 @@ public class NotificationTestConfiguration {
 
     @Bean
     public MessageSource messageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
         messageSource.setBasename("messages");
 
@@ -26,7 +26,7 @@ public class NotificationTestConfiguration {
     }
 
     @Bean
-    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+    public NotificationMessageResolverService notificationMessageResolverService(MessageSource messageSource) {
         return new MessageSourceNotificationMessageResolverService(messageSource);
     }
 
@@ -36,7 +36,7 @@ public class NotificationTestConfiguration {
     }
 
     @Bean
-    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+    public NotificationResolverService notificationResolverService(NotificationMessageResolverService notificationMessageResolverService, ConstraintConversionService constraintConversionService) {
         return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 

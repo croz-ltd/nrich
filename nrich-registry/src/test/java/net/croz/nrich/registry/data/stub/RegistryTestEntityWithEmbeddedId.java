@@ -40,7 +40,7 @@ public class RegistryTestEntityWithEmbeddedId {
         private Long secondId;
 
         public Map<String, Object> asMap() {
-            final Map<String, Object> mapKey = new HashMap<>();
+            Map<String, Object> mapKey = new HashMap<>();
 
             mapKey.put("firstId", firstId.intValue());
             mapKey.put("secondId", secondId.intValue());

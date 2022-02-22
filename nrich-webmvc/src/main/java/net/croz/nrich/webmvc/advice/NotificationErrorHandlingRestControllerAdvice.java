@@ -39,37 +39,37 @@ public class NotificationErrorHandlingRestControllerAdvice {
     private final ExceptionHttpStatusResolverService httpStatusResolverService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
-        final HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
+        HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.status(status).body(notificationResponseService.responseWithValidationFailureNotification(exception.getBindingResult(), exception.getParameter().getParameterType()));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> handleConstraintViolationException(final ConstraintViolationException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
-        final HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
+        HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.status(status).body(notificationResponseService.responseWithValidationFailureNotification(exception));
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> handleBindException(final BindException exception, final HttpServletRequest request) {
+    public ResponseEntity<?> handleBindException(BindException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
-        final Class<?> targetClass = Optional.ofNullable(exception.getTarget()).map(Object::getClass).orElse(null);
+        Class<?> targetClass = Optional.ofNullable(exception.getTarget()).map(Object::getClass).orElse(null);
 
-        final HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
+        HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
 
         return ResponseEntity.status(status).body(notificationResponseService.responseWithValidationFailureNotification(exception.getBindingResult(), targetClass));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(final Exception exception, final HttpServletRequest request) {
-        final Exception unwrappedException = unwrapException(exception);
+    public ResponseEntity<?> handleException(Exception exception, HttpServletRequest request) {
+        Exception unwrappedException = unwrapException(exception);
 
         if (unwrappedException instanceof MethodArgumentNotValidException) {
             return handleMethodArgumentNotValidException((MethodArgumentNotValidException) unwrappedException, request);
@@ -81,7 +81,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
             return handleConstraintViolationException((ConstraintViolationException) unwrappedException, request);
         }
 
-        final Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
+        Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(unwrappedException, exceptionAuxiliaryData);
 
@@ -92,12 +92,12 @@ public class NotificationErrorHandlingRestControllerAdvice {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
-        final HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.INTERNAL_SERVER_ERROR);
 
         return ResponseEntity.status(status).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, AdditionalNotificationData.builder().messageListDataMap(notificationAuxiliaryData).build(), resolveExceptionArgumentList(exception)));
     }
 
-    private Exception unwrapException(final Exception exception) {
+    private Exception unwrapException(Exception exception) {
         if (exceptionToUnwrapList != null && exceptionToUnwrapList.contains(exception.getClass().getName()) && exception.getCause() != null) {
             return (Exception) exception.getCause();
         }
@@ -105,21 +105,21 @@ public class NotificationErrorHandlingRestControllerAdvice {
         return exception;
     }
 
-    private void logExceptionWithResolvedAuxiliaryData(final Exception exception, final HttpServletRequest request) {
-        final Map<String, ?> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
+    private void logExceptionWithResolvedAuxiliaryData(Exception exception, HttpServletRequest request) {
+        Map<String, ?> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
     }
 
-    private Object[] resolveExceptionArgumentList(final Exception exception) {
+    private Object[] resolveExceptionArgumentList(Exception exception) {
         return exception instanceof ExceptionWithArguments ? ((ExceptionWithArguments) exception).getArgumentList() : null;
     }
 
-    private Map<String, Object> resolveExceptionAuxiliaryData(final Exception exception, final HttpServletRequest request) {
+    private Map<String, Object> resolveExceptionAuxiliaryData(Exception exception, HttpServletRequest request) {
         return Optional.ofNullable(exceptionAuxiliaryDataResolverService).map(service -> service.resolveRequestExceptionAuxiliaryData(exception, request)).orElse(Collections.emptyMap());
     }
 
-    private HttpStatus resolveHttpStatusForException(final Exception exception, final HttpStatus defaultStatus) {
+    private HttpStatus resolveHttpStatusForException(Exception exception, HttpStatus defaultStatus) {
         return Optional.ofNullable(httpStatusResolverService.resolveHttpStatusForException(exception)).map(HttpStatus::resolve).orElse(defaultStatus);
     }
 }

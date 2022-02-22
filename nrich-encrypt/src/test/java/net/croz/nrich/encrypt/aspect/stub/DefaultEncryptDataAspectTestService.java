@@ -12,62 +12,62 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
 
     @EncryptResult(resultPathList = "value")
     @Override
-    public EncryptDataAspectTestServiceResult dataToEncrypt(final String value) {
+    public EncryptDataAspectTestServiceResult dataToEncrypt(String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @EncryptResult
     @Override
-    public EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(final String value) {
+    public EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @EncryptResult(resultPathList = "value")
     @Override
-    public Future<EncryptDataAspectTestServiceResult> dataToEncryptWithCompletableFuture(final String value) {
+    public Future<EncryptDataAspectTestServiceResult> dataToEncryptWithCompletableFuture(String value) {
         return CompletableFuture.completedFuture(new EncryptDataAspectTestServiceResult(value));
     }
 
     @EncryptResult(resultPathList = "value")
     @Override
-    public Mono<EncryptDataAspectTestServiceResult> dataToEncryptWithMono(final String value) {
+    public Mono<EncryptDataAspectTestServiceResult> dataToEncryptWithMono(String value) {
         return Mono.just(new EncryptDataAspectTestServiceResult(value));
     }
 
     @EncryptResult(resultPathList = "value")
     @Override
-    public Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(final String value) {
+    public Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(String value) {
         return Flux.just(new EncryptDataAspectTestServiceResult(value));
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecrypt(@DecryptArgument(argumentPathList = "value") final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecrypt(@DecryptArgument(argumentPathList = "value") EncryptDataAspectTestServiceResult data) {
         return data;
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(@DecryptArgument final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecryptWithInvalidAnnotation(@DecryptArgument EncryptDataAspectTestServiceResult data) {
         return data;
     }
 
     @EncryptResult
     @Override
-    public String textToEncrypt(final String value) {
+    public String textToEncrypt(String value) {
         return value;
     }
 
     @Override
-    public String textToDecrypt(@DecryptArgument final String value, final String valueToIgnore) {
+    public String textToDecrypt(@DecryptArgument String value, String valueToIgnore) {
         return value;
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(final String value) {
+    public EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToDecryptFromConfiguration(final EncryptDataAspectTestServiceResult data) {
+    public EncryptDataAspectTestServiceResult dataToDecryptFromConfiguration(EncryptDataAspectTestServiceResult data) {
         return data;
     }
 }

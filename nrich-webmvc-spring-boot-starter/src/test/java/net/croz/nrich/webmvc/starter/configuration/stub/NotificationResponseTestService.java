@@ -10,27 +10,27 @@ import javax.validation.ConstraintViolationException;
 public class NotificationResponseTestService implements NotificationResponseService<Object> {
 
     @Override
-    public Object responseWithValidationFailureNotification(final Errors errors, final Class<?> validationFailedOwningType, final AdditionalNotificationData additionalNotificationData) {
+    public Object responseWithValidationFailureNotification(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 
     @Override
-    public Object responseWithValidationFailureNotification(final ConstraintViolationException exception, final AdditionalNotificationData additionalNotificationData) {
+    public Object responseWithValidationFailureNotification(ConstraintViolationException exception, AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 
     @Override
-    public Object responseWithExceptionNotification(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, final Object... exceptionMessageArgumentList) {
+    public Object responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
         return null;
     }
 
     @Override
-    public <D> Object responseWithNotificationActionResolvedFromRequest(final D data, final AdditionalNotificationData additionalNotificationData) {
+    public <D> Object responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 
     @Override
-    public <D> Object responseWithNotification(final D data, final String actionName, final AdditionalNotificationData additionalNotificationData) {
+    public <D> Object responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 

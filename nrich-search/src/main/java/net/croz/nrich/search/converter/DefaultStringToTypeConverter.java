@@ -36,7 +36,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
 
     private final List<ConverterHolder> converterHolderList;
 
-    public DefaultStringToTypeConverter(final List<String> dateFormatList, final List<String> decimalNumberFormatList, final String booleanTrueRegexPattern, final String booleanFalseRegexPattern) {
+    public DefaultStringToTypeConverter(List<String> dateFormatList, List<String> decimalNumberFormatList, String booleanTrueRegexPattern, String booleanFalseRegexPattern) {
         this.dateFormatList = dateFormatList;
         this.decimalNumberFormatList = decimalNumberFormatList;
         this.booleanTrueRegexPattern = booleanTrueRegexPattern;
@@ -45,12 +45,12 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     }
 
     @Override
-    public Object convert(final String value, final Class<?> requiredType) {
+    public Object convert(String value, Class<?> requiredType) {
         if (value == null) {
             return null;
         }
 
-        final ConverterHolder converterHolder = converterHolderList.stream().filter(holder -> holder.getType().isAssignableFrom(requiredType)).findFirst().orElse(null);
+        ConverterHolder converterHolder = converterHolderList.stream().filter(holder -> holder.getType().isAssignableFrom(requiredType)).findFirst().orElse(null);
 
         Object convertedValue = null;
         if (converterHolder != null) {
@@ -61,15 +61,15 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     }
 
     @Override
-    public boolean supports(final Class<?> requiredType) {
+    public boolean supports(Class<?> requiredType) {
         return true;
     }
 
-    private Object convertWithExceptionIgnored(final Supplier<Object> conversionFunction) {
+    private Object convertWithExceptionIgnored(Supplier<Object> conversionFunction) {
         try {
             return conversionFunction.get();
         }
-        catch (final Exception ignored) {
+        catch (Exception ignored) {
             return null;
         }
     }
@@ -95,27 +95,27 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         );
     }
 
-    private Boolean booleanConverter(final String value) {
+    private Boolean booleanConverter(String value) {
         Boolean convertedValue = null;
 
         if (value.matches(booleanTrueRegexPattern)) {
             convertedValue = Boolean.TRUE;
         }
-        else if(value.matches(booleanFalseRegexPattern)) {
+        else if (value.matches(booleanFalseRegexPattern)) {
             convertedValue = Boolean.FALSE;
         }
 
         return convertedValue;
     }
 
-    private <E extends Enum<E>> E enumConverter(final String value, final Class<?> requiredType) {
+    private <E extends Enum<E>> E enumConverter(String value, Class<?> requiredType) {
         @SuppressWarnings("unchecked")
-        final Class<E> enumType = (Class<E>) requiredType;
+        Class<E> enumType = (Class<E>) requiredType;
 
         return Enum.valueOf(enumType, value);
     }
 
-    private Object dateConverter(final String value) {
+    private Object dateConverter(String value) {
         return dateFormatList.stream()
                 .map(SimpleDateFormat::new)
                 .map(format -> convertWithExceptionIgnored(() -> parseDate(format, value)))
@@ -124,7 +124,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
                 .orElse(null);
     }
 
-    private Object temporalConverter(final String value, final TemporalQuery<?> query) {
+    private Object temporalConverter(String value, TemporalQuery<?> query) {
         return dateFormatList.stream()
                 .map(DateTimeFormatter::ofPattern)
                 .map(format -> convertWithExceptionIgnored(() -> format.parse(value, query)))
@@ -133,10 +133,10 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
                 .orElse(null);
     }
 
-    private Object numberConverter(final String value, final boolean parseBigDecimal) {
+    private Object numberConverter(String value, boolean parseBigDecimal) {
         return decimalNumberFormatList.stream()
                 .map(format -> {
-                    final DecimalFormat decimalFormat = new DecimalFormat(format);
+                    DecimalFormat decimalFormat = new DecimalFormat(format);
 
                     decimalFormat.setParseBigDecimal(parseBigDecimal);
 
@@ -149,12 +149,12 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     }
 
     @SneakyThrows
-    private Object parseDate(final SimpleDateFormat format, final String value) {
+    private Object parseDate(SimpleDateFormat format, String value) {
         return format.parse(value);
     }
 
     @SneakyThrows
-    private Object parseNumber(final DecimalFormat format, final String value) {
+    private Object parseNumber(DecimalFormat format, String value) {
         return format.parse(value);
     }
 

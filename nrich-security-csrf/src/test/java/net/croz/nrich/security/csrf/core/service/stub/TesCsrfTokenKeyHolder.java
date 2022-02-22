@@ -22,7 +22,7 @@ public class TesCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeToken(final String csrfToken) {
+    public void storeToken(String csrfToken) {
         dataHolderMap.put(tokenKeyName, csrfToken);
     }
 
@@ -32,7 +32,7 @@ public class TesCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeCryptoKey(final Key cryptoKey) {
+    public void storeCryptoKey(Key cryptoKey) {
         dataHolderMap.put(cryptoKeyName, cryptoKey);
     }
 }

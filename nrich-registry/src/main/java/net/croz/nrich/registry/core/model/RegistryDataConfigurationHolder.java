@@ -15,18 +15,18 @@ public class RegistryDataConfigurationHolder {
 
     private final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList;
 
-    public void verifyConfigurationExists(final String classFullName) {
+    public void verifyConfigurationExists(String classFullName) {
         findRegistryConfigurationForClass(classFullName);
     }
 
-    public RegistryDataConfiguration<?, ?> findRegistryConfigurationForClass(final String classFullName) {
+    public RegistryDataConfiguration<?, ?> findRegistryConfigurationForClass(String classFullName) {
         return registryDataConfigurationList.stream()
                 .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
     }
 
-    public ManagedTypeWrapper resolveManagedTypeWrapper(final String className) {
+    public ManagedTypeWrapper resolveManagedTypeWrapper(String className) {
         return classNameManagedTypeWrapperMap.get(className);
     }
 }

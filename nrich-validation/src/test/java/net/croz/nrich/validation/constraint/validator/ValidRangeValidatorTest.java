@@ -32,10 +32,10 @@ class ValidRangeValidatorTest {
     @Test
     void shouldThrowExceptionWhenFieldAreNotComparable() {
         // given
-        final ValidRangeValidatorDifferentTypeTestRequest request = new ValidRangeValidatorDifferentTypeTestRequest(1L, Instant.now());
+        ValidRangeValidatorDifferentTypeTestRequest request = new ValidRangeValidatorDifferentTypeTestRequest(1L, Instant.now());
 
         // when
-        final Throwable thrown = catchThrowable(() -> validator.validate(request));
+        Throwable thrown = catchThrowable(() -> validator.validate(request));
 
         // then
         assertThat(thrown).isNotNull();
@@ -45,10 +45,10 @@ class ValidRangeValidatorTest {
     @Test
     void shouldThrowExceptionWhenFieldAreOfDifferentType() {
         // given
-        final ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(new ValidRangeValidatorNotComparableTestRequest.NotComparable(), new ValidRangeValidatorNotComparableTestRequest.NotComparable());
+        ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(new ValidRangeValidatorNotComparableTestRequest.NotComparable(), new ValidRangeValidatorNotComparableTestRequest.NotComparable());
 
         // when
-        final Throwable thrown = catchThrowable(() -> validator.validate(request));
+        Throwable thrown = catchThrowable(() -> validator.validate(request));
 
         // then
         assertThat(thrown).isNotNull();
@@ -58,10 +58,10 @@ class ValidRangeValidatorTest {
     @Test
     void shouldNotReturnErrorWhenValuesAreEqualAndInclusiveFlagIsEnabled() {
         // given
-        final ValidRangeValidatorInclusiveTestRequest request = new ValidRangeValidatorInclusiveTestRequest(1, 1);
+        ValidRangeValidatorInclusiveTestRequest request = new ValidRangeValidatorInclusiveTestRequest(1, 1);
 
         // when
-        final Set<ConstraintViolation<ValidRangeValidatorInclusiveTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidRangeValidatorInclusiveTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -69,19 +69,19 @@ class ValidRangeValidatorTest {
 
     @MethodSource("shouldReturnIsValidForRangeValuesMethodSource")
     @ParameterizedTest
-    void shouldReturnIsValidForRangeValues(final Instant firstValue, final Instant secondValue, final boolean isValid) {
+    void shouldReturnIsValidForRangeValues(Instant firstValue, Instant secondValue, boolean isValid) {
         // given
-        final ValidRangeValidatorTestRequest request = new ValidRangeValidatorTestRequest(firstValue, secondValue);
+        ValidRangeValidatorTestRequest request = new ValidRangeValidatorTestRequest(firstValue, secondValue);
 
         // when
-        final Set<ConstraintViolation<ValidRangeValidatorTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidRangeValidatorTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).hasSize(isValid ? 0 : 1);
     }
 
     private static Stream<Arguments> shouldReturnIsValidForRangeValuesMethodSource() {
-        final Instant now = Instant.now();
+        Instant now = Instant.now();
 
         return Stream.of(
                 arguments(null, null, true),

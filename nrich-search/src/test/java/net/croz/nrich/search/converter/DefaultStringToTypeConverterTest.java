@@ -27,9 +27,9 @@ class DefaultStringToTypeConverterTest {
 
     @MethodSource("shouldConvertStringValueToRequiredValueMethodSource")
     @ParameterizedTest
-    void shouldConvertStringValueToRequiredValue(final String stringValue, final Class<?> typeToConvertTo, final Object expectedValue) {
+    void shouldConvertStringValueToRequiredValue(String stringValue, Class<?> typeToConvertTo, Object expectedValue) {
         // when
-        final Object convertedValue = defaultStringToTypeConverter.convert(stringValue, typeToConvertTo);
+        Object convertedValue = defaultStringToTypeConverter.convert(stringValue, typeToConvertTo);
 
         // then
         assertThat(convertedValue).isEqualTo(expectedValue);

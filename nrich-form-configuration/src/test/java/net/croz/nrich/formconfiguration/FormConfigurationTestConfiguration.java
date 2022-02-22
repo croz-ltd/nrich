@@ -30,7 +30,7 @@ public class FormConfigurationTestConfiguration {
 
     @Bean
     public MessageSource messageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
         messageSource.setBasename("messages");
 
@@ -38,18 +38,18 @@ public class FormConfigurationTestConfiguration {
     }
 
     @Bean
-    public FieldErrorMessageResolverService fieldErrorMessageResolverService(final MessageSource messageSource) {
+    public FieldErrorMessageResolverService fieldErrorMessageResolverService(MessageSource messageSource) {
         return new MessageSourceFieldErrorMessageResolverService(messageSource);
     }
 
     @Bean
-    public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(final FieldErrorMessageResolverService fieldErrorMessageResolverService) {
+    public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(FieldErrorMessageResolverService fieldErrorMessageResolverService) {
         return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);
     }
 
     @Bean
-    public FormConfigurationService formConfigurationService(final LocalValidatorFactoryBean validator, final List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
-        final Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>();
+    public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
+        Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>();
 
         formIdConstraintHolderMap.put(SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedTestRequest.class);

@@ -27,10 +27,10 @@ class PoiExcelReportGeneratorFactoryTest {
     @Test
     void shouldThrowExceptionWhenOutputFileDoesntExist() {
         // given
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().build();
+        CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
+        Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -39,10 +39,10 @@ class PoiExcelReportGeneratorFactoryTest {
     @Test
     void shouldThrowExceptionWhenTemplateFileDoesntExist() {
         // given
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(new File(temporaryDirectory, "output.xlsx")).build();
+        CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(new File(temporaryDirectory, "output.xlsx")).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
+        Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -51,12 +51,12 @@ class PoiExcelReportGeneratorFactoryTest {
     @Test
     void shouldThrowExceptionWhenRowIndexIsNegative() {
         // given
-        final File file = createFileInTemporaryDirectory("missing-row.xlxs");
+        File file = createFileInTemporaryDirectory("missing-row.xlxs");
 
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(-1).build();
+        CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(-1).build();
 
         // when
-        final Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
+        Throwable thrown = catchThrowable(() -> excelReportGeneratorFactory.createReportGenerator(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -65,20 +65,20 @@ class PoiExcelReportGeneratorFactoryTest {
     @Test
     void shouldReturnReportGeneratorWhenDataIsValid() {
         // given
-        final File file = createFileInTemporaryDirectory("valid.xlxs");
+        File file = createFileInTemporaryDirectory("valid.xlxs");
 
-        final CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(1).build();
+        CreateReportGeneratorRequest request = CreateReportGeneratorRequest.builder().outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(1).build();
 
         // when
-        final ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(request);
+        ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(request);
 
         // then
         assertThat(excelReportGenerator).isNotNull();
     }
 
     @SneakyThrows
-    private File createFileInTemporaryDirectory(final String fileName) {
-        final File file = new File(temporaryDirectory, fileName);
+    private File createFileInTemporaryDirectory(String fileName) {
+        File file = new File(temporaryDirectory, fileName);
 
         Assert.isTrue(file.createNewFile(), "File has not been created for test");
 

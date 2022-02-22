@@ -30,15 +30,15 @@ public class NrichExcelAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public ExcelReportGeneratorFactory excelReportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList, final NrichExcelProperties excelProperties) {
-        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList(excelProperties.getDateFormat(), excelProperties.getDateTimeFormat(), excelProperties.getIntegerNumberFormat(), excelProperties.getDecimalNumberFormat(), excelProperties.isWriteDateWithTime(), excelProperties.getTypeDataFormatList());
+    public ExcelReportGeneratorFactory excelReportGeneratorFactory(ResourceLoader resourceLoader, List<CellValueConverter> cellValueConverterList, NrichExcelProperties excelProperties) {
+        List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList(excelProperties.getDateFormat(), excelProperties.getDateTimeFormat(), excelProperties.getIntegerNumberFormat(), excelProperties.getDecimalNumberFormat(), excelProperties.isWriteDateWithTime(), excelProperties.getTypeDataFormatList());
 
         return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public ExcelReportService excelReportService(final ExcelReportGeneratorFactory excelReportGeneratorFactory) {
+    public ExcelReportService excelReportService(ExcelReportGeneratorFactory excelReportGeneratorFactory) {
         return new DefaultExcelReportService(excelReportGeneratorFactory);
     }
 }

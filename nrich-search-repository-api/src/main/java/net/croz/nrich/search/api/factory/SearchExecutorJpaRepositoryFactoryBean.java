@@ -8,8 +8,9 @@ import javax.persistence.EntityManager;
 
 /**
  * Factory that supports creating repository factories for {@link net.croz.nrich.search.api.repository.SearchExecutor} and {@link net.croz.nrich.search.api.repository.StringSearchExecutor} interfaces.
- * @param <T> repository type
- * @param <S> entity type
+ *
+ * @param <T>  repository type
+ * @param <S>  entity type
  * @param <ID> id type
  */
 public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID> {
@@ -18,14 +19,14 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
 
     private final Class<? extends T> repositoryInterface;
 
-    public SearchExecutorJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
+    public SearchExecutorJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface, RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
         super(repositoryInterface);
         this.repositoryInterface = repositoryInterface;
         this.repositoryFactorySupportFactory = repositoryFactorySupportFactory;
     }
 
     @Override
-    protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
+    protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
         return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager);
     }
 

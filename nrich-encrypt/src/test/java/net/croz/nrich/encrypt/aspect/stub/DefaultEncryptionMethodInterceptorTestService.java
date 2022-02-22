@@ -3,17 +3,17 @@ package net.croz.nrich.encrypt.aspect.stub;
 public class DefaultEncryptionMethodInterceptorTestService implements EncryptionMethodInterceptorTestService {
 
     @Override
-    public EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(final String value) {
+    public EncryptDataAspectTestServiceResult dataToEncryptFromConfiguration(String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @Override
-    public EncryptDataAspectTestServiceResult ignoredMethod(final String value) {
+    public EncryptDataAspectTestServiceResult ignoredMethod(String value) {
         return new EncryptDataAspectTestServiceResult(value);
     }
 
     @Override
-    public String dataToDecryptFromConfiguration(final EncryptDataAspectTestServiceResult data) {
+    public String dataToDecryptFromConfiguration(EncryptDataAspectTestServiceResult data) {
         return data.getValue();
     }
 }

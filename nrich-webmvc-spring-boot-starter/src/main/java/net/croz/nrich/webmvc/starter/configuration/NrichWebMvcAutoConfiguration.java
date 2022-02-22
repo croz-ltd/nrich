@@ -41,25 +41,25 @@ public class NrichWebMvcAutoConfiguration {
     }
 
     @Bean
-    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final NrichWebMvcProperties webMvcProperties, final TransientPropertyResolverService transientPropertyResolverService) {
+    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(NrichWebMvcProperties webMvcProperties, TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(webMvcProperties.isConvertEmptyStringsToNull(), webMvcProperties.isIgnoreTransientFields(), transientPropertyResolverService);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(MessageSource messageSource) {
         return new MessageSourceExceptionHttpStatusResolverService(messageSource);
     }
 
     @ConditionalOnProperty(name = "nrich.webmvc.controller-advice-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NrichWebMvcProperties webMvcProperties, final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, @Autowired(required = false) final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NrichWebMvcProperties webMvcProperties, NotificationResponseService<?> notificationResponseService, LoggingService loggingService, @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 
     @ConditionalOnPropertyNotEmpty("nrich.webmvc.allowed-locale-list")
     @Bean
-    public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(final NrichWebMvcProperties webMvcProperties) {
+    public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(NrichWebMvcProperties webMvcProperties) {
         return new ConstrainedSessionLocaleResolver(webMvcProperties.getDefaultLocale(), webMvcProperties.getAllowedLocaleList());
     }
 }

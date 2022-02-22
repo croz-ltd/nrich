@@ -14,13 +14,13 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
     private final Map<Class<?>, List<String>> typeTransientPropertyListCache = new ConcurrentHashMap<>();
 
     @Override
-    public List<String> resolveTransientPropertyList(final Class<?> type) {
+    public List<String> resolveTransientPropertyList(Class<?> type) {
         if (!typeTransientPropertyListCache.containsKey(type)) {
-            final List<String> transientPropertyList = new ArrayList<>();
+            List<String> transientPropertyList = new ArrayList<>();
             Class<?> currentType = type;
 
             while (currentType != Object.class) {
-                final List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
+                List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
                         .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
                         .map(Field::getName)
                         .collect(Collectors.toList());

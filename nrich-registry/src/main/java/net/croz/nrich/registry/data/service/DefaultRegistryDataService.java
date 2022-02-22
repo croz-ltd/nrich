@@ -46,7 +46,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private final RegistryEntityFinderService registryEntityFinderService;
 
-    public DefaultRegistryDataService(final EntityManager entityManager, final ModelMapper modelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryDataConfigurationHolder registryDataConfigurationHolder, final List<RegistryDataInterceptor> registryDataInterceptorList, final RegistryEntityFinderService registryEntityFinderService) {
+    public DefaultRegistryDataService(EntityManager entityManager, ModelMapper modelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryDataConfigurationHolder registryDataConfigurationHolder, List<RegistryDataInterceptor> registryDataInterceptorList, RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
@@ -58,14 +58,14 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<String, Page<?>> listBulk(final ListBulkRegistryRequest request) {
+    public Map<String, Page<?>> listBulk(ListBulkRegistryRequest request) {
         return request.getRegistryRequestList().stream()
                 .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public <P> Page<P> list(final ListRegistryRequest request) {
+    public <P> Page<P> list(ListRegistryRequest request) {
         interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryList(request));
 
         return registryListInternal(request);
@@ -73,13 +73,13 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T create(final String classFullName, final Object entityData) {
+    public <T> T create(String classFullName, Object entityData) {
         interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryCreate(classFullName, entityData));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
+        RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
+        T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
 
         modelMapper.map(entityData, instance);
 
@@ -88,13 +88,13 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T update(final String classFullName, final Object id, final Object entityData) {
+    public <T> T update(String classFullName, Object id, Object entityData) {
         interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryUpdate(classFullName, id, entityData));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
+        RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(classFullName);
+        ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(classFullName);
 
         T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
 
@@ -110,20 +110,20 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional
     @Override
-    public <T> T delete(final String classFullName, final Object id) {
+    public <T> T delete(String classFullName, Object id) {
         interceptorList().forEach(registryDataInterceptor -> registryDataInterceptor.beforeRegistryDelete(classFullName, id));
 
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
+        RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        final T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
+        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
 
         entityManager.remove(instance);
 
         return instance;
     }
 
-    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(final RegistryDataConfigurationHolder registryDataConfigurationHolder) {
+    private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(RegistryDataConfigurationHolder registryDataConfigurationHolder) {
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
                 .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
@@ -132,43 +132,43 @@ public class DefaultRegistryDataService implements RegistryDataService {
         return Optional.ofNullable(registryDataInterceptorList).orElse(Collections.emptyList());
     }
 
-    private <T, P> Page<P> registryListInternal(final ListRegistryRequest request) {
+    private <T, P> Page<P> registryListInternal(ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        final RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
 
         @SuppressWarnings("unchecked")
-        final JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
+        JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
 
-        final ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
+        ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
 
-        final String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
+        String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
 
-        final Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.getSortPropertyList());
+        Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.getSortPropertyList());
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
             searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType());
         }
 
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registryDataConfiguration.getSearchConfiguration(), pageable.getSort());
+        CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registryDataConfiguration.getSearchConfiguration(), pageable.getSort());
 
-        final TypedQuery<P> typedQuery = entityManager.createQuery(query);
+        TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
         return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(queryBuilder, query));
     }
 
-    private long executeCountQuery(final JpaQueryBuilder<?> queryBuilder, final CriteriaQuery<?> query) {
-        final CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
+    private long executeCountQuery(JpaQueryBuilder<?> queryBuilder, CriteriaQuery<?> query) {
+        CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
 
-        final List<Long> totals = entityManager.createQuery(countQuery).getResultList();
+        List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T resolveEntityInstance(final Class<T> type, final Object entityData) {
+    private <T> T resolveEntityInstance(Class<T> type, Object entityData) {
         if (entityData != null && type.equals(entityData.getClass())) {
             return (T) entityData;
         }

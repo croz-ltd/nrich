@@ -4,7 +4,7 @@ public class EntityNotFoundException extends RuntimeException implements Excepti
 
     private final transient Object[] argumentList;
 
-    public EntityNotFoundException(final String message, final Object... argumentList) {
+    public EntityNotFoundException(String message, Object... argumentList) {
         super(message);
         this.argumentList = argumentList;
     }

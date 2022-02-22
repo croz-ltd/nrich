@@ -12,32 +12,32 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
 
     private final Map<String, RegistryOverrideConfiguration> registryOverrideConfigurationMap;
 
-    public RegistryConfigurationUpdateInterceptor(final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {
+    public RegistryConfigurationUpdateInterceptor(Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {
         this.registryOverrideConfigurationMap = initializeRegistryOverrideConfigurationMap(registryOverrideConfigurationMap);
     }
 
     @Override
-    public void beforeRegistryCreate(final String classFullName, final Object entityData) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
+    public void beforeRegistryCreate(String classFullName, Object entityData) {
+        RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
         verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isCreatable());
     }
 
     @Override
-    public void beforeRegistryUpdate(final String classFullName, final Object id, final Object entityData) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
+    public void beforeRegistryUpdate(String classFullName, Object id, Object entityData) {
+        RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
         verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isUpdateable());
     }
 
     @Override
-    public void beforeRegistryDelete(final String classFullName, final Object id) {
-        final RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
+    public void beforeRegistryDelete(String classFullName, Object id) {
+        RegistryOverrideConfiguration registryOverrideConfiguration = resolveConfiguration(classFullName);
 
         verifyRegistryOperation(classFullName, registryOverrideConfiguration.isReadOnly() || !registryOverrideConfiguration.isDeletable());
     }
 
-    private RegistryOverrideConfiguration resolveConfiguration(final String classFullName) {
+    private RegistryOverrideConfiguration resolveConfiguration(String classFullName) {
         if (registryOverrideConfigurationMap.get(classFullName) == null) {
             return RegistryOverrideConfiguration.defaultConfiguration();
         }
@@ -45,7 +45,7 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
         return registryOverrideConfigurationMap.get(classFullName);
     }
 
-    private Map<String, RegistryOverrideConfiguration> initializeRegistryOverrideConfigurationMap(final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {
+    private Map<String, RegistryOverrideConfiguration> initializeRegistryOverrideConfigurationMap(Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {
         if (registryOverrideConfigurationMap == null) {
             return Collections.emptyMap();
         }
@@ -54,7 +54,7 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
                 .collect(Collectors.toMap(entry -> entry.getKey().getName(), Map.Entry::getValue));
     }
 
-    private void verifyRegistryOperation(final String registryClassName, final boolean isAllowed) {
+    private void verifyRegistryOperation(String registryClassName, boolean isAllowed) {
         if (isAllowed) {
             throw new RegistryUpdateNotAllowedException(String.format("Trying to update registry: %s that is not updatable", registryClassName));
         }

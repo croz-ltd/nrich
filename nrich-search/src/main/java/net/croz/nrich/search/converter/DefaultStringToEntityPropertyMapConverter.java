@@ -20,25 +20,25 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
     private final List<StringToTypeConverter<?>> converterList;
 
     @Override
-    public Map<String, Object> convert(final String value, final List<String> propertyToSearchList, final ManagedType<?> managedType) {
+    public Map<String, Object> convert(String value, List<String> propertyToSearchList, ManagedType<?> managedType) {
         if (value == null || CollectionUtils.isEmpty(propertyToSearchList)) {
             return Collections.emptyMap();
         }
 
         Assert.notNull(managedType, "Managed type cannot be null!");
 
-        final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
+        JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
-        final Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>();
 
         propertyToSearchList.forEach(property -> {
-            final AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(property);
+            AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(property);
 
             if (attributeHolder.getAttribute() == null) {
                 return;
             }
 
-            final Object convertedValue = doConversion(value, attributeHolder.getAttribute().getJavaType());
+            Object convertedValue = doConversion(value, attributeHolder.getAttribute().getJavaType());
 
             resultMap.put(property, convertedValue);
 
@@ -47,12 +47,12 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
         return resultMap;
     }
 
-    private Object doConversion(final String searchTerm, final Class<?> attributeType) {
+    private Object doConversion(String searchTerm, Class<?> attributeType) {
         if (String.class.isAssignableFrom(attributeType)) {
             return searchTerm;
         }
 
-        final StringToTypeConverter<?> converter = converterList.stream()
+        StringToTypeConverter<?> converter = converterList.stream()
                 .filter(value -> value.supports(attributeType))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for attribute type %s", attributeType.getName())));

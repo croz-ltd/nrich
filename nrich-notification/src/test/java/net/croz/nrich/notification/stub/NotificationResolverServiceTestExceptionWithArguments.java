@@ -7,7 +7,7 @@ public class NotificationResolverServiceTestExceptionWithArguments extends Runti
 
     private final transient Object[] argumentList;
 
-    public NotificationResolverServiceTestExceptionWithArguments(final String message, final Object... argumentList) {
+    public NotificationResolverServiceTestExceptionWithArguments(String message, Object... argumentList) {
         super(message);
         this.argumentList = argumentList;
     }

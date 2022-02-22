@@ -16,7 +16,7 @@ public class TestEntityAdditionalRestrictionResolver implements AdditionalRestri
     private final boolean appendAdditionalRestriction;
 
     @Override
-    public List<Predicate> resolvePredicateList(final CriteriaBuilder criteriaBuilder, final CriteriaQuery<TestEntity> query, final Root<TestEntity> root, final TestEntitySearchRequest request) {
+    public List<Predicate> resolvePredicateList(CriteriaBuilder criteriaBuilder, CriteriaQuery<TestEntity> query, Root<TestEntity> root, TestEntitySearchRequest request) {
         if (appendAdditionalRestriction) {
             return Collections.singletonList(criteriaBuilder.greaterThan(root.get("age"), 100));
         }

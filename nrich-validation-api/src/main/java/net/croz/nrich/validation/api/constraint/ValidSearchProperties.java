@@ -25,15 +25,15 @@ public @interface ValidSearchProperties {
 
     String message() default "{nrich.constraint.searchFields.invalid.message}";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 
     /**
      * List of property groups.
-     * @see PropertyGroup
      *
      * @return group of properties.
+     * @see PropertyGroup
      */
     PropertyGroup[] propertyGroup();
 

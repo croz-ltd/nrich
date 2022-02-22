@@ -23,14 +23,14 @@ public class ExcelTestConfiguration {
     }
 
     @Bean
-    public ExcelReportGeneratorFactory excelReportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
-        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, null);
+    public ExcelReportGeneratorFactory excelReportGeneratorFactory(ResourceLoader resourceLoader, List<CellValueConverter> cellValueConverterList) {
+        List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, null);
 
         return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @Bean
-    public ExcelReportService excelReportService(final ExcelReportGeneratorFactory excelReportGeneratorFactory) {
+    public ExcelReportService excelReportService(ExcelReportGeneratorFactory excelReportGeneratorFactory) {
         return new DefaultExcelReportService(excelReportGeneratorFactory);
     }
 }

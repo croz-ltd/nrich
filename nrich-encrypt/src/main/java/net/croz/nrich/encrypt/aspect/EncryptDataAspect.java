@@ -24,25 +24,25 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     private final DataEncryptionService dataEncryptionService;
 
     @Around("execution(* *(.., @net.croz.nrich.encrypt.api.annotation.DecryptArgument (*), ..)))")
-    public Object aroundDecryptAnnotatedMethods(final ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        final Signature signature = proceedingJoinPoint.getSignature();
-        final Object[] arguments = proceedingJoinPoint.getArgs();
+    public Object aroundDecryptAnnotatedMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        Signature signature = proceedingJoinPoint.getSignature();
+        Object[] arguments = proceedingJoinPoint.getArgs();
 
         if (signature instanceof MethodSignature && arguments.length > 0) {
-            final List<Object> argumentList = Arrays.asList(arguments);
+            List<Object> argumentList = Arrays.asList(arguments);
 
-            final MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+            MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
-            final String methodName = methodSignature.getMethod().getName();
+            String methodName = methodSignature.getMethod().getName();
 
-            final Class<?>[] parameterTypes = methodSignature.getMethod().getParameterTypes();
+            Class<?>[] parameterTypes = methodSignature.getMethod().getParameterTypes();
 
-            final Annotation[][] parameterAnnotationList = proceedingJoinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getParameterAnnotations();
+            Annotation[][] parameterAnnotationList = proceedingJoinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getParameterAnnotations();
 
-            final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
+            EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
 
-            final Object[] decryptedArguments = IntStream.range(0, arguments.length).mapToObj(index -> {
-                final DecryptArgument argumentAnnotation = decryptArgumentAnnotation(parameterAnnotationList[index]);
+            Object[] decryptedArguments = IntStream.range(0, arguments.length).mapToObj(index -> {
+                DecryptArgument argumentAnnotation = decryptArgumentAnnotation(parameterAnnotationList[index]);
 
                 if (argumentAnnotation == null) {
                     return arguments[index];
@@ -59,14 +59,14 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     }
 
     @Around("@annotation(annotation)")
-    public Object aroundEncryptAnnotatedMethods(final ProceedingJoinPoint proceedingJoinPoint, final EncryptResult annotation) throws Throwable {
-        final Signature signature = proceedingJoinPoint.getSignature();
+    public Object aroundEncryptAnnotatedMethods(ProceedingJoinPoint proceedingJoinPoint, EncryptResult annotation) throws Throwable {
+        Signature signature = proceedingJoinPoint.getSignature();
 
-        final Object[] arguments = proceedingJoinPoint.getArgs();
+        Object[] arguments = proceedingJoinPoint.getArgs();
 
-        final List<Object> argumentList = Arrays.asList(arguments);
+        List<Object> argumentList = Arrays.asList(arguments);
 
-        final EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
+        EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
 
         Object result = proceedingJoinPoint.proceed(arguments);
 
@@ -80,11 +80,11 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
         return dataEncryptionService;
     }
 
-    private String methodName(final Signature signature) {
+    private String methodName(Signature signature) {
         return String.format(EncryptConstants.METHOD_NAME_FORMAT, signature.getDeclaringType().getName(), signature.getName());
     }
 
-    private DecryptArgument decryptArgumentAnnotation(final Annotation[] annotationList) {
+    private DecryptArgument decryptArgumentAnnotation(Annotation[] annotationList) {
         return (DecryptArgument) Arrays.stream(annotationList)
                 .filter(DecryptArgument.class::isInstance)
                 .findFirst()

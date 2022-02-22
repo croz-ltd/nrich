@@ -43,6 +43,7 @@ public class ConstrainedProperty {
 
     /**
      * Returns constraint annotation name (i.e for @NotNull constraint it will return NotNull)
+     *
      * @return constraint name
      */
     public String getConstraintName() {
@@ -55,7 +56,7 @@ public class ConstrainedProperty {
      * @return containing argument map
      */
     public Map<String, Object> getConstraintArgumentMap() {
-        final List<String> ignoredKeyList = Arrays.asList("groups", "message", "payload");
+        List<String> ignoredKeyList = Arrays.asList("groups", "message", "payload");
 
         return constraintDescriptor.getAttributes().entrySet().stream()
                 .filter(entry -> !ignoredKeyList.contains(entry.getKey()))

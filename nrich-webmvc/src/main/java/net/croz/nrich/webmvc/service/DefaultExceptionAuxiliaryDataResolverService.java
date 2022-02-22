@@ -11,8 +11,8 @@ import java.util.UUID;
 public class DefaultExceptionAuxiliaryDataResolverService implements ExceptionAuxiliaryDataResolverService {
 
     @Override
-    public Map<String, Object> resolveRequestExceptionAuxiliaryData(final Exception exception, final HttpServletRequest request) {
-        final Map<String, Object> resultMap = new LinkedHashMap<>();
+    public Map<String, Object> resolveRequestExceptionAuxiliaryData(Exception exception, HttpServletRequest request) {
+        Map<String, Object> resultMap = new LinkedHashMap<>();
 
         resultMap.put("uuid", UUID.randomUUID().toString());
         resultMap.put("occurrenceTime", Instant.now());

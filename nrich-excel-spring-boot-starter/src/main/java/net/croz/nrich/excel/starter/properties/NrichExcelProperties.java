@@ -49,7 +49,7 @@ public class NrichExcelProperties {
      */
     private final boolean defaultConverterEnabled;
 
-    public NrichExcelProperties(@DefaultValue("dd.MM.yyyy.") final String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") final String dateTimeFormat, @DefaultValue("false") final boolean writeDateWithTime, @DefaultValue("#,##0") final String integerNumberFormat, @DefaultValue("#,##0.00") final String decimalNumberFormat, final List<TypeDataFormat> typeDataFormatList, @DefaultValue("true") final boolean defaultConverterEnabled) {
+    public NrichExcelProperties(@DefaultValue("dd.MM.yyyy.") String dateFormat, @DefaultValue("dd.MM.yyyy. HH:mm") String dateTimeFormat, @DefaultValue("false") boolean writeDateWithTime, @DefaultValue("#,##0") String integerNumberFormat, @DefaultValue("#,##0.00") String decimalNumberFormat, List<TypeDataFormat> typeDataFormatList, @DefaultValue("true") boolean defaultConverterEnabled) {
         this.dateFormat = dateFormat;
         this.dateTimeFormat = dateTimeFormat;
         this.writeDateWithTime = writeDateWithTime;

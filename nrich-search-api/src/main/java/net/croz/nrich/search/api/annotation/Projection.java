@@ -30,6 +30,7 @@ public @interface Projection {
      */
     Class<? extends Predicate<?>> condition() default DEFAULT.class;
 
-    interface DEFAULT extends Predicate<Object> {}
+    interface DEFAULT extends Predicate<Object> {
+    }
 
 }
