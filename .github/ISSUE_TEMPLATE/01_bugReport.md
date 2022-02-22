@@ -1,5 +1,6 @@
 ---
-name: Bug report about: Report a bug in nrich title: ""
+name: Bug report
+about: Report a bug in nrich title: ""
 labels: "bug"
 assignees: ""
 ---
