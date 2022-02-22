@@ -3,24 +3,21 @@ package net.croz.nrich.security.csrf.core.service;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.service.stub.TesCsrfTokenKeyHolder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.awaitility.Awaitility.await;
 
 class AesCsrfTokenManagerServiceTest {
 
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
-    private AesCsrfTokenManagerService aesCsrfTokenManagerService;
+    private static final Duration DEFAULT_DURATION = Duration.ofMillis(10);
 
-    @BeforeEach
-    void setup() {
-        aesCsrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMillis(10), Duration.ofMillis(10), 128);
-    }
+    private final AesCsrfTokenManagerService aesCsrfTokenManagerService = new AesCsrfTokenManagerService(DEFAULT_DURATION, DEFAULT_DURATION, 128);
 
     @Test
     void shouldThrowExceptionWhenTokenIsNotInTokenHolder() {
@@ -76,19 +73,18 @@ class AesCsrfTokenManagerServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionOnInvalidTokenDuration() throws Exception {
+    void shouldThrowExceptionOnInvalidTokenDuration() {
         // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
         tokenHolder.storeToken(aesCsrfTokenManagerService.generateToken(tokenHolder));
 
-        Thread.sleep(30);
+        await().atMost(Duration.ofSeconds(1)).untilAsserted(() -> {
+            // when
+            Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 
-        // when
-        Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
-
-        // then
-        assertThat(thrown).isInstanceOf(CsrfTokenException.class);
-        assertThat(thrown.getMessage()).isEqualTo("Csrf token is too old.");
+            // then
+            assertThat(thrown).isInstanceOf(CsrfTokenException.class);
+            assertThat(thrown.getMessage()).isEqualTo("Csrf token is too old.");
+        });
     }
-
 }
