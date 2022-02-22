@@ -123,13 +123,13 @@ public class DemoApplicationConfiguration implements WebMvcConfigurer {
 
     @Bean
     public TextEncryptionService textEncryptionService() {
-        final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+        BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
 
         return new BytesEncryptorTextEncryptService(encryptor, "UTF-8");
     }
 
     @Bean
-    public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
+    public DataEncryptionService dataEncryptionService(TextEncryptionService textEncryptionService) {
         return new DefaultDataEncryptService(textEncryptionService);
     }
 
@@ -150,7 +150,7 @@ To be able to use _nrich-encrypt_ with annotations on methods `EncryptDataAspect
 
 ```
 @Bean
-public EncryptDataAspect encryptDataAspect(final DataEncryptionService dataEncryptionService) {
+public EncryptDataAspect encryptDataAspect(DataEncryptionService dataEncryptionService) {
     return new EncryptDataAspect(dataEncryptionService);
 }
 ```
@@ -173,15 +173,15 @@ So instead of using `@EncryptResult` and `@DecryptArgument` annotations and `enc
 
 ```
     @Bean
-    public Advisor encryptorAdvisor(final DataEncryptionService dataEncryptionService) {
+    public Advisor encryptorAdvisor(DataEncryptionService dataEncryptionService) {
 
-        final List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
+        List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
                 new EncryptionConfiguration("com.example.demo.controller.AccountController.listAll", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
                 new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
                 new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.DECRYPT)
         );
 
-        final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
         pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptionConfigurationList));
 

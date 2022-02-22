@@ -11,12 +11,12 @@ public class InListValidator implements ConstraintValidator<InList, Object> {
     private String[] stringList;
 
     @Override
-    public void initialize(final InList constraintAnnotation) {
+    public void initialize(InList constraintAnnotation) {
         stringList = constraintAnnotation.value();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }

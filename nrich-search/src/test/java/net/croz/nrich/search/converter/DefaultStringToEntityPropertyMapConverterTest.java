@@ -27,10 +27,10 @@ class DefaultStringToEntityPropertyMapConverterTest {
     @Test
     void shouldConvertStringToEntityPropertyMap() {
         // given
-        final String value = "01.01.1970";
+        String value = "01.01.1970";
 
         // when
-        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity());
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity());
 
         // then
         assertThat(result).containsEntry("name", value).containsEntry("date", dateOf(value)).containsEntry("nestedEntity.nestedName", value);
@@ -39,10 +39,10 @@ class DefaultStringToEntityPropertyMapConverterTest {
     @Test
     void shouldNotFailOnNonExistingAttributes() {
         // given
-        final String value = "name";
+        String value = "name";
 
         // when
-        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
 
         // then
         assertThat(result).containsEntry("name", value);
@@ -52,10 +52,10 @@ class DefaultStringToEntityPropertyMapConverterTest {
     @Test
     void shouldReturnEmptyMapWhenValueIsNull() {
         // given
-        final String value = null;
+        String value = null;
 
         // when
-        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity());
 
         // then
         assertThat(result).isEmpty();
@@ -64,10 +64,10 @@ class DefaultStringToEntityPropertyMapConverterTest {
     @Test
     void shouldReturnEmptyMapWhenPropertyListIsEmpty() {
         // given
-        final String value = "value";
+        String value = "value";
 
         // when
-        final Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, null, managedTypeOfTestEntity());
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, null, managedTypeOfTestEntity());
 
         // then
         assertThat(result).isEmpty();

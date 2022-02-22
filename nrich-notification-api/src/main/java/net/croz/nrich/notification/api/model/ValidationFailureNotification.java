@@ -17,7 +17,7 @@ public class ValidationFailureNotification extends Notification {
 
     private final List<ValidationError> validationErrorList;
 
-    public ValidationFailureNotification(final String title, final String content, final List<String> messageList, final NotificationSeverity severity, final Map<String, ?> uxNotificationOptions, final List<ValidationError> validationErrorList) {
+    public ValidationFailureNotification(String title, String content, List<String> messageList, NotificationSeverity severity, Map<String, ?> uxNotificationOptions, List<ValidationError> validationErrorList) {
         super(title, content, messageList, severity, uxNotificationOptions);
         this.validationErrorList = validationErrorList;
     }

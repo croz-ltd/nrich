@@ -40,17 +40,17 @@ public class SearchDataParser {
         return resolveRestrictionList(null);
     }
 
-    public Set<Restriction> resolveRestrictionList(final String propertyPrefix) {
+    public Set<Restriction> resolveRestrictionList(String propertyPrefix) {
         return resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(searchData), propertyPrefix, null, managedType, new HashSet<>(), false);
     }
 
-    private Set<Restriction> resolveRestrictionListInternal(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper, final String propertyPrefix, final String path, final ManagedType<?> managedType, final Set<Restriction> restrictionList, final boolean isPluralAttribute) {
-        final List<String> fieldNameList = resolveFieldNameList(wrapper);
-        final JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
+    private Set<Restriction> resolveRestrictionListInternal(MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper, String propertyPrefix, String path, ManagedType<?> managedType, Set<Restriction> restrictionList, boolean isPluralAttribute) {
+        List<String> fieldNameList = resolveFieldNameList(wrapper);
+        JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
         fieldNameList.forEach(originalFieldName -> {
-            final String fieldNameWithoutPrefixAndSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
-            final Object value = wrapper.getPropertyValue(originalFieldName);
+            String fieldNameWithoutPrefixAndSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
+            Object value = wrapper.getPropertyValue(originalFieldName);
 
             if (value == null) {
                 return;
@@ -59,7 +59,7 @@ public class SearchDataParser {
             AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
 
             if (attributeHolder.getAttribute() != null) {
-                final String currentPath = path == null ? fieldNameWithoutPrefixAndSuffix : path + "." + fieldNameWithoutPrefixAndSuffix;
+                String currentPath = path == null ? fieldNameWithoutPrefixAndSuffix : path + "." + fieldNameWithoutPrefixAndSuffix;
 
                 if (attributeHolder.getManagedType() != null) {
                     resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
@@ -88,8 +88,8 @@ public class SearchDataParser {
         return restrictionList;
     }
 
-    private List<String> resolveFieldNameList(final MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
-        final List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList();
+    private List<String> resolveFieldNameList(MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
+        List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList();
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
@@ -97,7 +97,7 @@ public class SearchDataParser {
                     .collect(Collectors.toList());
         }
 
-        final Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
+        Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
                 .filter(shouldIncludeField)
@@ -105,12 +105,12 @@ public class SearchDataParser {
                 .collect(Collectors.toList());
     }
 
-    private String fieldNameWithoutSuffixAndPrefix(final String originalFieldName, final String prefix) {
-        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
-        final String[] suffixListToRemove = new String[] { searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(), searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix() };
+    private String fieldNameWithoutSuffixAndPrefix(String originalFieldName, String prefix) {
+        SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
+        String[] suffixListToRemove = new String[] { searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(), searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix() };
 
         String fieldName = originalFieldName;
-        for (final String suffix : suffixListToRemove) {
+        for (String suffix : suffixListToRemove) {
             if (originalFieldName.endsWith(suffix)) {
                 fieldName = originalFieldName.substring(0, originalFieldName.lastIndexOf(suffix));
                 break;
@@ -124,10 +124,10 @@ public class SearchDataParser {
         return fieldName;
     }
 
-    private Restriction createAttributeRestriction(final Class<?> attributeType, final String attributeName, final String path, final Object value, final boolean isPluralAttribute) {
-        final boolean isRangeSearchSupported = isRangeSearchSupported(attributeType);
-        final SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
-        final SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
+    private Restriction createAttributeRestriction(Class<?> attributeType, String attributeName, String path, Object value, boolean isPluralAttribute) {
+        boolean isRangeSearchSupported = isRangeSearchSupported(attributeType);
+        SearchOperator resolvedOperator = resolveFromSearchConfiguration(searchConfiguration, path, attributeType);
+        SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
 
         SearchOperator operator = DefaultSearchOperator.EQ;
         if (resolvedOperator != null) {
@@ -157,11 +157,11 @@ public class SearchDataParser {
         return new Restriction(path, operator, value, isPluralAttribute);
     }
 
-    private boolean isRangeSearchSupported(final Class<?> attributeType) {
+    private boolean isRangeSearchSupported(Class<?> attributeType) {
         return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
-    private String findPathUsingMapping(final List<SearchPropertyMapping> propertyMappingList, final String fieldName) {
+    private String findPathUsingMapping(List<SearchPropertyMapping> propertyMappingList, String fieldName) {
         return Optional.ofNullable(propertyMappingList)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -171,8 +171,8 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private String findPathUsingAttributePrefix(final String originalFieldName, final ManagedType<?> managedType) {
-        final List<String> attributeNameList = managedType.getAttributes().stream()
+    private String findPathUsingAttributePrefix(String originalFieldName, ManagedType<?> managedType) {
+        List<String> attributeNameList = managedType.getAttributes().stream()
                 .filter(attribute -> attribute.isAssociation() || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED)
                 .map(Attribute::getName)
                 .collect(Collectors.toList());
@@ -184,11 +184,11 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private boolean searchUsingPropertyMapping(final SearchDataParserConfiguration searchConfiguration) {
+    private boolean searchUsingPropertyMapping(SearchDataParserConfiguration searchConfiguration) {
         return searchConfiguration.isResolvePropertyMappingUsingPrefix() || searchConfiguration.getPropertyMappingList() != null;
     }
 
-    private SearchOperator resolveFromSearchConfiguration(final SearchDataParserConfiguration searchConfiguration, final String path, final Class<?> attributeType) {
+    private SearchOperator resolveFromSearchConfiguration(SearchDataParserConfiguration searchConfiguration, String path, Class<?> attributeType) {
         SearchOperator operator = null;
         SearchOperatorOverride operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
 
@@ -203,7 +203,7 @@ public class SearchDataParser {
         return operator;
     }
 
-    private SearchOperatorOverride findOperatorOverride(final List<SearchOperatorOverride> searchOperatorOverrideList, final Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
+    private SearchOperatorOverride findOperatorOverride(List<SearchOperatorOverride> searchOperatorOverrideList, Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
         return Optional.ofNullable(searchOperatorOverrideList)
                 .orElse(Collections.emptyList())
                 .stream()
@@ -212,7 +212,7 @@ public class SearchDataParser {
                 .orElse(null);
     }
 
-    private boolean isFieldNameValid(final String fieldName, final String attribute) {
+    private boolean isFieldNameValid(String fieldName, String attribute) {
         return fieldName.startsWith(attribute) && fieldName.length() > attribute.length();
     }
 }

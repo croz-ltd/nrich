@@ -14,27 +14,27 @@ abstract class BaseNullableCheckValidator {
 
     protected abstract boolean isPropertyValueValid(Object propertyValue);
 
-    protected boolean isValid(final Object value, final Class<? extends Predicate<?>> conditionClass, final String propertyName) {
+    protected boolean isValid(Object value, Class<? extends Predicate<?>> conditionClass, String propertyName) {
         if (value == null) {
             return true;
         }
 
         @SuppressWarnings("unchecked")
-        final Predicate<Object> condition = (Predicate<Object>) beanFactory.autowire(conditionClass, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
+        Predicate<Object> condition = (Predicate<Object>) beanFactory.autowire(conditionClass, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
 
-        final boolean conditionEvaluationResult = condition.test(value);
+        boolean conditionEvaluationResult = condition.test(value);
 
         if (!conditionEvaluationResult) {
             return true;
         }
 
-        final Object propertyValue = resolvePropertyValue(value, propertyName);
+        Object propertyValue = resolvePropertyValue(value, propertyName);
 
         return isPropertyValueValid(propertyValue);
     }
 
-    private Object resolvePropertyValue(final Object parent, final String propertyName) {
-        final Method propertyGetterMethod = ValidationReflectionUtil.findGetterMethod(parent.getClass(), propertyName);
+    private Object resolvePropertyValue(Object parent, String propertyName) {
+        Method propertyGetterMethod = ValidationReflectionUtil.findGetterMethod(parent.getClass(), propertyName);
 
         if (propertyGetterMethod == null) {
             throw new IllegalArgumentException(String.format("No getter method found for property %s when invoking %s validator", propertyName, this.getClass().getSimpleName()));

@@ -82,13 +82,13 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
-        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(true);
 
-        final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setPackagesToScan("net.croz.nrich.registry");
@@ -98,8 +98,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
 
         transactionManager.setEntityManagerFactory(entityManagerFactory);
 
@@ -108,8 +108,8 @@ public class RegistryTestConfiguration {
 
     @Bean
     public ModelMapper registryDataModelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
-        final Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
+        ModelMapper modelMapper = new ModelMapper();
+        Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
 
         modelMapper.getConfiguration().setPropertyCondition(skipIds);
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -119,7 +119,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public ModelMapper registryBaseModelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -128,7 +128,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.findAndRegisterModules();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -143,7 +143,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public MessageSource messageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 
         messageSource.setBasename("messages");
 
@@ -151,7 +151,7 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryWebMvcTestConfiguration registryWebMvcConfiguration(final ObjectMapper objectMapper) {
+    public RegistryWebMvcTestConfiguration registryWebMvcConfiguration(ObjectMapper objectMapper) {
         return new RegistryWebMvcTestConfiguration(objectMapper);
     }
 
@@ -161,26 +161,26 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @Bean
     public RegistryConfiguration registryConfiguration() {
-        final RegistryConfiguration registryConfiguration = new RegistryConfiguration();
+        RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        final RegistryGroupDefinitionConfiguration registryDataConfiguratinGroup = new RegistryGroupDefinitionConfiguration();
+        RegistryGroupDefinitionConfiguration registryDataConfiguratinGroup = new RegistryGroupDefinitionConfiguration();
 
         registryDataConfiguratinGroup.setGroupId("DATA");
         registryDataConfiguratinGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
         registryDataConfiguratinGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
-        final RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryConfigurationConfigurationGroup.setGroupId("CONFIGURATION");
         registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
 
-        final RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+        RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryHistoryConfigurationGroup.setGroupId("HISTORY");
         registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
@@ -188,7 +188,7 @@ public class RegistryTestConfiguration {
         registryConfiguration.setGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
         registryConfiguration.setGroupDefinitionConfigurationList(Arrays.asList(registryDataConfiguratinGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup));
 
-        final RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
         registryOverrideConfiguration.setPropertyDisplayOrderList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
         registryOverrideConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
@@ -196,20 +196,20 @@ public class RegistryTestConfiguration {
         registryOverrideConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
         registryOverrideConfiguration.setDeletable(false);
 
-        final RegistryOverrideConfiguration registryInterceptorTestOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration registryInterceptorTestOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
         registryInterceptorTestOverrideConfiguration.setReadOnly(true);
 
-        final RegistryOverrideConfigurationHolder registryTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
+        RegistryOverrideConfigurationHolder registryTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
                 .type(RegistryConfigurationTestEntity.class).overrideConfiguration(registryOverrideConfiguration).build();
 
-        final RegistryOverrideConfigurationHolder registryInterceptorTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
+        RegistryOverrideConfigurationHolder registryInterceptorTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
                 .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
 
-        final SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
+        SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
-        final RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+        RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
                 .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
         registryConfiguration.setOverrideConfigurationHolderList(Arrays.asList(registryOverrideConfigurationHolder, registryTestEntityOverrideConfiguration, registryInterceptorTestEntityOverrideConfiguration));
@@ -218,64 +218,64 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryConfigurationResolverService registryConfigurationResolverService(final EntityManager entityManager, final RegistryConfiguration registryConfiguration) {
+    public RegistryConfigurationResolverService registryConfigurationResolverService(EntityManager entityManager, RegistryConfiguration registryConfiguration) {
         return new DefaultRegistryConfigurationResolverService(entityManager, registryConfiguration);
     }
 
     @Bean
-    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new RegistryConfigurationUpdateInterceptor(registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
-    public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        final List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
+    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService) {
+        List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
 
         return new DefaultRegistryConfigurationService(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @Bean
-    public RegistryConfigurationController registryConfigurationController(final RegistryConfigurationService registryConfigurationService) {
+    public RegistryConfigurationController registryConfigurationController(RegistryConfigurationService registryConfigurationService) {
         return new RegistryConfigurationController(registryConfigurationService);
     }
 
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService(final EntityManager entityManager, final ModelMapper registryBaseModelMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryEntityFinderService registryEntityFinderService(EntityManager entityManager, ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap());
     }
 
     @Bean
-    public RegistryDataService registryDataService(final EntityManager entityManager, final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList, final RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryDataService registryDataService(EntityManager entityManager, ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         return new DefaultRegistryDataService(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()), registryEntityFinderService);
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
     }
 
     @Bean
-    public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService, final Validator validator) {
+    public RegistryDataController registryDataController(RegistryDataService registryDataService, RegistryDataRequestConversionService registryDataRequestConversionService, Validator validator) {
         return new RegistryDataController(registryDataService, registryDataRequestConversionService, validator);
     }
 
     @Bean
-    public RegistryHistoryService registryHistoryService(final EntityManager entityManager, final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryBaseModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryHistoryService registryHistoryService(EntityManager entityManager, RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
         return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
     }
 
     @Bean
-    public RegistryHistoryController registryHistoryController(final RegistryHistoryService registryHistoryService) {
+    public RegistryHistoryController registryHistoryController(RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
     }
 
     @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(final RegistryConfigurationResolverService registryConfigurationResolverService) {
-        final List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
+    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService) {
+        List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
                 .map(RegistryDataConfiguration::getRegistryType)
                 .collect(Collectors.toList());
 
-        final Map<String, Class<?>> formConfigurationMap = new HashMap<>();
+        Map<String, Class<?>> formConfigurationMap = new HashMap<>();
 
         formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
         formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);

@@ -8,26 +8,26 @@ public final class AnnotationUtil {
     private AnnotationUtil() {
     }
 
-    public static boolean isAnnotationPresent(final Field field, final String annotationName) {
+    public static boolean isAnnotationPresent(Field field, String annotationName) {
         try {
             @SuppressWarnings("unchecked")
-            final Class<? extends Annotation> annotation = (Class<? extends Annotation>) Class.forName(annotationName);
+            Class<? extends Annotation> annotation = (Class<? extends Annotation>) Class.forName(annotationName);
 
             return field.getAnnotationsByType(annotation).length > 0;
         }
-        catch (final Exception ignored) {
+        catch (Exception ignored) {
             return false;
         }
     }
 
-    public static boolean isAnnotationPresent(final Class<?> type, final String annotationName) {
+    public static boolean isAnnotationPresent(Class<?> type, String annotationName) {
         try {
             @SuppressWarnings("unchecked")
-            final Class<? extends Annotation> annotation = (Class<? extends Annotation>) Class.forName(annotationName);
+            Class<? extends Annotation> annotation = (Class<? extends Annotation>) Class.forName(annotationName);
 
             return type.isAnnotationPresent(annotation);
         }
-        catch (final Exception ignored) {
+        catch (Exception ignored) {
             return false;
         }
     }

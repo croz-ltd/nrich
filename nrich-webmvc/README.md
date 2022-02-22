@@ -22,7 +22,7 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
     @Bean
-    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(final TransientPropertyResolverService transientPropertyResolverService) {
+    public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(true, true, transientPropertyResolverService);
     }
 
@@ -32,12 +32,12 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
     }
 
     @Bean
-    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(final MessageSource messageSource) {
+    public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(MessageSource messageSource) {
         return new MessageSourceExceptionHttpStatusResolverService(messageSource);
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(final NotificationResponseService<?> notificationResponseService, final LoggingService loggingService, final ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, final ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService, ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
     }
 

@@ -16,16 +16,16 @@ public class MessageSourceExceptionHttpStatusResolverService implements Exceptio
     private final MessageSource messageSource;
 
     @Override
-    public Integer resolveHttpStatusForException(final Exception exception) {
-        final String statusMessageCode = String.format(PREFIX_FORMAT, exception.getClass().getName(), EXCEPTION_HTTP_STATUS_SUFFIX);
+    public Integer resolveHttpStatusForException(Exception exception) {
+        String statusMessageCode = String.format(PREFIX_FORMAT, exception.getClass().getName(), EXCEPTION_HTTP_STATUS_SUFFIX);
 
-        final DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(statusMessageCode);
+        DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(statusMessageCode);
 
         Integer status = null;
         try {
             status = Integer.valueOf(messageSource.getMessage(defaultMessageSourceResolvable, LocaleContextHolder.getLocale()));
         }
-        catch (final Exception ignored) {
+        catch (Exception ignored) {
             // ignored
         }
 

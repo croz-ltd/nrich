@@ -23,7 +23,7 @@ import org.hibernate.validator.spi.cfg.ConstraintMappingContributor;
 public class DefaultConstraintMappingContributor implements ConstraintMappingContributor {
 
     @Override
-    public void createConstraintMappings(final ConstraintMappingBuilder builder) {
+    public void createConstraintMappings(ConstraintMappingBuilder builder) {
         builder.addConstraintMapping().constraintDefinition(ValidOib.class).validatedBy(ValidOibValidator.class);
         builder.addConstraintMapping().constraintDefinition(ValidSearchProperties.class).validatedBy(ValidSearchPropertiesValidator.class);
         builder.addConstraintMapping().constraintDefinition(ValidRange.class).validatedBy(ValidRangeValidator.class);

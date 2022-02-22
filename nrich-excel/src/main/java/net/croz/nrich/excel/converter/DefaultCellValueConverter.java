@@ -23,12 +23,12 @@ public class DefaultCellValueConverter implements CellValueConverter {
     private final List<ConverterHolder> converterHolderList = initializeConverterList();
 
     @Override
-    public void setCellValue(final CellHolder cell, final Object value) {
+    public void setCellValue(CellHolder cell, Object value) {
         Optional.ofNullable(findConverter(value)).ifPresent(converterHolder -> converterHolder.setCellValueFunction.accept(cell, value));
     }
 
     @Override
-    public boolean supports(final CellHolder cell, final Object value) {
+    public boolean supports(CellHolder cell, Object value) {
         return findConverter(value) != null;
     }
 
@@ -49,7 +49,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
         );
     }
 
-    private ConverterHolder findConverter(final Object value) {
+    private ConverterHolder findConverter(Object value) {
         if (value == null) {
             return null;
         }

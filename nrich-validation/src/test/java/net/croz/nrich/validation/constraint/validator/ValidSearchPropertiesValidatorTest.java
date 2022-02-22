@@ -22,10 +22,10 @@ class ValidSearchPropertiesValidatorTest {
     @Test
     void shouldReportErrorWhenBothSearchFieldGroupsAreNull() {
         // given
-        final ValidSearchFieldsValidatorTestRequest request = new ValidSearchFieldsValidatorTestRequest(null, null, null);
+        ValidSearchFieldsValidatorTestRequest request = new ValidSearchFieldsValidatorTestRequest(null, null, null);
 
         // when
-        final Set<ConstraintViolation<ValidSearchFieldsValidatorTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidSearchFieldsValidatorTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).hasSize(1);
@@ -34,10 +34,10 @@ class ValidSearchPropertiesValidatorTest {
     @Test
     void shouldNotReportErrorWhenOneSearchGroupIsNotNull() {
         // given
-        final ValidSearchFieldsValidatorTestRequest request = new ValidSearchFieldsValidatorTestRequest("first", Instant.now(), null);
+        ValidSearchFieldsValidatorTestRequest request = new ValidSearchFieldsValidatorTestRequest("first", Instant.now(), null);
 
         // when
-        final Set<ConstraintViolation<ValidSearchFieldsValidatorTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<ValidSearchFieldsValidatorTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();

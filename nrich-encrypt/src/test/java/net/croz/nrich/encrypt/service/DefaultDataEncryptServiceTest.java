@@ -28,14 +28,14 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptSimpleData() {
         // given
-        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
-        final String textToEncrypt = "some text";
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        String textToEncrypt = "some text";
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setFieldToEncryptDecrypt(textToEncrypt);
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
@@ -45,21 +45,21 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldDecryptSimpleData() {
         // given
-        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
-        final String textToEncrypt = "some text";
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        String textToEncrypt = "some text";
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setFieldToEncryptDecrypt(textToEncrypt);
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getFieldToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
 
         // and when
-        final DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
@@ -69,21 +69,21 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptCollectionTextData() {
         // given
-        final List<String> propertyList = Collections.singletonList("listToEncrypt");
-        final List<String> textList = Collections.singletonList("some text");
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("listToEncrypt");
+        List<String> textList = Collections.singletonList("some text");
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setListToEncrypt(textList);
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getListToEncrypt()).isNotEqualTo(textList);
 
         // and when
-        final DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
@@ -93,21 +93,21 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptNestedTextData() {
         // given
-        final List<String> propertyList = Collections.singletonList("nestedTestObject.nestedFieldToEncrypt");
-        final String text = "some text";
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("nestedTestObject.nestedFieldToEncrypt");
+        String text = "some text";
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setNestedTestObject(new DataEncryptionServiceNestedTestObject(text, null));
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getNestedTestObject().getNestedFieldToEncrypt()).isNotEqualTo(text);
 
         // and when
-        final DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
@@ -117,21 +117,21 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptNestedCollectionTextData() {
         // given
-        final List<String> propertyList = Collections.singletonList("nestedTestObjectList.nestedFieldToEncrypt");
-        final String text = "some text";
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("nestedTestObjectList.nestedFieldToEncrypt");
+        String text = "some text";
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setNestedTestObjectList(Collections.singletonList(new DataEncryptionServiceNestedTestObject(text, null)));
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.getNestedTestObjectList()).extracting("nestedFieldToEncrypt").doesNotContain(text);
 
         // and when
-        final DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
@@ -141,8 +141,8 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValues() {
         // given
-        final List<String> propertyList = Arrays.asList("fieldToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Arrays.asList("fieldToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then
         assertThatCode(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
@@ -155,8 +155,8 @@ class DefaultDataEncryptServiceTest {
     @ParameterizedTest
     void shouldNotFailOnNestedNullOrInvalidValues() {
         // given
-        final List<String> propertyList = Collections.singletonList("nestedTestObject.parent.nestedFieldToEncrypt");
-        final DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
+        List<String> propertyList = Collections.singletonList("nestedTestObject.parent.nestedFieldToEncrypt");
+        DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then
         assertThatCode(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build())).doesNotThrowAnyException();
@@ -168,11 +168,11 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenEncryptingData() {
         // given
-        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
-        final DataEncryptionServiceTestObject data = null;
+        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        DataEncryptionServiceTestObject data = null;
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNull();
@@ -181,11 +181,11 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenDecryptingData() {
         // given
-        final List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
-        final DataEncryptionServiceTestObject data = null;
+        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        DataEncryptionServiceTestObject data = null;
 
         // when
-        final DataEncryptionServiceTestObject result = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        DataEncryptionServiceTestObject result = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNull();
@@ -194,21 +194,21 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptMapData() {
         // given
-        final String key = "mapKey";
-        final List<String> propertyList = Collections.singletonList(key);
-        final String textToEncrypt = "some text";
-        final Map<String, String> data = new HashMap<>();
+        String key = "mapKey";
+        List<String> propertyList = Collections.singletonList(key);
+        String textToEncrypt = "some text";
+        Map<String, String> data = new HashMap<>();
 
         data.put(key, textToEncrypt);
 
         // when
-        final Map<String, String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        Map<String, String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).doesNotContainEntry(key, textToEncrypt);
 
         // and when
-        final Map<String, String> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        Map<String, String> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).containsEntry(key, textToEncrypt);
@@ -217,25 +217,25 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptNestedMapData() {
         // given
-        final String key = "mapKey";
-        final List<String> propertyList = Collections.singletonList("mapKey.mapKey");
-        final String textToEncrypt = "some text";
-        final Map<String, Map<String, String>> data = new HashMap<>();
-        final Map<String, String> nestedData = new HashMap<>();
+        String key = "mapKey";
+        List<String> propertyList = Collections.singletonList("mapKey.mapKey");
+        String textToEncrypt = "some text";
+        Map<String, Map<String, String>> data = new HashMap<>();
+        Map<String, String> nestedData = new HashMap<>();
 
         nestedData.put(key, textToEncrypt);
 
         data.put(key, nestedData);
 
         // when
-        final Map<String, Map<String, String>> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+        Map<String, Map<String, String>> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
         assertThat(result.get(key)).doesNotContainEntry(key, textToEncrypt);
 
         // and when
-        final Map<String, Map<String, String>> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
+        Map<String, Map<String, String>> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();

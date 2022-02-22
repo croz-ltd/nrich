@@ -24,10 +24,10 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId() {
         // given
-        final List<String> formIdList = Collections.singletonList("invalidFormId");
+        List<String> formIdList = Collections.singletonList("invalidFormId");
 
         // when
-        final Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(formIdList));
+        Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(formIdList));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -36,16 +36,16 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldResolveSimpleFormFieldConfiguration() {
         // given
-        final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
+        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
 
         // when
-        final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
 
         // then
         assertThat(resultList).hasSize(1);
 
         // and when
-        final FormConfiguration formConfiguration = resultList.get(0);
+        FormConfiguration formConfiguration = resultList.get(0);
 
         // then
         assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
@@ -57,7 +57,7 @@ class DefaultFormConfigurationServiceTest {
         formConfiguration.getConstrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::getPath));
 
         // and when
-        final ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(0).getValidatorList().get(0);
+        ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(0).getValidatorList().get(0);
 
         // then
         assertThat(lastNameValidatorConfiguration).isNotNull();
@@ -70,16 +70,16 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldResolveNestedFormConfiguration() {
         // given
-        final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
+        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
 
         // when
-        final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
 
         // then
         assertThat(resultList).hasSize(1);
 
         // and when
-        final FormConfiguration formConfiguration = resultList.get(0);
+        FormConfiguration formConfiguration = resultList.get(0);
 
         // then
         assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
@@ -91,7 +91,7 @@ class DefaultFormConfigurationServiceTest {
         assertThat(formConfiguration.getConstrainedPropertyConfigurationList().get(4).getValidatorList()).hasSize(1);
 
         // and when
-        final ConstrainedPropertyClientValidatorConfiguration valueValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(4).getValidatorList().get(0);
+        ConstrainedPropertyClientValidatorConfiguration valueValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(4).getValidatorList().get(0);
 
         // then
         assertThat(valueValidatorConfiguration).isNotNull();
@@ -104,16 +104,16 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldIgnoreNestedFieldConfigurationWhenFieldIsNotValidated() {
         // given
-        final List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
+        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
 
         // when
-        final List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
 
         // then
         assertThat(resultList).hasSize(1);
 
         // and when
-        final FormConfiguration formConfiguration = resultList.get(0);
+        FormConfiguration formConfiguration = resultList.get(0);
 
         // then
         assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);

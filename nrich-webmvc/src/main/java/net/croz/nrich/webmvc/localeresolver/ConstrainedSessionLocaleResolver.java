@@ -14,13 +14,13 @@ public class ConstrainedSessionLocaleResolver extends SessionLocaleResolver {
 
     private final List<String> supportedLocaleCodeList;
 
-    public ConstrainedSessionLocaleResolver(final String defaultLocaleCode, final List<String> supportedLocaleCodeList) {
+    public ConstrainedSessionLocaleResolver(String defaultLocaleCode, List<String> supportedLocaleCodeList) {
         this.defaultLocaleCode = defaultLocaleCode == null ? Locale.getDefault().toLanguageTag() : defaultLocaleCode;
         this.supportedLocaleCodeList = supportedLocaleCodeList;
     }
 
     @Override
-    public void setLocale(final HttpServletRequest request, final HttpServletResponse response, final Locale locale) {
+    public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
         Locale localeToSet = locale;
         if (locale == null || !supportedLocaleCodeList.contains(locale.toString())) {
             localeToSet = Locale.forLanguageTag(defaultLocaleCode);

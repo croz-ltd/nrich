@@ -17,7 +17,7 @@ Spring Boot is used or they can be manullay registered on
 
     @Bean
     public ObjectMapper registryObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
         objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(true, Collections.singletonList("net.croz.test")));

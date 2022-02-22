@@ -50,7 +50,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private boolean templateOpen = true;
 
-    public PoiExcelReportGenerator(final List<CellValueConverter> cellValueConverterList, final File outputFile, final InputStream template, final List<TemplateVariable> templateVariableList, final List<TypeDataFormat> typeDataFormatList, final List<ColumnDataFormat> columnDataFormatList, final int startIndex) {
+    public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, File outputFile, InputStream template, List<TemplateVariable> templateVariableList, List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
@@ -62,16 +62,16 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     }
 
     @Override
-    public void writeRowData(final Object... reportDataList) {
+    public void writeRowData(Object... reportDataList) {
         Assert.isTrue(templateOpen, "Template has benn closed and cannot be written anymore");
 
-        final Row row = sheet.createRow(currentRowNumber++);
+        Row row = sheet.createRow(currentRowNumber++);
 
         IntStream.range(0, reportDataList.length).forEach(index -> {
-            final Object value = reportDataList[index];
-            final Cell cell = row.createCell(index);
-            final CellStyle defaultStyle = Optional.ofNullable(value).map(Object::getClass).map(defaultStyleMap::get).orElse(null);
-            final CellStyle cellStyle = Optional.ofNullable(cellStyleMap.get(index)).orElse(defaultStyle);
+            Object value = reportDataList[index];
+            Cell cell = row.createCell(index);
+            CellStyle defaultStyle = Optional.ofNullable(value).map(Object::getClass).map(defaultStyleMap::get).orElse(null);
+            CellStyle cellStyle = Optional.ofNullable(cellStyleMap.get(index)).orElse(defaultStyle);
 
             setCellValue(cell, value, cellStyle);
         });
@@ -80,43 +80,43 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     @SneakyThrows
     @Override
     public void flushAndClose() {
-        try (final FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
             workbook.write(outputStream);
         }
         this.templateOpen = false;
     }
 
-    private void processTemplateVariableMap(final Sheet sheet, final List<TemplateVariable> templateVariableList) {
+    private void processTemplateVariableMap(Sheet sheet, List<TemplateVariable> templateVariableList) {
         if (templateVariableList == null) {
             return;
         }
 
         sheet.forEach(row -> row.forEach(cell -> {
-            final Matcher matcher = TEMPLATE_VARIABLE_PATTERN.matcher(cell.getStringCellValue());
+            Matcher matcher = TEMPLATE_VARIABLE_PATTERN.matcher(cell.getStringCellValue());
 
             if (matcher.find()) {
-                final String matchedExpression = matcher.group(1);
-                final String variableValue = templateVariableList.stream()
+                String matchedExpression = matcher.group(1);
+                String variableValue = templateVariableList.stream()
                         .filter(variable -> matchedExpression.equals(variable.getName()))
                         .map(TemplateVariable::getValue)
                         .findFirst()
                         .orElse("");
 
-                final String updatedValue = matcher.replaceFirst(variableValue);
+                String updatedValue = matcher.replaceFirst(variableValue);
 
                 setCellValue(cell, updatedValue, cell.getCellStyle());
             }
         }));
     }
 
-    private void setCellValue(final Cell cell, final Object value, final CellStyle style) {
+    private void setCellValue(Cell cell, Object value, CellStyle style) {
         if (value == null) {
             return;
         }
 
-        final PoiCellHolder cellHolder = new PoiCellHolder(cell);
+        PoiCellHolder cellHolder = new PoiCellHolder(cell);
 
-        final CellValueConverter converter = cellValueConverterList.stream()
+        CellValueConverter converter = cellValueConverterList.stream()
                 .filter(cellValueConverter -> cellValueConverter.supports(cellHolder, value))
                 .findFirst()
                 .orElse(null);
@@ -133,7 +133,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         }
     }
 
-    private Map<Integer, CellStyle> createStyleMap(final List<ColumnDataFormat> columnDataFormatList) {
+    private Map<Integer, CellStyle> createStyleMap(List<ColumnDataFormat> columnDataFormatList) {
         if (columnDataFormatList == null) {
             return new HashMap<>();
         }
@@ -142,8 +142,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
                 .collect(Collectors.toMap(ColumnDataFormat::getColumnIndex, entry -> createCellStyle(entry.getDataFormat())));
     }
 
-    private CellStyle createCellStyle(final String dataFormat) {
-        final CellStyle style = workbook.createCellStyle();
+    private CellStyle createCellStyle(String dataFormat) {
+        CellStyle style = workbook.createCellStyle();
 
         if (dataFormat != null) {
             style.setDataFormat(creationHelper.createDataFormat().getFormat(dataFormat));
@@ -153,15 +153,15 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     }
 
     @SneakyThrows
-    private SXSSFWorkbook initializeWorkBookWithTemplate(final InputStream template, final List<TemplateVariable> templateVariableList) {
-        final XSSFWorkbook xssfWorkbook = new XSSFWorkbook(template);
+    private SXSSFWorkbook initializeWorkBookWithTemplate(InputStream template, List<TemplateVariable> templateVariableList) {
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(template);
 
         processTemplateVariableMap(xssfWorkbook.getSheetAt(0), templateVariableList);
 
         return new SXSSFWorkbook(xssfWorkbook);
     }
 
-    private Map<Class<?>, CellStyle> createDefaultStyleMap(final List<TypeDataFormat> typeDataFormatList) {
+    private Map<Class<?>, CellStyle> createDefaultStyleMap(List<TypeDataFormat> typeDataFormatList) {
         return typeDataFormatList.stream()
                 .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
                 .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));

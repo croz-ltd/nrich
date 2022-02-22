@@ -7,22 +7,22 @@ import java.util.Map;
 public class LoggingTestService implements LoggingService {
 
     @Override
-    public void logInternalException(final Exception exception, final Map<String, ?> exceptionAuxiliaryData) {
+    public void logInternalException(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
 
     }
 
     @Override
-    public void logInternalExceptionAtCompactVerbosityLevel(final Exception exception, final Map<String, ?> exceptionAuxiliaryData) {
+    public void logInternalExceptionAtCompactVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
 
     }
 
     @Override
-    public void logInternalExceptionAtFullVerbosityLevel(final Exception exception, final Map<String, ?> exceptionAuxiliaryData) {
+    public void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
 
     }
 
     @Override
-    public void logExternalException(final String exceptionClassName, final String exceptionMessage, final Map<String, ?> exceptionAuxiliaryData) {
+    public void logExternalException(String exceptionClassName, String exceptionMessage, Map<String, ?> exceptionAuxiliaryData) {
 
     }
 }

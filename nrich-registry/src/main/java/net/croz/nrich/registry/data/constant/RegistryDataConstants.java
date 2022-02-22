@@ -4,8 +4,6 @@ public final class RegistryDataConstants {
 
     public static final String ENTITY_ALIAS = "entity";
 
-    public static final String PROPERTY_PREFIX_FORMAT = "%s.%s";
-
     public static final String PROPERTY_SPACE_FORMAT = " %s %s ";
 
     public static final String QUERY_PARAMETER_FORMAT = ENTITY_ALIAS + ".%s = :%s";

@@ -22,16 +22,16 @@ class EncryptMethodInterceptorTest {
     @Test
     void shouldEncryptDecryptData() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptFromConfiguration(text);
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptFromConfiguration(text);
 
         // then
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecryptFromConfiguration(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecryptFromConfiguration(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(text);
@@ -40,16 +40,16 @@ class EncryptMethodInterceptorTest {
     @Test
     void shouldEncryptDecryptDataWithPointcutMatchingAllMethods() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptionMethodInterceptorTestService.dataToEncryptFromConfiguration(text);
+        EncryptDataAspectTestServiceResult result = encryptionMethodInterceptorTestService.dataToEncryptFromConfiguration(text);
 
         // then
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final String decryptResult = encryptionMethodInterceptorTestService.dataToDecryptFromConfiguration(result);
+        String decryptResult = encryptionMethodInterceptorTestService.dataToDecryptFromConfiguration(result);
 
         // then
         assertThat(decryptResult).isEqualTo(text);
@@ -58,10 +58,10 @@ class EncryptMethodInterceptorTest {
     @Test
     void shouldNotEncryptDataForIgnoredMethod() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptionMethodInterceptorTestService.ignoredMethod(text);
+        EncryptDataAspectTestServiceResult result = encryptionMethodInterceptorTestService.ignoredMethod(text);
 
         // then
         assertThat(result.getValue()).isEqualTo(text);
@@ -70,10 +70,10 @@ class EncryptMethodInterceptorTest {
     @Test
     void shouldSkipResultEncryptionWhenAnnotationArgumentListIsEmpty() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithInvalidAnnotation(text);
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithInvalidAnnotation(text);
 
         // then
         assertThat(result.getValue()).isEqualTo(text);
@@ -82,16 +82,16 @@ class EncryptMethodInterceptorTest {
     @Test
     void shouldSkipDecryptionWhenAnnotationArgumentListIsEmpty() {
         // given
-        final String text = "some text";
+        String text = "some text";
 
         // when
-        final EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
 
         // then
         assertThat(result.getValue()).isNotEqualTo(text);
 
         // and when
-        final EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecryptWithInvalidAnnotation(result);
+        EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecryptWithInvalidAnnotation(result);
 
         // then
         assertThat(decryptResult.getValue()).isEqualTo(result.getValue());

@@ -23,7 +23,7 @@ class ValidOibValidatorTest {
     @ParameterizedTest
     void shouldSkipValidationOfNullOrEmptyValue(String oib) {
         // when
-        final boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
+        boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
 
         // then
         assertThat(result).isTrue();
@@ -32,10 +32,10 @@ class ValidOibValidatorTest {
     @Test
     void shouldReturnFalseForInvalidOib() {
         // given
-        final String oib = "11111111110";
+        String oib = "11111111110";
 
         // when
-        final boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
+        boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
 
         // then
         assertThat(result).isFalse();
@@ -44,10 +44,10 @@ class ValidOibValidatorTest {
     @Test
     void shouldReturnTrueForValidOib() {
         // given
-        final String oib = "12655668145";
+        String oib = "12655668145";
 
         // when
-        final boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
+        boolean result = validOibValidator.isValid(oib, constraintValidatorContext);
 
         // then
         assertThat(result).isTrue();

@@ -11,15 +11,15 @@ public final class MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUt
     private MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUtil() {
     }
 
-    public static Map<String, Object> mapOf(final String key, final Object value) {
-        final Map<String, Object> map = new HashMap<>();
+    public static Map<String, Object> mapOf(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
 
         map.put(key, value);
 
         return map;
     }
 
-    public static Object entityWithPropertyValue(final Object value) {
+    public static Object entityWithPropertyValue(Object value) {
         return new Entity(value);
     }
 

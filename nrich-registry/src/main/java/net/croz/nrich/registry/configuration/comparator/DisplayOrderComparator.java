@@ -9,7 +9,7 @@ public class DisplayOrderComparator {
 
     protected final List<String> propertyDisplayOrderList;
 
-    public int comparePropertiesByDisplayList(final String firstPropertyName, final String secondPropertyName) {
+    public int comparePropertiesByDisplayList(String firstPropertyName, String secondPropertyName) {
         if (!propertyDisplayOrderList.contains(firstPropertyName)) {
             return 1;
         }
@@ -18,8 +18,8 @@ public class DisplayOrderComparator {
             return -1;
         }
 
-        final Integer firstPropertyIndex = propertyDisplayOrderList.indexOf(firstPropertyName);
-        final Integer secondPropertyIndex = propertyDisplayOrderList.indexOf(secondPropertyName);
+        Integer firstPropertyIndex = propertyDisplayOrderList.indexOf(firstPropertyName);
+        Integer secondPropertyIndex = propertyDisplayOrderList.indexOf(secondPropertyName);
 
         return firstPropertyIndex.compareTo(secondPropertyIndex);
     }

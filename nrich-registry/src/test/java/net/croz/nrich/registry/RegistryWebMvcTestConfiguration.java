@@ -14,7 +14,7 @@ public class RegistryWebMvcTestConfiguration implements WebMvcConfigurer {
     private final ObjectMapper objectMapper;
 
     @Override
-    public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new MappingJackson2HttpMessageConverter(objectMapper));
     }
 }

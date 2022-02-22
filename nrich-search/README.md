@@ -21,12 +21,12 @@ annotation on `@Configuration` class and following beans should be defined in co
     }
 
     @Bean
-    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @Bean
-    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         return new SearchRepositoryFactorySupportFactory(stringToEntityPropertyMapConverter);
     }
 
@@ -154,14 +154,14 @@ public class CarSearchDemoService {
 
     private final CarRepository carRepository;
 
-    public Page<CarSearchResult> search(final SearchCarRequest request) {
-        final SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+    public Page<CarSearchResult> search(SearchCarRequest request) {
+        SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
 
         return carRepository.findAll(request, searchConfiguration, PageableUtil.convertToPageable(request));
     }
 
-    public List<CarSearchResult> simpleSearch(final String query) {
-        final SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+    public List<CarSearchResult> simpleSearch(String query) {
+        SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
 
         return carSearchRepository.findAll(query, Arrays.asList("registrationNumber", "price"), searchConfiguration);
     }
@@ -192,12 +192,12 @@ we mapped that connection by using UserRole entity.
 
 ```
 
-    final SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
+    SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
                 .rootEntity(UserRole.class)
                 .propertyPrefix("userRole")
                 .joinBy(new SearchPropertyJoin("id", "user.id")).build();
 
-    final SearchConfiguration<User, User, UserSearchRequest> searchConfiguration = SearchConfiguration.<User, User, UserSearchRequest>builder()
+    SearchConfiguration<User, User, UserSearchRequest> searchConfiguration = SearchConfiguration.<User, User, UserSearchRequest>builder()
                 .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
                 .build();
 

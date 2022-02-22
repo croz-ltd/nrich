@@ -23,10 +23,10 @@ class NotNullWhenValidatorTest {
     @Test
     void shouldThrowExceptionWhenSpecifiedPropertyDoesntExist() {
         // given
-        final NotNullWhenInvalidTestRequest request = new NotNullWhenInvalidTestRequest("property", "different property");
+        NotNullWhenInvalidTestRequest request = new NotNullWhenInvalidTestRequest("property", "different property");
 
         // when
-        final Throwable thrown = catchThrowable(() -> validator.validate(request));
+        Throwable thrown = catchThrowable(() -> validator.validate(request));
 
         // then
         assertThat(thrown).isNotNull();
@@ -36,10 +36,10 @@ class NotNullWhenValidatorTest {
     @Test
     void shouldNotReportErrorWhenPropertyIsNullAndConditionIsFalse() {
         // given
-        final NotNullWhenTestRequest request = new NotNullWhenTestRequest(null, "different property");
+        NotNullWhenTestRequest request = new NotNullWhenTestRequest(null, "different property");
 
         // when
-        final Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -48,10 +48,10 @@ class NotNullWhenValidatorTest {
     @Test
     void shouldNotReportErrorWhenPropertyIsNotNullAndConditionIsTrue() {
         // given
-        final NotNullWhenTestRequest request = new NotNullWhenTestRequest("value", "not null");
+        NotNullWhenTestRequest request = new NotNullWhenTestRequest("value", "not null");
 
         // when
-        final Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -60,10 +60,10 @@ class NotNullWhenValidatorTest {
     @Test
     void shouldReportErrorWhenPropertyIsNullAndConditionIsTrue() {
         // given
-        final NotNullWhenTestRequest request = new NotNullWhenTestRequest(null, "not null");
+        NotNullWhenTestRequest request = new NotNullWhenTestRequest(null, "not null");
 
         // when
-        final Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NotNullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();

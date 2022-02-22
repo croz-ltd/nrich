@@ -12,7 +12,7 @@ public class TestWebSessionManager implements WebSessionManager {
     private final WebSession webSession;
 
     @Override
-    public Mono<WebSession> getSession(final ServerWebExchange exchange) {
+    public Mono<WebSession> getSession(ServerWebExchange exchange) {
         return Mono.just(webSession);
     }
 }

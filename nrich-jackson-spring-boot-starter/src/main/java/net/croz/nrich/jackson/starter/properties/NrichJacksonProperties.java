@@ -32,7 +32,7 @@ public class NrichJacksonProperties {
      */
     private final List<String> additionalPackageListForClassNameSerialization;
 
-    public NrichJacksonProperties(@DefaultValue("true") final boolean convertEmptyStringsToNull, @DefaultValue("true") final boolean serializeClassName, @DefaultValue("true") final boolean serializeClassNameForEntityAnnotatedClasses, final List<String> additionalPackageListForClassNameSerialization) {
+    public NrichJacksonProperties(@DefaultValue("true") boolean convertEmptyStringsToNull, @DefaultValue("true") boolean serializeClassName, @DefaultValue("true") boolean serializeClassNameForEntityAnnotatedClasses, List<String> additionalPackageListForClassNameSerialization) {
         this.convertEmptyStringsToNull = convertEmptyStringsToNull;
         this.serializeClassName = serializeClassName;
         this.serializeClassNameForEntityAnnotatedClasses = serializeClassNameForEntityAnnotatedClasses;

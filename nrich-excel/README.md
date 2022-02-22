@@ -18,14 +18,14 @@ To be able to use this library following configuration is required:
     }
 
     @Bean
-    public ExcelReportGeneratorFactory excelReportGeneratorFactory(final ResourceLoader resourceLoader, final List<CellValueConverter> cellValueConverterList) {
-        final List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.clas, "dd-MM-yyyy"));
+    public ExcelReportGeneratorFactory excelReportGeneratorFactory(ResourceLoader resourceLoader, List<CellValueConverter> cellValueConverterList) {
+        List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.clas, "dd-MM-yyyy"));
 
         return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);
     }
 
     @Bean
-    public ExcelReportService excelReportService(final ExcelReportGeneratorFactory excelReportGeneratorFactory) {
+    public ExcelReportService excelReportService(ExcelReportGeneratorFactory excelReportGeneratorFactory) {
         return new DefaultExcelReportService(excelReportGeneratorFactory);
     }
 
@@ -72,11 +72,11 @@ would look like this:
 @RequiredArgsConstructor
 public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvider {
 
-    private final ExampleRepository exampleRepository;
+    private ExampleRepository exampleRepository;
 
     @Override
-    public Object[][] resolveMultiRowData(final int start, final int limit) {
-        final Page<Example> exampleList = exampleRepository.findAll(PageableUtil.convertToPageable(start, limit));
+    public Object[][] resolveMultiRowData(int start, int limit) {
+        Page<Example> exampleList = exampleRepository.findAll(PageableUtil.convertToPageable(start, limit));
 
         return exampleList.getContent().stream()
                 .map(value -> new Object[] { value.getName(), value.getDate() })
@@ -91,21 +91,21 @@ Example usage of `ExcelReportService` is:
 
 ```
     // file where data will be written
-    final File file = new File("directory/excel-report.xlsx");
+    File file = new File("directory/excel-report.xlsx");
     // rows in excel
-    final Object[][] rowData = new Object[][] { { 1.1, "value 1", new Date(), new Date() }, { 2.2, "value 2", new Date(), new Date() };
+    Object[][] rowData = new Object[][] { { 1.1, "value 1", new Date(), new Date() }, { 2.2, "value 2", new Date(), new Date() };
     // no need for batching since we have only two records
-    final MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
+    MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
     // template variable defined in template with value ${templateVariable} will be replaced with resolvedValue
-    final List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
+    List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
 
     // data format for columns 2 and 3 is overriden one date is written with dd-MM-yyyy format and another with dd-MM-yyyy HH:mm format
-    final List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
+    List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
     // first row index is 3 since first two rows contain column headers
-    final CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
+    CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
 
-    final File createdFile = ExcelReportService.createExcelReport(request);
+    File createdFile = ExcelReportService.createExcelReport(request);
 
 ```

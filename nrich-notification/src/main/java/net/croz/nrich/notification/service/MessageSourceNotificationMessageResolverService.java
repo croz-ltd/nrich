@@ -22,23 +22,23 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
     private final MessageSource messageSource;
 
     @Override
-    public String resolveMessage(final List<String> messageCodeList, final List<Object> argumentList, final String defaultMessage) {
+    public String resolveMessage(List<String> messageCodeList, List<Object> argumentList, String defaultMessage) {
         Assert.notEmpty(messageCodeList, "Code list cannot be empty!");
 
-        final Object[] arguments = argumentList == null ? new Object[0] : argumentList.toArray(new Object[0]);
+        Object[] arguments = argumentList == null ? new Object[0] : argumentList.toArray(new Object[0]);
 
-        final DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), arguments, defaultMessage);
+        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), arguments, defaultMessage);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    public String resolveMessageForObjectError(final Class<?> validationFailedOwningType, final ObjectError objectError) {
-        final String constraintName = objectError.getCode();
-        final String fieldName = objectError instanceof FieldError ? ((FieldError) objectError).getField() : null;
-        final String name = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getName());
-        final String shortName = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
+    public String resolveMessageForObjectError(Class<?> validationFailedOwningType, ObjectError objectError) {
+        String constraintName = objectError.getCode();
+        String fieldName = objectError instanceof FieldError ? ((FieldError) objectError).getField() : null;
+        String name = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getName());
+        String shortName = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
 
-        final List<String> messageCodeList = new ArrayList<>();
+        List<String> messageCodeList = new ArrayList<>();
 
         if (fieldName == null) {
             messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, constraintName, NotificationConstants.INVALID_SUFFIX));
@@ -61,7 +61,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
             messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
             messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.FIELD_LABEL_SUFFIX));
 
-            final String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
+            String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
 
             message = String.format(NotificationConstants.FIELD_ERROR_FORMAT, fieldNameMessage, message);
         }
@@ -69,7 +69,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         return message;
     }
 
-    private List<Object> argumentsWithoutMessageCodeResolvable(final Object[] arguments) {
+    private List<Object> argumentsWithoutMessageCodeResolvable(Object[] arguments) {
         if (arguments == null || arguments.length == 0) {
             return null;
         }
@@ -84,7 +84,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
                 .collect(Collectors.toList());
     }
 
-    private String convertToString(final Object[] value) {
+    private String convertToString(Object[] value) {
         return Arrays.toString(value).replace('[', ' ').replace(']', ' ').trim();
     }
 }

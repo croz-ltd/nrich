@@ -10,7 +10,7 @@ public interface ExcelReportGenerator {
      *
      * @param reportDataList data to write as a row in excel report.
      */
-    void writeRowData(final Object... reportDataList);
+    void writeRowData(Object... reportDataList);
 
     /**
      * Flushes data to report and closes it. No further writing is possible after this call.

@@ -11,17 +11,17 @@ public final class PersistenceTestUtil {
     private PersistenceTestUtil() {
     }
 
-    public static void flushEntityManager(final EntityManager entityManager) {
+    public static void flushEntityManager(EntityManager entityManager) {
         entityManager.flush();
         entityManager.clear();
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T executeInTransaction(final PlatformTransactionManager transactionManager, final Supplier<?> function) {
+    public static <T> T executeInTransaction(PlatformTransactionManager transactionManager, Supplier<?> function) {
         return (T) new TransactionTemplate(transactionManager).execute(status -> function.get());
     }
 
-    public static void executeInTransactionWithoutResult(final PlatformTransactionManager transactionManager, final Runnable function) {
+    public static void executeInTransactionWithoutResult(PlatformTransactionManager transactionManager, Runnable function) {
         new TransactionTemplate(transactionManager).execute(status -> {
             function.run();
 

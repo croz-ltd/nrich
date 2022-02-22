@@ -17,12 +17,12 @@ class ConvertEmptyStringToNullDeserializerTest {
     @Test
     void shouldConvertEmptyStringsToNull() throws Exception {
         // given
-        final String key = "key";
-        final Map<String, String> testMap = new HashMap<>();
+        String key = "key";
+        Map<String, String> testMap = new HashMap<>();
         testMap.put(key, "");
 
         // when
-        final Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), new TypeReference<Map<String, String>>() {
+        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), new TypeReference<Map<String, String>>() {
         });
 
         // then

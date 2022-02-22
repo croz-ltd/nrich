@@ -11,23 +11,23 @@ public class ValidFileResolvableValidator extends BaseValidFileValidator impleme
 
     private final Environment environment;
 
-    public ValidFileResolvableValidator(final Environment environment) {
+    public ValidFileResolvableValidator(Environment environment) {
         this.environment = environment;
     }
 
     @Override
-    public void initialize(final ValidFileResolvable constraintAnnotation) {
+    public void initialize(ValidFileResolvable constraintAnnotation) {
         this.allowedContentTypeList = resolvePropertyValue(constraintAnnotation.allowedContentTypeListPropertyName(), String[].class, new String[0]);
         this.allowedExtensionList = resolvePropertyValue(constraintAnnotation.allowedExtensionListPropertyName(), String[].class, new String[0]);
         this.allowedFileNameRegex = resolvePropertyValue(constraintAnnotation.allowedFileNameRegexPropertyName(), String.class, "");
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         return isValid(value);
     }
 
-    private <T> T resolvePropertyValue(final String propertyName, final Class<T> propertyType, final T defaultPropertyValue) {
+    private <T> T resolvePropertyValue(String propertyName, Class<T> propertyType, T defaultPropertyValue) {
         if (!propertyName.isEmpty()) {
             return Optional.ofNullable(environment.getProperty(propertyName, propertyType)).orElse(defaultPropertyValue);
         }

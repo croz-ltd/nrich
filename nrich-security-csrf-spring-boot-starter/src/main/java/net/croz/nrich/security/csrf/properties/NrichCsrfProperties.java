@@ -55,7 +55,7 @@ public class NrichCsrfProperties {
      */
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
-    public NrichCsrfProperties(@DefaultValue("true") final boolean active, @DefaultValue("35m") final Duration tokenExpirationInterval, @DefaultValue("1m") final Duration tokenFutureThreshold, @DefaultValue("X-CSRF-Token") final String tokenKeyName, @DefaultValue("128") final Integer cryptoKeyLength, final String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) final String csrfPingUri, final List<CsrfExcludeConfig> csrfExcludeConfigList) {
+    public NrichCsrfProperties(@DefaultValue("true") boolean active, @DefaultValue("35m") Duration tokenExpirationInterval, @DefaultValue("1m") Duration tokenFutureThreshold, @DefaultValue("X-CSRF-Token") String tokenKeyName, @DefaultValue("128") Integer cryptoKeyLength, String initialTokenUrl, @DefaultValue(CsrfConstants.CSRF_DEFAULT_PING_URI) String csrfPingUri, List<CsrfExcludeConfig> csrfExcludeConfigList) {
         this.active = active;
         this.tokenExpirationInterval = tokenExpirationInterval;
         this.tokenFutureThreshold = tokenFutureThreshold;

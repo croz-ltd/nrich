@@ -28,8 +28,8 @@ public class NrichEncryptAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public TextEncryptionService textEncryptionService(final NrichEncryptProperties encryptProperties) {
-        final BytesEncryptor encryptor;
+    public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
+        BytesEncryptor encryptor;
         if (!StringUtils.isEmpty(encryptProperties.getEncryptPassword()) && !StringUtils.isEmpty(encryptProperties.getEncryptSalt())) {
             encryptor = Encryptors.standard(encryptProperties.getEncryptPassword(), encryptProperties.getEncryptSalt());
         }
@@ -42,21 +42,21 @@ public class NrichEncryptAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public DataEncryptionService dataEncryptionService(final TextEncryptionService textEncryptionService) {
+    public DataEncryptionService dataEncryptionService(TextEncryptionService textEncryptionService) {
         return new DefaultDataEncryptService(textEncryptionService);
     }
 
     @ConditionalOnProperty(name = "nrich.encrypt.encrypt-aspect-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
-    public EncryptDataAspect encryptDataAspect(final DataEncryptionService dataEncryptionService) {
+    public EncryptDataAspect encryptDataAspect(DataEncryptionService dataEncryptionService) {
         return new EncryptDataAspect(dataEncryptionService);
     }
 
     @ConditionalOnProperty(name = "nrich.encrypt.encrypt-advisor-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnPropertyNotEmpty("nrich.encrypt.encryption-configuration-list")
     @Bean
-    public Advisor encryptAdvisor(final DataEncryptionService dataEncryptionService, final NrichEncryptProperties encryptProperties) {
-        final AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
+    public Advisor encryptAdvisor(DataEncryptionService dataEncryptionService, NrichEncryptProperties encryptProperties) {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
         pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptProperties.getEncryptionConfigurationList()));
 

@@ -24,7 +24,7 @@ public class NrichCsrfAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public CsrfTokenManagerService tokenManagerService(final NrichCsrfProperties csrfProperties) {
+    public CsrfTokenManagerService tokenManagerService(NrichCsrfProperties csrfProperties) {
         return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getCryptoKeyLength());
     }
 
@@ -36,23 +36,23 @@ public class NrichCsrfAutoConfiguration {
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
-    public CsrfInterceptor csrfInterceptor(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
+    public CsrfInterceptor csrfInterceptor(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @Bean
-    public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService, final NrichCsrfProperties csrfProperties) {
+    public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
     }
 
     @ConditionalOnBean(CsrfInterceptor.class)
     @Bean
-    public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(final CsrfInterceptor csrfInterceptor) {
+    public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(CsrfInterceptor csrfInterceptor) {
         return new WebMvcConfigurer() {
 
             @Override
-            public void addInterceptors(final InterceptorRegistry registry) {
+            public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(csrfInterceptor);
             }
 

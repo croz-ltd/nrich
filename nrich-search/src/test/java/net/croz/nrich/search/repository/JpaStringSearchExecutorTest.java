@@ -39,7 +39,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isNotEmpty();
@@ -51,7 +51,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000", Collections.singletonList("localDate"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isEmpty();
@@ -63,7 +63,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Arrays.asList("age", "localDate", "name"), SearchConfiguration.emptyConfigurationMatchingAny());
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970", Arrays.asList("age", "localDate", "name"), SearchConfiguration.emptyConfigurationMatchingAny());
 
         // then
         assertThat(result).isNotEmpty();
@@ -75,7 +75,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name 1", Collections.singletonList("name"), SearchConfiguration.emptyConfiguration());
+        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name 1", Collections.singletonList("name"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).hasSize(1);
@@ -87,7 +87,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name", Collections.singletonList("name"), SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("name")));
+        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name", Collections.singletonList("name"), SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("name")));
 
         // then
         assertThat(result).hasSize(5);
@@ -100,7 +100,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
+        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration(), PageRequest.of(0, 1));
 
         // then
         assertThat(result).hasSize(1);
@@ -112,7 +112,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", Collections.singletonList("ageFrom"), SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
+        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", Collections.singletonList("ageFrom"), SearchConfiguration.emptyConfiguration(), Pageable.unpaged());
 
         // then
         assertThat(result).isNotEmpty();
@@ -126,7 +126,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final long result = testEntityStringSearchRepository.count("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+        long result = testEntityStringSearchRepository.count("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isEqualTo(1);
@@ -138,7 +138,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+        long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isZero();
@@ -150,7 +150,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final boolean result = testEntityStringSearchRepository.exists("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+        boolean result = testEntityStringSearchRepository.exists("51", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isTrue();
@@ -162,7 +162,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        final boolean result = testEntityStringSearchRepository.exists("51111", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
+        boolean result = testEntityStringSearchRepository.exists("51111", Collections.singletonList("age"), SearchConfiguration.emptyConfiguration());
 
         // then
         assertThat(result).isFalse();

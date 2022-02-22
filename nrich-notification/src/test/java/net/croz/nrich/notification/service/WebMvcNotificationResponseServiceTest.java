@@ -28,7 +28,7 @@ class WebMvcNotificationResponseServiceTest {
 
     @BeforeEach
     void setup() {
-        final NotificationResolverService notificationResolverService = mock(NotificationResolverService.class);
+        NotificationResolverService notificationResolverService = mock(NotificationResolverService.class);
 
         when(notificationResolverService.createNotificationForAction(eq("actionPrefix.actionSuffix"), any(AdditionalNotificationData.class))).thenReturn(new Notification("title", "Action success", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap()));
         when(notificationResolverService.createNotificationForValidationFailure(any(Errors.class), any(), any(AdditionalNotificationData.class))).thenReturn(new ValidationFailureNotification("validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()));
@@ -41,7 +41,7 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldReturnNotificationResolverService() {
         // when
-        final NotificationResolverService notificationResolverService = notificationResponseService.notificationResolverService();
+        NotificationResolverService notificationResolverService = notificationResponseService.notificationResolverService();
 
         // then
         assertThat(notificationResolverService).isNotNull();
@@ -50,7 +50,7 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateResponseForValidationFailure() {
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(Errors.class), Object.class);
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(Errors.class), Object.class);
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -62,7 +62,7 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateResponseForValidationFailureForConstraintViolation() {
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(ConstraintViolationException.class));
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(ConstraintViolationException.class));
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -74,7 +74,7 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateResponseForException() {
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithExceptionNotification(new Exception());
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithExceptionNotification(new Exception());
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -86,12 +86,12 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateNotificationFromCurrentRequest() {
         // given
-        final String data = "data";
-        final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
+        String data = "data";
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest(data);
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest(data);
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -104,10 +104,10 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateNotificationFromActionName() {
         // given
-        final String data = "data";
+        String data = "data";
 
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification(data, "actionPrefix.actionSuffix");
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification(data, "actionPrefix.actionSuffix");
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -120,11 +120,11 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateNotificationFromCurrentRequestWithoutData() {
         // given
-        final MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest("POST", "/actionPrefix/actionSuffix");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest();
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest();
 
         // then
         assertThat(responseWithNotification).isNotNull();
@@ -136,7 +136,7 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateNotificationFromActionNameWithoutData() {
         // when
-        final ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification("actionPrefix.actionSuffix");
+        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification("actionPrefix.actionSuffix");
 
         // then
         assertThat(responseWithNotification).isNotNull();

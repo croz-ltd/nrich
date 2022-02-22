@@ -21,7 +21,7 @@ public class NullWhenTestRequestWithAutowiredService {
         private final NullWhenTestService nullWhenTestService;
 
         @Override
-        public boolean test(final NullWhenTestRequestWithAutowiredService notNullWhenTestRequest) {
+        public boolean test(NullWhenTestRequestWithAutowiredService notNullWhenTestRequest) {
             return nullWhenTestService.reportError();
         }
     }

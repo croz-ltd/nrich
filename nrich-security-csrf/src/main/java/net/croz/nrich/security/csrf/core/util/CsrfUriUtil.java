@@ -10,7 +10,7 @@ public final class CsrfUriUtil {
     private CsrfUriUtil() {
     }
 
-    public static boolean excludeUri(final List<CsrfExcludeConfig> csrfExcludeConfigList, final String uri) {
+    public static boolean excludeUri(List<CsrfExcludeConfig> csrfExcludeConfigList, String uri) {
         if (CollectionUtils.isEmpty(csrfExcludeConfigList)) {
             return false;
         }

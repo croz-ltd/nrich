@@ -14,18 +14,18 @@ To be able to use this library following configuration is required:
 
 ```
     @Bean
-    public FieldErrorMessageResolverService fieldErrorMessageResolverService(final MessageSource messageSource) {
+    public FieldErrorMessageResolverService fieldErrorMessageResolverService(MessageSource messageSource) {
         return new MessageSourceFieldErrorMessageResolverService(messageSource);
     }
 
     @Bean
-    public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(final FieldErrorMessageResolverService fieldErrorMessageResolverService) {
+    public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(FieldErrorMessageResolverService fieldErrorMessageResolverService) {
         return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);
     }
 
     @Bean
-    public FormConfigurationService formConfigurationService(final LocalValidatorFactoryBean validator, final List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
-        final Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>();
+    public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
+        Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>();
 
         formIdConstraintHolderMap.put("testRequest.formId", FormConfigurationServiceTestRequest.class);
 
@@ -33,7 +33,7 @@ To be able to use this library following configuration is required:
      }
 
     @Bean
-    public FormConfigurationController formConfigurationController(final FormConfigurationService formConfigurationService) {
+    public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
         return new FormConfigurationController(formConfigurationService);
     }
 

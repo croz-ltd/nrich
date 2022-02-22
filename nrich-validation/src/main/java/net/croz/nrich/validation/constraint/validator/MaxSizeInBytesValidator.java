@@ -13,13 +13,13 @@ public class MaxSizeInBytesValidator implements ConstraintValidator<MaxSizeInByt
     private Charset charset;
 
     @Override
-    public void initialize(final MaxSizeInBytes constraintAnnotation) {
+    public void initialize(MaxSizeInBytes constraintAnnotation) {
         maxSizeInBytes = constraintAnnotation.value();
         charset = Charset.forName(constraintAnnotation.encoding());
     }
 
     @Override
-    public boolean isValid(final String value, final ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null) {
             return true;
         }

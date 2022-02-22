@@ -24,10 +24,10 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
     @Test
     void shouldResolveValidationMessageForConstrainedProperty() {
         // given
-        final ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceNestedTestRequest.class);
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceNestedTestRequest.class);
 
         // when
-        final String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
 
         // then
         assertThat(message).isEqualTo("Invalid value");
@@ -36,13 +36,13 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
     @Test
     void shouldConvertArraysToStringWhenResolvingMessage() {
         // given
-        final Map<String, Object> argumentMap = new HashMap<>();
+        Map<String, Object> argumentMap = new HashMap<>();
         argumentMap.put("value", new String[] { "one", "two " });
 
-        final ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 
         // when
-        final String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
 
         // then
         assertThat(message).isEqualTo("Not in list: one, two");

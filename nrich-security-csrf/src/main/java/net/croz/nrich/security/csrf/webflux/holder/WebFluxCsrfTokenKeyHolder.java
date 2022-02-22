@@ -30,7 +30,7 @@ public class WebFluxCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeToken(final String csrfToken) {
+    public void storeToken(String csrfToken) {
         exchange.getResponse().getHeaders().add(tokenKeyName, csrfToken);
     }
 
@@ -40,7 +40,7 @@ public class WebFluxCsrfTokenKeyHolder implements CsrfTokenKeyHolder {
     }
 
     @Override
-    public void storeCryptoKey(final Key cryptoKey) {
+    public void storeCryptoKey(Key cryptoKey) {
         webSession.getAttributes().put(cryptoKeyName, cryptoKey);
     }
 }

@@ -17,7 +17,7 @@ public class NotNullWhenInvalidTestRequest {
 
     public static class Condition implements Predicate<NotNullWhenInvalidTestRequest> {
         @Override
-        public boolean test(final NotNullWhenInvalidTestRequest notNullWhenTestRequest) {
+        public boolean test(NotNullWhenInvalidTestRequest notNullWhenTestRequest) {
             return true;
         }
     }

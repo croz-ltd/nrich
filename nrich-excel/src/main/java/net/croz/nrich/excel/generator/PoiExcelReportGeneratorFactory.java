@@ -23,18 +23,18 @@ public class PoiExcelReportGeneratorFactory implements ExcelReportGeneratorFacto
     private final List<TypeDataFormat> typeDataFormatList;
 
     @Override
-    public ExcelReportGenerator createReportGenerator(final CreateReportGeneratorRequest request) {
+    public ExcelReportGenerator createReportGenerator(CreateReportGeneratorRequest request) {
         Assert.isTrue(request.getOutputFile() != null && request.getOutputFile().exists(), "Output file cannot be null");
         Assert.hasText(request.getTemplatePath(), "Template path cannot be null");
         Assert.isTrue(request.getFirstRowIndex() >= 0, "Row index must be greater or equal to 0");
 
-        final InputStream template = resolveTemplate(request.getTemplatePath());
+        InputStream template = resolveTemplate(request.getTemplatePath());
 
         return new PoiExcelReportGenerator(cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex());
     }
 
     @SneakyThrows
-    private InputStream resolveTemplate(final String templatePath) {
+    private InputStream resolveTemplate(String templatePath) {
         return resourceLoader.getResource(templatePath).getInputStream();
     }
 }

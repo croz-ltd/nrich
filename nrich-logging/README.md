@@ -12,7 +12,7 @@ Setup is simple, one only has to define a single bean and then when common loggi
 
 ```
     @Bean
-    public LoggingService loggingService(final MessageSource messageSource) {
+    public LoggingService loggingService(MessageSource messageSource) {
         return new Slf4jLoggingService(messageSource);
     }
 

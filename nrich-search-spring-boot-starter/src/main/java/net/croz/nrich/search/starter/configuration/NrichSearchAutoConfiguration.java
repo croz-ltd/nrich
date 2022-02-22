@@ -25,19 +25,19 @@ public class NrichSearchAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.search.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "searchDefaultStringToTypeConverter")
     @Bean
-    public StringToTypeConverter<?> searchDefaultStringToTypeConverter(final NrichSearchProperties searchProperties) {
+    public StringToTypeConverter<?> searchDefaultStringToTypeConverter(NrichSearchProperties searchProperties) {
         return new DefaultStringToTypeConverter(searchProperties.getStringSearch().getDateFormatList(), searchProperties.getStringSearch().getDecimalNumberFormatList(), searchProperties.getStringSearch().getBooleanTrueRegexPattern(), searchProperties.getStringSearch().getBooleanFalseRegexPattern());
     }
 
     @ConditionalOnMissingBean(name = "searchStringToEntityPropertyMapConverter")
     @Bean
-    public StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+    public StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(final StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter) {
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter) {
         return new SearchRepositoryFactorySupportFactory(searchStringToEntityPropertyMapConverter);
     }
 }

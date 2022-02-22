@@ -16,7 +16,7 @@ public class CsrfPingController {
     @RequestMapping(CsrfConstants.CSRF_DEFAULT_PING_URI)
     @ResponseBody
     public Map<String, Boolean> ping() {
-        final Map<String, Boolean> result = new HashMap<>();
+        Map<String, Boolean> result = new HashMap<>();
 
         result.put("success", true);
 

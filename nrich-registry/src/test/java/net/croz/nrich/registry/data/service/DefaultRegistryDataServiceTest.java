@@ -57,10 +57,10 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final Map<String, Page<?>> result = registryDataService.listBulk(request);
+        Map<String, Page<?>> result = registryDataService.listBulk(request);
 
         // then
         assertThat(result).hasSize(1);
@@ -72,10 +72,10 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.list(request);
+        Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(5);
@@ -86,10 +86,10 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityWithDifferentIdNameList(entityManager);
 
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithDifferentIdName.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithDifferentIdName.class.getName(), "name%");
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.list(request);
+        Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(5);
@@ -100,10 +100,10 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%", 0, 3);
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%", 0, 3);
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.list(request);
+        Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(3);
@@ -116,10 +116,10 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), null);
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), null);
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.list(request);
+        Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).hasSize(5);
@@ -128,14 +128,14 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldCreateRegistryEntity() {
         // when
-        final RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), new CreateRegistryTestEntityRequest("name 1", 50));
+        RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), new CreateRegistryTestEntityRequest("name 1", 50));
 
         // then
         assertThat(registryTestEntity).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
+        RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
 
         // then
         assertThat(loaded.getAge()).isEqualTo(50);
@@ -145,17 +145,17 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldUpdateRegistryEntity() {
         // given
-        final RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
 
         // when
-        final RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
+        RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
 
         // then
         assertThat(updatedEntity).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
+        RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
 
         // then
         assertThat(loaded.getAge()).isEqualTo(51);
@@ -165,17 +165,17 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldUpdateRegistryEntityWithoutAssociations() {
         // given
-        final RegistryTestEntityWithoutAssociation registryTestEntity = createRegistryTestEntityWithoutAssociation(entityManager);
+        RegistryTestEntityWithoutAssociation registryTestEntity = createRegistryTestEntityWithoutAssociation(entityManager);
 
         // when
-        final RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
+        RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
 
         // then
         assertThat(updatedEntity).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEntityWithoutAssociation loaded = entityManager.find(RegistryTestEntityWithoutAssociation.class, registryTestEntity.getId());
+        RegistryTestEntityWithoutAssociation loaded = entityManager.find(RegistryTestEntityWithoutAssociation.class, registryTestEntity.getId());
 
         // then
         assertThat(loaded.getAge()).isEqualTo(51);
@@ -185,12 +185,12 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldUpdateRegistryEntityWithEmbeddedObjectId() {
         // given
-        final String joinedPropertyUpdateValue = "updated joined property";
-        final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
-        final RegistryTestEmbeddedUserGroupId registryUpdateGroupId = createRegistryTestEmbeddedUserGroupId(entityManager);
+        String joinedPropertyUpdateValue = "updated joined property";
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
+        RegistryTestEmbeddedUserGroupId registryUpdateGroupId = createRegistryTestEmbeddedUserGroupId(entityManager);
 
         // when
-        final RegistryTestEmbeddedUserGroup result = registryDataService.update(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId(), new RegistryTestEmbeddedUserGroup(registryUpdateGroupId, joinedPropertyUpdateValue));
+        RegistryTestEmbeddedUserGroup result = registryDataService.update(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId(), new RegistryTestEmbeddedUserGroup(registryUpdateGroupId, joinedPropertyUpdateValue));
 
         // then
         assertThat(result).isNotNull();
@@ -198,7 +198,7 @@ class DefaultRegistryDataServiceTest {
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryUpdateGroupId);
+        RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryUpdateGroupId);
 
         // then
         assertThat(loaded).isNotNull();
@@ -207,10 +207,10 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldDeleteRegistryEntity() {
         // given
-        final RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
 
         // when
-        final RegistryTestEntity result = registryDataService.delete(RegistryTestEntity.class.getName(), registryTestEntity.getId());
+        RegistryTestEntity result = registryDataService.delete(RegistryTestEntity.class.getName(), registryTestEntity.getId());
 
         // then
         assertThat(result.getId()).isEqualTo(registryTestEntity.getId());
@@ -219,17 +219,17 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldDeleteRegistryEntityWithEmbeddedObjectId() {
         // given
-        final RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
 
         // when
-        final RegistryTestEmbeddedUserGroup result = registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId());
+        RegistryTestEmbeddedUserGroup result = registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId());
 
         // then
         assertThat(result).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryTestEmbeddedUserGroup.getUserGroupId());
+        RegistryTestEmbeddedUserGroup loaded = findRegistryTestEmbeddedUserGroup(entityManager, registryTestEmbeddedUserGroup.getUserGroupId());
 
         // then
         assertThat(loaded).isNull();
@@ -238,17 +238,17 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldDeleteRegistryEntityWithEmbeddedId() {
         // given
-        final RegistryTestEntityWithEmbeddedId registryTestEntityWithEmbeddedId = createRegistryTestEntityWithEmbeddedId(entityManager);
+        RegistryTestEntityWithEmbeddedId registryTestEntityWithEmbeddedId = createRegistryTestEntityWithEmbeddedId(entityManager);
 
         // when
-        final RegistryTestEntityWithEmbeddedId result = registryDataService.delete(RegistryTestEntityWithEmbeddedId.class.getName(), registryTestEntityWithEmbeddedId.getId().asMap());
+        RegistryTestEntityWithEmbeddedId result = registryDataService.delete(RegistryTestEntityWithEmbeddedId.class.getName(), registryTestEntityWithEmbeddedId.getId().asMap());
 
         // then
         assertThat(result).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEntityWithEmbeddedId loaded = entityManager.find(RegistryTestEntityWithEmbeddedId.class, registryTestEntityWithEmbeddedId.getId());
+        RegistryTestEntityWithEmbeddedId loaded = entityManager.find(RegistryTestEntityWithEmbeddedId.class, registryTestEntityWithEmbeddedId.getId());
 
         // then
         assertThat(loaded).isNull();
@@ -260,7 +260,7 @@ class DefaultRegistryDataServiceTest {
         createRegistryTestEmbeddedUserGroup(entityManager);
 
         // when
-        final Throwable thrown = catchThrowable(() -> registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), new Object()));
+        Throwable thrown = catchThrowable(() -> registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), new Object()));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -271,18 +271,18 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityWithOverriddenSearchConfigurationList(entityManager);
 
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name%");
 
         // when
-        final Page<RegistryTestEntity> result = registryDataService.list(request);
+        Page<RegistryTestEntity> result = registryDataService.list(request);
 
         // then
         assertThat(result).isEmpty();
 
         // and when
-        final ListRegistryRequest requestWithEqualName = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name 0");
+        ListRegistryRequest requestWithEqualName = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name 0");
 
-        final Page<RegistryTestEntity> resultWithEqualName = registryDataService.list(requestWithEqualName);
+        Page<RegistryTestEntity> resultWithEqualName = registryDataService.list(requestWithEqualName);
 
         // then
         assertThat(resultWithEqualName).hasSize(1);
@@ -291,10 +291,10 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldThrowExceptionWhenConfigurationHasNotBeenDefined() {
         // given
-        final ListRegistryRequest request = createListRegistryRequest("undefined.configuration", "name%");
+        ListRegistryRequest request = createListRegistryRequest("undefined.configuration", "name%");
 
         // when
-        final Throwable thrown = catchThrowable(() -> registryDataService.list(request));
+        Throwable thrown = catchThrowable(() -> registryDataService.list(request));
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
@@ -303,17 +303,17 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldDeleteRegistryEntityWithIdClassId() {
         // given
-        final RegistryTestEntityWithIdClass registryTestEntityWithIdClass = createRegistryTestEntityWithIdClass(entityManager);
+        RegistryTestEntityWithIdClass registryTestEntityWithIdClass = createRegistryTestEntityWithIdClass(entityManager);
 
         // when
-        final RegistryTestEntityWithIdClass result = registryDataService.delete(RegistryTestEntityWithIdClass.class.getName(), registryTestEntityWithIdClassId(registryTestEntityWithIdClass));
+        RegistryTestEntityWithIdClass result = registryDataService.delete(RegistryTestEntityWithIdClass.class.getName(), registryTestEntityWithIdClassId(registryTestEntityWithIdClass));
 
         // then
         assertThat(result).isNotNull();
 
         // and when
         flushEntityManager(entityManager);
-        final RegistryTestEntityWithIdClass loaded = findRegistryTestEntityWithIdClass(entityManager, registryTestEntityWithIdClass);
+        RegistryTestEntityWithIdClass loaded = findRegistryTestEntityWithIdClass(entityManager, registryTestEntityWithIdClass);
 
         // then
         assertThat(loaded).isNull();

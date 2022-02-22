@@ -17,14 +17,14 @@ public final class FormConfigurationGeneratingUtil {
     private FormConfigurationGeneratingUtil() {
     }
 
-    public static ConstrainedProperty createConstrainedProperty(final Class<?> parentType) {
+    public static ConstrainedProperty createConstrainedProperty(Class<?> parentType) {
         return createConstrainedProperty(parentType, Collections.emptyMap());
     }
 
-    public static ConstrainedProperty createConstrainedProperty(final Class<?> parentType, final Map<String, Object> attributeMap) {
+    public static ConstrainedProperty createConstrainedProperty(Class<?> parentType, Map<String, Object> attributeMap) {
         @SuppressWarnings("unchecked")
-        final ConstraintDescriptor<Annotation> constraintDescriptor = mock(ConstraintDescriptor.class);
-        final Annotation annotation = mock(Annotation.class);
+        ConstraintDescriptor<Annotation> constraintDescriptor = mock(ConstraintDescriptor.class);
+        Annotation annotation = mock(Annotation.class);
 
         doReturn(NotNull.class).when(annotation).annotationType();
 

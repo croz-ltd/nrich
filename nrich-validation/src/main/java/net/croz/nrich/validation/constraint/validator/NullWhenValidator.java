@@ -13,23 +13,23 @@ public class NullWhenValidator extends BaseNullableCheckValidator implements Con
 
     private Class<? extends Predicate<?>> conditionClass;
 
-    public NullWhenValidator(final AutowireCapableBeanFactory beanFactory) {
+    public NullWhenValidator(AutowireCapableBeanFactory beanFactory) {
         super(beanFactory);
     }
 
     @Override
-    public void initialize(final NullWhen constraintAnnotation) {
+    public void initialize(NullWhen constraintAnnotation) {
         propertyName = constraintAnnotation.property();
         conditionClass = constraintAnnotation.condition();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         return isValid(value, conditionClass, propertyName);
     }
 
     @Override
-    protected boolean isPropertyValueValid(final Object propertyValue) {
+    protected boolean isPropertyValueValid(Object propertyValue) {
         return propertyValue == null;
     }
 }

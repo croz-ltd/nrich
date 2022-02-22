@@ -13,7 +13,7 @@ public class SearchRepositoryFactorySupportFactory implements RepositoryFactoryS
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
     @Override
-    public RepositoryFactorySupport createRepositoryFactory(final Class<?> repositoryInterface, final EntityManager entityManager) {
+    public RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager) {
         return new SearchRepositoryJpaRepositoryFactory(entityManager, stringToEntityPropertyMapConverter);
     }
 }

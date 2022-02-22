@@ -50,7 +50,7 @@ public class NrichEncryptProperties {
      */
     private final String encryptSalt;
 
-    public NrichEncryptProperties(final List<EncryptionConfiguration> encryptionConfigurationList, final List<String> ignoredMethodList, @DefaultValue("UTF-8") final String textEncryptCharset, @DefaultValue("true") final boolean encryptAspectEnabled, @DefaultValue("true") final boolean encryptAdvisorEnabled, final String encryptPassword, final String encryptSalt) {
+    public NrichEncryptProperties(List<EncryptionConfiguration> encryptionConfigurationList, List<String> ignoredMethodList, @DefaultValue("UTF-8") String textEncryptCharset, @DefaultValue("true") boolean encryptAspectEnabled, @DefaultValue("true") boolean encryptAdvisorEnabled, String encryptPassword, String encryptSalt) {
         this.encryptionConfigurationList = encryptionConfigurationList;
         this.ignoredMethodList = ignoredMethodList;
         this.textEncryptCharset = textEncryptCharset;

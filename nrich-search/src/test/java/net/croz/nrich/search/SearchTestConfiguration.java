@@ -37,13 +37,13 @@ public class SearchTestConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(final DataSource dataSource) {
-        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(true);
 
-        final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setPackagesToScan("net.croz.nrich.search");
@@ -53,8 +53,8 @@ public class SearchTestConfiguration {
     }
 
     @Bean
-    public JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
 
         transactionManager.setEntityManagerFactory(entityManagerFactory);
 
@@ -67,12 +67,12 @@ public class SearchTestConfiguration {
     }
 
     @Bean
-    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+    public StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @Bean
-    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         return new SearchRepositoryFactorySupportFactory(stringToEntityPropertyMapConverter);
     }
 }

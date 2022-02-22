@@ -22,10 +22,10 @@ class NullWhenValidatorTest {
     @Test
     void shouldNotReportErrorWhenPropertyIsNotNullAndConditionIsFalse() {
         // given
-        final NullWhenTestRequest request = new NullWhenTestRequest("value of property", "different property");
+        NullWhenTestRequest request = new NullWhenTestRequest("value of property", "different property");
 
         // when
-        final Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -34,10 +34,10 @@ class NullWhenValidatorTest {
     @Test
     void shouldNotReportErrorWhenPropertyIsNullAndConditionIsTrue() {
         // given
-        final NullWhenTestRequest request = new NullWhenTestRequest(null, "not null");
+        NullWhenTestRequest request = new NullWhenTestRequest(null, "not null");
 
         // when
-        final Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -46,10 +46,10 @@ class NullWhenValidatorTest {
     @Test
     void shouldReportErrorWhenPropertyIsNotNullAndConditionIsTrue() {
         // given
-        final NullWhenTestRequest request = new NullWhenTestRequest("value", "not null");
+        NullWhenTestRequest request = new NullWhenTestRequest("value", "not null");
 
         // when
-        final Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NullWhenTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();
@@ -58,10 +58,10 @@ class NullWhenValidatorTest {
     @Test
     void shouldUseAutowiredServiceAndReportError() {
         // given
-        final NullWhenTestRequestWithAutowiredService request = new NullWhenTestRequestWithAutowiredService("value", "not null");
+        NullWhenTestRequestWithAutowiredService request = new NullWhenTestRequestWithAutowiredService("value", "not null");
 
         // when
-        final Set<ConstraintViolation<NullWhenTestRequestWithAutowiredService>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<NullWhenTestRequestWithAutowiredService>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();

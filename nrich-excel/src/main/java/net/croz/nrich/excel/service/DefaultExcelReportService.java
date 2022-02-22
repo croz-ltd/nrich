@@ -19,17 +19,16 @@ public class DefaultExcelReportService implements ExcelReportService {
     private final ExcelReportGeneratorFactory excelReportGeneratorFactory;
 
     @Override
-    public File createExcelReport(final CreateExcelReportRequest request) {
-
+    public File createExcelReport(CreateExcelReportRequest request) {
         Assert.notNull(request.getMultiRowDataProvider(), "Row data provider cannot be null!");
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
-        final CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
-        final ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
+        CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
+        ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
-        final MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
+        MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
 
-        final int limit = request.getBatchSize();
+        int limit = request.getBatchSize();
         int start = 0;
         Object[][] rowBatchData;
         while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
@@ -50,7 +49,7 @@ public class DefaultExcelReportService implements ExcelReportService {
         return request.getOutputFile();
     }
 
-    private CreateReportGeneratorRequest toCreateReportGeneratorRequest(final CreateExcelReportRequest reportRequest) {
+    private CreateReportGeneratorRequest toCreateReportGeneratorRequest(CreateExcelReportRequest reportRequest) {
         return CreateReportGeneratorRequest.builder()
                 .columnDataFormatList(reportRequest.getColumnDataFormatList())
                 .firstRowIndex(reportRequest.getFirstRowIndex())

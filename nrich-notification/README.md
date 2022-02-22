@@ -20,17 +20,17 @@ To be able to use this library following configuration is required:
     }
 
     @Bean
-    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+    public NotificationMessageResolverService notificationMessageResolverService(MessageSource messageSource) {
         return new MessageSourceNotificationMessageResolverService(messageSource);
     }
 
     @Bean
-    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+    public NotificationResolverService notificationResolverService(NotificationMessageResolverService notificationMessageResolverService, ConstraintConversionService constraintConversionService) {
         return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 
     @Bean
-    public NotificationResponseService<?> notificationResponseService(final NotificationResolverService notificationResolverService) {
+    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
@@ -62,11 +62,11 @@ advice would look something like this:
 @RequiredArgsConstructor
 public class NotificationErrorHandlingRestControllerAdvice {
 
-    private final NotificationResponseService<?> notificationResponseService;
+    private NotificationResponseService<?> notificationResponseService;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(final Exception exception, final HttpServletRequest request) {
-        final Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryData();
+    public ResponseEntity<?> handleException(Exception exception, HttpServletRequest request) {
+        Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryData();
 
         log.error("Error occurred", exception);
 
@@ -74,7 +74,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     private Map<String, Object> exceptionAuxiliaryData() {
-        final Map<String, Object> exceptionAuxiliaryData = new HashMap<>();
+        Map<String, Object> exceptionAuxiliaryData = new HashMap<>();
 
         exceptionAuxiliaryData.put("uuid", UUID.randomUUID().toString());
 
@@ -93,13 +93,13 @@ Users can also use `NotificationResponseService` to return notifications with re
 @RequiredArgsConstructor
 public class NotificationTestController {
 
-    private final NotificationResponseService<ResponseWithNotification<?>> notificationResponseService;
+    private NotificationResponseService<ResponseWithNotification<?>> notificationResponseService;
 
-    private final ExampleService exampleService;
+    private ExampleService exampleService;
 
     @PostMapping("save")
-    public ResponseWithNotification<?> save(final ExampleEntity exampleEntity) {
-        final ExampleEntity saved = exampleService.save(exampleEntity);
+    public ResponseWithNotification<?> save(ExampleEntity exampleEntity) {
+        ExampleEntity saved = exampleService.save(exampleEntity);
 
         return notificationResponseService.responseWithNotificationActionResolvedFromRequest(saved);
     }

@@ -20,7 +20,7 @@ public class RegistryHistoryController {
     private final RegistryHistoryService registryHistoryService;
 
     @PostMapping("list")
-    public <T> Page<EntityWithRevision<T>> historyList(@RequestBody @Valid final ListRegistryHistoryRequest request) {
+    public <T> Page<EntityWithRevision<T>> historyList(@RequestBody @Valid ListRegistryHistoryRequest request) {
         return registryHistoryService.historyList(request);
     }
 }

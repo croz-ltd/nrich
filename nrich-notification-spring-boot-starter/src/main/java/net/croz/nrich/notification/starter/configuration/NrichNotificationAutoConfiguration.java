@@ -31,25 +31,25 @@ public class NrichNotificationAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public NotificationMessageResolverService notificationMessageResolverService(final MessageSource messageSource) {
+    public NotificationMessageResolverService notificationMessageResolverService(MessageSource messageSource) {
         return new MessageSourceNotificationMessageResolverService(messageSource);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public NotificationResolverService notificationResolverService(final NotificationMessageResolverService notificationMessageResolverService, final ConstraintConversionService constraintConversionService) {
+    public NotificationResolverService notificationResolverService(NotificationMessageResolverService notificationMessageResolverService, ConstraintConversionService constraintConversionService) {
         return new DefaultNotificationResolverService(notificationMessageResolverService, constraintConversionService);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
-    public NotificationResponseService<?> notificationResponseService(final NotificationResolverService notificationResolverService) {
+    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
     @ConditionalOnProperty(name = "nrich.notification.register-messages", havingValue = "true", matchIfMissing = true)
     @Bean
-    public NotificationMessageSourceRegistrar notificationMessageSourceRegistrar(final MessageSource messageSource) {
+    public NotificationMessageSourceRegistrar notificationMessageSourceRegistrar(MessageSource messageSource) {
         return new NotificationMessageSourceRegistrar(messageSource);
     }
 

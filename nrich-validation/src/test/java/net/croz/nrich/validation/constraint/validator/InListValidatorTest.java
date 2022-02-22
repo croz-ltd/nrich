@@ -21,10 +21,10 @@ class InListValidatorTest {
     @Test
     void shouldNotReportErrorForNullValue() {
         // given
-        final InListTestRequest request = new InListTestRequest(null);
+        InListTestRequest request = new InListTestRequest(null);
 
         // when
-        final Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -33,10 +33,10 @@ class InListValidatorTest {
     @Test
     void shouldNotReportErrorWhenValueIsInList() {
         // given
-        final InListTestRequest request = new InListTestRequest("in list");
+        InListTestRequest request = new InListTestRequest("in list");
 
         // when
-        final Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
@@ -44,10 +44,10 @@ class InListValidatorTest {
 
     @Test
     void shouldReportErrorWhenValueIsNotInList() {
-        final InListTestRequest request = new InListTestRequest("not in list");
+        InListTestRequest request = new InListTestRequest("not in list");
 
         // when
-        final Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
+        Set<ConstraintViolation<InListTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isNotEmpty();

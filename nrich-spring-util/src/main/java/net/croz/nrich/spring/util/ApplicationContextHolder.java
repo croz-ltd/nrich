@@ -17,7 +17,7 @@ public final class ApplicationContextHolder implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(final ApplicationContext applicationContext) {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         ApplicationContextHolder.applicationContext = applicationContext;
     }
 }

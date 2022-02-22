@@ -8,14 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 public class ValidFileValidator extends BaseValidFileValidator implements ConstraintValidator<ValidFile, Object> {
 
     @Override
-    public void initialize(final ValidFile constraintAnnotation) {
+    public void initialize(ValidFile constraintAnnotation) {
         this.allowedContentTypeList = constraintAnnotation.allowedContentTypeList();
         this.allowedExtensionList = constraintAnnotation.allowedExtensionList();
         this.allowedFileNameRegex = constraintAnnotation.allowedFileNameRegex();
     }
 
     @Override
-    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
         return isValid(value);
     }
 }

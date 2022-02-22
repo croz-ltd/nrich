@@ -13,7 +13,7 @@ class CsrfUriUtilTest {
     @Test
     void shouldReturnFalseWhenExcludedUriConfigurationIsEmpty() {
         // when
-        final boolean result = CsrfUriUtil.excludeUri(null, "url");
+        boolean result = CsrfUriUtil.excludeUri(null, "url");
 
         // then
         assertThat(result).isFalse();
@@ -22,10 +22,10 @@ class CsrfUriUtilTest {
     @Test
     void shouldReturnFalseWhenExcludedUriIsNotMatched() {
         // given
-        final CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("not-matched", null);
+        CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("not-matched", null);
 
         // when
-        final boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isFalse();
@@ -34,23 +34,22 @@ class CsrfUriUtilTest {
     @Test
     void shouldReturnFalseWhenExcludedUriIsNotMatchedByRegex() {
         // given
-        final CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, "/*");
+        CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, "/*");
 
         // when
-        final boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isFalse();
     }
 
-
     @Test
     void shouldReturnTrueWhenExcludedUriIsMatched() {
         // given
-        final CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("url", null);
+        CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("url", null);
 
         // when
-        final boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isTrue();
@@ -59,10 +58,10 @@ class CsrfUriUtilTest {
     @Test
     void shouldReturnTrueWhenExcludedUriIsMatchedByRegex() {
         // given
-        final CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, ".*");
+        CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, ".*");
 
         // when
-        final boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isTrue();

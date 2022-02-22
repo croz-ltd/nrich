@@ -26,41 +26,41 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     private final JpaQueryBuilder<T> queryBuilder;
 
-    public JpaSearchExecutor(final EntityManager entityManager, final JpaEntityInformation<T, ?> entityInformation) {
+    public JpaSearchExecutor(EntityManager entityManager, JpaEntityInformation<T, ?> entityInformation) {
         this.entityManager = entityManager;
         this.queryBuilder = new JpaQueryBuilder<>(entityManager, entityInformation.getJavaType());
     }
 
     @Override
-    public <R, P> Optional<P> findOne(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+    public <R, P> Optional<P> findOne(R request, SearchConfiguration<T, P, R> searchConfiguration) {
+        CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         try {
             return Optional.of(entityManager.createQuery(query).getSingleResult());
         }
-        catch (final NoResultException ignored) {
+        catch (NoResultException ignored) {
             return Optional.empty();
         }
     }
 
     @Override
-    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+    public <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration) {
+        CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <R, P> List<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Sort sort) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, sort);
+    public <R, P> List<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration, Sort sort) {
+        CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, sort);
 
         return entityManager.createQuery(query).getResultList();
     }
 
     @Override
-    public <R, P> Page<P> findAll(final R request, final SearchConfiguration<T, P, R> searchConfiguration, final Pageable pageable) {
-        final CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, pageable.getSort());
-        final TypedQuery<P> typedQuery = entityManager.createQuery(query);
+    public <R, P> Page<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration, Pageable pageable) {
+        CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, pageable.getSort());
+        TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         if (pageable.isPaged()) {
             typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
@@ -72,19 +72,19 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
-    public <R, P> long count(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+    public <R, P> long count(R request, SearchConfiguration<T, P, R> searchConfiguration) {
         return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted()));
     }
 
     @Override
-    public <R, P> boolean exists(final R request, final SearchConfiguration<T, P, R> searchConfiguration) {
+    public <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration) {
         return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted())) > 0;
     }
 
-    private long executeCountQuery(final CriteriaQuery<?> query) {
-        final CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
+    private long executeCountQuery(CriteriaQuery<?> query) {
+        CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
 
-        final List<Long> totals = entityManager.createQuery(countQuery).getResultList();
+        List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 
         return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
     }

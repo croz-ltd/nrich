@@ -34,23 +34,23 @@ public class RegistryDataController {
     private final Validator validator;
 
     @PostMapping("list-bulk")
-    public Map<String, Page<?>> listBulk(@RequestBody @Valid final ListBulkRegistryRequest request) {
+    public Map<String, Page<?>> listBulk(@RequestBody @Valid ListBulkRegistryRequest request) {
         return registryDataService.listBulk(request);
     }
 
     @PostMapping("list")
-    public <P> Page<P> list(@RequestBody @Valid final ListRegistryRequest request) {
+    public <P> Page<P> list(@RequestBody @Valid ListRegistryRequest request) {
         return registryDataService.list(request);
     }
 
     @PostMapping("delete")
-    public <T> T delete(@RequestBody @Valid final DeleteRegistryRequest request) {
+    public <T> T delete(@RequestBody @Valid DeleteRegistryRequest request) {
         return registryDataService.delete(request.getClassFullName(), request.getId());
     }
 
     @PostMapping("create")
-    public <T> T create(@RequestBody @Valid final CreateRegistryRequest request) {
-        final Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
+    public <T> T create(@RequestBody @Valid CreateRegistryRequest request) {
+        Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
         validateEntityData(entityData);
 
@@ -58,8 +58,8 @@ public class RegistryDataController {
     }
 
     @PostMapping("update")
-    public <T> T update(@RequestBody @Valid final UpdateRegistryRequest request) {
-        final Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
+    public <T> T update(@RequestBody @Valid UpdateRegistryRequest request) {
+        Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
         validateEntityData(entityData);
 
@@ -67,8 +67,8 @@ public class RegistryDataController {
     }
 
     @SneakyThrows
-    private void validateEntityData(final Object entityData) {
-        final BindingResult errors = new BeanPropertyBindingResult(entityData, "entityData");
+    private void validateEntityData(Object entityData) {
+        BindingResult errors = new BeanPropertyBindingResult(entityData, "entityData");
 
         validator.validate(entityData, errors);
 

@@ -44,11 +44,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldConvertValidationFailureToNotificationErrorResponse() {
         // given
-        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
-        final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
+        Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
+        BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -66,12 +66,12 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldNotFailConversionWhenOwningTypeIsNull() {
         // given
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
+        Map<String, Object> invalidBindingMap = new HashMap<>();
 
-        final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
+        BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, null);
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, null);
 
         // then
         assertThat(notification).isNotNull();
@@ -85,13 +85,13 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldConvertObjectErrorsToValidationMessages() {
         // given
-        final Map<String, Object> invalidBindingMap = new HashMap<>();
+        Map<String, Object> invalidBindingMap = new HashMap<>();
 
-        final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
+        BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
         result.addError(new ObjectError(NotificationResolverServiceTestRequest.class.getSimpleName(), "Object error occurred"));
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -108,10 +108,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldReturnDefaultErrorWhenThereIsNoMessageDefined() {
         // given
-        final BindingResult result = validate(new NotificationResolverServiceTestWithoutMessageRequest(), new HashMap<>());
+        BindingResult result = validate(new NotificationResolverServiceTestWithoutMessageRequest(), new HashMap<>());
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestWithoutMessageRequest.class);
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestWithoutMessageRequest.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -122,10 +122,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldReturnDefinedExceptionMessageAndSeverity() {
         // given
-        final Exception exception = new NotificationResolverServiceTestException();
+        Exception exception = new NotificationResolverServiceTestException();
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
 
         // then
         assertThat(notification).isNotNull();
@@ -138,10 +138,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddMessageArgumentsForDefinedExceptions() {
         // given
-        final Exception exception = new NotificationResolverServiceTestExceptionWithArguments("message");
+        Exception exception = new NotificationResolverServiceTestExceptionWithArguments("message");
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception, "1");
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception, "1");
 
         // then
         assertThat(notification).isNotNull();
@@ -151,10 +151,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldReturnDefaultMessageAndSeverityWhenNoneHasBeenDefined() {
         // given
-        final Exception exception = new IllegalArgumentException();
+        Exception exception = new IllegalArgumentException();
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
 
         // then
         assertThat(notification).isNotNull();
@@ -165,10 +165,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldCreateSuccessfulNotification() {
         // given
-        final String actionName = "upload.finished";
+        String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
 
         // then
         assertThat(notification).isNotNull();
@@ -179,12 +179,12 @@ class DefaultNotificationResolverServiceTest {
 
     @Test
     void shouldCreateValidationFailureNotificationWithCustomTitle() {
-        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
+        Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
-        final BindingResult result = validate(new NotificationResolverServiceTestRequestWithCustomTitle(), invalidBindingMap);
+        BindingResult result = validate(new NotificationResolverServiceTestRequestWithCustomTitle(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequestWithCustomTitle.class);
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequestWithCustomTitle.class);
 
         // then
         assertThat(notification).isNotNull();
@@ -195,10 +195,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldCreateErrorNotificationWithCustomTitle() {
         // given
-        final Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
+        Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
 
         // then
         assertThat(notification).isNotNull();
@@ -208,10 +208,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldCreateSuccessfulNotificationWithCustomTitle() {
         // given
-        final String actionName = "upload.finished.with-title";
+        String actionName = "upload.finished.with-title";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName);
 
         // then
         assertThat(notification).isNotNull();
@@ -223,13 +223,13 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToValidationFailureNotification() {
         // given
-        final Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
-        final Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
+        Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
+        Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
-        final BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
+        BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -239,11 +239,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToExceptionNotification() {
         // given
-        final Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
-        final Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
+        Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
+        Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForException(exception, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -253,11 +253,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToSuccessNotification() {
         // given
-        final Map<String, Object> additionalDataMap = additionalDataMap("success", "ok");
-        final String actionName = "upload.finished";
+        Map<String, Object> additionalDataMap = additionalDataMap("success", "ok");
+        String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -267,11 +267,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldIgnoreNotFoundAdditionalDataMessages() {
         // given
-        final Map<String, Object> additionalDataMap = additionalDataMap("notFound", "ok");
-        final String actionName = "upload.finished";
+        Map<String, Object> additionalDataMap = additionalDataMap("notFound", "ok");
+        String actionName = "upload.finished";
 
         // when
-        final Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
 
         // then
         assertThat(notification).isNotNull();
@@ -281,11 +281,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldConvertConstraintViolationExceptionTooNotificationErrorResponse() {
         // given
-        final NotificationResolverServiceTestRequest request = invalidNotificationResolverServiceTestRequest();
-        final Set<ConstraintViolation<Object>> result = validate(request);
+        NotificationResolverServiceTestRequest request = invalidNotificationResolverServiceTestRequest();
+        Set<ConstraintViolation<Object>> result = validate(request);
 
         // when
-        final ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(new ConstraintViolationException(result));
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(new ConstraintViolationException(result));
 
         // then
         assertThat(notification).isNotNull();
@@ -300,8 +300,8 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
     }
 
-    private BindingResult validate(final Object objectToValidate, final Map<String, Object> valueMap) {
-        final DataBinder binder = new DataBinder(objectToValidate);
+    private BindingResult validate(Object objectToValidate, Map<String, Object> valueMap) {
+        DataBinder binder = new DataBinder(objectToValidate);
 
         binder.setValidator(validator);
 
@@ -312,7 +312,7 @@ class DefaultNotificationResolverServiceTest {
         return binder.getBindingResult();
     }
 
-    private Set<ConstraintViolation<Object>> validate(final Object objectToValidate) {
+    private Set<ConstraintViolation<Object>> validate(Object objectToValidate) {
         return validator.getValidator().validate(objectToValidate);
     }
 }

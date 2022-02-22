@@ -75,8 +75,8 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryDataModelMapper")
     @Bean
     public ModelMapper registryDataModelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
-        final Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
+        ModelMapper modelMapper = new ModelMapper();
+        Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
 
         modelMapper.getConfiguration().setPropertyCondition(skipIds);
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -87,7 +87,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
     public ModelMapper registryBaseModelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
@@ -97,7 +97,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public ObjectMapper registryObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.findAndRegisterModules();
 
@@ -114,81 +114,81 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.registry.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "registryDefaultStringToTypeConverter")
     @Bean
-    public StringToTypeConverter<?> registryDefaultStringToTypeConverter(final NrichRegistryProperties registryProperties) {
+    public StringToTypeConverter<?> registryDefaultStringToTypeConverter(NrichRegistryProperties registryProperties) {
         return new DefaultStringToTypeConverter(registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(), registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern());
     }
 
     // TODO qualifier on a list, prefix maybe, this way it will pick up from search also?
     @ConditionalOnMissingBean(name = "registryStringToEntityPropertyMapConverter")
     @Bean
-    public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(final List<StringToTypeConverter<?>> stringToTypeConverterList) {
+    public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
         return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationResolverService registryConfigurationResolverService(final RegistryConfiguration registryConfiguration) {
+    public RegistryConfigurationResolverService registryConfigurationResolverService(RegistryConfiguration registryConfiguration) {
         return new DefaultRegistryConfigurationResolverService(entityManager, registryConfiguration);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryConfigurationUpdateInterceptor registryConfigurationUpdateInterceptor(RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new RegistryConfigurationUpdateInterceptor(registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationService registryConfigurationService(final MessageSource messageSource, final RegistryConfigurationResolverService registryConfigurationResolverService, final NrichRegistryProperties registryProperties) {
+    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService, NrichRegistryProperties registryProperties) {
         return new DefaultRegistryConfigurationService(messageSource, Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList()), registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
     @ConditionalOnWebApplication
     @Bean
-    public RegistryConfigurationController registryConfigurationController(final RegistryConfigurationService registryConfigurationService) {
+    public RegistryConfigurationController registryConfigurationController(RegistryConfigurationService registryConfigurationService) {
         return new RegistryConfigurationController(registryConfigurationService);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService(final ModelMapper registryBaseModelMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryEntityFinderService registryEntityFinderService(ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap());
     }
 
     @Bean
-    public RegistryDataService registryDataService(final ModelMapper registryDataModelMapper, final StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter, final RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) final List<RegistryDataInterceptor> interceptorList, final RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter, RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         return new DefaultRegistryDataService(entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()), registryEntityFinderService);
     }
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(final ObjectMapper objectMapper, final RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
         return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
     }
 
     @ConditionalOnWebApplication
     @Bean
-    public RegistryDataController registryDataController(final RegistryDataService registryDataService, final RegistryDataRequestConversionService registryDataRequestConversionService, final Validator validator) {
+    public RegistryDataController registryDataController(RegistryDataService registryDataService, RegistryDataRequestConversionService registryDataRequestConversionService, Validator validator) {
         return new RegistryDataController(registryDataService, registryDataRequestConversionService, validator);
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
     @Bean
-    public RegistryHistoryService registryHistoryService(final RegistryConfigurationResolverService registryConfigurationResolverService, final ModelMapper registryBaseModelMapper, final RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
         return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
     @ConditionalOnWebApplication
     @Bean
-    public RegistryHistoryController registryHistoryController(final RegistryHistoryService registryHistoryService) {
+    public RegistryHistoryController registryHistoryController(RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
     }
 
     @ConditionalOnBean(name = FORM_CONFIGURATION_MAPPING_BEAN_NAME)
     @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(final RegistryConfigurationResolverService registryConfigurationResolverService, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) final Map<String, Class<?>> formConfigurationMapping) {
-        final List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
+    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
+        List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
                 .map(RegistryDataConfiguration::getRegistryType)
                 .collect(Collectors.toList());
 

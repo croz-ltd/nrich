@@ -14,10 +14,10 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnFalseWhenAnnotationClassIsNotOnClassPath() {
         // given
-        final String nonExistingClass = "non.existing.class.Test";
+        String nonExistingClass = "non.existing.class.Test";
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtilTest.class, nonExistingClass);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtilTest.class, nonExistingClass);
 
         // then
         assertThat(isAnnotationPresent).isFalse();
@@ -26,10 +26,10 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnFalseWhenAnnotationClassIsNotPresent() {
         // given
-        final String nonPresentAnnotation = Test.class.getName();
+        String nonPresentAnnotation = Test.class.getName();
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtil.class, nonPresentAnnotation);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtil.class, nonPresentAnnotation);
 
         // then
         assertThat(isAnnotationPresent).isFalse();
@@ -38,10 +38,10 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnTrueWhenAnnotationClassIsPresent() {
         // given
-        final String presentAnnotationName = Valid.class.getName();
+        String presentAnnotationName = Valid.class.getName();
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtilTestEntity.class, presentAnnotationName);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(AnnotationUtilTestEntity.class, presentAnnotationName);
 
         // then
         assertThat(isAnnotationPresent).isTrue();
@@ -50,11 +50,11 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnFalseWhenAnnotationClassForFieldIsNotOnClassPath() throws Exception {
         // given
-        final Field field = AnnotationUtilTestEntity.class.getField("name");
-        final String nonExistingClass = "non.existing.class.Test";
+        Field field = AnnotationUtilTestEntity.class.getField("name");
+        String nonExistingClass = "non.existing.class.Test";
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, nonExistingClass);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, nonExistingClass);
 
         // then
         assertThat(isAnnotationPresent).isFalse();
@@ -63,11 +63,11 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnFalseWhenAnnotationClassForFieldIsNotPresent() throws Exception {
         // given
-        final Field field = AnnotationUtilTestEntity.class.getField("name");
-        final String nonPresentAnnotation = Test.class.getName();
+        Field field = AnnotationUtilTestEntity.class.getField("name");
+        String nonPresentAnnotation = Test.class.getName();
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, nonPresentAnnotation);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, nonPresentAnnotation);
 
         // then
         assertThat(isAnnotationPresent).isFalse();
@@ -76,11 +76,11 @@ class AnnotationUtilTest {
     @Test
     void shouldReturnTrueWhenAnnotationClassForFieldIsPresent() throws Exception {
         // given
-        final Field field = AnnotationUtilTestEntity.class.getField("name");
-        final String presentAnnotationName = NotNull.class.getName();
+        Field field = AnnotationUtilTestEntity.class.getField("name");
+        String presentAnnotationName = NotNull.class.getName();
 
         // when
-        final boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, presentAnnotationName);
+        boolean isAnnotationPresent = AnnotationUtil.isAnnotationPresent(field, presentAnnotationName);
 
         // then
         assertThat(isAnnotationPresent).isTrue();

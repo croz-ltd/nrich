@@ -8,14 +8,14 @@ import java.util.List;
 
 public class RegistryPropertyComparator extends DisplayOrderComparator implements Comparator<RegistryPropertyConfiguration> {
 
-    public RegistryPropertyComparator(final List<String> propertyDisplayOrderList) {
+    public RegistryPropertyComparator(List<String> propertyDisplayOrderList) {
         super(propertyDisplayOrderList);
     }
 
     @Override
-    public int compare(final RegistryPropertyConfiguration firstProperty, final RegistryPropertyConfiguration secondProperty) {
-        final String firstPropertyName = firstProperty.getName();
-        final String secondPropertyName = secondProperty.getName();
+    public int compare(RegistryPropertyConfiguration firstProperty, RegistryPropertyConfiguration secondProperty) {
+        String firstPropertyName = firstProperty.getName();
+        String secondPropertyName = secondProperty.getName();
 
         if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
             if (firstProperty.isId()) {

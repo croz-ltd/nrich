@@ -21,36 +21,36 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     private final NotificationResolverService notificationResolverService;
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(final Errors errors, final Class<?> validationFailedOwningType, final AdditionalNotificationData additionalNotificationData) {
-        final Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType, additionalNotificationData);
+    public ResponseWithNotification<?> responseWithValidationFailureNotification(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData) {
+        Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType, additionalNotificationData);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(final ConstraintViolationException exception, final AdditionalNotificationData additionalNotificationData) {
-        final Notification notification = notificationResolverService.createNotificationForValidationFailure(exception, additionalNotificationData);
+    public ResponseWithNotification<?> responseWithValidationFailureNotification(ConstraintViolationException exception, AdditionalNotificationData additionalNotificationData) {
+        Notification notification = notificationResolverService.createNotificationForValidationFailure(exception, additionalNotificationData);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithExceptionNotification(final Throwable throwable, final AdditionalNotificationData additionalNotificationData, final Object... exceptionMessageArgumentList) {
-        final Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData, exceptionMessageArgumentList);
+    public ResponseWithNotification<?> responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
+        Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData, exceptionMessageArgumentList);
 
         return new ResponseWithNotification<>(null, notification);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithNotificationActionResolvedFromRequest(final D data, final AdditionalNotificationData additionalNotificationData) {
-        final String actionName = extractActionNameFromCurrentRequest();
+    public <D> ResponseWithNotification<D> responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
+        String actionName = extractActionNameFromCurrentRequest();
 
         return responseWithNotification(data, actionName, additionalNotificationData);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithNotification(final D data, final String actionName, final AdditionalNotificationData additionalNotificationData) {
-        final Notification notification = notificationResolverService.createNotificationForAction(actionName, additionalNotificationData);
+    public <D> ResponseWithNotification<D> responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData) {
+        Notification notification = notificationResolverService.createNotificationForAction(actionName, additionalNotificationData);
 
         return new ResponseWithNotification<>(data, notification);
     }
@@ -61,13 +61,13 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     }
 
     private String extractActionNameFromCurrentRequest() {
-        final HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
 
         return extractActionNameFromRequest(request);
     }
 
-    private String extractActionNameFromRequest(final HttpServletRequest request) {
-        final String path = new UrlPathHelper().getPathWithinApplication(request);
+    private String extractActionNameFromRequest(HttpServletRequest request) {
+        String path = new UrlPathHelper().getPathWithinApplication(request);
 
         return path.substring(1).replace("/", ".");
     }

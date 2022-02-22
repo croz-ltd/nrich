@@ -28,20 +28,20 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
     private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
 
     @Override
-    public <T> T findEntityInstance(final Class<T> type, final Object id) {
-        final QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
+    public <T> T findEntityInstance(Class<T> type, Object id) {
+        QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
-        final String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
+        String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
                 .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
 
-        final String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
+        String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
 
-        final String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
+        String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
 
-        final String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
+        String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
 
         @SuppressWarnings("unchecked")
-        final TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
+        TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
 
         queryCondition.parameterMap.forEach(query::setParameter);
 
@@ -49,27 +49,27 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
     }
 
     @Override
-    public <T> Map<String, Object> resolveIdParameterMap(final Class<T> type, final Object id) {
+    public <T> Map<String, Object> resolveIdParameterMap(Class<T> type, Object id) {
         return queryWherePartWithParameterMap(type, id, false).parameterMap;
     }
 
-    private <T> QueryCondition queryWherePartWithParameterMap(final Class<T> type, final Object id, final boolean convertParameterToQueryFormat) {
-        final ManagedTypeWrapper managedTypeWrapper = classNameManagedTypeWrapperMap.get(type.getName());
+    private <T> QueryCondition queryWherePartWithParameterMap(Class<T> type, Object id, boolean convertParameterToQueryFormat) {
+        ManagedTypeWrapper managedTypeWrapper = classNameManagedTypeWrapperMap.get(type.getName());
 
-        final List<String> wherePartList = new ArrayList<>();
-        final Map<String, Object> parameterMap = new HashMap<>();
+        List<String> wherePartList = new ArrayList<>();
+        Map<String, Object> parameterMap = new HashMap<>();
 
         if (managedTypeWrapper.isIdClassIdentifier()) {
             Assert.isTrue(id instanceof Map, "Id should be instance of Map for @IdClass identifier");
 
             @SuppressWarnings("unchecked")
-            final Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
+            Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
                     .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
-            final Map<String, Class<?>> idClassPropertyMap = managedTypeWrapper.getIdClassPropertyMap();
+            Map<String, Class<?>> idClassPropertyMap = managedTypeWrapper.getIdClassPropertyMap();
 
             idClassPropertyMap.forEach((key, value) -> {
-                final Object convertedIdValue = modelMapper.map(idMap.get(key), value);
+                Object convertedIdValue = modelMapper.map(idMap.get(key), value);
 
                 wherePartList.add(toParameterExpression(key, convertParameterToQueryFormat));
 
@@ -77,7 +77,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             });
         }
         else {
-            final Object convertedIdValue;
+            Object convertedIdValue;
             if (managedTypeWrapper.isEmbeddedIdentifier()) {
                 Assert.isTrue(id instanceof Map || managedTypeWrapper.getEmbeddableIdType().getJavaType().equals(id.getClass()), "Id should be instance of Map or EmbeddedId for @EmbeddedId identifier");
 
@@ -87,7 +87,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
                 convertedIdValue = modelMapper.map(id, managedTypeWrapper.getIdentifiableType().getIdType().getJavaType());
             }
 
-            final String idAttributeName = managedTypeWrapper.getIdAttributeName();
+            String idAttributeName = managedTypeWrapper.getIdAttributeName();
 
             wherePartList.add(toParameterExpression(idAttributeName, convertParameterToQueryFormat));
 
@@ -97,16 +97,16 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         return new QueryCondition(String.join(RegistryDataConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
     }
 
-    private String toParameterExpression(final String key, final boolean convertParameterToQueryFormat) {
+    private String toParameterExpression(String key, boolean convertParameterToQueryFormat) {
         return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToQueryFormat));
     }
 
-    private String toParameterVariable(final String key, final boolean convertParameterToQueryFormat) {
+    private String toParameterVariable(String key, boolean convertParameterToQueryFormat) {
         if (!convertParameterToQueryFormat) {
             return key;
         }
 
-        final String[] keyList = key.split("\\.");
+        String[] keyList = key.split("\\.");
 
         return Arrays.stream(keyList)
                 .map(StringUtils::capitalize)

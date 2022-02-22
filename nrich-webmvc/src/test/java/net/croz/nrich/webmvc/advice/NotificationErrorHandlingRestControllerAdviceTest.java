@@ -23,15 +23,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveExceptionNotification() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
         });
 
         // then
@@ -39,7 +39,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
+        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
@@ -50,13 +50,13 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveExceptionWithArgumentsNotification() throws Exception {
         // when
-        final String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
+        String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
 
         // then
         assertThat(responseString).isNotNull();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
         });
 
         // then
@@ -64,7 +64,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
+        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
@@ -73,15 +73,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveValidationNotification() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
         });
 
         // then
@@ -89,7 +89,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
+        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
@@ -100,15 +100,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveValidationBindFailedNotification() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
         });
 
         // then
@@ -116,7 +116,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
+        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
@@ -127,15 +127,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldUnwrapException() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
+        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
         });
 
         // then
@@ -143,7 +143,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final Notification notification = convertedResponse.get(NOTIFICATION_KEY);
+        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
@@ -152,8 +152,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldUnwrapValidationException() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -163,8 +163,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldUnwrapBindException() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -174,15 +174,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveConstraintExceptionNotification() throws Exception {
         // when
-        final MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        final String responseString = response.getContentAsString();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        String responseString = response.getContentAsString();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
-        final Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
+        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
         });
 
         // then
@@ -190,7 +190,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
 
         // and when
-        final ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
+        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
 
         // then
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");

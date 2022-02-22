@@ -19,14 +19,14 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>,
 
     private final Class<? extends T> repositoryInterface;
 
-    public SearchExecutorJpaRepositoryFactoryBean(final Class<? extends T> repositoryInterface, final RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
+    public SearchExecutorJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface, RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
         super(repositoryInterface);
         this.repositoryInterface = repositoryInterface;
         this.repositoryFactorySupportFactory = repositoryFactorySupportFactory;
     }
 
     @Override
-    protected RepositoryFactorySupport createRepositoryFactory(final EntityManager entityManager) {
+    protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
         return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager);
     }
 

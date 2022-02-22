@@ -11,12 +11,12 @@ public class ControllerEditorRegistrationAdviceTestController {
     private static final String TRANSIENT_PROPERTY_IGNORE_RESPONSE_FORMAT = "value=%s transientValue=%s";
 
     @PostMapping("convertEmptyStringToNull")
-    public String convertEmptyStringToNull(final String param) {
+    public String convertEmptyStringToNull(String param) {
         return "value=" + param;
     }
 
     @PostMapping("ignoreTransientProperty")
-    public String ignoreTransientProperty(final ControllerEditorRegistrationAdviceTestRequest request) {
+    public String ignoreTransientProperty(ControllerEditorRegistrationAdviceTestRequest request) {
         return String.format(TRANSIENT_PROPERTY_IGNORE_RESPONSE_FORMAT, request.getProperty(), request.getTransientProperty());
     }
 }

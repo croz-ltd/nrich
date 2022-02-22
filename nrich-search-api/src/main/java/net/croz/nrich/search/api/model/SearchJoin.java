@@ -44,19 +44,19 @@ public class SearchJoin<R> {
      */
     private boolean fetch;
 
-    public static <R> SearchJoin<R> innerJoin(final String path) {
+    public static <R> SearchJoin<R> innerJoin(String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null, false);
     }
 
-    public static <R> SearchJoin<R> leftJoin(final String path) {
+    public static <R> SearchJoin<R> leftJoin(String path) {
         return new SearchJoin<>(path, path, JoinType.LEFT, null, false);
     }
 
-    public static <R> SearchJoin<R> innerJoinFetch(final String path) {
+    public static <R> SearchJoin<R> innerJoinFetch(String path) {
         return new SearchJoin<>(path, path, JoinType.INNER, null, true);
     }
 
-    public static <R> SearchJoin<R> leftJoinFetch(final String path) {
+    public static <R> SearchJoin<R> leftJoinFetch(String path) {
         return new SearchJoin<>(path, path, JoinType.LEFT, null, true);
     }
 }

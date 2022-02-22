@@ -19,10 +19,10 @@ class RegistryDataControllerEndpointTest extends BaseWebTest {
     @Test
     void shouldListRegistryOnCustomDomain() throws Exception {
         // given
-        final ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        final MockHttpServletResponse response = mockMvc.perform(
+        MockHttpServletResponse response = mockMvc.perform(
                 post("/domain/nrich/registry/data/list").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 

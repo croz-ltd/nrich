@@ -5,7 +5,7 @@ package net.croz.nrich.encrypt.exception;
  */
 public class EncryptOperationFailedException extends RuntimeException {
 
-    public EncryptOperationFailedException(final String message, final Throwable cause) {
+    public EncryptOperationFailedException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -25,7 +25,7 @@ public class PoiCellHolder implements CellHolder {
     }
 
     @Override
-    public void setCellValue(final Object value) {
+    public void setCellValue(Object value) {
         if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
         }

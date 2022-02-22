@@ -26,11 +26,11 @@ public class SearchOperatorOverride {
      */
     private final SearchOperator searchOperator;
 
-    public static SearchOperatorOverride forType(final Class<?> propertyType, final SearchOperator searchOperator) {
+    public static SearchOperatorOverride forType(Class<?> propertyType, SearchOperator searchOperator) {
         return new SearchOperatorOverride(propertyType, null, searchOperator);
     }
 
-    public static SearchOperatorOverride forPath(final String propertyPath, final SearchOperator searchOperator) {
+    public static SearchOperatorOverride forPath(String propertyPath, SearchOperator searchOperator) {
         return new SearchOperatorOverride(null, propertyPath, searchOperator);
     }
 }

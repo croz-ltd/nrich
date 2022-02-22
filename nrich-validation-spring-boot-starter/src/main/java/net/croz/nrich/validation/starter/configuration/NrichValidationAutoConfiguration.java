@@ -15,7 +15,7 @@ public class NrichValidationAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.validation.register-messages", havingValue = "true", matchIfMissing = true)
     @Bean
-    public ValidationMessageSourceRegistrar validationMessageSourceRegistrar(final MessageSource messageSource) {
+    public ValidationMessageSourceRegistrar validationMessageSourceRegistrar(MessageSource messageSource) {
         return new ValidationMessageSourceRegistrar(messageSource);
     }
 

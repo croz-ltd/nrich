@@ -18,8 +18,8 @@ public final class ProjectionListResolverUtil {
     private ProjectionListResolverUtil() {
     }
 
-    public static <R> List<SearchProjection<R>> resolveSearchProjectionList(final Class<?> projectionType) {
-        final Predicate<Field> shouldIncludeField = field -> !(field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
+    public static <R> List<SearchProjection<R>> resolveSearchProjectionList(Class<?> projectionType) {
+        Predicate<Field> shouldIncludeField = field -> !(field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(projectionType.getDeclaredFields())
                 .filter(shouldIncludeField)
@@ -27,27 +27,27 @@ public final class ProjectionListResolverUtil {
                 .collect(Collectors.toList());
     }
 
-    private static <R> SearchProjection<R> convertToProjection(final Field field) {
-        final String alias = field.getName();
+    private static <R> SearchProjection<R> convertToProjection(Field field) {
+        String alias = field.getName();
 
-        final Annotation[] annotationList = field.getAnnotations();
+        Annotation[] annotationList = field.getAnnotations();
 
         String path = alias;
         Predicate<R> condition = request -> true;
         if (annotationList != null) {
-            final Projection projectionAnnotation = findProjectionAnnotation(annotationList);
+            Projection projectionAnnotation = findProjectionAnnotation(annotationList);
 
             if (projectionAnnotation != null) {
                 path = projectionAnnotation.path();
 
                 if (!Projection.DEFAULT.class.equals(projectionAnnotation.condition())) {
                     @SuppressWarnings("unchecked")
-                    final Predicate<R> predicate = (Predicate<R>) BeanUtils.instantiateClass(projectionAnnotation.condition());
+                    Predicate<R> predicate = (Predicate<R>) BeanUtils.instantiateClass(projectionAnnotation.condition());
                     condition = predicate;
                 }
             }
             else {
-                final Value valueAnnotation = findValueAnnotation(annotationList);
+                Value valueAnnotation = findValueAnnotation(annotationList);
 
                 if (valueAnnotation != null) {
                     path = valueAnnotation.value();
@@ -58,14 +58,14 @@ public final class ProjectionListResolverUtil {
         return new SearchProjection<>(path, alias, condition);
     }
 
-    private static Value findValueAnnotation(final Annotation[] annotationList) {
+    private static Value findValueAnnotation(Annotation[] annotationList) {
         return (Value) Arrays.stream(annotationList)
                 .filter(annotation -> Value.class.isAssignableFrom(annotation.annotationType()))
                 .findFirst()
                 .orElse(null);
     }
 
-    private static Projection findProjectionAnnotation(final Annotation[] annotationList) {
+    private static Projection findProjectionAnnotation(Annotation[] annotationList) {
         return (Projection) Arrays.stream(annotationList)
                 .filter(annotation -> Projection.class.isAssignableFrom(annotation.annotationType()))
                 .findFirst()

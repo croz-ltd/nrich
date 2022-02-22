@@ -9,7 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 public class ValidOibValidator implements ConstraintValidator<ValidOib, String> {
 
     @Override
-    public boolean isValid(final String value, final ConstraintValidatorContext context) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         // will be validated by other constraints
         if (value == null || value.isEmpty()) {
             return true;

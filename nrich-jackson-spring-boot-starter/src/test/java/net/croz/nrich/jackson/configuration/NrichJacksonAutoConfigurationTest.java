@@ -32,7 +32,7 @@ class NrichJacksonAutoConfigurationTest {
     void shouldConfigureJacksonProperties() {
         contextRunner.run(context -> {
             // when
-            final ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
 
             // then
             assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isTrue();
@@ -54,7 +54,7 @@ class NrichJacksonAutoConfigurationTest {
     void shouldSupportStandardOverrideOfJacksonProperties() {
         contextRunner.withPropertyValues("spring.jackson.parser.ALLOW_COMMENTS=false").run(context -> {
             // when
-            final ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
 
             // then
             assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isFalse();

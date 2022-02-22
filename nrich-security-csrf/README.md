@@ -24,8 +24,8 @@ WebFlux environments.
 
     // when in servlet environment (Spring Web MVC)
     @Bean
-    public CsrfInterceptor csrfInterceptor(final CsrfTokenManagerService csrfTokenManagerService) {
-        final CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
+    public CsrfInterceptor csrfInterceptor(CsrfTokenManagerService csrfTokenManagerService) {
+        CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
 
         csrfExcludeConfig.setUri("app/app");
 
@@ -34,8 +34,8 @@ WebFlux environments.
 
     // when in reactive environment (Spring WebFlux)
     @Bean
-    public CsrfWebFilter webFilter(final CsrfTokenManagerService csrfTokenManagerService) {
-        final CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
+    public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService) {
+        CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
 
         csrfExcludeConfig.setUri("app/app");
 
@@ -43,11 +43,11 @@ WebFlux environments.
     }
 
     @Bean
-    public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(final CsrfInterceptor csrfInterceptor) {
+    public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(CsrfInterceptor csrfInterceptor) {
         return new WebMvcConfigurer() {
 
             @Override
-            public void addInterceptors(final InterceptorRegistry registry) {
+            public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(csrfInterceptor);
             }
 

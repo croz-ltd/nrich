@@ -34,21 +34,21 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.debug("csrfInterceptor.preHandle()");
 
         if (handler instanceof ResourceHttpRequestHandler) {
             return true;
         }
 
-        final String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
+        String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
 
         if (CsrfConstants.EMPTY_PATH.equals(pathWithinApplication)) {
             return true;
         }
 
-        final HttpSession httpSession = request.getSession(false);
-        final String requestUri = request.getRequestURI();
+        HttpSession httpSession = request.getSession(false);
+        String requestUri = request.getRequestURI();
 
         if (CsrfUriUtil.excludeUri(csrfExcludeConfigList, requestUri)) {
 
@@ -75,7 +75,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler, final ModelAndView modelAndView) {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (request.getRequestURI().endsWith(initialTokenUrl)) {
 
             modelAndView.addObject(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
@@ -84,19 +84,19 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         }
     }
 
-    private void handleCsrfPingUrl(final HttpServletRequest request, final HttpServletResponse response, final HttpSession httpSession) {
+    private void handleCsrfPingUrl(HttpServletRequest request, HttpServletResponse response, HttpSession httpSession) {
         boolean sessionJustInvalidated = false;
 
         long deltaMillis = 0L;
         if (httpSession != null) {
-            final Long lastRealApiRequestMillis = (Long) httpSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
+            Long lastRealApiRequestMillis = (Long) httpSession.getAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS);
             log.debug("    lastRealApiRequestMillis: {}", lastRealApiRequestMillis);
 
             if (lastRealApiRequestMillis != null) {
                 deltaMillis = System.currentTimeMillis() - lastRealApiRequestMillis;
                 log.debug("    deltaMillis: {}", deltaMillis);
 
-                final long maxInactiveIntervalMillis = httpSession.getMaxInactiveInterval() * 1000L;
+                long maxInactiveIntervalMillis = httpSession.getMaxInactiveInterval() * 1000L;
                 log.debug("    maxInactiveIntervalMillis: {}", maxInactiveIntervalMillis);
 
                 if ((maxInactiveIntervalMillis > 0) && (deltaMillis > maxInactiveIntervalMillis)) {
@@ -121,7 +121,7 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
         response.setHeader(CsrfConstants.CSRF_AFTER_LAST_ACTIVE_REQUEST_MILLIS_HEADER_NAME, Long.toString(deltaMillis));
     }
 
-    private void updateLastApiCallAttribute(final HttpSession httpSession) {
+    private void updateLastApiCallAttribute(HttpSession httpSession) {
         Optional.ofNullable(httpSession).ifPresent(session -> session.setAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, System.currentTimeMillis()));
     }
 }

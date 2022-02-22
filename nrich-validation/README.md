@@ -15,14 +15,14 @@ If automatic registration of messages is required then following configuration i
 ```
 
     @Bean
-    public ValidationMessageSourceRegistrar validationMessageSourceRegistrar(final MessageSource messageSource) {
+    public ValidationMessageSourceRegistrar validationMessageSourceRegistrar(MessageSource messageSource) {
         return new ValidationMessageSourceRegistrar(messageSource);
     }
 
     @RequiredArgsConstructor
     public static class ValidationMessageSourceRegistrar implements InitializingBean {
 
-        private final MessageSource messageSource;
+        private MessageSource messageSource;
 
         @Override
         public void afterPropertiesSet() {
@@ -59,7 +59,7 @@ Validates that values doesn't exceed specified number of bytes in specified enco
 ```
 
     @MaxSizeInBytes(value = 5)
-    private final String value;
+    private String value;
 
 ```
 
@@ -83,7 +83,7 @@ public class CreatePersonRequest {
 
     public static class Condition implements Predicate<CreatePersonRequest> {
         @Override
-        public boolean test(final CreatePersonRequest request) {
+        public boolean test(CreatePersonRequest request) {
             return request.getLastName() != null;
         }
     }
@@ -114,7 +114,7 @@ public class CreateBusinessEntityRequest {
 
     public static class Condition implements Predicate<CreateBusinessEntityRequest> {
         @Override
-        public boolean test(final CreateBusinessEntityRequest request) {
+        public boolean test(CreateBusinessEntityRequest request) {
             return request.getFirstName() != null || request.getLastName() != null;
         }
     }
@@ -152,7 +152,7 @@ defined in property files.
             allowedExtensionListPropertyName = "my.custom.validation.file.allowed-extension-list",
             allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
     )
-    private final MultipartFile file;
+    private MultipartFile file;
 
 ```
 

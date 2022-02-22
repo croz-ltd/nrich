@@ -12,9 +12,9 @@ public final class ValidationConstraintGeneratingUtil {
     private ValidationConstraintGeneratingUtil() {
     }
 
-    public static FilePart filePart(final String fileName, final MediaType mediaType) {
-        final FilePart filePart = mock(FilePart.class);
-        final HttpHeaders headers = new HttpHeaders();
+    public static FilePart filePart(String fileName, MediaType mediaType) {
+        FilePart filePart = mock(FilePart.class);
+        HttpHeaders headers = new HttpHeaders();
 
         headers.setContentType(mediaType);
 

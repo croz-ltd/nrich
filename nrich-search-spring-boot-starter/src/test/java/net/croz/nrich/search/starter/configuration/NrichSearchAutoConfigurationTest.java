@@ -32,7 +32,7 @@ class NrichSearchAutoConfigurationTest {
     void shouldAllowForOverridingStringSearchValues() {
         contextRunner.withPropertyValues("nrich.search.string-search.boolean-true-regex-pattern=new").run(context -> {
             // when
-            final NrichSearchProperties searchProperties = context.getBean(NrichSearchProperties.class);
+            NrichSearchProperties searchProperties = context.getBean(NrichSearchProperties.class);
 
             // then
             assertThat(searchProperties.getStringSearch()).isNotNull();
