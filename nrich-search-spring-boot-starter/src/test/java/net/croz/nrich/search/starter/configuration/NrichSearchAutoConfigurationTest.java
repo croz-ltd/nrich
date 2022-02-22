@@ -16,6 +16,7 @@ class NrichSearchAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(StringToTypeConverter.class);
             assertThat(context).hasSingleBean(StringToEntityPropertyMapConverter.class);
@@ -25,6 +26,7 @@ class NrichSearchAutoConfigurationTest {
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
+        // expect
         contextRunner.withPropertyValues("nrich.search.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(StringToTypeConverter.class));
     }
 

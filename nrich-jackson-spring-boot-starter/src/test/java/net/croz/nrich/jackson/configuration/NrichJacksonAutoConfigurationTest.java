@@ -20,11 +20,13 @@ class NrichJacksonAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.run(context -> assertThat(context).hasBean("convertEmptyStringsToNullModule"));
     }
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
+        // expect
         contextRunner.withPropertyValues("nrich.jackson.convert-empty-strings-to-null=false").run(context -> assertThat(context).doesNotHaveBean("convertEmptyStringsToNullModule"));
     }
 

@@ -31,6 +31,7 @@ class NrichRegistryAutoConfigurationTest {
 
     @Test
     void shouldConfigureDefaultConfiguration() {
+        // expect
         contextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
             assertThat(context).hasBean("registryDataModelMapper");
             assertThat(context).hasBean("registryBaseModelMapper");
@@ -52,6 +53,7 @@ class NrichRegistryAutoConfigurationTest {
 
     @Test
     void shouldRegisterControllersInWebEnvironment() {
+        // expect
         webContextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
             assertThat(context).hasSingleBean(RegistryConfigurationController.class);
             assertThat(context).hasSingleBean(RegistryDataController.class);
@@ -60,9 +62,9 @@ class NrichRegistryAutoConfigurationTest {
 
     @Test
     void shouldRegisterFormConfigurationResolverServiceWhenFormConfigurationBeanIsDefined() {
-        contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class).withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
-            assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class);
-        });
+        // expect
+        contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class).withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class)
+                .run(context -> assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class));
     }
 
     @Test

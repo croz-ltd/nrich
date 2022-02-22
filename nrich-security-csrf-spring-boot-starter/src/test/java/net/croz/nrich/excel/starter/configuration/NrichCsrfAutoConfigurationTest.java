@@ -20,6 +20,7 @@ class NrichCsrfAutoConfigurationTest {
 
     @Test
     void shouldConfigureWebMvcConfiguration() {
+        // expect
         webContextRunner.run(context -> {
             assertThat(context).hasSingleBean(CsrfTokenManagerService.class);
             assertThat(context).hasSingleBean(CsrfPingController.class);
@@ -29,6 +30,7 @@ class NrichCsrfAutoConfigurationTest {
 
     @Test
     void shouldConfigureReactiveConfiguration() {
+        // expect
         reactiveWebContextRunner.run(context -> {
             assertThat(context).hasSingleBean(CsrfTokenManagerService.class);
             assertThat(context).hasSingleBean(CsrfPingController.class);
@@ -38,6 +40,7 @@ class NrichCsrfAutoConfigurationTest {
 
     @Test
     void shouldNotIncludeCsrfConfigurationWhenItIsDisabled() {
+        // expect
         webContextRunner.withPropertyValues("nrich.security.csrf.active=false").run(context -> {
             assertThat(context).doesNotHaveBean(CsrfTokenManagerService.class);
             assertThat(context).doesNotHaveBean(CsrfPingController.class);
