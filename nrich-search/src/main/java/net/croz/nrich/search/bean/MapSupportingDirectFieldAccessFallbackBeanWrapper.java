@@ -6,11 +6,11 @@ import java.util.Map;
 
 public class MapSupportingDirectFieldAccessFallbackBeanWrapper extends DirectFieldAccessFallbackBeanWrapper {
 
-    private Map<String, Object> entityAsMap;
+    private final Map<String, Object> entityAsMap;
 
     public MapSupportingDirectFieldAccessFallbackBeanWrapper(Object entity) {
         super(entity);
-        this.entityAsMap = asMap(entity);
+        this.entityAsMap = entity instanceof Map ? asMap(entity) : null;
     }
 
     @Override
@@ -34,11 +34,7 @@ public class MapSupportingDirectFieldAccessFallbackBeanWrapper extends DirectFie
 
     @SuppressWarnings("unchecked")
     private Map<String, Object> asMap(Object entity) {
-        if (entity instanceof Map) {
-            return (Map<String, Object>) entity;
-        }
-
-        return null;
+        return (Map<String, Object>) entity;
     }
 
     public Map<String, Object> getEntityAsMap() {

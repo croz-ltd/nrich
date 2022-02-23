@@ -13,6 +13,7 @@ import org.springframework.validation.ObjectError;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +72,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
 
     private List<Object> argumentsWithoutMessageCodeResolvable(Object[] arguments) {
         if (arguments == null || arguments.length == 0) {
-            return null;
+            return Collections.emptyList();
         }
 
         Object[] filteredArguments = arguments;
