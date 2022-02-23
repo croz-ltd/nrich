@@ -39,7 +39,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     private final ExceptionHttpStatusResolverService httpStatusResolverService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
@@ -48,7 +48,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception, HttpServletRequest request) {
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.BAD_REQUEST);
@@ -57,7 +57,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> handleBindException(BindException exception, HttpServletRequest request) {
+    public ResponseEntity<Object> handleBindException(BindException exception, HttpServletRequest request) {
         logExceptionWithResolvedAuxiliaryData(exception, request);
 
         Class<?> targetClass = Optional.ofNullable(exception.getTarget()).map(Object::getClass).orElse(null);
@@ -68,7 +68,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception exception, HttpServletRequest request) {
+    public ResponseEntity<Object> handleException(Exception exception, HttpServletRequest request) {
         Exception unwrappedException = unwrapException(exception);
 
         if (unwrappedException instanceof MethodArgumentNotValidException) {

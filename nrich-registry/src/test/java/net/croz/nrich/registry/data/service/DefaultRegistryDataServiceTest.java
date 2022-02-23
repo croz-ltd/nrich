@@ -60,7 +60,7 @@ class DefaultRegistryDataServiceTest {
         ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        Map<String, Page<?>> result = registryDataService.listBulk(request);
+        Map<String, Page<Object>> result = registryDataService.listBulk(request);
 
         // then
         assertThat(result).hasSize(1);

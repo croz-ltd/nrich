@@ -13,13 +13,13 @@ public class RegistryDataConfigurationHolder {
 
     private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
 
-    private final List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList;
+    private final List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList;
 
     public void verifyConfigurationExists(String classFullName) {
         findRegistryConfigurationForClass(classFullName);
     }
 
-    public RegistryDataConfiguration<?, ?> findRegistryConfigurationForClass(String classFullName) {
+    public RegistryDataConfiguration<Object, Object> findRegistryConfigurationForClass(String classFullName) {
         return registryDataConfigurationList.stream()
                 .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
                 .findFirst()
