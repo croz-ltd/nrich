@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchDataParser {
 
+    private static final String PATH_FORMAT = "%s.%s";
+
     private final ManagedType<?> managedType;
 
     private final Object searchData;
@@ -59,7 +61,7 @@ public class SearchDataParser {
             AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
 
             if (attributeHolder.getAttribute() != null) {
-                String currentPath = path == null ? fieldNameWithoutPrefixAndSuffix : path + "." + fieldNameWithoutPrefixAndSuffix;
+                String currentPath = resolveCurrentPath(path, fieldNameWithoutPrefixAndSuffix);
 
                 if (attributeHolder.getManagedType() != null) {
                     resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
@@ -69,11 +71,7 @@ public class SearchDataParser {
                 restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isPluralAttribute));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
-                String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
-
-                if (mappedPath == null) {
-                    mappedPath = findPathUsingAttributePrefix(originalFieldName, managedType);
-                }
+                String mappedPath = resolveAttributeHolderFromSecurityConfiguration(originalFieldName);
 
                 if (mappedPath != null) {
                     attributeHolder = attributeResolver.resolveAttributeByPath(mappedPath);
@@ -161,6 +159,20 @@ public class SearchDataParser {
         return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
+    private String resolveCurrentPath(String path, String fieldNameWithoutPrefixAndSuffix) {
+        return path == null ? fieldNameWithoutPrefixAndSuffix : String.format(PATH_FORMAT, path, fieldNameWithoutPrefixAndSuffix);
+    }
+
+    private String resolveAttributeHolderFromSecurityConfiguration(String originalFieldName) {
+        String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
+
+        if (mappedPath == null) {
+            mappedPath = findPathUsingAttributePrefix(originalFieldName, managedType);
+        }
+
+        return mappedPath;
+    }
+
     private String findPathUsingMapping(List<SearchPropertyMapping> propertyMappingList, String fieldName) {
         return Optional.ofNullable(propertyMappingList)
                 .orElse(Collections.emptyList())
@@ -179,7 +191,7 @@ public class SearchDataParser {
 
         return attributeNameList.stream()
                 .filter(attribute -> isFieldNameValid(originalFieldName, attribute))
-                .map(attribute -> attribute + "." + StringUtils.uncapitalize(originalFieldName.substring(attribute.length())))
+                .map(attribute -> String.format(PATH_FORMAT, attribute, StringUtils.uncapitalize(originalFieldName.substring(attribute.length()))))
                 .findFirst()
                 .orElse(null);
     }
