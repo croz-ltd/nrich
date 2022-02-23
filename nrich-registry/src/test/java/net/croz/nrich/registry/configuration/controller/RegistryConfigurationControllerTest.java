@@ -28,8 +28,6 @@ class RegistryConfigurationControllerTest extends BaseWebTest {
         });
 
         // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse).hasSize(3);
+        assertThat(convertedResponse).isNotNull().hasSize(3);
     }
-
 }
