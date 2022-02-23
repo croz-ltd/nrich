@@ -11,9 +11,9 @@ import javax.persistence.EntityManager;
  *
  * @param <T>  repository type
  * @param <S>  entity type
- * @param <ID> id type
+ * @param <I> id type
  */
-public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> extends JpaRepositoryFactoryBean<T, S, ID> {
+public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, I>, S, I> extends JpaRepositoryFactoryBean<T, S, I> {
 
     private final RepositoryFactorySupportFactory repositoryFactorySupportFactory;
 
