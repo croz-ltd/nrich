@@ -35,43 +35,42 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        preHandleInternal(request, response, handler);
+
+        return true;
+    }
+
+    protected void preHandleInternal(HttpServletRequest request, HttpServletResponse response, Object handler) {
         log.debug("csrfInterceptor.preHandle()");
 
         if (handler instanceof ResourceHttpRequestHandler) {
-            return true;
+            return;
         }
 
         String pathWithinApplication = new UrlPathHelper().getPathWithinApplication(request);
 
         if (CsrfConstants.EMPTY_PATH.equals(pathWithinApplication)) {
-            return true;
+            return;
         }
 
         HttpSession httpSession = request.getSession(false);
         String requestUri = request.getRequestURI();
 
         if (CsrfUriUtil.excludeUri(csrfExcludeConfigList, requestUri)) {
-
             updateLastApiCallAttribute(httpSession);
-
         }
         else if (requestUri.endsWith(csrfPingUrl)) {
-
             handleCsrfPingUrl(request, response, httpSession);
-
         }
         else if (httpSession != null) {
-
             csrfTokenManagerService.validateAndRefreshToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
 
             updateLastApiCallAttribute(httpSession);
         }
         else {
-            // Session doesn't exists, but we should not pass through request.
+            // Session doesn't exist, but we should not pass through request.
             throw new CsrfTokenException("Can't validate token. There is no session.");
         }
-
-        return true;
     }
 
     @Override

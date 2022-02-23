@@ -34,7 +34,7 @@ public class RegistryDataController {
     private final Validator validator;
 
     @PostMapping("list-bulk")
-    public Map<String, Page<?>> listBulk(@RequestBody @Valid ListBulkRegistryRequest request) {
+    public Map<String, Page<Object>> listBulk(@RequestBody @Valid ListBulkRegistryRequest request) {
         return registryDataService.listBulk(request);
     }
 

@@ -15,7 +15,7 @@ class AesCsrfTokenManagerServiceTest {
 
     private static final String CSRF_TOKEN_KEY_NAME = "X-CSRF-Token";
 
-    private static final Duration DEFAULT_DURATION = Duration.ofMillis(10);
+    private static final Duration DEFAULT_DURATION = Duration.ofMillis(100);
 
     private final AesCsrfTokenManagerService aesCsrfTokenManagerService = new AesCsrfTokenManagerService(DEFAULT_DURATION, DEFAULT_DURATION, 128);
 
@@ -45,6 +45,20 @@ class AesCsrfTokenManagerServiceTest {
     }
 
     @Test
+    void shouldNotFailValidationOnGeneratedToken() {
+        // given
+        TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
+
+        tokenHolder.storeToken(aesCsrfTokenManagerService.generateToken(tokenHolder));
+
+        // when
+        Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
     void shouldThrowExceptionOnInvalidTokenLength() {
         // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
@@ -62,7 +76,7 @@ class AesCsrfTokenManagerServiceTest {
     void shouldThrowExceptionOnInvalidToken() {
         // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
-        tokenHolder.storeToken("SqgRJ6bh8uZ4xjpzAUIErg==");
+        tokenHolder.storeToken("dGLml7ib_mTsNYz_RwKsa-AsOVLFuVCsDQmkolvUZcpd1g==");
 
         // when
         Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
@@ -78,7 +92,7 @@ class AesCsrfTokenManagerServiceTest {
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
         tokenHolder.storeToken(aesCsrfTokenManagerService.generateToken(tokenHolder));
 
-        await().atMost(Duration.ofSeconds(1)).untilAsserted(() -> {
+        await().atMost(Duration.ofSeconds(2)).untilAsserted(() -> {
             // when
             Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
 

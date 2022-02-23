@@ -1,13 +1,18 @@
 package net.croz.nrich.registry.configuration.comparator;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class DisplayOrderComparator {
+@Getter
+public class DisplayOrderComparator implements Serializable {
 
-    protected final List<String> propertyDisplayOrderList;
+    private static final long serialVersionUID = 4980226671627040327L;
+
+    private final List<String> propertyDisplayOrderList;
 
     public int comparePropertiesByDisplayList(String firstPropertyName, String secondPropertyName) {
         if (!propertyDisplayOrderList.contains(firstPropertyName)) {

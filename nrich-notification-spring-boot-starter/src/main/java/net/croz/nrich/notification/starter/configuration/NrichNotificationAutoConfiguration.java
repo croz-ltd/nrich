@@ -42,8 +42,9 @@ public class NrichNotificationAutoConfiguration {
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean(NotificationResponseService.class)
     @Bean
-    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
+    public WebMvcNotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 

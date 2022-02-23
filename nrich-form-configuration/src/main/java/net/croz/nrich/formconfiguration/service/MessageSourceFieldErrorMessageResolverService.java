@@ -56,7 +56,7 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
 
     private Object[] convertArraysInArgumentList(Object[] argumentList) {
         if (argumentList == null) {
-            return null;
+            return new Object[0];
         }
 
         return Arrays.stream(argumentList)

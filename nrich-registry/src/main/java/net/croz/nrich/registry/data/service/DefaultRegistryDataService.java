@@ -58,7 +58,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     @Transactional(readOnly = true)
     @Override
-    public Map<String, Page<?>> listBulk(ListBulkRegistryRequest request) {
+    public Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request) {
         return request.getRegistryRequestList().stream()
                 .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
     }

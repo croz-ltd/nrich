@@ -17,7 +17,7 @@ public interface RegistryDataService {
      * @param request {@link ListBulkRegistryRequest} instance holding query information.
      * @return map holding multiple registry entities
      */
-    Map<String, Page<?>> listBulk(ListBulkRegistryRequest request);
+    Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request);
 
     /**
      * Returns Springs {@link Page} instance holding found registry instances.

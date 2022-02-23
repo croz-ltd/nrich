@@ -80,7 +80,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        List<RegistryDataConfiguration<?, ?>> registryDataConfigurationList = new ArrayList<>();
+        List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList = new ArrayList<>();
 
         managedTypeWrapperList.forEach(managedTypeWrapper -> {
             @SuppressWarnings("unchecked")

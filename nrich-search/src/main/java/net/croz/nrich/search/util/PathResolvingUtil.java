@@ -4,11 +4,13 @@ import javax.persistence.criteria.Path;
 
 public final class PathResolvingUtil {
 
+    private static final String PATH_REGEX = "\\.";
+
     private PathResolvingUtil() {
     }
 
     public static String[] convertToPathList(String path) {
-        return path.split("\\.");
+        return path.split(PATH_REGEX);
     }
 
     public static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList) {

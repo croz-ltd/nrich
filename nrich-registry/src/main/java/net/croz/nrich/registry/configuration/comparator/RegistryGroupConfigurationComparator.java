@@ -17,7 +17,7 @@ public class RegistryGroupConfigurationComparator extends DisplayOrderComparator
         String firstGroupId = firstConfiguration.getGroupId();
         String secondGroupId = secondConfiguration.getGroupId();
 
-        if (CollectionUtils.isEmpty(propertyDisplayOrderList)) {
+        if (CollectionUtils.isEmpty(getPropertyDisplayOrderList())) {
             return firstGroupId.compareTo(secondGroupId);
         }
 

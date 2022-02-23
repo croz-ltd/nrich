@@ -4,13 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.croz.nrich.security.csrf.api.holder.CsrfTokenKeyHolder;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
+import net.croz.nrich.security.csrf.core.constants.AesCsrfTokenConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import javax.crypto.spec.GCMParameterSpec;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
@@ -18,7 +22,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
-    private static final String ENCRYPTION_ALGORITHM = "AES";
+    private static final SecureRandom INITIALIZATION_VECTOR_RANDOM = new SecureRandom();
 
     private final Duration tokenExpirationInterval;
 
@@ -33,7 +37,7 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
             throw new CsrfTokenException("Csrf token is not available!");
         }
 
-        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
+        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder);
 
         validateToken(csrfToken, cryptoKey);
 
@@ -41,23 +45,23 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
     }
 
     public String generateToken(CsrfTokenKeyHolder csrfTokenKeyHolder) {
-        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder, cryptoKeyLength);
+        Key cryptoKey = fetchCryptoKey(csrfTokenKeyHolder);
 
         return generateToken(cryptoKey);
     }
 
-    private Key fetchCryptoKey(CsrfTokenKeyHolder csrfTokenKeyHolder, Integer cryptoKeyLength) {
+    private Key fetchCryptoKey(CsrfTokenKeyHolder csrfTokenKeyHolder) {
         Key cryptoKey = csrfTokenKeyHolder.getCryptoKey();
 
         if (cryptoKey == null) {
-            cryptoKey = generateCryptoKey(cryptoKeyLength);
+            cryptoKey = generateCryptoKey();
             csrfTokenKeyHolder.storeCryptoKey(cryptoKey);
         }
 
         return cryptoKey;
     }
 
-    private Key generateCryptoKey(Integer cryptoKeyLength) {
+    private Key generateCryptoKey() {
         KeyGenerator keyGenerator = getKeyGenerator();
 
         keyGenerator.init(cryptoKeyLength);
@@ -68,23 +72,16 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
     private void validateToken(String csrfToken, Key key) {
         byte[] csrfTokenEncryptedBytes = Base64.getUrlDecoder().decode(csrfToken);
 
-        if (csrfTokenEncryptedBytes.length != 16) {
+        if (csrfTokenEncryptedBytes.length != AesCsrfTokenConstants.TOKEN_LENGTH) {
             throw new CsrfTokenException("Csrf token is not valid.");
         }
 
-        Cipher cipher = initCipher(key, Cipher.DECRYPT_MODE);
-        byte[] csrfTokenDecryptedBytes;
-        try {
-            csrfTokenDecryptedBytes = cipher.doFinal(csrfTokenEncryptedBytes);
-        }
-        catch (Exception exception) {
-            throw new CsrfTokenException("Csrf token can't be decrypted.", exception);
-        }
+        byte[] decryptedCurrentTimeBytes = decryptedCurrentTimeBytes(key, csrfTokenEncryptedBytes);
 
-        Long csrfTokenTimeMillis = new BigInteger(csrfTokenDecryptedBytes).longValue();
+        Long csrfTokenTimeMillis = new BigInteger(decryptedCurrentTimeBytes).longValue();
         Long currentTimeMillis = Instant.now().toEpochMilli();
 
-        // If token time is in future, tolerate that case to some extent (for example, to avoid issues around unsynchronized computer times in cluster)
+        // If token time is in the future, tolerate that case to some extent (for example, to avoid issues around unsynchronized computer times in cluster)
         if (currentTimeMillis < csrfTokenTimeMillis) {
             if (csrfTokenTimeMillis - currentTimeMillis > tokenFutureThreshold.toMillis()) {
                 throw new CsrfTokenException("Csrf token is too far in the future.");
@@ -93,7 +90,21 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
         else if (currentTimeMillis - csrfTokenTimeMillis > tokenExpirationInterval.toMillis()) {
             throw new CsrfTokenException("Csrf token is too old.");
         }
+    }
 
+    private byte[] decryptedCurrentTimeBytes(Key key, byte[] csrfTokenEncryptedBytes) {
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(AesCsrfTokenConstants.AUTHENTICATION_TAG_LENGTH, csrfTokenEncryptedBytes, 0, AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH);
+        Cipher cipher = initCipher(key, Cipher.DECRYPT_MODE, parameterSpec);
+
+        byte[] csrfTokenDecryptedBytes;
+        try {
+            csrfTokenDecryptedBytes = cipher.doFinal(csrfTokenEncryptedBytes, AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH, csrfTokenEncryptedBytes.length - AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH);
+        }
+        catch (Exception exception) {
+            throw new CsrfTokenException("Csrf token can't be decrypted.", exception);
+        }
+
+        return csrfTokenDecryptedBytes;
     }
 
     private String generateToken(Key key) {
@@ -106,23 +117,38 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
     }
 
     @SneakyThrows
-    private Cipher initCipher(Key key, Integer mode) {
-        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
-
-        cipher.init(mode, key);
-
-        return cipher;
-    }
-
-    @SneakyThrows
     private KeyGenerator getKeyGenerator() {
-        return KeyGenerator.getInstance(ENCRYPTION_ALGORITHM);
+        return KeyGenerator.getInstance(AesCsrfTokenConstants.ENCRYPTION_ALGORITHM);
     }
 
     @SneakyThrows
     private byte[] encryptedCurrentTimeBytes(Key key, byte[] currentTimeBytes) {
-        Cipher cipher = initCipher(key, Cipher.ENCRYPT_MODE);
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(AesCsrfTokenConstants.AUTHENTICATION_TAG_LENGTH, generateInitializationVector());
+        Cipher cipher = initCipher(key, Cipher.ENCRYPT_MODE, parameterSpec);
 
-        return cipher.doFinal(currentTimeBytes);
+        byte[] encryptedCurrentTimeInBytes = cipher.doFinal(currentTimeBytes);
+        byte[] initializationVector = cipher.getIV();
+
+        return ByteBuffer.allocate(initializationVector.length + encryptedCurrentTimeInBytes.length)
+                .put(initializationVector)
+                .put(encryptedCurrentTimeInBytes)
+                .array();
+    }
+
+    @SneakyThrows
+    private Cipher initCipher(Key key, Integer mode, GCMParameterSpec parameterSpec) {
+        Cipher cipher = Cipher.getInstance(AesCsrfTokenConstants.CIPHER_TRANSFORMATION);
+
+        cipher.init(mode, key, parameterSpec);
+
+        return cipher;
+    }
+
+    private byte[] generateInitializationVector() {
+        byte[] initializationVector = new byte[AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH];
+
+        INITIALIZATION_VECTOR_RANDOM.nextBytes(initializationVector);
+
+        return initializationVector;
     }
 }
