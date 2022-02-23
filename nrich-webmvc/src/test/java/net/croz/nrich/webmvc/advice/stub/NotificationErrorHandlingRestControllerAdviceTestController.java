@@ -47,7 +47,6 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
         return request.getName();
     }
 
-
     @PostMapping("unwrappedExceptionResolving")
     public void unwrappedExceptionResolving() throws Exception {
         throw new ExecutionException(new NotificationErrorHandlingRestControllerAdviceTestException());
@@ -69,7 +68,7 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
     }
 
     @PostMapping("constraintViolationExceptionResolving")
-    public void constraintViolationExceptionResolving() {
-        notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
+    public String constraintViolationExceptionResolving() {
+        return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
     }
 }
