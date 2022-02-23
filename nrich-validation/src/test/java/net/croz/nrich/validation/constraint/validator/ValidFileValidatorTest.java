@@ -14,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 import static net.croz.nrich.validation.constraint.testutil.ValidationConstraintGeneratingUtil.filePart;
@@ -23,13 +24,15 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 @SpringJUnitConfig(ValidationTestConfiguration.class)
 class ValidFileValidatorTest {
 
+    private static final byte[] FILE_BYTES = "content".getBytes(StandardCharsets.UTF_8);
+
     @Autowired
     private Validator validator;
 
     @Test
     void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
         // given
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("**.txt", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("**.txt", FILE_BYTES));
 
         // when
         Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -41,7 +44,7 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
         // given
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.exe", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.exe", FILE_BYTES));
 
         // when
         Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -53,7 +56,7 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenContentTypeIsNotValidForMultipartFile() {
         // given
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.txt", "1.txt", "application/json", "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile("1.txt", "1.txt", "application/json", FILE_BYTES));
 
         // when
         Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -66,7 +69,7 @@ class ValidFileValidatorTest {
     @ParameterizedTest
     void shouldNotReportErrorForValidMultipartFile(String filename) {
         // given
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile(filename, "content".getBytes()));
+        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(new MockMultipartFile(filename, FILE_BYTES));
 
         // when
         Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);

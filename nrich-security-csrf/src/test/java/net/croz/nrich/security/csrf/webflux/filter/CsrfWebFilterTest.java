@@ -21,6 +21,7 @@ import org.springframework.web.server.WebSession;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Objects;
@@ -183,6 +184,6 @@ class CsrfWebFilterTest {
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.OK);
         assertThat(result.getResponseBody()).isNotNull();
-        assertThat(new String(result.getResponseBody())).isEqualTo("result");
+        assertThat(new String(result.getResponseBody(), StandardCharsets.UTF_8)).isEqualTo("result");
     }
 }
