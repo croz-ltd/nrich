@@ -1,6 +1,7 @@
 ---
 name: Enhancement request
-about: Suggest an enhancement to an existing feature for nrich title: ""
+about: Suggest an enhancement to an existing feature for nrich
+title: ""
 labels: "enhancement"
 assignees: ""
 ---
