@@ -45,6 +45,20 @@ class AesCsrfTokenManagerServiceTest {
     }
 
     @Test
+    void shouldNotFailValidationOnGeneratedToken() {
+        // given
+        TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
+
+        tokenHolder.storeToken(aesCsrfTokenManagerService.generateToken(tokenHolder));
+
+        // when
+        Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
     void shouldThrowExceptionOnInvalidTokenLength() {
         // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
@@ -62,7 +76,7 @@ class AesCsrfTokenManagerServiceTest {
     void shouldThrowExceptionOnInvalidToken() {
         // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
-        tokenHolder.storeToken("SqgRJ6bh8uZ4xjpzAUIErg==");
+        tokenHolder.storeToken("dGLml7ib_mTsNYz_RwKsa-AsOVLFuVCsDQmkolvUZcpd1g==");
 
         // when
         Throwable thrown = catchThrowable(() -> aesCsrfTokenManagerService.validateAndRefreshToken(tokenHolder));
