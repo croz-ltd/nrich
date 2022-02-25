@@ -2,12 +2,15 @@ package net.croz.nrich.encrypt.aspect.stub;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Signal;
 
 import java.util.concurrent.Future;
 
 public interface EncryptDataAspectTestService {
 
     EncryptDataAspectTestServiceResult dataToEncrypt(String value);
+
+    EncryptDataAspectTestServiceResult dataToEncrypt();
 
     EncryptDataAspectTestServiceResult dataToEncryptWithInvalidAnnotation(String value);
 
@@ -16,6 +19,8 @@ public interface EncryptDataAspectTestService {
     Mono<EncryptDataAspectTestServiceResult> dataToEncryptWithMono(String value);
 
     Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(String value);
+
+    Signal<EncryptDataAspectTestServiceResult> dataToEncryptWithUnsupportedReactorClass(String value);
 
     EncryptDataAspectTestServiceResult dataToDecrypt(EncryptDataAspectTestServiceResult data);
 

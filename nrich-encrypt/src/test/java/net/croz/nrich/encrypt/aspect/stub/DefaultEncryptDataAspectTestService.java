@@ -4,6 +4,7 @@ import net.croz.nrich.encrypt.api.annotation.DecryptArgument;
 import net.croz.nrich.encrypt.api.annotation.EncryptResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Signal;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -14,6 +15,12 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
     @Override
     public EncryptDataAspectTestServiceResult dataToEncrypt(String value) {
         return new EncryptDataAspectTestServiceResult(value);
+    }
+
+    @EncryptResult(resultPathList = "value")
+    @Override
+    public EncryptDataAspectTestServiceResult dataToEncrypt() {
+        return null;
     }
 
     @EncryptResult
@@ -38,6 +45,12 @@ public class DefaultEncryptDataAspectTestService implements EncryptDataAspectTes
     @Override
     public Flux<EncryptDataAspectTestServiceResult> dataToEncryptWithFlux(String value) {
         return Flux.just(new EncryptDataAspectTestServiceResult(value));
+    }
+
+    @EncryptResult(resultPathList = "value")
+    @Override
+    public Signal<EncryptDataAspectTestServiceResult> dataToEncryptWithUnsupportedReactorClass(String value) {
+        return Signal.next(new EncryptDataAspectTestServiceResult(value));
     }
 
     @Override
