@@ -3,6 +3,7 @@ package net.croz.nrich.search.repository;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.repository.SearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
+import net.croz.nrich.search.util.QueryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +87,6 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
         List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 
-        return totals.stream().mapToLong(value -> value == null ? 0L : value).sum();
+        return QueryUtil.toCountResult(totals);
     }
 }
