@@ -4,6 +4,7 @@ import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.api.history.model.EntityWithRevision;
 import net.croz.nrich.registry.api.history.request.ListRegistryHistoryRequest;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
+import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntity;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.history.stub.RegistryHistoryTestEntityWithEmbeddedObject;
@@ -142,7 +143,7 @@ class DefaultRegistryHistoryServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionOnInvalidClassFullName() {
+    void shouldThrowExceptionOnInvalidIdType() {
         // given
         ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), new Object());
 
@@ -151,6 +152,18 @@ class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void shouldNotFailOnEmptyConfiguration() {
+        // given
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = new RegistryDataConfigurationHolder(null, null);
+
+        // when
+        Throwable thrown = catchThrowable(() -> new DefaultRegistryHistoryService(null, registryDataConfigurationHolder, null, null, null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     @AfterEach
