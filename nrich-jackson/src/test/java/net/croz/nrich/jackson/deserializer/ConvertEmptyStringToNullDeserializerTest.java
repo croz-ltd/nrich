@@ -12,20 +12,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ConvertEmptyStringToNullDeserializerTest {
 
+    private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, String>>() {
+    };
+
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
 
     @Test
     void shouldConvertEmptyStringsToNull() throws Exception {
         // given
-        String key = "key";
+        String emptyKey = "emptyKey";
+        String nonEmptyKey = "nonEmptyKey";
         Map<String, String> testMap = new HashMap<>();
-        testMap.put(key, "");
+
+        testMap.put(emptyKey, "");
+        testMap.put(nonEmptyKey, "non empty");
 
         // when
-        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), new TypeReference<Map<String, String>>() {
-        });
+        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), MAP_TYPE_REFERENCE);
 
         // then
-        assertThat(deserialized.get(key)).isNull();
+        assertThat(deserialized.get(emptyKey)).isNull();
+        assertThat(deserialized.get(nonEmptyKey)).isNotEmpty();
     }
 }
