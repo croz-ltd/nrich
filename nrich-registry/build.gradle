@@ -26,6 +26,7 @@ dependencies {
   testImplementation "org.hibernate:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework:spring-webmvc"
 }
