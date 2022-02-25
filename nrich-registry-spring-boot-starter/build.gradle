@@ -17,9 +17,13 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
+  testAnnotationProcessor "org.projectlombok:lombok"
+  testCompileOnly "org.projectlombok:lombok"
+
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.glassfish:jakarta.el"
+  testImplementation "org.hibernate:hibernate-envers"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.springframework:spring-test"
