@@ -18,9 +18,13 @@ import net.croz.nrich.registry.configuration.controller.RegistryConfigurationCon
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
+import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
@@ -32,6 +36,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchC
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
+import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorNonModifiableEntity;
 import net.croz.nrich.registry.security.stub.RegistryConfigurationUpdateInterceptorTestEntity;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
@@ -169,50 +174,10 @@ public class RegistryTestConfiguration {
     public RegistryConfiguration registryConfiguration() {
         RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
-        RegistryGroupDefinitionConfiguration registryDataConfiguratinGroup = new RegistryGroupDefinitionConfiguration();
-
-        registryDataConfiguratinGroup.setGroupId("DATA");
-        registryDataConfiguratinGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
-        registryDataConfiguratinGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
-
-        RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
-
-        registryConfigurationConfigurationGroup.setGroupId("CONFIGURATION");
-        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
-
-        RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
-
-        registryHistoryConfigurationGroup.setGroupId("HISTORY");
-        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
-
+        registryConfiguration.setGroupDefinitionConfigurationList(createRegistryGroupDefinitionConfigurationList());
         registryConfiguration.setGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
-        registryConfiguration.setGroupDefinitionConfigurationList(Arrays.asList(registryDataConfiguratinGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup));
 
-        RegistryOverrideConfiguration registryOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
-
-        registryOverrideConfiguration.setPropertyDisplayOrderList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
-        registryOverrideConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
-        registryOverrideConfiguration.setNonEditablePropertyList(Collections.singletonList("nonEditableProperty"));
-        registryOverrideConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
-        registryOverrideConfiguration.setDeletable(false);
-
-        RegistryOverrideConfiguration registryInterceptorTestOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
-
-        registryInterceptorTestOverrideConfiguration.setReadOnly(true);
-
-        RegistryOverrideConfigurationHolder registryTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationTestEntity.class).overrideConfiguration(registryOverrideConfiguration).build();
-
-        RegistryOverrideConfigurationHolder registryInterceptorTestEntityOverrideConfiguration = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(registryInterceptorTestOverrideConfiguration).build();
-
-        SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
-        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
-
-        RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
-
-        registryConfiguration.setOverrideConfigurationHolderList(Arrays.asList(registryOverrideConfigurationHolder, registryTestEntityOverrideConfiguration, registryInterceptorTestEntityOverrideConfiguration));
+        registryConfiguration.setOverrideConfigurationHolderList(createRegistryOverrideConfigurationList());
 
         return registryConfiguration;
     }
@@ -230,8 +195,11 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService) {
         List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
+        RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
+        RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
+        Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
 
-        return new DefaultRegistryConfigurationService(messageSource, defaultReadOnlyPropertyList, registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+        return new DefaultRegistryConfigurationService(messageSource, defaultReadOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap);
     }
 
     @Bean
@@ -241,12 +209,17 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryEntityFinderService registryEntityFinderService(EntityManager entityManager, ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap());
+        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap();
+
+        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
     @Bean
     public RegistryDataService registryDataService(EntityManager entityManager, ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()), registryEntityFinderService);
+        List<RegistryDataInterceptor> interceptors = Optional.ofNullable(interceptorList).orElse(Collections.emptyList());
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+
+        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, stringToEntityPropertyMapConverter, registryDataConfigurationHolder, interceptors, registryEntityFinderService);
     }
 
     @Bean
@@ -261,7 +234,10 @@ public class RegistryTestConfiguration {
 
     @Bean
     public RegistryHistoryService registryHistoryService(EntityManager entityManager, RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+        RegistryHistoryConfigurationHolder historyConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
+
+        return new DefaultRegistryHistoryService(entityManager, registryDataConfigurationHolder, historyConfigurationHolder, registryBaseModelMapper, registryEntityFinderService);
     }
 
     @Bean
@@ -281,5 +257,61 @@ public class RegistryTestConfiguration {
         formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
 
         return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMap);
+    }
+
+    private List<RegistryGroupDefinitionConfiguration> createRegistryGroupDefinitionConfigurationList() {
+        RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+
+        registryDataConfigurationGroup.setGroupId("DATA");
+        registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
+        registryDataConfigurationGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+
+        RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+
+        registryConfigurationConfigurationGroup.setGroupId("CONFIGURATION");
+        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
+
+        RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
+
+        registryHistoryConfigurationGroup.setGroupId("HISTORY");
+        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
+
+        return Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup);
+    }
+
+    private List<RegistryOverrideConfigurationHolder> createRegistryOverrideConfigurationList() {
+        RegistryOverrideConfiguration configurationEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+
+        configurationEntityConfiguration.setPropertyDisplayOrderList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
+        configurationEntityConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
+        configurationEntityConfiguration.setNonEditablePropertyList(Collections.singletonList("nonEditableProperty"));
+        configurationEntityConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
+        configurationEntityConfiguration.setDeletable(false);
+
+        RegistryOverrideConfigurationHolder configurationEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
+
+        RegistryOverrideConfiguration interceptorTestEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        interceptorTestEntityConfiguration.setReadOnly(true);
+
+        RegistryOverrideConfigurationHolder interceptorTestEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
+
+        RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+
+        InterceptorTestNonEntityNonModifiableConfiguration.setDeletable(false);
+        InterceptorTestNonEntityNonModifiableConfiguration.setUpdateable(false);
+        InterceptorTestNonEntityNonModifiableConfiguration.setCreatable(false);
+
+        RegistryOverrideConfigurationHolder InterceptorTestNonEntityNonModifiableConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
+
+        SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
+        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
+
+        RegistryOverrideConfigurationHolder searchConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
+
+        return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
     }
 }
