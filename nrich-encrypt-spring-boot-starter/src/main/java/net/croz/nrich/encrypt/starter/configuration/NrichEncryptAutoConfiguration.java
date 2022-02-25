@@ -29,13 +29,9 @@ public class NrichEncryptAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
-        BytesEncryptor encryptor;
-        if (!StringUtils.isEmpty(encryptProperties.getEncryptPassword()) && !StringUtils.isEmpty(encryptProperties.getEncryptSalt())) {
-            encryptor = Encryptors.standard(encryptProperties.getEncryptPassword(), encryptProperties.getEncryptSalt());
-        }
-        else {
-            encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
-        }
+        String password = StringUtils.isEmpty(encryptProperties.getEncryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptPassword();
+        String salt = StringUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey(): encryptProperties.getEncryptSalt();
+        BytesEncryptor encryptor = Encryptors.standard(password, salt);
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());
     }
