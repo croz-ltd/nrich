@@ -29,7 +29,7 @@ public class PoiCellHolder implements CellHolder {
         if (value instanceof Boolean) {
             cell.setCellValue((Boolean) value);
         }
-        if (value instanceof Number) {
+        else if (value instanceof Number) {
             cell.setCellValue(((Number) value).doubleValue());
         }
         else if (value instanceof Date) {
