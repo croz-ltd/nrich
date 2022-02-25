@@ -5,6 +5,8 @@ import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.webmvc.test.BaseWebTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -149,10 +151,12 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
     }
 
-    @Test
-    void shouldUnwrapValidationException() throws Exception {
+
+    @ValueSource(strings = { "unwrappedExceptionValidationFailedResolving", "unwrappedExceptionBindExceptionResolving", "unwrappedExceptionConstraintViolationExceptionExceptionResolving" })
+    @ParameterizedTest
+    void shouldUnwrapBadRequestExceptions(String url) throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionValidationFailedResolving")).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/" + url)).andReturn().getResponse();
         String responseString = response.getContentAsString();
 
         // then
@@ -160,16 +164,6 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(responseString).isNotEmpty();
     }
 
-    @Test
-    void shouldUnwrapBindException() throws Exception {
-        // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionBindExceptionResolving")).andReturn().getResponse();
-        String responseString = response.getContentAsString();
-
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(responseString).isNotEmpty();
-    }
 
     @Test
     void shouldResolveConstraintExceptionNotification() throws Exception {
