@@ -10,19 +10,19 @@ public final class OibValidatorUtil {
             return false;
         }
 
-        int a = 10;
+        int modulo = 10;
         for (int i = 0; i < 10; i++) {
-            a += Integer.parseInt(oib.substring(i, i + 1));
-            a %= 10;
-            a = (a != 0) ? a : 10;
-            a *= 2;
-            a %= 11;
+            modulo += Integer.parseInt(oib.substring(i, i + 1));
+            modulo %= 10;
+            modulo = (modulo != 0) ? modulo : 10;
+            modulo *= 2;
+            modulo %= 11;
         }
 
-        int kontrolni = 11 - a;
-        kontrolni = (kontrolni != 10) ? kontrolni : 0;
+        int controlNumber = 11 - modulo;
+        controlNumber = (controlNumber != 10) ? controlNumber : 0;
 
-        return kontrolni == Integer.parseInt(oib.substring(10));
+        return controlNumber == Integer.parseInt(oib.substring(10));
     }
 
 }
