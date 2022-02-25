@@ -1,6 +1,7 @@
 package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.ValidationTestConfiguration;
+import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorEmptyPropertyTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorFilePartTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorInvalidTypeFileTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorMultipartFileCustomTestRequest;
@@ -125,6 +126,18 @@ class ValidFileResolvableValidatorTest {
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorFilePartTestRequest>> constraintViolationList = validator.validate(request);
+
+        // then
+        assertThat(constraintViolationList).isEmpty();
+    }
+
+    @Test
+    void shouldNotFailOnEmptyPropertyNames() {
+        // given
+        ValidFileResolvableValidatorEmptyPropertyTestRequest request = new ValidFileResolvableValidatorEmptyPropertyTestRequest(new MockMultipartFile("someFile.txt", FILE_BYTES));
+
+        // when
+        Set<ConstraintViolation<ValidFileResolvableValidatorEmptyPropertyTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
