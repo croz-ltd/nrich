@@ -8,8 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class NrichNotificationAutoConfigurationTest {
 
@@ -39,5 +43,14 @@ class NrichNotificationAutoConfigurationTest {
     void shouldIncludeNotificationResponseServiceWhenRunningInWebEnvironment() {
         // expect
         webContextRunner.run(context -> assertThat(context).hasSingleBean(NotificationResponseService.class));
+    }
+
+    @Test
+    void shouldRegisterMessagesWhenPossible() {
+        // given
+        AbstractResourceBasedMessageSource messageSource = mock(AbstractResourceBasedMessageSource.class);
+
+        // expect
+        contextRunner.withBean(MessageSource.class, () -> messageSource).run(context -> verify(messageSource).addBasenames(NrichNotificationAutoConfiguration.NOTIFICATION_MESSAGES_NAME));
     }
 }

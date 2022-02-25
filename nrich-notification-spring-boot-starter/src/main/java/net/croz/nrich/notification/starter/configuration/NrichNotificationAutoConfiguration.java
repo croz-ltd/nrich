@@ -21,7 +21,7 @@ import org.springframework.context.support.AbstractResourceBasedMessageSource;
 @Configuration(proxyBeanMethods = false)
 public class NrichNotificationAutoConfiguration {
 
-    private static final String NOTIFICATION_MESSAGES_NAME = "notificationMessages";
+    public static final String NOTIFICATION_MESSAGES_NAME = "notificationMessages";
 
     @ConditionalOnMissingBean
     @Bean
