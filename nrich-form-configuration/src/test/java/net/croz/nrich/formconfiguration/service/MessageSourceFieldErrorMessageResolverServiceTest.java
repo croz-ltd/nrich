@@ -14,6 +14,9 @@ import java.util.Map;
 
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createConstrainedProperty;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
 class MessageSourceFieldErrorMessageResolverServiceTest {
@@ -46,5 +49,20 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
 
         // then
         assertThat(message).isEqualTo("Not in list: one, two");
+    }
+
+    @Test
+    void shouldNotFailOnNullConstraintArguments() {
+        // given
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class);
+        ConstrainedProperty constrainedPropertySpy = spy(constrainedProperty);
+
+        doReturn(null).when(constrainedPropertySpy).getConstraintArgumentList();
+
+        // when
+        Throwable thrown = catchThrowable(() -> fieldErrorMessageResolverService.resolveErrorMessage(constrainedPropertySpy, new Locale("en")));
+
+        // then
+        assertThat(thrown).isNull();
     }
 }
