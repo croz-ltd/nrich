@@ -30,7 +30,7 @@ public class NrichEncryptAutoConfiguration {
     @Bean
     public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
         String password = StringUtils.isEmpty(encryptProperties.getEncryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptPassword();
-        String salt = StringUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey(): encryptProperties.getEncryptSalt();
+        String salt = StringUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptSalt();
         BytesEncryptor encryptor = Encryptors.standard(password, salt);
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());

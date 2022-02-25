@@ -76,7 +76,8 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
     public String unwrappedExceptionConstraintViolationExceptionExceptionResolving() throws Exception {
         try {
             return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             throw new ExecutionException(exception);
         }
     }
