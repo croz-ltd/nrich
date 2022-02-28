@@ -18,7 +18,6 @@ public final class CreateExcelReportRequestGeneratingUtil {
 
     public static CreateExcelReportRequest createExcelReportRequest(MultiRowDataProvider multiRowDataProvider, int batchSize, File file, int firstRowIndex) {
 
-
         return CreateExcelReportRequest.builder()
                 .multiRowDataProvider(multiRowDataProvider)
                 .batchSize(batchSize)
