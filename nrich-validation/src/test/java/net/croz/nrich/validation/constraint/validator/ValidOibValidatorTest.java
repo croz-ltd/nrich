@@ -30,7 +30,7 @@ class ValidOibValidatorTest {
         assertThat(result).isTrue();
     }
 
-    @ValueSource(strings = { "aaa", "11111111110" })
+    @ValueSource(strings = { "invalidOib", "11111111110" })
     @ParameterizedTest
     void shouldReturnFalseForInvalidOib(String oib) {
         // when
