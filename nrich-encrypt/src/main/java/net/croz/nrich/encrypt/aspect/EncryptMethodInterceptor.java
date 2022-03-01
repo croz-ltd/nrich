@@ -44,8 +44,8 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
         }
 
         List<EncryptionConfiguration> foundConfigurationList = encryptionConfigurationList.stream()
-                .filter(configuration -> methodName.equals(configuration.getMethodToEncryptDecrypt()) || anyMethodName.equals(configuration.getMethodToEncryptDecrypt()))
-                .collect(Collectors.toList());
+            .filter(configuration -> methodName.equals(configuration.getMethodToEncryptDecrypt()) || anyMethodName.equals(configuration.getMethodToEncryptDecrypt()))
+            .collect(Collectors.toList());
 
         if (!foundConfigurationList.isEmpty()) {
             EncryptionConfiguration decryptArgumentsConfiguration = findEncryptionConfigurationForOperation(foundConfigurationList, EncryptionOperation.DECRYPT);
@@ -95,8 +95,8 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
     private EncryptionConfiguration findEncryptionConfigurationForOperation(List<EncryptionConfiguration> encryptionConfigurationList, EncryptionOperation encryptionOperation) {
         return encryptionConfigurationList.stream()
-                .filter(configuration -> configuration.getEncryptionOperation() == encryptionOperation)
-                .findFirst()
-                .orElse(null);
+            .filter(configuration -> configuration.getEncryptionOperation() == encryptionOperation)
+            .findFirst()
+            .orElse(null);
     }
 }

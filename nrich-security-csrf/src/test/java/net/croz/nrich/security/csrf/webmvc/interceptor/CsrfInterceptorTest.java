@@ -187,8 +187,8 @@ class CsrfInterceptorTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT)
-                .session(session)
-                .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
+            .session(session)
+            .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

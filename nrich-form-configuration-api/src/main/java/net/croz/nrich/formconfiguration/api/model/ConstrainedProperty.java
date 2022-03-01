@@ -59,8 +59,8 @@ public class ConstrainedProperty {
         List<String> ignoredKeyList = Arrays.asList("groups", "message", "payload");
 
         return constraintDescriptor.getAttributes().entrySet().stream()
-                .filter(entry -> !ignoredKeyList.contains(entry.getKey()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            .filter(entry -> !ignoredKeyList.contains(entry.getKey()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     /**

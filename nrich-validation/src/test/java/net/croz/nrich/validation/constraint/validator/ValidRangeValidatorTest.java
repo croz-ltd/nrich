@@ -84,12 +84,12 @@ class ValidRangeValidatorTest {
         Instant now = Instant.now();
 
         return Stream.of(
-                arguments(null, null, true),
-                arguments(now, null, true),
-                arguments(null, now, true),
-                arguments(now, now.plus(1, ChronoUnit.DAYS), true),
-                arguments(now.plus(1, ChronoUnit.DAYS), now, false),
-                arguments(now, now, false)
+            arguments(null, null, true),
+            arguments(now, null, true),
+            arguments(null, now, true),
+            arguments(now, now.plus(1, ChronoUnit.DAYS), true),
+            arguments(now.plus(1, ChronoUnit.DAYS), now, false),
+            arguments(now, now, false)
         );
     }
 }

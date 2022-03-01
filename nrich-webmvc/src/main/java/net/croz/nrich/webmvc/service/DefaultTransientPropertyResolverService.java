@@ -21,9 +21,9 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
 
             while (currentType != Object.class) {
                 List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
-                        .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
-                        .map(Field::getName)
-                        .collect(Collectors.toList());
+                    .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
+                    .map(Field::getName)
+                    .collect(Collectors.toList());
 
                 transientPropertyList.addAll(currentTransientPropertyList);
 

@@ -52,9 +52,9 @@ class EntityClassSerializerModifierTest {
 
     private static Stream<Arguments> shouldNotSerializeWhenSerializationIsNotEnabledMethodSource() {
         return Stream.of(
-                arguments(false, null, new EntityClassSerializerModifierTestEntity()),
-                arguments(false, Collections.singletonList("java.lang"), new EntityClassSerializerModifierTestEntity()),
-                arguments(true, null, new EntityClassSerializerModifierTestEntityWithoutAnnotation())
+            arguments(false, null, new EntityClassSerializerModifierTestEntity()),
+            arguments(false, Collections.singletonList("java.lang"), new EntityClassSerializerModifierTestEntity()),
+            arguments(true, null, new EntityClassSerializerModifierTestEntityWithoutAnnotation())
         );
     }
 

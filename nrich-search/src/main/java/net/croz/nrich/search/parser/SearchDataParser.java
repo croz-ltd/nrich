@@ -91,16 +91,16 @@ public class SearchDataParser {
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
-                    .filter(key -> !ignoredFieldList.contains(key))
-                    .collect(Collectors.toList());
+                .filter(key -> !ignoredFieldList.contains(key))
+                .collect(Collectors.toList());
         }
 
         Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
-                .filter(shouldIncludeField)
-                .map(Field::getName)
-                .collect(Collectors.toList());
+            .filter(shouldIncludeField)
+            .map(Field::getName)
+            .collect(Collectors.toList());
     }
 
     private String fieldNameWithoutSuffixAndPrefix(String originalFieldName, String prefix) {
@@ -175,25 +175,25 @@ public class SearchDataParser {
 
     private String findPathUsingMapping(List<SearchPropertyMapping> propertyMappingList, String fieldName) {
         return Optional.ofNullable(propertyMappingList)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(mapping -> fieldName.equals(mapping.getName()))
-                .map(SearchPropertyMapping::getPath)
-                .findAny()
-                .orElse(null);
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(mapping -> fieldName.equals(mapping.getName()))
+            .map(SearchPropertyMapping::getPath)
+            .findAny()
+            .orElse(null);
     }
 
     private String findPathUsingAttributePrefix(String originalFieldName, ManagedType<?> managedType) {
         List<String> attributeNameList = managedType.getAttributes().stream()
-                .filter(attribute -> attribute.isAssociation() || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED)
-                .map(Attribute::getName)
-                .collect(Collectors.toList());
+            .filter(attribute -> attribute.isAssociation() || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED)
+            .map(Attribute::getName)
+            .collect(Collectors.toList());
 
         return attributeNameList.stream()
-                .filter(attribute -> isFieldNameValid(originalFieldName, attribute))
-                .map(attribute -> String.format(PATH_FORMAT, attribute, StringUtils.uncapitalize(originalFieldName.substring(attribute.length()))))
-                .findFirst()
-                .orElse(null);
+            .filter(attribute -> isFieldNameValid(originalFieldName, attribute))
+            .map(attribute -> String.format(PATH_FORMAT, attribute, StringUtils.uncapitalize(originalFieldName.substring(attribute.length()))))
+            .findFirst()
+            .orElse(null);
     }
 
     private boolean searchUsingPropertyMapping(SearchDataParserConfiguration searchConfiguration) {
@@ -217,11 +217,11 @@ public class SearchDataParser {
 
     private SearchOperatorOverride findOperatorOverride(List<SearchOperatorOverride> searchOperatorOverrideList, Predicate<SearchOperatorOverride> searchOperatorOverridePredicate) {
         return Optional.ofNullable(searchOperatorOverrideList)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(searchOperatorOverridePredicate)
-                .findFirst()
-                .orElse(null);
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(searchOperatorOverridePredicate)
+            .findFirst()
+            .orElse(null);
     }
 
     private boolean isFieldNameValid(String fieldName, String attribute) {

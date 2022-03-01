@@ -123,8 +123,8 @@ public class Slf4jLoggingService implements LoggingService {
         }
 
         return exceptionAuxiliaryData.entrySet().stream()
-                .map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue()))
-                .collect(Collectors.joining(separator));
+            .map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue()))
+            .collect(Collectors.joining(separator));
     }
 
     private void logOnLevel(LoggingLevel loggingLevel, String message) {

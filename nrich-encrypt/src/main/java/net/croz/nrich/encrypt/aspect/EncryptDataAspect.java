@@ -86,8 +86,8 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
 
     private DecryptArgument decryptArgumentAnnotation(Annotation[] annotationList) {
         return (DecryptArgument) Arrays.stream(annotationList)
-                .filter(DecryptArgument.class::isInstance)
-                .findFirst()
-                .orElse(null);
+            .filter(DecryptArgument.class::isInstance)
+            .findFirst()
+            .orElse(null);
     }
 }

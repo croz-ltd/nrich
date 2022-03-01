@@ -21,8 +21,8 @@ public class ValidSearchPropertiesValidator implements ConstraintValidator<Valid
         ValidSearchProperties.PropertyGroup[] propertyGroupList = constraintAnnotation.propertyGroup();
 
         propertyGroupMap = IntStream.range(0, propertyGroupList.length)
-                .boxed()
-                .collect(Collectors.toConcurrentMap(Object::toString, value -> propertyGroupList[value].value()));
+            .boxed()
+            .collect(Collectors.toConcurrentMap(Object::toString, value -> propertyGroupList[value].value()));
     }
 
     @Override
@@ -31,8 +31,8 @@ public class ValidSearchPropertiesValidator implements ConstraintValidator<Valid
 
         return propertyGroupMap.entrySet().stream().anyMatch(fieldGroup -> {
             List<Method> methodList = Arrays.stream(fieldGroup.getValue())
-                    .map(fieldName -> ValidationReflectionUtil.findGetterMethod(type, fieldName))
-                    .collect(Collectors.toList());
+                .map(fieldName -> ValidationReflectionUtil.findGetterMethod(type, fieldName))
+                .collect(Collectors.toList());
 
             return methodList.stream().allMatch(method -> ValidationReflectionUtil.invokeMethod(method, value) != null);
         });

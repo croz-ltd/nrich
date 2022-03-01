@@ -106,8 +106,8 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         }
 
         return resultMap.entrySet().stream()
-                .map(value -> new ValidationError(value.getKey(), value.getValue()))
-                .collect(Collectors.toList());
+            .map(value -> new ValidationError(value.getKey(), value.getValue()))
+            .collect(Collectors.toList());
     }
 
     private List<String> resolveMessageListFromNotificationData(Map<String, ?> additionalNotificationData) {
@@ -116,9 +116,9 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         }
 
         return additionalNotificationData.entrySet().stream()
-                .map(this::resolveMessageForAdditionalData)
-                .filter(message -> !NotificationConstants.UNDEFINED_MESSAGE_VALUE.equals(message))
-                .collect(Collectors.toList());
+            .map(this::resolveMessageForAdditionalData)
+            .filter(message -> !NotificationConstants.UNDEFINED_MESSAGE_VALUE.equals(message))
+            .collect(Collectors.toList());
     }
 
     private String constraintFieldNameOrDefault(ObjectError objectError) {

@@ -213,12 +213,12 @@ class CsrfWebFilterTest {
 
         // when
         EntityExchangeResult<byte[]> result = client.post()
-                .uri(CSRF_SECURED_ENDPOINT)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(CSRF_TOKEN_KEY_NAME, csrfToken)
-                .exchange()
-                .expectBody()
-                .returnResult();
+            .uri(CSRF_SECURED_ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(CSRF_TOKEN_KEY_NAME, csrfToken)
+            .exchange()
+            .expectBody()
+            .returnResult();
 
         // then
         assertThat(result.getStatus()).isEqualTo(HttpStatus.OK);

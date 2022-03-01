@@ -121,8 +121,8 @@ public class NrichRegistryAutoConfiguration {
     @Bean
     public StringToTypeConverter<Object> registryDefaultStringToTypeConverter(NrichRegistryProperties registryProperties) {
         return new DefaultStringToTypeConverter(
-                registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(),
-                registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern()
+            registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(),
+            registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern()
         );
     }
 
@@ -214,8 +214,8 @@ public class NrichRegistryAutoConfiguration {
     @Bean
     public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-                .map(RegistryDataConfiguration::getRegistryType)
-                .collect(Collectors.toList());
+            .map(RegistryDataConfiguration::getRegistryType)
+            .collect(Collectors.toList());
 
         return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMapping);
     }

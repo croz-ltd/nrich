@@ -36,7 +36,7 @@ class NrichNotificationAutoConfigurationTest {
     void shouldNotRegisterMessagesWhenExplicitlyDisalbed() {
         // expect
         contextRunner.withPropertyValues("nrich.notification.register-messages=false")
-                .run(context -> assertThat(context).doesNotHaveBean(NrichNotificationAutoConfiguration.NotificationMessageSourceRegistrar.class));
+            .run(context -> assertThat(context).doesNotHaveBean(NrichNotificationAutoConfiguration.NotificationMessageSourceRegistrar.class));
     }
 
     @Test
@@ -52,7 +52,7 @@ class NrichNotificationAutoConfigurationTest {
 
         // expect
         contextRunner.withBean(MessageSource.class, () -> messageSource).run(context ->
-                verify(messageSource).addBasenames(NrichNotificationAutoConfiguration.NOTIFICATION_MESSAGES_NAME)
+            verify(messageSource).addBasenames(NrichNotificationAutoConfiguration.NOTIFICATION_MESSAGES_NAME)
         );
     }
 }

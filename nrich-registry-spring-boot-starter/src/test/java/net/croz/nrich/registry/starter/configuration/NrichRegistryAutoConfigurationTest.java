@@ -71,7 +71,7 @@ class NrichRegistryAutoConfigurationTest {
     void shouldRegisterFormConfigurationResolverServiceWhenFormConfigurationBeanIsDefined() {
         // expect
         contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class).withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class)
-                .run(context -> assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class));
+            .run(context -> assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class));
     }
 
     @Test

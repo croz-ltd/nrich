@@ -35,9 +35,9 @@ class NrichEncryptAutoConfigurationTest {
     void shouldCreateAdvisorWhenEncryptConfigurationIsDefined() {
         // expect
         contextRunner.withPropertyValues(
-                "nrich.encrypt.encryption-configuration-list[0].method-to-encrypt-decrypt=methodToEncrypt",
-                "nrich.encrypt.encryption-configuration-list[0].property-to-encrypt-decrypt-list=property",
-                "nrich.encrypt.encryption-configuration-list[0].encryption-operation=ENCRYPT").run(context -> assertThat(context).hasBean("encryptAdvisor"));
+            "nrich.encrypt.encryption-configuration-list[0].method-to-encrypt-decrypt=methodToEncrypt",
+            "nrich.encrypt.encryption-configuration-list[0].property-to-encrypt-decrypt-list=property",
+            "nrich.encrypt.encryption-configuration-list[0].encryption-operation=ENCRYPT").run(context -> assertThat(context).hasBean("encryptAdvisor"));
     }
 
     @CsvSource({ "'',''", "ec49c585b7c44f2b,''", "'',ec49c585b7c44f2b" })

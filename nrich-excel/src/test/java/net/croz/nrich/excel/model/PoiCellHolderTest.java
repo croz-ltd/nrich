@@ -79,13 +79,13 @@ class PoiCellHolderTest {
         String stringValue = "value";
 
         return Stream.of(
-                arguments(booleanValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(booleanValue)),
-                arguments(numberValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(numberValue)),
-                arguments(dateValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(dateValue)),
-                arguments(calendarValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(calendarValue)),
-                arguments(localDateTimeValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(localDateTimeValue)),
-                arguments(localDateValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(localDateValue)),
-                arguments(stringValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(stringValue))
+            arguments(booleanValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(booleanValue)),
+            arguments(numberValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(numberValue)),
+            arguments(dateValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(dateValue)),
+            arguments(calendarValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(calendarValue)),
+            arguments(localDateTimeValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(localDateTimeValue)),
+            arguments(localDateValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(localDateValue)),
+            arguments(stringValue, (Consumer<Cell>) currentCell -> verify(currentCell).setCellValue(stringValue))
         );
     }
 
@@ -96,6 +96,6 @@ class PoiCellHolderTest {
 
         // then
         assertThat(throwable).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Set cell value called with unrecognized type!");
+            .hasMessage("Set cell value called with unrecognized type!");
     }
 }

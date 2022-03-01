@@ -36,8 +36,8 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     @Override
     public List<FormConfiguration> fetchFormConfigurationList(List<String> formIdList) {
         return formIdList.stream()
-                .map(this::resolveFormConfiguration)
-                .collect(Collectors.toList());
+            .map(this::resolveFormConfiguration)
+            .collect(Collectors.toList());
     }
 
     private FormConfiguration resolveFormConfiguration(String formId) {
@@ -79,24 +79,24 @@ public class DefaultFormConfigurationService implements FormConfigurationService
         Set<ConstraintDescriptor<?>> constraintDescriptorList = propertyDescriptor.getConstraintDescriptors();
 
         return constraintDescriptorList.stream()
-                .map(constraintDescriptor -> convertProperty(constraintDescriptor, parentType, propertyPath, propertyDescriptor))
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+            .map(constraintDescriptor -> convertProperty(constraintDescriptor, parentType, propertyPath, propertyDescriptor))
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     private List<ConstrainedPropertyClientValidatorConfiguration> convertProperty(ConstraintDescriptor<?> constraintDescriptor, Class<?> parentType, String propertyPath, PropertyDescriptor propertyDescriptor) {
         ConstrainedProperty constrainedProperty = ConstrainedProperty.builder()
-                .constraintDescriptor(constraintDescriptor)
-                .parentType(parentType)
-                .path(propertyPath)
-                .name(propertyDescriptor.getPropertyName())
-                .type(propertyDescriptor.getElementClass())
-                .build();
+            .constraintDescriptor(constraintDescriptor)
+            .parentType(parentType)
+            .path(propertyPath)
+            .name(propertyDescriptor.getPropertyName())
+            .type(propertyDescriptor.getElementClass())
+            .build();
 
         ConstrainedPropertyValidatorConverterService converterService = constraintConverterServiceList.stream()
-                .filter(converter -> converter.supports(constrainedProperty))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for constrained property: %s", constrainedProperty)));
+            .filter(converter -> converter.supports(constrainedProperty))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for constrained property: %s", constrainedProperty)));
 
         return converterService.convert(constrainedProperty);
     }

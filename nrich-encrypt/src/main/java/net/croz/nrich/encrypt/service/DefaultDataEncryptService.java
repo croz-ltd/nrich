@@ -96,8 +96,8 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
 
             Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
-                    .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
-                    .collect(Collectors.toList());
+                .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
+                .collect(Collectors.toList());
 
             setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValueList);
         }

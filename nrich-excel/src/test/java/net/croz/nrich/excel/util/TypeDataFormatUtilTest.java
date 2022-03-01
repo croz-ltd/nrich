@@ -31,12 +31,12 @@ class TypeDataFormatUtilTest {
 
         // then
         assertThat(formatList).extracting("type").containsExactly(
-                Date.class, Instant.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class,
-                Short.class, Integer.class, Long.class, BigInteger.class, Float.class, Double.class, BigDecimal.class
+            Date.class, Instant.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class,
+            Short.class, Integer.class, Long.class, BigInteger.class, Float.class, Double.class, BigDecimal.class
         );
         assertThat(formatList).extracting("dataFormat").containsExactly(
-                dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat,
-                integerFormat, integerFormat, integerFormat, integerFormat, decimalFormat, decimalFormat, decimalFormat
+            dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat,
+            integerFormat, integerFormat, integerFormat, integerFormat, decimalFormat, decimalFormat, decimalFormat
         );
     }
 

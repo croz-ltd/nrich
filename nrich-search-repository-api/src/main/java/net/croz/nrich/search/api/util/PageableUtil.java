@@ -59,8 +59,8 @@ public final class PageableUtil {
         }
         else {
             List<Sort.Order> orderList = sortPropertyList.stream()
-                    .map(PageableUtil::convertToSortOrder)
-                    .collect(Collectors.toList());
+                .map(PageableUtil::convertToSortOrder)
+                .collect(Collectors.toList());
 
             if (uniqueSortOrder != null && sortPropertyList.stream().map(SortProperty::getProperty).noneMatch(value -> value.equals(uniqueSortProperty.getProperty()))) {
                 orderList.add(uniqueSortOrder);

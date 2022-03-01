@@ -248,8 +248,8 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-                .map(RegistryDataConfiguration::getRegistryType)
-                .collect(Collectors.toList());
+            .map(RegistryDataConfiguration::getRegistryType)
+            .collect(Collectors.toList());
 
         Map<String, Class<?>> formConfigurationMap = new HashMap<>();
 
@@ -289,13 +289,13 @@ public class RegistryTestConfiguration {
         configurationEntityConfiguration.setDeletable(false);
 
         RegistryOverrideConfigurationHolder configurationEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
+            .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
 
         RegistryOverrideConfiguration interceptorTestEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
         interceptorTestEntityConfiguration.setReadOnly(true);
 
         RegistryOverrideConfigurationHolder interceptorTestEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
+            .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
 
         RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
@@ -304,13 +304,13 @@ public class RegistryTestConfiguration {
         InterceptorTestNonEntityNonModifiableConfiguration.setCreatable(false);
 
         RegistryOverrideConfigurationHolder InterceptorTestNonEntityNonModifiableConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
+            .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
 
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
         RegistryOverrideConfigurationHolder searchConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
+            .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
         return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
     }

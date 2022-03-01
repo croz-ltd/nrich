@@ -93,9 +93,9 @@ public final class RegistryHistoryGeneratingUtil {
         ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
 
         request.setSortPropertyList(Arrays.asList(
-                new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
-                new SortProperty(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, SortDirection.DESC), new SortProperty("name", SortDirection.DESC),
-                new SortProperty("revisionProperty", SortDirection.ASC)
+            new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
+            new SortProperty(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, SortDirection.DESC), new SortProperty("name", SortDirection.DESC),
+            new SortProperty("revisionProperty", SortDirection.ASC)
         ));
 
         return request;

@@ -81,8 +81,8 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         }
 
         return Arrays.stream(filteredArguments)
-                .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
-                .collect(Collectors.toList());
+            .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
+            .collect(Collectors.toList());
     }
 
     private String convertToString(Object[] value) {

@@ -97,10 +97,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             if (matcher.find()) {
                 String matchedExpression = matcher.group(1);
                 String variableValue = templateVariableList.stream()
-                        .filter(variable -> matchedExpression.equals(variable.getName()))
-                        .map(TemplateVariable::getValue)
-                        .findFirst()
-                        .orElse("");
+                    .filter(variable -> matchedExpression.equals(variable.getName()))
+                    .map(TemplateVariable::getValue)
+                    .findFirst()
+                    .orElse("");
 
                 String updatedValue = matcher.replaceFirst(variableValue);
 
@@ -117,9 +117,9 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         PoiCellHolder cellHolder = new PoiCellHolder(cell);
 
         CellValueConverter converter = cellValueConverterList.stream()
-                .filter(cellValueConverter -> cellValueConverter.supports(cellHolder, value))
-                .findFirst()
-                .orElse(null);
+            .filter(cellValueConverter -> cellValueConverter.supports(cellHolder, value))
+            .findFirst()
+            .orElse(null);
 
         if (converter == null) {
             cell.setCellValue(value.toString());
@@ -139,7 +139,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         }
 
         return columnDataFormatList.stream()
-                .collect(Collectors.toMap(ColumnDataFormat::getColumnIndex, entry -> createCellStyle(entry.getDataFormat())));
+            .collect(Collectors.toMap(ColumnDataFormat::getColumnIndex, entry -> createCellStyle(entry.getDataFormat())));
     }
 
     private CellStyle createCellStyle(String dataFormat) {
@@ -163,7 +163,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private Map<Class<?>, CellStyle> createDefaultStyleMap(List<TypeDataFormat> typeDataFormatList) {
         return typeDataFormatList.stream()
-                .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
-                .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
+            .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
+            .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
     }
 }

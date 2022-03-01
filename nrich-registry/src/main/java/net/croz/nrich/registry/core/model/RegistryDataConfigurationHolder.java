@@ -21,9 +21,9 @@ public class RegistryDataConfigurationHolder {
 
     public RegistryDataConfiguration<Object, Object> findRegistryConfigurationForClass(String classFullName) {
         return registryDataConfigurationList.stream()
-                .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
+            .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
     }
 
     public ManagedTypeWrapper resolveManagedTypeWrapper(String className) {

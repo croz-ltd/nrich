@@ -52,10 +52,10 @@ public class EncryptTestConfiguration {
     public Advisor encryptorAdvisor(DataEncryptionService dataEncryptionService) {
         List<String> propertyList = Collections.singletonList("value");
         List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToEncryptFromConfiguration", propertyList, EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration", propertyList, EncryptionOperation.DECRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.DECRYPT)
+            new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToEncryptFromConfiguration", propertyList, EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration", propertyList, EncryptionOperation.DECRYPT),
+            new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*", propertyList, EncryptionOperation.DECRYPT)
         );
 
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();

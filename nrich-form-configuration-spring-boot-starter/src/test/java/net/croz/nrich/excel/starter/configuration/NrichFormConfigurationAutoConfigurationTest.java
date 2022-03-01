@@ -42,6 +42,6 @@ class NrichFormConfigurationAutoConfigurationTest {
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
         // expect
         contextRunner.withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.form-configuration.default-converter-enabled=false")
-                .run(context -> assertThat(context).doesNotHaveBean(ConstrainedPropertyValidatorConverterService.class));
+            .run(context -> assertThat(context).doesNotHaveBean(ConstrainedPropertyValidatorConverterService.class));
     }
 }

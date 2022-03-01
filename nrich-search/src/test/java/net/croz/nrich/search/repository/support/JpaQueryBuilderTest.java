@@ -103,8 +103,8 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .nestedEntity(new TestEntitySearchRequest.TestNestedEntitySearchRequest("nested0"))
-                .build();
+            .nestedEntity(new TestEntitySearchRequest.TestNestedEntitySearchRequest("nested0"))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
@@ -119,12 +119,12 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .pluralAssociationRestrictionType(PluralAssociationRestrictionType.EXISTS)
-                .build();
+            .pluralAssociationRestrictionType(PluralAssociationRestrictionType.EXISTS)
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
-                .build();
+            .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -141,12 +141,12 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
-                .build();
+            .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
-                .build();
+            .collectionEntityList(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("collection2"))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -163,13 +163,13 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
-                .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-                .build();
+            .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
+            .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .collectionName("collection2")
-                .build();
+            .collectionName("collection2")
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -186,13 +186,13 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
-                .resolvePropertyMappingUsingPrefix(true)
-                .build();
+            .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
+            .resolvePropertyMappingUsingPrefix(true)
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .collectionEntityListName("collection2")
-                .build();
+            .collectionEntityListName("collection2")
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -209,12 +209,12 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .resolvePropertyMappingUsingPrefix(true)
-                .build();
+            .resolvePropertyMappingUsingPrefix(true)
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .testEntityEmbeddedEmbeddedName("embedded1")
-                .build();
+            .testEntityEmbeddedEmbeddedName("embedded1")
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -230,17 +230,17 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
-                .rootEntity(TestEntityCollectionWithReverseAssociation.class)
-                .propertyPrefix("subqueryRestriction")
-                .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
+            .rootEntity(TestEntityCollectionWithReverseAssociation.class)
+            .propertyPrefix("subqueryRestriction")
+            .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
-                .build();
+            .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .subqueryRestrictionName("first0-association-1")
-                .build();
+            .subqueryRestrictionName("first0-association-1")
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -255,17 +255,17 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
-                .rootEntity(TestEntityCollectionWithReverseAssociation.class)
-                .restrictionPropertyHolder("subqueryRestrictionHolder")
-                .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
+            .rootEntity(TestEntityCollectionWithReverseAssociation.class)
+            .restrictionPropertyHolder("subqueryRestrictionHolder")
+            .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
-                .build();
+            .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .subqueryRestrictionHolder(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("first0-association-1"))
-                .build();
+            .subqueryRestrictionHolder(new TestEntitySearchRequest.TestCollectionEntitySearchRequest("first0-association-1"))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -280,8 +280,8 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .testEntityEnum(TestEntityEnum.SECOND)
-                .build();
+            .testEntityEnum(TestEntityEnum.SECOND)
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
@@ -297,8 +297,8 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .testEntityEmbedded(new TestEntitySearchRequest.TestEntityEmbeddedSearchRequest("embedded3"))
-                .build();
+            .testEntityEmbedded(new TestEntitySearchRequest.TestEntityEmbeddedSearchRequest("embedded3"))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
@@ -333,9 +333,9 @@ class JpaQueryBuilderTest {
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
         SearchConfiguration<TestEntity, Tuple, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, Tuple, TestEntitySearchRequest>builder()
-                .resultClass(Tuple.class)
-                .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
-                .build();
+            .resultClass(Tuple.class)
+            .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
+            .build();
 
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
@@ -358,9 +358,9 @@ class JpaQueryBuilderTest {
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .resultClass(TestEntityDto.class)
-                .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
-                .build();
+            .resultClass(TestEntityDto.class)
+            .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
+            .build();
 
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
@@ -409,8 +409,8 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .rootEntityResolver((requestInstance) -> TestEntity.class)
-                .build();
+            .rootEntityResolver((requestInstance) -> TestEntity.class)
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -430,8 +430,8 @@ class JpaQueryBuilderTest {
         SearchJoin<TestEntitySearchRequest> nonAppliedJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("nestedJoinAlias").path("nonExistingPath").condition(value -> false).joinType(JoinType.LEFT).build();
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .joinList(Arrays.asList(nestedEntityJoin, nonAppliedJoin))
-                .build();
+            .joinList(Arrays.asList(nestedEntityJoin, nonAppliedJoin))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -448,8 +448,8 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
-                .build();
+            .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -466,8 +466,8 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
-                .build();
+            .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+            .build();
 
         // when
         CriteriaQuery<TestEntity> query = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
@@ -487,9 +487,9 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-                .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
-                .build();
+            .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+            .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -515,9 +515,9 @@ class JpaQueryBuilderTest {
         request.setAgeFrom(-1);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
-                .build();
+            .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
+            .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -534,8 +534,8 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("Rst");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.CONTAINS)))
-                .build();
+            .searchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.CONTAINS)))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -552,8 +552,8 @@ class JpaQueryBuilderTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .additionalRestrictionResolverList(Collections.singletonList(new TestEntityAdditionalRestrictionResolver(true)))
-                .build();
+            .additionalRestrictionResolverList(Collections.singletonList(new TestEntityAdditionalRestrictionResolver(true)))
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, searchConfiguration);
@@ -622,8 +622,8 @@ class JpaQueryBuilderTest {
 
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
         SearchConfiguration<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest>builder()
-                .resultClass(TestEntityProjectionDto.class)
-                .build();
+            .resultClass(TestEntityProjectionDto.class)
+            .build();
 
         // when
         List<TestEntityProjectionDto> results = executeQuery(request, searchConfiguration);
@@ -655,9 +655,9 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .nestedEntityNestedEntityName("nested0")
-                .nestedEntityNestedEntityAliasName("nested alias0")
-                .build();
+            .nestedEntityNestedEntityName("nested0")
+            .nestedEntityNestedEntityAliasName("nested alias0")
+            .build();
 
         // when
         List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
@@ -675,10 +675,10 @@ class JpaQueryBuilderTest {
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .resultClass(TestEntityDto.class)
-                .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
-                .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
-                .build();
+            .resultClass(TestEntityDto.class)
+            .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
+            .joinList(Collections.singletonList(SearchJoin.leftJoinFetch("nestedEntity")))
+            .build();
 
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
@@ -700,8 +700,8 @@ class JpaQueryBuilderTest {
         mapSearchRequest.put("name", "name0");
 
         SearchConfiguration<TestEntityWithEmbeddedId, TestEntityWithEmbeddedId, Map<String, Object>> searchConfiguration = SearchConfiguration.<TestEntityWithEmbeddedId, TestEntityWithEmbeddedId, Map<String, Object>>builder()
-                .joinList(Arrays.asList(SearchJoin.innerJoinFetch("id.firstKey"), SearchJoin.innerJoin("id.secondKey")))
-                .build();
+            .joinList(Arrays.asList(SearchJoin.innerJoinFetch("id.firstKey"), SearchJoin.innerJoin("id.secondKey")))
+            .build();
 
         // when
         List<TestEntityWithEmbeddedId> results = entityManager.createQuery(testEntityWithEmbeddedIdJpaQueryBuilder.buildQuery(mapSearchRequest, searchConfiguration, Sort.unsorted())).getResultList();

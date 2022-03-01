@@ -137,8 +137,8 @@ public class JpaQueryBuilder<T> {
         }
 
         joinList.stream()
-                .filter(join -> shouldApplyJoinOrFetch(join, request))
-                .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin));
+            .filter(join -> shouldApplyJoinOrFetch(join, request))
+            .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin));
     }
 
     private <R> List<Selection<?>> resolveQueryProjectionList(Root<?> root, List<SearchProjection<R>> projectionList, R request) {
@@ -147,9 +147,9 @@ public class JpaQueryBuilder<T> {
         }
 
         return projectionList.stream()
-                .filter(projection -> shouldApplyProjection(projection, request))
-                .map(projection -> convertToSelectionExpression(root, projection))
-                .collect(Collectors.toList());
+            .filter(projection -> shouldApplyProjection(projection, request))
+            .map(projection -> convertToSelectionExpression(root, projection))
+            .collect(Collectors.toList());
     }
 
     private <R> boolean shouldApplyJoinOrFetch(SearchJoin<R> join, R request) {
@@ -255,9 +255,9 @@ public class JpaQueryBuilder<T> {
         }
 
         return subqueryConfigurationList.stream()
-                .map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+            .map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
     private <R> Subquery<?> buildSubquery(R request, SearchPropertyConfiguration searchPropertyConfiguration, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, SubqueryConfiguration subqueryConfiguration) {
@@ -295,10 +295,10 @@ public class JpaQueryBuilder<T> {
 
     private <R, P> List<Predicate> resolveInterceptorPredicateList(R request, List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList, CriteriaBuilder criteriaBuilder, Root<T> root, CriteriaQuery<P> query) {
         return Optional.ofNullable(additionalRestrictionResolverList).orElse(Collections.emptyList()).stream()
-                .map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request))
-                .filter(Objects::nonNull)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+            .map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request))
+            .filter(Objects::nonNull)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     private void applyPredicatesToQuery(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, boolean anyMatch, List<Predicate> requestPredicateList, List<Predicate> interceptorPredicateList) {
@@ -321,6 +321,6 @@ public class JpaQueryBuilder<T> {
 
     private <R> boolean joinFetchExists(List<SearchJoin<R>> joinList) {
         return Optional.ofNullable(joinList).orElse(Collections.emptyList()).stream()
-                .anyMatch(SearchJoin::isFetch);
+            .anyMatch(SearchJoin::isFetch);
     }
 }

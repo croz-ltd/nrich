@@ -19,10 +19,10 @@ public final class CreateExcelReportRequestGeneratingUtil {
     public static CreateExcelReportRequest createExcelReportRequest(MultiRowDataProvider multiRowDataProvider, int batchSize, File file, int firstRowIndex) {
 
         return CreateExcelReportRequest.builder()
-                .multiRowDataProvider(multiRowDataProvider)
-                .batchSize(batchSize)
-                .outputFile(file)
-                .templatePath("classpath:excel/template.xlsx")
-                .firstRowIndex(firstRowIndex).build();
+            .multiRowDataProvider(multiRowDataProvider)
+            .batchSize(batchSize)
+            .outputFile(file)
+            .templatePath("classpath:excel/template.xlsx")
+            .firstRowIndex(firstRowIndex).build();
     }
 }

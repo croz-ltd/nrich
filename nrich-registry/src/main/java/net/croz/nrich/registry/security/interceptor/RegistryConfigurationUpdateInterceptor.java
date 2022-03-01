@@ -51,7 +51,7 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
         }
 
         return registryOverrideConfigurationMap.entrySet().stream()
-                .collect(Collectors.toMap(entry -> entry.getKey().getName(), Map.Entry::getValue));
+            .collect(Collectors.toMap(entry -> entry.getKey().getName(), Map.Entry::getValue));
     }
 
     private void verifyRegistryOperation(String registryClassName, boolean isAllowed) {

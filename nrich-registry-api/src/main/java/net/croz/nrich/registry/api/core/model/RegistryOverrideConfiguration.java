@@ -67,16 +67,16 @@ public class RegistryOverrideConfiguration {
 
     public static RegistryOverrideConfiguration defaultConfiguration() {
         return RegistryOverrideConfiguration.builder()
-                .readOnly(false)
-                .creatable(true)
-                .updateable(true)
-                .deletable(true)
-                .isHistoryAvailable(false)
-                .ignoredPropertyList(Collections.emptyList())
-                .propertyDisplayOrderList(Collections.emptyList())
-                .nonEditablePropertyList(Collections.emptyList())
-                .nonSortablePropertyList(Collections.emptyList())
-                .nonSearchablePropertyList(Collections.emptyList())
-                .build();
+            .readOnly(false)
+            .creatable(true)
+            .updateable(true)
+            .deletable(true)
+            .isHistoryAvailable(false)
+            .ignoredPropertyList(Collections.emptyList())
+            .propertyDisplayOrderList(Collections.emptyList())
+            .nonEditablePropertyList(Collections.emptyList())
+            .nonSortablePropertyList(Collections.emptyList())
+            .nonSearchablePropertyList(Collections.emptyList())
+            .build();
     }
 }

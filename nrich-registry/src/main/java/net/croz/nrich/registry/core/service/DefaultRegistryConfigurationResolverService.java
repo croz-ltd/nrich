@@ -49,9 +49,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
         registryConfiguration.getGroupDefinitionConfigurationList().forEach(registryGroupDefinition -> {
             List<ManagedTypeWrapper> includedManagedTypeList = managedTypeList.stream()
-                    .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
-                    .map(ManagedTypeWrapper::new)
-                    .collect(Collectors.toList());
+                .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
+                .map(ManagedTypeWrapper::new)
+                .collect(Collectors.toList());
 
             if (CollectionUtils.isEmpty(includedManagedTypeList)) {
                 return;
@@ -66,9 +66,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     @Override
     public Map<Class<?>, RegistryOverrideConfiguration> resolveRegistryOverrideConfigurationMap() {
         return Optional.ofNullable(registryConfiguration.getOverrideConfigurationHolderList()).orElse(Collections.emptyList())
-                .stream()
-                .filter(registryOverrideConfigurationHolder -> registryOverrideConfigurationHolder.getOverrideConfiguration() != null)
-                .collect(Collectors.toMap(RegistryOverrideConfigurationHolder::getType, RegistryOverrideConfigurationHolder::getOverrideConfiguration));
+            .stream()
+            .filter(registryOverrideConfigurationHolder -> registryOverrideConfigurationHolder.getOverrideConfiguration() != null)
+            .collect(Collectors.toMap(RegistryOverrideConfigurationHolder::getType, RegistryOverrideConfigurationHolder::getOverrideConfiguration));
     }
 
     @Override
@@ -76,9 +76,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         RegistryGroupDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
 
         List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.getGroupDefinitionList().stream()
-                .map(RegistryGroupDefinition::getRegistryEntityList)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
+            .map(RegistryGroupDefinition::getRegistryEntityList)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
 
         List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList = new ArrayList<>();
 
@@ -97,10 +97,10 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     @Override
     public RegistryHistoryConfigurationHolder resolveRegistryHistoryConfiguration() {
         ManagedType<?> revisionEntityManagedType = entityManager.getMetamodel().getManagedTypes()
-                .stream()
-                .filter(managedType -> AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION))
-                .findFirst()
-                .orElse(null);
+            .stream()
+            .filter(managedType -> AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION))
+            .findFirst()
+            .orElse(null);
 
         String revisionNumberPropertyName = RegistryEnversConstants.REVISION_NUMBER_PROPERTY_DEFAULT_ORIGINAL_NAME;
         Class<?> revisionNumberPropertyType = Integer.class;
@@ -160,19 +160,19 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         Class<?> type = managedTypeWrapper.getJavaType();
 
         return Optional.ofNullable(registryConfiguration.getOverrideConfigurationHolderList()).orElse(Collections.emptyList()).stream()
-                .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getOverrideSearchConfiguration() != null)
-                .map(RegistryOverrideConfigurationHolder::getOverrideSearchConfiguration)
-                .findFirst()
-                .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedTypeWrapper));
+            .filter(registryOverrideConfigurationHolder -> type.equals(registryOverrideConfigurationHolder.getType()) && registryOverrideConfigurationHolder.getOverrideSearchConfiguration() != null)
+            .map(RegistryOverrideConfigurationHolder::getOverrideSearchConfiguration)
+            .findFirst()
+            .orElse(emptySearchConfigurationWithRequiredJoinFetchList(managedTypeWrapper));
     }
 
     private SearchConfiguration<Object, Object, Map<String, Object>> emptySearchConfigurationWithRequiredJoinFetchList(ManagedTypeWrapper managedTypeWrapper) {
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         List<SearchJoin<Map<String, Object>>> searchJoinList = Stream.concat(
-                        createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), ""),
-                        createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + "."))
-                .collect(Collectors.toList());
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), ""),
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + "."))
+            .collect(Collectors.toList());
 
         searchConfiguration.setJoinList(searchJoinList);
 
@@ -181,6 +181,6 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
     private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(List<SingularAttribute<?, ?>> associationList, String prefix) {
         return associationList.stream()
-                .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + singularAttribute.getName()) : SearchJoin.innerJoinFetch(prefix + singularAttribute.getName()));
+            .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + singularAttribute.getName()) : SearchJoin.innerJoinFetch(prefix + singularAttribute.getName()));
     }
 }

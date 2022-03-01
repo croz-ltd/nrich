@@ -60,7 +60,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
     @Override
     public Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request) {
         return request.getRegistryRequestList().stream()
-                .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
+            .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
     }
 
     @Transactional(readOnly = true)
@@ -125,7 +125,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(RegistryDataConfigurationHolder registryDataConfigurationHolder) {
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-                .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
+            .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
     }
 
     private List<RegistryDataInterceptor> interceptorList() {

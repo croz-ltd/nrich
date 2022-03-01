@@ -35,18 +35,18 @@ public class DefaultCellValueConverter implements CellValueConverter {
 
     private List<ConverterHolder> initializeConverterList() {
         return Arrays.asList(
-                new ConverterHolder(Date.class, CellHolder::setCellValue),
-                new ConverterHolder(Instant.class, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
-                new ConverterHolder(LocalDate.class, CellHolder::setCellValue),
-                new ConverterHolder(LocalDateTime.class, CellHolder::setCellValue),
-                new ConverterHolder(ZonedDateTime.class, (cell, value) -> cell.setCellValue(((ZonedDateTime) value).toLocalDateTime())),
-                new ConverterHolder(OffsetDateTime.class, (cell, value) -> cell.setCellValue(((OffsetDateTime) value).toLocalDateTime())),
-                new ConverterHolder(Short.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
-                new ConverterHolder(Integer.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
-                new ConverterHolder(Long.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
-                new ConverterHolder(BigDecimal.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
-                new ConverterHolder(Float.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
-                new ConverterHolder(Double.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue()))
+            new ConverterHolder(Date.class, CellHolder::setCellValue),
+            new ConverterHolder(Instant.class, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
+            new ConverterHolder(LocalDate.class, CellHolder::setCellValue),
+            new ConverterHolder(LocalDateTime.class, CellHolder::setCellValue),
+            new ConverterHolder(ZonedDateTime.class, (cell, value) -> cell.setCellValue(((ZonedDateTime) value).toLocalDateTime())),
+            new ConverterHolder(OffsetDateTime.class, (cell, value) -> cell.setCellValue(((OffsetDateTime) value).toLocalDateTime())),
+            new ConverterHolder(Short.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+            new ConverterHolder(Integer.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+            new ConverterHolder(Long.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
+            new ConverterHolder(BigDecimal.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
+            new ConverterHolder(Float.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
+            new ConverterHolder(Double.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue()))
         );
     }
 
@@ -56,9 +56,9 @@ public class DefaultCellValueConverter implements CellValueConverter {
         }
 
         return converterHolderList.stream()
-                .filter(converterHolder -> converterHolder.getType().isAssignableFrom(value.getClass()))
-                .findFirst()
-                .orElse(null);
+            .filter(converterHolder -> converterHolder.getType().isAssignableFrom(value.getClass()))
+            .findFirst()
+            .orElse(null);
     }
 
 

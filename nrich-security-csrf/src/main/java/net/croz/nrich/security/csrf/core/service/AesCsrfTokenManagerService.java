@@ -130,9 +130,9 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
         byte[] initializationVector = cipher.getIV();
 
         return ByteBuffer.allocate(initializationVector.length + encryptedCurrentTimeInBytes.length)
-                .put(initializationVector)
-                .put(encryptedCurrentTimeInBytes)
-                .array();
+            .put(initializationVector)
+            .put(encryptedCurrentTimeInBytes)
+            .array();
     }
 
     @SneakyThrows

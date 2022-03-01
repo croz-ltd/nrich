@@ -53,9 +53,9 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
         }
 
         StringToTypeConverter<?> converter = converterList.stream()
-                .filter(value -> value.supports(attributeType))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for attribute type %s", attributeType.getName())));
+            .filter(value -> value.supports(attributeType))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for attribute type %s", attributeType.getName())));
 
         return converter.convert(searchTerm, attributeType);
     }

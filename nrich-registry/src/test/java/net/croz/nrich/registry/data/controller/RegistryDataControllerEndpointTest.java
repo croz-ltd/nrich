@@ -23,8 +23,8 @@ class RegistryDataControllerEndpointTest extends BaseWebTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-                post("/domain/nrich/registry/data/list").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+            post("/domain/nrich/registry/data/list").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

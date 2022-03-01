@@ -32,11 +32,11 @@ public final class FormConfigurationGeneratingUtil {
         when(constraintDescriptor.getAnnotation()).thenReturn(annotation);
 
         return ConstrainedProperty.builder()
-                .constraintDescriptor(constraintDescriptor)
-                .name("propertyName")
-                .path("propertyPath")
-                .type(String.class)
-                .parentType(parentType).build();
+            .constraintDescriptor(constraintDescriptor)
+            .name("propertyName")
+            .path("propertyPath")
+            .type(String.class)
+            .parentType(parentType).build();
 
     }
 }

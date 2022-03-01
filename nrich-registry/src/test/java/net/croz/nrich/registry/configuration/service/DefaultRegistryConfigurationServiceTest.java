@@ -39,9 +39,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
         // then
         assertThat(registryEntityConfiguration).isNotNull();
@@ -112,9 +112,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
 
         // then
@@ -156,9 +156,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
 
         // then

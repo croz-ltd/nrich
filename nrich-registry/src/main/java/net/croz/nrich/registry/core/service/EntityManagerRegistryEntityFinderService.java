@@ -32,7 +32,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
-                .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
+            .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
 
         String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
 
@@ -64,7 +64,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
             @SuppressWarnings("unchecked")
             Map<String, Object> idMap = ((Map<Object, Object>) id).entrySet().stream()
-                    .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(), Map.Entry::getValue));
 
             Map<String, Class<?>> idClassPropertyMap = managedTypeWrapper.getIdClassPropertyMap();
 
@@ -109,8 +109,8 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         String[] keyList = key.split("\\.");
 
         return Arrays.stream(keyList)
-                .map(StringUtils::capitalize)
-                .collect(Collectors.joining());
+            .map(StringUtils::capitalize)
+            .collect(Collectors.joining());
     }
 
     @Value
