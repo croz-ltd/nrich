@@ -7,6 +7,7 @@ dependencies {
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 
+  testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "jakarta.persistence:jakarta.persistence-api"

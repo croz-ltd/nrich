@@ -1,10 +1,10 @@
 dependencies {
   annotationProcessor "org.projectlombok:lombok"
-
   compileOnly "org.projectlombok:lombok"
 
   implementation "org.springframework:spring-context"
 
+  testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "org.assertj:assertj-core"
