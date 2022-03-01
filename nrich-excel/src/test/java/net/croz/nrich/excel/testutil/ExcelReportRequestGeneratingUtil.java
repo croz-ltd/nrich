@@ -1,13 +1,13 @@
-package net.croz.nrich.excel.service;
+package net.croz.nrich.excel.testutil;
 
 import net.croz.nrich.excel.api.model.MultiRowDataProvider;
 import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 
 import java.io.File;
 
-public final class CreateExcelReportRequestGeneratingUtil {
+public final class ExcelReportRequestGeneratingUtil {
 
-    private CreateExcelReportRequestGeneratingUtil() {
+    private ExcelReportRequestGeneratingUtil() {
     }
 
     public static CreateExcelReportRequest createExcelReportRequest(Object[][] rowData, int batchSize, File file, int firstRowIndex) {
@@ -17,7 +17,6 @@ public final class CreateExcelReportRequestGeneratingUtil {
     }
 
     public static CreateExcelReportRequest createExcelReportRequest(MultiRowDataProvider multiRowDataProvider, int batchSize, File file, int firstRowIndex) {
-
         return CreateExcelReportRequest.builder()
             .multiRowDataProvider(multiRowDataProvider)
             .batchSize(batchSize)
