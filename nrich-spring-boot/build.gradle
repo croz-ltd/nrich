@@ -1,6 +1,7 @@
 dependencies {
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
+  testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "org.assertj:assertj-core"

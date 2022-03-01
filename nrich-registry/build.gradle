@@ -16,6 +16,7 @@ dependencies {
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 
+  testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 

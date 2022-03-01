@@ -14,11 +14,12 @@ dependencies {
   implementation "org.springframework:spring-web"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
-  testRuntimeOnly "com.h2database:h2"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
+
+  testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "com.h2database:h2"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.assertj:assertj-core"

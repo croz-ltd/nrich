@@ -10,6 +10,7 @@ dependencies {
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
+  testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "jakarta.servlet:jakarta.servlet-api"
