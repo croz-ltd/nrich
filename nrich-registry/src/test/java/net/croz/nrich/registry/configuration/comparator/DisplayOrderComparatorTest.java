@@ -17,5 +17,4 @@ class DisplayOrderComparatorTest {
         // expect
         assertThat(displayOrderComparator.comparePropertiesByDisplayList(firstProperty, secondProperty)).isEqualTo(expectedResult);
     }
-
 }

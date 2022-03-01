@@ -51,6 +51,8 @@ class NrichNotificationAutoConfigurationTest {
         AbstractResourceBasedMessageSource messageSource = mock(AbstractResourceBasedMessageSource.class);
 
         // expect
-        contextRunner.withBean(MessageSource.class, () -> messageSource).run(context -> verify(messageSource).addBasenames(NrichNotificationAutoConfiguration.NOTIFICATION_MESSAGES_NAME));
+        contextRunner.withBean(MessageSource.class, () -> messageSource).run(context ->
+                verify(messageSource).addBasenames(NrichNotificationAutoConfiguration.NOTIFICATION_MESSAGES_NAME)
+        );
     }
 }

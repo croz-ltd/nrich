@@ -11,5 +11,4 @@ public class SpringUtilTestConfiguration {
     public ApplicationContextHolder applicationContextHolder() {
         return new ApplicationContextHolder();
     }
-
 }

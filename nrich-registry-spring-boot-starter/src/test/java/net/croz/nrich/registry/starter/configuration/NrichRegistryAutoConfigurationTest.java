@@ -96,7 +96,6 @@ class NrichRegistryAutoConfigurationTest {
             // then
             assertThat(result.getId()).isEqualTo("initial");
             assertThat(result.getName()).isEqualTo("name");
-
         });
     }
 }

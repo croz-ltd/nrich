@@ -35,5 +35,4 @@ class RegistryPropertyComparatorTest {
         // then
         assertThat(result).isEqualTo(-1);
     }
-
 }

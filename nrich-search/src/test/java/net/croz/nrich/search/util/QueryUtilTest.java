@@ -20,5 +20,4 @@ class QueryUtilTest {
         // then
         assertThat(result).isEqualTo(11L);
     }
-
 }

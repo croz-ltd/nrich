@@ -31,7 +31,5 @@ class ClassLoadingUtilTest {
 
         // then
         assertThat(result).isNull();
-
     }
-
 }

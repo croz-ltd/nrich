@@ -38,5 +38,4 @@ class ProjectionListResolverUtilTest {
         assertThat(conditionalProjection.getCondition().test(null)).isTrue();
         assertThat(conditionalProjection.getCondition().test(new ProjectionListResolverUtilTestEntity())).isFalse();
     }
-
 }

@@ -71,7 +71,6 @@ class Slf4jLoggingServiceTest {
 
         // when
         loggingService.logInternalException(exception, auxiliaryExceptionData);
-        ILoggingEvent event = getLastEvent();
 
         // then
         assertThat(getLastEvent().getMessage()).contains("key: value");
@@ -83,7 +82,10 @@ class Slf4jLoggingServiceTest {
         // given
         IllegalArgumentException exception = new IllegalArgumentException("exception");
 
-        doReturn(loggingLevel.name()).when(messageSource).getMessage(argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))), any(Locale.class));
+        doReturn(loggingLevel.name()).when(messageSource).getMessage(
+                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+                any(Locale.class)
+        );
 
         // when
         loggingService.logInternalException(exception, null);
@@ -94,11 +96,14 @@ class Slf4jLoggingServiceTest {
     }
 
     @Test
-    void shouldLogInCompactVerbosityLevel() {
+    void shouldLogOnCompactVerbosityLevel() {
         // given
         IllegalStateException exception = new IllegalStateException("exception");
 
-        doReturn(LoggingVerbosityLevel.COMPACT.name()).when(messageSource).getMessage(argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))), any(Locale.class));
+        doReturn(LoggingVerbosityLevel.COMPACT.name()).when(messageSource).getMessage(
+                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+                any(Locale.class)
+        );
 
         // when
         loggingService.logInternalException(exception, null);
@@ -113,7 +118,10 @@ class Slf4jLoggingServiceTest {
         // given
         IllegalStateException exception = new IllegalStateException("exception");
 
-        doReturn(LoggingVerbosityLevel.NONE.name()).when(messageSource).getMessage(argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))), any(Locale.class));
+        doReturn(LoggingVerbosityLevel.NONE.name()).when(messageSource).getMessage(
+                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+                any(Locale.class)
+        );
 
         // when
         loggingService.logInternalException(exception, null);

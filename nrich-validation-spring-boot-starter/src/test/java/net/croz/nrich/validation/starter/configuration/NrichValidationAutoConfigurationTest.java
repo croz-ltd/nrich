@@ -33,6 +33,8 @@ class NrichValidationAutoConfigurationTest {
         AbstractResourceBasedMessageSource messageSource = mock(AbstractResourceBasedMessageSource.class);
 
         // expect
-        contextRunner.withBean(MessageSource.class, () -> messageSource).run(context -> verify(messageSource).addBasenames(NrichValidationAutoConfiguration.VALIDATION_MESSAGES_NAME));
+        contextRunner.withBean(MessageSource.class, () -> messageSource).run(context ->
+                verify(messageSource).addBasenames(NrichValidationAutoConfiguration.VALIDATION_MESSAGES_NAME)
+        );
     }
 }

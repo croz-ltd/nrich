@@ -18,7 +18,7 @@ class EncryptDataAspectTest {
     private EncryptDataAspectTestService encryptDataAspectTestService;
 
     @Test
-    void shouldEncryptDecryptData() {
+    void shouldEncryptAndDecryptData() {
         // when
         EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(VALUE_TO_ENCRYPT);
 
@@ -89,7 +89,7 @@ class EncryptDataAspectTest {
     }
 
     @Test
-    void shouldNotEncryptUnrecognizedReactorClass() {
+    void shouldNotEncryptUnsupportedReactorClass() {
         // when
         EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithUnsupportedReactorClass(VALUE_TO_ENCRYPT).get();
 

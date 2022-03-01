@@ -37,5 +37,4 @@ class RegistryGroupConfigurationComparatorTest {
         // then
         assertThat(result).isPositive();
     }
-
 }

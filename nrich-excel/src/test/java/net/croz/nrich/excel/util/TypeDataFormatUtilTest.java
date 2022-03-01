@@ -30,12 +30,18 @@ class TypeDataFormatUtilTest {
         List<TypeDataFormat> formatList = TypeDataFormatUtil.resolveTypeDataFormatList(dateFormat, dateTimeFormat, integerFormat, decimalFormat, true, null);
 
         // then
-        assertThat(formatList).extracting("type").containsExactly(Date.class, Instant.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, Short.class, Integer.class, Long.class, BigInteger.class, Float.class, Double.class, BigDecimal.class);
-        assertThat(formatList).extracting("dataFormat").containsExactly(dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat, integerFormat, integerFormat, integerFormat, integerFormat, decimalFormat, decimalFormat, decimalFormat);
+        assertThat(formatList).extracting("type").containsExactly(
+                Date.class, Instant.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class,
+                Short.class, Integer.class, Long.class, BigInteger.class, Float.class, Double.class, BigDecimal.class
+        );
+        assertThat(formatList).extracting("dataFormat").containsExactly(
+                dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat,
+                integerFormat, integerFormat, integerFormat, integerFormat, decimalFormat, decimalFormat, decimalFormat
+        );
     }
 
     @Test
-    void shouldReturnDateFormatWithTimeWhenIfEnabled() {
+    void shouldReturnDateFormatWithTimeWhenEnabled() {
         // given
         String dateTimeFormat = "dd.MM.yyyy. HH:mm";
 
@@ -46,10 +52,10 @@ class TypeDataFormatUtilTest {
         assertThat(formatList).extracting("dataFormat").contains(dateTimeFormat);
 
         // and when
-        List<TypeDataFormat> formatListWithoutTIme = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", dateTimeFormat, "#,##0", "#,##0.00", false, null);
+        List<TypeDataFormat> formatListWithoutTime = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", dateTimeFormat, "#,##0", "#,##0.00", false, null);
 
         // then
-        assertThat(formatListWithoutTIme).extracting("dataFormat").isNotEmpty().doesNotContain(dateTimeFormat);
+        assertThat(formatListWithoutTime).extracting("dataFormat").isNotEmpty().doesNotContain(dateTimeFormat);
     }
 
     @Test
@@ -66,5 +72,4 @@ class TypeDataFormatUtilTest {
         assertThat(dateTypeDataFormat).isNotNull();
         assertThat(dateTypeDataFormat.getDataFormat()).isEqualTo(dateFormat);
     }
-
 }

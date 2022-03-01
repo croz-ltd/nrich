@@ -103,6 +103,7 @@ class AesCsrfTokenManagerServiceTest {
 
     @Test
     void shouldThrowExceptionWhenTokenIsTooFarInTheFuture() {
+        // given
         TesCsrfTokenKeyHolder tokenHolder = new TesCsrfTokenKeyHolder(CSRF_TOKEN_KEY_NAME, CsrfConstants.CSRF_CRYPTO_KEY_NAME);
         SecretKeySpec key = new SecretKeySpec("ABCDEFGHIJKLMNOP".getBytes(StandardCharsets.UTF_8), "AES");
 

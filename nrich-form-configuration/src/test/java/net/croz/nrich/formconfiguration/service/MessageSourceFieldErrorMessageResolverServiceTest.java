@@ -30,7 +30,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
         ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceNestedTestRequest.class);
 
         // when
-        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
 
         // then
         assertThat(message).isEqualTo("Invalid value");
@@ -45,7 +45,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
         ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 
         // when
-        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
 
         // then
         assertThat(message).isEqualTo("Not in list: one, two");
@@ -60,7 +60,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
         doReturn(null).when(constrainedPropertySpy).getConstraintArgumentList();
 
         // when
-        Throwable thrown = catchThrowable(() -> fieldErrorMessageResolverService.resolveErrorMessage(constrainedPropertySpy, new Locale("en")));
+        Throwable thrown = catchThrowable(() -> fieldErrorMessageResolverService.resolveErrorMessage(constrainedPropertySpy, Locale.ENGLISH));
 
         // then
         assertThat(thrown).isNull();
