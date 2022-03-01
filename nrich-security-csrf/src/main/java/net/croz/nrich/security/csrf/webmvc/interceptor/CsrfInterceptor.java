@@ -8,8 +8,8 @@ import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import net.croz.nrich.security.csrf.core.util.CsrfUriUtil;
 import net.croz.nrich.security.csrf.webmvc.holder.WebMvcCsrfTokenKeyHolder;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import org.springframework.web.util.UrlPathHelper;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-public class CsrfInterceptor extends HandlerInterceptorAdapter {
+public class CsrfInterceptor implements HandlerInterceptor {
 
     private final CsrfTokenManagerService csrfTokenManagerService;
 

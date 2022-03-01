@@ -31,14 +31,14 @@ public class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
 
         if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-            SearchExecutor<?> searchExecutorFragment = getTargetRepositoryViaReflection(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
+            SearchExecutor<?> searchExecutorFragment = instantiateClass(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
 
             fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
         }
         if (StringSearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
             JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
-            StringSearchExecutor<?> stringSearchExecutorFragment = getTargetRepositoryViaReflection(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
+            StringSearchExecutor<?> stringSearchExecutorFragment = instantiateClass(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
 
             fragments = fragments.append(RepositoryFragment.implemented(StringSearchExecutor.class, stringSearchExecutorFragment));
         }
