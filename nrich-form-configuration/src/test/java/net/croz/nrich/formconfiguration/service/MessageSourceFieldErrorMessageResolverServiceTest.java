@@ -14,6 +14,9 @@ import java.util.Map;
 
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createConstrainedProperty;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 
 @SpringJUnitConfig(FormConfigurationTestConfiguration.class)
 class MessageSourceFieldErrorMessageResolverServiceTest {
@@ -27,7 +30,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
         ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceNestedTestRequest.class);
 
         // when
-        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
 
         // then
         assertThat(message).isEqualTo("Invalid value");
@@ -42,9 +45,24 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
         ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 
         // when
-        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, new Locale("en"));
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
 
         // then
         assertThat(message).isEqualTo("Not in list: one, two");
+    }
+
+    @Test
+    void shouldNotFailOnNullConstraintArguments() {
+        // given
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class);
+        ConstrainedProperty constrainedPropertySpy = spy(constrainedProperty);
+
+        doReturn(null).when(constrainedPropertySpy).getConstraintArgumentList();
+
+        // when
+        Throwable thrown = catchThrowable(() -> fieldErrorMessageResolverService.resolveErrorMessage(constrainedPropertySpy, Locale.ENGLISH));
+
+        // then
+        assertThat(thrown).isNull();
     }
 }

@@ -15,6 +15,7 @@ dependencies {
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.mockito:mockito-core"
   testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework:spring-webmvc"
   testImplementation "org.springframework.boot:spring-boot-test"

@@ -21,7 +21,7 @@ public class OnPropertyNotEmptyCondition implements Condition {
         Environment environment = context.getEnvironment();
         String propertyName = (String) Objects.requireNonNull(attributes).get(PROPERTY_NAME_ANNOTATION_VALUE);
 
-        String stringPropertyValue = environment.getProperty(propertyName);
+        String stringPropertyValue = bindWithExceptionIgnored(environment, propertyName, String.class);
 
         if (stringPropertyValue != null) {
             return !stringPropertyValue.isEmpty();

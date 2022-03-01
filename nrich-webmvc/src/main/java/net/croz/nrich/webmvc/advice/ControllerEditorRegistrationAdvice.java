@@ -25,8 +25,13 @@ public class ControllerEditorRegistrationAdvice {
             binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
         }
 
-        Object target = binder.getTarget();
-        if (ignoreTransientFields && target != null) {
+        if (ignoreTransientFields) {
+            Object target = binder.getTarget();
+
+            if (target == null) {
+                return;
+            }
+
             List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(target.getClass());
 
             binder.setDisallowedFields(transientPropertyList.toArray(new String[0]));

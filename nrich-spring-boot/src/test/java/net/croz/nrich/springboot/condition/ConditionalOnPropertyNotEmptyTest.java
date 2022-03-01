@@ -13,6 +13,7 @@ class ConditionalOnPropertyNotEmptyTest {
 
     @Test
     void shouldNotRegisterBeansOnNullConditions() {
+        // expect
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(ConditionalOnPropertyNotEmptyConfiguration.StringConditionBean.class);
             assertThat(context).doesNotHaveBean(ConditionalOnPropertyNotEmptyConfiguration.StringListConditionBean.class);
@@ -22,6 +23,7 @@ class ConditionalOnPropertyNotEmptyTest {
 
     @Test
     void shouldNotRegisterBeansOnEmptyConditions() {
+        // expect
         contextRunner.withPropertyValues("string.condition=", "string.list.condition=", "map.list.condition=").run(context -> {
             assertThat(context).doesNotHaveBean(ConditionalOnPropertyNotEmptyConfiguration.StringConditionBean.class);
             assertThat(context).doesNotHaveBean(ConditionalOnPropertyNotEmptyConfiguration.StringListConditionBean.class);
@@ -31,6 +33,7 @@ class ConditionalOnPropertyNotEmptyTest {
 
     @Test
     void shouldRegisterBeansOnNotEmptyConditions() {
+        // expect
         contextRunner.withPropertyValues("string.condition=value", "string.list.condition[0]=value", "map.list.condition[0].first=value").run(context -> {
             assertThat(context).hasSingleBean(ConditionalOnPropertyNotEmptyConfiguration.StringConditionBean.class);
             assertThat(context).hasSingleBean(ConditionalOnPropertyNotEmptyConfiguration.StringListConditionBean.class);

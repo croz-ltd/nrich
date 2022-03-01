@@ -29,12 +29,11 @@ public final class ProjectionListResolverUtil {
 
     private static <R> SearchProjection<R> convertToProjection(Field field) {
         String alias = field.getName();
-
         Annotation[] annotationList = field.getAnnotations();
 
         String path = alias;
         Predicate<R> condition = request -> true;
-        if (annotationList != null) {
+        if (annotationList.length > 0) {
             Projection projectionAnnotation = findProjectionAnnotation(annotationList);
 
             if (projectionAnnotation != null) {

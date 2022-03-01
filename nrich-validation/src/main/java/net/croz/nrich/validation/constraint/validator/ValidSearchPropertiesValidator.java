@@ -27,11 +27,8 @@ public class ValidSearchPropertiesValidator implements ConstraintValidator<Valid
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
         Class<?> type = value.getClass();
+
         return propertyGroupMap.entrySet().stream().anyMatch(fieldGroup -> {
             List<Method> methodList = Arrays.stream(fieldGroup.getValue())
                     .map(fieldName -> ValidationReflectionUtil.findGetterMethod(type, fieldName))

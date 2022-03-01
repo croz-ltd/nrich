@@ -71,4 +71,14 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
     public String constraintViolationExceptionResolving() {
         return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
     }
+
+    @PostMapping("unwrappedExceptionConstraintViolationExceptionExceptionResolving")
+    public String unwrappedExceptionConstraintViolationExceptionExceptionResolving() throws Exception {
+        try {
+            return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
+        }
+        catch (Exception exception) {
+            throw new ExecutionException(exception);
+        }
+    }
 }

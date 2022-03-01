@@ -1,6 +1,7 @@
 package net.croz.nrich.excel.converter;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.CellHolder;
 import org.springframework.core.annotation.Order;
@@ -60,12 +61,14 @@ public class DefaultCellValueConverter implements CellValueConverter {
                 .orElse(null);
     }
 
-    @Value
+
+    @RequiredArgsConstructor
+    @Getter
     public static class ConverterHolder {
 
-        Class<?> type;
+        private final Class<?> type;
 
-        BiConsumer<CellHolder, Object> setCellValueFunction;
+        private final BiConsumer<CellHolder, Object> setCellValueFunction;
 
     }
 }

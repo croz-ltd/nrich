@@ -9,9 +9,6 @@ public final class ApplicationContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
-    private ApplicationContextHolder() {
-    }
-
     public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }

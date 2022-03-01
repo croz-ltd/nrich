@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
@@ -14,9 +15,13 @@ import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
+import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
+import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
+import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
+import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
@@ -114,8 +119,11 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.registry.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "registryDefaultStringToTypeConverter")
     @Bean
-    public StringToTypeConverter<?> registryDefaultStringToTypeConverter(NrichRegistryProperties registryProperties) {
-        return new DefaultStringToTypeConverter(registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(), registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern());
+    public StringToTypeConverter<Object> registryDefaultStringToTypeConverter(NrichRegistryProperties registryProperties) {
+        return new DefaultStringToTypeConverter(
+                registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(),
+                registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern()
+        );
     }
 
     // TODO qualifier on a list, prefix maybe, this way it will pick up from search also?
@@ -140,7 +148,12 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService, NrichRegistryProperties registryProperties) {
-        return new DefaultRegistryConfigurationService(messageSource, Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList()), registryConfigurationResolverService.resolveRegistryGroupDefinition(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
+        List<String> readOnlyPropertyList = Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList());
+        RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
+        RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
+        Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
+
+        return new DefaultRegistryConfigurationService(messageSource, readOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap);
     }
 
     @ConditionalOnWebApplication
@@ -152,18 +165,27 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RegistryEntityFinderService registryEntityFinderService(ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap());
+        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap();
+
+        return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
     @Bean
-    public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter, RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter, registryConfigurationResolverService.resolveRegistryDataConfiguration(), Optional.ofNullable(interceptorList).orElse(Collections.emptyList()), registryEntityFinderService);
+    public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
+                                                   RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList,
+                                                   RegistryEntityFinderService registryEntityFinderService) {
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+        List<RegistryDataInterceptor> resolvedInterceptorList = Optional.ofNullable(interceptorList).orElse(Collections.emptyList());
+
+        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter, registryDataConfigurationHolder, resolvedInterceptorList, registryEntityFinderService);
     }
 
     @ConditionalOnMissingBean
     @Bean
     public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+
+        return new DefaultRegistryDataRequestConversionService(objectMapper, registryDataConfigurationHolder);
     }
 
     @ConditionalOnWebApplication
@@ -175,7 +197,10 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
     @Bean
     public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
-        return new DefaultRegistryHistoryService(entityManager, registryConfigurationResolverService.resolveRegistryDataConfiguration(), registryConfigurationResolverService.resolveRegistryHistoryConfiguration(), registryBaseModelMapper, registryEntityFinderService);
+        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+        RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
+
+        return new DefaultRegistryHistoryService(entityManager, registryDataConfigurationHolder, registryHistoryConfigurationHolder, registryBaseModelMapper, registryEntityFinderService);
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)

@@ -31,6 +31,7 @@ import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.ad
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceRequestBindingMap;
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceTestRequest;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(NotificationTestConfiguration.class)
 class DefaultNotificationResolverServiceTest {
@@ -298,6 +299,15 @@ class DefaultNotificationResolverServiceTest {
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
+    }
+
+    @Test
+    void shouldNotFailWithNullArguments() {
+        // when
+        Throwable thrown = catchThrowable(() -> defaultNotificationResolverService.createNotificationForException(new RuntimeException(), AdditionalNotificationData.builder().build(), (Object[]) null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     private BindingResult validate(Object objectToValidate, Map<String, Object> valueMap) {

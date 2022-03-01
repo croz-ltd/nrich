@@ -24,10 +24,6 @@ public class ValidRangeValidator implements ConstraintValidator<ValidRange, Obje
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
         Class<?> type = value.getClass();
         Method fromFieldGetter = ValidationReflectionUtil.findGetterMethod(type, fromPropertyName);
         Method toFieldGetter = ValidationReflectionUtil.findGetterMethod(type, toPropertyName);

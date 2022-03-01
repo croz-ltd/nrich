@@ -12,97 +12,104 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringJUnitConfig(EncryptTestConfiguration.class)
 class EncryptDataAspectTest {
 
+    private static final String VALUE_TO_ENCRYPT = "some text";
+
     @Autowired
     private EncryptDataAspectTestService encryptDataAspectTestService;
 
     @Test
-    void shouldEncryptDecryptData() {
-        // given
-        String text = "some text";
-
+    void shouldEncryptAndDecryptData() {
         // when
-        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(text);
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt(VALUE_TO_ENCRYPT);
 
         // then
-        assertThat(result.getValue()).isNotEqualTo(text);
+        assertThat(result.getValue()).isNotEqualTo(VALUE_TO_ENCRYPT);
 
         // and when
         EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
-        assertThat(decryptResult.getValue()).isEqualTo(text);
+        assertThat(decryptResult.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
+    }
+
+    @Test
+    void shouldNotEncryptNullData() {
+        // when
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncrypt();
+
+        // then
+        assertThat(result).isNull();
     }
 
     @Test
     void shouldEncryptCompletableFutureData() throws Exception {
-        // given
-        String text = "some text";
-
         // when
-        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithCompletableFuture(text).get();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithCompletableFuture(VALUE_TO_ENCRYPT).get();
 
         // then
-        assertThat(result.getValue()).isNotEqualTo(text);
+        assertThat(result.getValue()).isNotEqualTo(VALUE_TO_ENCRYPT);
 
         // and when
         EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
-        assertThat(decryptResult.getValue()).isEqualTo(text);
+        assertThat(decryptResult.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
     }
 
     @Test
     void shouldEncryptMonoData() {
-        // given
-        String text = "some text";
-
         // when
-        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithMono(text).block();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithMono(VALUE_TO_ENCRYPT).block();
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getValue()).isNotEqualTo(text);
+        assertThat(result.getValue()).isNotEqualTo(VALUE_TO_ENCRYPT);
 
         // and when
         EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
-        assertThat(decryptResult.getValue()).isEqualTo(text);
+        assertThat(decryptResult.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
     }
 
     @Test
     void shouldEncryptFluxData() {
-        // given
-        String text = "some text";
-
         // when
-        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithFlux(text).blockFirst();
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithFlux(VALUE_TO_ENCRYPT).blockFirst();
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getValue()).isNotEqualTo(text);
+        assertThat(result.getValue()).isNotEqualTo(VALUE_TO_ENCRYPT);
 
         // and when
         EncryptDataAspectTestServiceResult decryptResult = encryptDataAspectTestService.dataToDecrypt(result);
 
         // then
-        assertThat(decryptResult.getValue()).isEqualTo(text);
+        assertThat(decryptResult.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
+    }
+
+    @Test
+    void shouldNotEncryptUnsupportedReactorClass() {
+        // when
+        EncryptDataAspectTestServiceResult result = encryptDataAspectTestService.dataToEncryptWithUnsupportedReactorClass(VALUE_TO_ENCRYPT).get();
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
     }
 
     @Test
     void shouldEncryptText() {
-        String text = "some text";
-
         // when
-        String result = encryptDataAspectTestService.textToEncrypt(text);
+        String result = encryptDataAspectTestService.textToEncrypt(VALUE_TO_ENCRYPT);
 
         // then
-        assertThat(result).isNotEqualTo(text);
+        assertThat(result).isNotEqualTo(VALUE_TO_ENCRYPT);
 
         // and when
         String decryptResult = encryptDataAspectTestService.textToDecrypt(result, "ignored value");
 
         // then
-        assertThat(decryptResult).isEqualTo(text);
+        assertThat(decryptResult).isEqualTo(VALUE_TO_ENCRYPT);
     }
 }

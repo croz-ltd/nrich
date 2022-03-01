@@ -4,7 +4,7 @@ import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class ConditionalOnPropertyNotEmptyConfiguration {
 
     @ConditionalOnPropertyNotEmpty("string.condition")

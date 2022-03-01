@@ -1,17 +1,20 @@
 package net.croz.nrich.search.repository.stub;
 
-import lombok.Value;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.annotation.Projection;
+import org.springframework.beans.factory.annotation.Value;
 
-@Value
+@RequiredArgsConstructor
+@Getter
 public class TestEntityProjectionDto {
 
-    String name;
+    private final String name;
 
     @Projection(path = "nestedEntity.nestedEntityName")
-    String nestedName;
+    private final String nestedName;
 
-    @org.springframework.beans.factory.annotation.Value("nestedEntity.id")
-    Long nestedId;
+    @Value("nestedEntity.id")
+    private final Long nestedId;
 
 }

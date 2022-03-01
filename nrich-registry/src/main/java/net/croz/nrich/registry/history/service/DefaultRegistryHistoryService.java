@@ -64,7 +64,6 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     @Transactional(readOnly = true)
     public <T> Page<EntityWithRevision<T>> historyList(ListRegistryHistoryRequest request) {
-
         AuditQuery auditQuery = createAuditQuery(request);
 
         addOrder(auditQuery, request.getSortPropertyList());
@@ -172,7 +171,6 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         MapSupportingDirectFieldAccessFallbackBeanWrapper directFieldAccessFallbackBeanWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(revisionEntity);
 
         Object revisionNumber = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfigurationHolder.getRevisionNumberProperty().getOriginalName());
-
         Object revisionDate = directFieldAccessFallbackBeanWrapper.getPropertyValue(registryHistoryConfigurationHolder.getRevisionTimestampProperty().getOriginalName());
 
         Assert.isTrue(revisionNumber != null && revisionDate != null, "Revision number or revision date are empty!");
