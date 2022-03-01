@@ -38,15 +38,17 @@ class NrichWebMvcAutoConfigurationTest {
     void shouldAddConstrainedLocaleResolverWhenAllowedLocaleListIsNotEmpty() {
         // expect
         webApplicationContextRunner.withPropertyValues("nrich.webmvc.allowed-locale-list=hr,en")
-            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class)
-            .run(context -> assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class));
+            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context ->
+                assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class)
+            );
     }
 
     @Test
     void shouldNotAddAdviceWhenItsDisabled() {
         // expect
         webApplicationContextRunner.withPropertyValues("nrich.webmvc.controller-advice-enabled=false")
-            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class)
-            .run(context -> assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class));
+            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context ->
+                assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class)
+            );
     }
 }
