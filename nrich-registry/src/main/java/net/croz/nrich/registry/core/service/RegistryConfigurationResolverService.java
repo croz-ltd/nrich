@@ -16,4 +16,5 @@ public interface RegistryConfigurationResolverService {
     RegistryDataConfigurationHolder resolveRegistryDataConfiguration();
 
     RegistryHistoryConfigurationHolder resolveRegistryHistoryConfiguration();
+
 }

@@ -16,4 +16,5 @@ public interface ExcelReportGenerator {
      * Flushes data to report and closes it. No further writing is possible after this call.
      */
     void flushAndClose();
+
 }

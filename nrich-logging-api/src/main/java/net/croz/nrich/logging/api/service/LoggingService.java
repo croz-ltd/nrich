@@ -39,4 +39,5 @@ public interface LoggingService {
      * @param exceptionAuxiliaryData additional data that should be logged
      */
     void logExternalException(String exceptionClassName, String exceptionMessage, Map<String, ?> exceptionAuxiliaryData);
+
 }

@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SearchExecutorJpaRepositoryFactoryBeanTestStringAndSearchExecutor extends JpaRepository<SearchExecutorJpaRepositoryFactoryBeanTestEntity, Long>, SearchExecutor<SearchExecutorJpaRepositoryFactoryBeanTestEntity>, StringSearchExecutor<SearchExecutorJpaRepositoryFactoryBeanTestEntity> {
+
 }

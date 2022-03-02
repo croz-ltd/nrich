@@ -15,4 +15,5 @@ public class ValidFileResolvableValidatorMultipartFileCustomTestRequest {
         allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
     )
     private final MultipartFile file;
+
 }

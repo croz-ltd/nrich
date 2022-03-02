@@ -83,4 +83,5 @@ public interface SearchExecutor<T> {
      * @return {@literal true} if the data store contains elements matching conditions applied from search request.
      */
     <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration);
+
 }
