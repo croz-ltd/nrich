@@ -1,9 +1,7 @@
 package net.croz.nrich.registry.data.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -11,10 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import java.io.Serializable;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @IdClass(RegistryTestEntityWithIdClass.RegistryConfigurationTestEntityWithIdClassId.class)
 @Entity
 public class RegistryTestEntityWithIdClass {
@@ -27,8 +23,8 @@ public class RegistryTestEntityWithIdClass {
 
     private String name;
 
-    @Getter
     @Setter
+    @Getter
     @EqualsAndHashCode
     static class RegistryConfigurationTestEntityWithIdClassId implements Serializable {
 

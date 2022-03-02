@@ -1,9 +1,7 @@
 package net.croz.nrich.registry.history.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
@@ -16,10 +14,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Audited
 @Entity
 public class RegistryHistoryTestEntityWithEmbeddedObject {
@@ -29,8 +25,6 @@ public class RegistryHistoryTestEntityWithEmbeddedObject {
 
     private BigDecimal amount;
 
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Setter
     @Getter
     @EqualsAndHashCode

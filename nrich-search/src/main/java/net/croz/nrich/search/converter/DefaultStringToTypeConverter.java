@@ -1,7 +1,8 @@
 package net.croz.nrich.search.converter;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.Value;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.springframework.core.annotation.Order;
 
@@ -157,12 +158,13 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         return format.parse(value);
     }
 
-    @Value
+    @RequiredArgsConstructor
+    @Getter
     public static class ConverterHolder {
 
-        Class<?> type;
+        private final Class<?> type;
 
-        BiFunction<String, Class<?>, Object> conversionFunction;
+        private final BiFunction<String, Class<?>, Object> conversionFunction;
 
     }
 }

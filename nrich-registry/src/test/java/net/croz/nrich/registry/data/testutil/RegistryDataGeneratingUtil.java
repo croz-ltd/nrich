@@ -19,6 +19,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
+import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static RegistryTestEntity createRegistryTestEntity(EntityManager entityManager) {
-        RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50, null);
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity("name 1", 50, null);
 
         entityManager.persist(registryTestEntity);
 
@@ -43,11 +44,11 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static RegistryTestEntity createRegistryTestEntityWithParent(EntityManager entityManager) {
-        RegistryTestEntity parentEntity = new RegistryTestEntity(null, "parent", 60, null);
+        RegistryTestEntity parentEntity = createRegistryTestEntity("parent", 60, null);
 
         entityManager.persist(parentEntity);
 
-        RegistryTestEntity registryTestEntity = new RegistryTestEntity(null, "name 1", 50, parentEntity);
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity("name 1", 50, parentEntity);
 
         entityManager.persist(registryTestEntity);
 
@@ -55,7 +56,10 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static RegistryTestEntityWithoutAssociation createRegistryTestEntityWithoutAssociation(EntityManager entityManager) {
-        RegistryTestEntityWithoutAssociation registryTestEntity = new RegistryTestEntityWithoutAssociation(null, "name 1", 50);
+        RegistryTestEntityWithoutAssociation registryTestEntity = new RegistryTestEntityWithoutAssociation();
+
+        registryTestEntity.setName("name 1");
+        registryTestEntity.setAge(50);
 
         entityManager.persist(registryTestEntity);
 
@@ -63,7 +67,9 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static List<RegistryTestEntity> createRegistryTestEntityList(EntityManager entityManager) {
-        List<RegistryTestEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntity(null, "name " + value, 50 + value, null)).collect(Collectors.toList());
+        List<RegistryTestEntity> testEntityList = IntStream.range(0, 5)
+            .mapToObj(value -> createRegistryTestEntity("name " + value, 50 + value, null))
+            .collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 
@@ -71,7 +77,9 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static List<RegistryTestEntityWithDifferentIdName> createRegistryTestEntityWithDifferentIdNameList(EntityManager entityManager) {
-        List<RegistryTestEntityWithDifferentIdName> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntityWithDifferentIdName(null, "name " + value)).collect(Collectors.toList());
+        List<RegistryTestEntityWithDifferentIdName> testEntityList = IntStream.range(0, 5)
+            .mapToObj(value -> createRegistryTestEntityWithDifferentIdName("name " + value))
+            .collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 
@@ -79,8 +87,15 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static RegistryTestEntityWithEmbeddedId createRegistryTestEntityWithEmbeddedId(EntityManager entityManager) {
-        RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey(1L, 2L);
-        RegistryTestEntityWithEmbeddedId registryTestEntity = new RegistryTestEntityWithEmbeddedId(primaryKey, "name 1");
+        RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryTestEntityWithEmbeddedId.RegistryTestEntityWithEmbeddedIdPrimaryKey();
+
+        primaryKey.setFirstId(1L);
+        primaryKey.setSecondId(2L);
+
+        RegistryTestEntityWithEmbeddedId registryTestEntity = new RegistryTestEntityWithEmbeddedId();
+
+        registryTestEntity.setId(primaryKey);
+        registryTestEntity.setName("name 1");
 
         entityManager.persist(registryTestEntity);
 
@@ -105,7 +120,9 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static List<RegistryTestEntityWithOverriddenSearchConfiguration> createRegistryTestEntityWithOverriddenSearchConfigurationList(EntityManager entityManager) {
-        List<RegistryTestEntityWithOverriddenSearchConfiguration> testEntityList = IntStream.range(0, 5).mapToObj(value -> new RegistryTestEntityWithOverriddenSearchConfiguration(null, "name " + value)).collect(Collectors.toList());
+        List<RegistryTestEntityWithOverriddenSearchConfiguration> testEntityList = IntStream.range(0, 5)
+            .mapToObj(value -> createRegistryTestEntityWithOverriddenSearchConfiguration("name " + value))
+            .collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 
@@ -144,7 +161,7 @@ public final class RegistryDataGeneratingUtil {
         CreateRegistryRequest request = new CreateRegistryRequest();
 
         request.setClassFullName(classFullName);
-        request.setJsonEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name)));
 
         return request;
     }
@@ -155,39 +172,57 @@ public final class RegistryDataGeneratingUtil {
 
         request.setClassFullName(classFullName);
         request.setId(id);
-        request.setJsonEntityData(objectMapper.writeValueAsString(new CreateRegistryTestEntityRequest(name, 50)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name)));
 
         return request;
     }
 
     public static RegistryTestEmbeddedUserGroup createRegistryTestEmbeddedUserGroup(EntityManager entityManager) {
-        RegistryTestEmbeddedUser user = new RegistryTestEmbeddedUser(null, "user name");
-        RegistryTestEmbeddedGroup group = new RegistryTestEmbeddedGroup(null, "user group");
+        RegistryTestEmbeddedUser user = createRegistryTestEmbeddedUser(entityManager);
+        RegistryTestEmbeddedGroup group = createRegistryTestEmbeddedGroup(entityManager);
 
-        entityManager.persist(user);
-        entityManager.persist(group);
+        RegistryTestEmbeddedUserGroupId userGroupId = new RegistryTestEmbeddedUserGroupId();
 
-        RegistryTestEmbeddedUserGroupId groupId = new RegistryTestEmbeddedUserGroupId(user, group);
+        userGroupId.setUser(user);
+        userGroupId.setGroup(group);
 
-        RegistryTestEmbeddedUserGroup userGroup = new RegistryTestEmbeddedUserGroup(groupId, "value");
+        RegistryTestEmbeddedUserGroup userGroup = new RegistryTestEmbeddedUserGroup();
+
+        userGroup.setUserGroupId(userGroupId);
+        userGroup.setJoinedPropertyValue("value");
 
         entityManager.persist(userGroup);
 
         return userGroup;
     }
 
+    public static RegistryTestEmbeddedUserGroup createRegistryTestEmbeddedUserGroup(RegistryTestEmbeddedUserGroupId registryUpdateGroupId, String joinedPropertyValue) {
+        RegistryTestEmbeddedUserGroup entity = new RegistryTestEmbeddedUserGroup();
+
+        entity.setUserGroupId(registryUpdateGroupId);
+        entity.setJoinedPropertyValue(joinedPropertyValue);
+
+        return entity;
+    }
+
     public static RegistryTestEmbeddedUserGroupId createRegistryTestEmbeddedUserGroupId(EntityManager entityManager) {
-        RegistryTestEmbeddedUser user = new RegistryTestEmbeddedUser(null, "user name");
-        RegistryTestEmbeddedGroup group = new RegistryTestEmbeddedGroup(null, "user group");
+        RegistryTestEmbeddedUser user = createRegistryTestEmbeddedUser(entityManager);
+        RegistryTestEmbeddedGroup group = createRegistryTestEmbeddedGroup(entityManager);
 
-        entityManager.persist(user);
-        entityManager.persist(group);
+        RegistryTestEmbeddedUserGroupId entity = new RegistryTestEmbeddedUserGroupId();
 
-        return new RegistryTestEmbeddedUserGroupId(user, group);
+        entity.setUser(user);
+        entity.setGroup(group);
+
+        return entity;
     }
 
     public static RegistryTestEntityWithIdClass createRegistryTestEntityWithIdClass(EntityManager entityManager) {
-        RegistryTestEntityWithIdClass registryTestEntityWithIdClass = new RegistryTestEntityWithIdClass(1L, 2L, "value");
+        RegistryTestEntityWithIdClass registryTestEntityWithIdClass = new RegistryTestEntityWithIdClass();
+
+        registryTestEntityWithIdClass.setFirstId(1L);
+        registryTestEntityWithIdClass.setSecondId(2L);
+        registryTestEntityWithIdClass.setName("value");
 
         entityManager.persist(registryTestEntityWithIdClass);
 
@@ -218,4 +253,68 @@ public final class RegistryDataGeneratingUtil {
         return idMap;
     }
 
+    public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name) {
+        CreateRegistryTestEntityRequest request = new CreateRegistryTestEntityRequest();
+
+        request.setName(name);
+        request.setAge(50);
+
+        return request;
+    }
+
+    public static UpdateRegistryTestEntityRequest createUpdateRegistryTestEntityRequest() {
+        UpdateRegistryTestEntityRequest request = new UpdateRegistryTestEntityRequest();
+
+        request.setId(100L);
+        request.setName("name 2");
+        request.setAge(51);
+
+        return request;
+    }
+
+    private static RegistryTestEntity createRegistryTestEntity(String name, Integer age, RegistryTestEntity parent) {
+        RegistryTestEntity entity = new RegistryTestEntity();
+
+        entity.setName(name);
+        entity.setAge(age);
+        entity.setParent(parent);
+
+        return entity;
+    }
+
+    private static RegistryTestEntityWithDifferentIdName createRegistryTestEntityWithDifferentIdName(String name) {
+        RegistryTestEntityWithDifferentIdName entity = new RegistryTestEntityWithDifferentIdName();
+
+        entity.setName(name);
+
+        return entity;
+    }
+
+    private static RegistryTestEntityWithOverriddenSearchConfiguration createRegistryTestEntityWithOverriddenSearchConfiguration(String name) {
+        RegistryTestEntityWithOverriddenSearchConfiguration entity = new RegistryTestEntityWithOverriddenSearchConfiguration();
+
+        entity.setName(name);
+
+        return entity;
+    }
+
+    private static RegistryTestEmbeddedUser createRegistryTestEmbeddedUser(EntityManager entityManager) {
+        RegistryTestEmbeddedUser entity = new RegistryTestEmbeddedUser();
+
+        entity.setName("user name");
+
+        entityManager.persist(entity);
+
+        return entity;
+    }
+
+    private static RegistryTestEmbeddedGroup createRegistryTestEmbeddedGroup(EntityManager entityManager) {
+        RegistryTestEmbeddedGroup entity = new RegistryTestEmbeddedGroup();
+
+        entity.setName("user group");
+
+        entityManager.persist(entity);
+
+        return entity;
+    }
 }

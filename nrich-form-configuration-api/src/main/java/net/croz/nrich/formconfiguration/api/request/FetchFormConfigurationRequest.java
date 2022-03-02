@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * Holder for a list of form ids for which to fetch form configuration.
  */
-@Getter
 @Setter
+@Getter
 public class FetchFormConfigurationRequest {
 
     @NotNull

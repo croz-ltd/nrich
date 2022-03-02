@@ -4,7 +4,6 @@ import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
-import net.croz.nrich.registry.data.stub.CreateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
@@ -30,11 +29,13 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroupId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithDifferentIdNameList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithEmbeddedId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithIdClass;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithOverriddenSearchConfigurationList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithoutAssociation;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateRegistryTestEntityRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.registryTestEntityWithIdClassId;
 import static net.croz.nrich.registry.data.testutil.RegistryDataResolvingUtil.findRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataResolvingUtil.findRegistryTestEntityWithIdClass;
@@ -128,7 +129,7 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldCreateRegistryEntity() {
         // when
-        RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), new CreateRegistryTestEntityRequest("name 1", 50));
+        RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), createRegistryTestEntityRequest("name 1"));
 
         // then
         assertThat(registryTestEntity).isNotNull();
@@ -146,9 +147,10 @@ class DefaultRegistryDataServiceTest {
     void shouldUpdateRegistryEntity() {
         // given
         RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest();
 
         // when
-        RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
+        RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), request);
 
         // then
         assertThat(updatedEntity).isNotNull();
@@ -166,9 +168,10 @@ class DefaultRegistryDataServiceTest {
     void shouldUpdateRegistryEntityWithoutAssociations() {
         // given
         RegistryTestEntityWithoutAssociation registryTestEntity = createRegistryTestEntityWithoutAssociation(entityManager);
+        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest();
 
         // when
-        RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId(), new UpdateRegistryTestEntityRequest(100L, "name 2", 51));
+        RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId(), request);
 
         // then
         assertThat(updatedEntity).isNotNull();
@@ -188,9 +191,10 @@ class DefaultRegistryDataServiceTest {
         String joinedPropertyUpdateValue = "updated joined property";
         RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
         RegistryTestEmbeddedUserGroupId registryUpdateGroupId = createRegistryTestEmbeddedUserGroupId(entityManager);
+        RegistryTestEmbeddedUserGroup entityData = createRegistryTestEmbeddedUserGroup(registryUpdateGroupId, joinedPropertyUpdateValue);
 
         // when
-        RegistryTestEmbeddedUserGroup result = registryDataService.update(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId(), new RegistryTestEmbeddedUserGroup(registryUpdateGroupId, joinedPropertyUpdateValue));
+        RegistryTestEmbeddedUserGroup result = registryDataService.update(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId(), entityData);
 
         // then
         assertThat(result).isNotNull();
