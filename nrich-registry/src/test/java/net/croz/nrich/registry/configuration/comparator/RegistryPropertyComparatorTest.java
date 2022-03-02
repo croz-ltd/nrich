@@ -15,10 +15,12 @@ class RegistryPropertyComparatorTest {
     @ParameterizedTest
     void shouldCompareByPropertyNameWhenDisplayOrderIsEmpty(boolean isFirstId, boolean isSecondId, int expectedResult) {
         // given
+        RegistryPropertyConfiguration first = RegistryPropertyConfiguration.builder().isId(isFirstId).name("third").build();
+        RegistryPropertyConfiguration second = RegistryPropertyConfiguration.builder().isId(isSecondId).name("second").build();
         RegistryPropertyComparator registryPropertyComparator = new RegistryPropertyComparator(null);
 
         // when
-        Integer result = registryPropertyComparator.compare(RegistryPropertyConfiguration.builder().isId(isFirstId).name("third").build(), RegistryPropertyConfiguration.builder().isId(isSecondId).name("second").build());
+        Integer result = registryPropertyComparator.compare(first, second);
 
         // then
         assertThat(result).isEqualTo(expectedResult);

@@ -1,19 +1,23 @@
 package net.croz.nrich.search.repository.testutil;
 
+import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.repository.stub.TestCollectionEntity;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityEmbedded;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
+import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.criteria.JoinType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -46,7 +50,9 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
     public static List<TestStringSearchEntity> generateListForStringSearch(EntityManager entityManager) {
         LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5).mapToObj(value -> createTestStringSearchEntity("name " + value, 50 + value, date.plus(value, ChronoUnit.DAYS))).collect(Collectors.toList());
+        List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5)
+            .mapToObj(value -> createTestStringSearchEntity("name " + value, 50 + value, date.plus(value, ChronoUnit.DAYS)))
+            .collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);
 
@@ -54,7 +60,9 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     }
 
     public static List<TestEntityWithEmbeddedId> generateTestEntityWithEmbeddedIdList(EntityManager entityManager) {
-        return IntStream.range(0, 5).mapToObj(value -> generateTestEntityWithEmbeddedId(entityManager, "name" + value)).collect(Collectors.toList());
+        return IntStream.range(0, 5)
+            .mapToObj(value -> generateTestEntityWithEmbeddedId(entityManager, "name" + value))
+            .collect(Collectors.toList());
     }
 
     public static TestEntityWithEmbeddedId generateTestEntityWithEmbeddedId(EntityManager entityManager, String name) {
@@ -76,6 +84,15 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         entityManager.persist(entity);
 
         return entity;
+    }
+
+    public static SearchJoin<TestEntitySearchRequest> createTestEntitySearchRequestJoin(String alias, String path, Predicate<TestEntitySearchRequest> condition) {
+        return SearchJoin.<TestEntitySearchRequest>builder()
+            .alias(alias)
+            .path(path)
+            .condition(condition)
+            .joinType(JoinType.LEFT)
+            .build();
     }
 
     private static TestEntity createTestEntity(Integer value, Integer numberOfCollectionEntities) {

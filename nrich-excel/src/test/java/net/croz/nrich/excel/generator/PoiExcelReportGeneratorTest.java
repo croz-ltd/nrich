@@ -50,21 +50,28 @@ class PoiExcelReportGeneratorTest {
 
     @BeforeEach
     void setup() {
-        CellValueConverter cellValueConverter = new DefaultCellValueConverter();
+        List<CellValueConverter> cellValueConverterList = Collections.singletonList(new DefaultCellValueConverter());
         InputStream template = this.getClass().getResourceAsStream("/excel/template.xlsx");
         List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
         List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
+        List<TypeDataFormat> additionalFormatList = Collections.singletonList(new TypeDataFormat(Date.class, "dd-MM-yyyy"));
+        List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList(
+            "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, additionalFormatList
+        );
 
-        List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, Collections.singletonList(new TypeDataFormat(Date.class, "dd-MM-yyyy")));
-
-        excelReportGenerator = new PoiExcelReportGenerator(Collections.singletonList(cellValueConverter), new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        excelReportGenerator = new PoiExcelReportGenerator(
+            cellValueConverterList, new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX
+        );
     }
 
     @Test
     void shouldExportDataToExcel() {
         // given
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        Object[] rowData = new Object[] { 1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null };
+        Object[] rowData = new Object[] {
+            1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1,
+            LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null
+        };
         // when resolving data from cells all dates are converted to instant, all decimal numbers are converted to double and all whole numbers are converted to integer
         Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, null };
 
@@ -112,6 +119,8 @@ class PoiExcelReportGeneratorTest {
         Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
 
         // then
-        assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly("#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0", "dd-MM-yyyy");
+        assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly(
+            "#,##0.00", "#,##0", "dd-MM-yyyy", "dd-MM-yyyy HH:mm", "#,##0", "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0.00", "#,##0", "dd-MM-yyyy"
+        );
     }
 }

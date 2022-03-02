@@ -23,7 +23,7 @@ class NrichFormConfigurationAutoConfigurationTest {
             assertThat(context).hasSingleBean(FieldErrorMessageResolverService.class);
             assertThat(context).hasSingleBean(FormConfigurationService.class);
             assertThat(context).hasSingleBean(FormConfigurationController.class);
-            assertThat(context).hasBean(NrichFormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
+            assertThat(context).hasBean(NrichFormConfigurationAutoConfiguration.MAPPING_BEAN_NAME);
         });
     }
 
@@ -34,7 +34,7 @@ class NrichFormConfigurationAutoConfigurationTest {
             assertThat(context).doesNotHaveBean(FieldErrorMessageResolverService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationController.class);
-            assertThat(context).doesNotHaveBean(NrichFormConfigurationAutoConfiguration.FORM_CONFIGURATION_MAPPING_BEAN_NAME);
+            assertThat(context).doesNotHaveBean(NrichFormConfigurationAutoConfiguration.MAPPING_BEAN_NAME);
         });
     }
 

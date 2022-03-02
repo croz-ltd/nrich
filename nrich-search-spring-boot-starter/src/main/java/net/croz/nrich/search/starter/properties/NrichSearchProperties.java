@@ -13,7 +13,8 @@ import java.util.List;
 public class NrichSearchProperties {
 
     /**
-     * String search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} that is used for string search by {@link net.croz.nrich.search.api.repository.StringSearchExecutor}
+     * String search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}
+     * that is used for string search by {@link net.croz.nrich.search.api.repository.StringSearchExecutor}
      */
     private final StringSearchProperties stringSearch;
 
@@ -50,7 +51,8 @@ public class NrichSearchProperties {
          */
         private final String booleanFalseRegexPattern;
 
-        public StringSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList, @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
+        public StringSearchProperties(@DefaultValue({ "dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm" }) List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList,
+                                      @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
             this.dateFormatList = dateFormatList;
             this.decimalNumberFormatList = decimalNumberFormatList;
             this.booleanTrueRegexPattern = booleanTrueRegexPattern;

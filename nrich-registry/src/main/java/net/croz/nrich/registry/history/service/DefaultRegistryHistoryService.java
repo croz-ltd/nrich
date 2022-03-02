@@ -53,7 +53,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private final RegistryEntityFinderService registryEntityFinderService;
 
-    public DefaultRegistryHistoryService(EntityManager entityManager, RegistryDataConfigurationHolder registryDataConfigurationHolder, RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, ModelMapper modelMapper, RegistryEntityFinderService registryEntityFinderService) {
+    public DefaultRegistryHistoryService(EntityManager entityManager, RegistryDataConfigurationHolder registryDataConfigurationHolder,
+                                         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, ModelMapper modelMapper, RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.registryHistoryConfigurationHolder = registryHistoryConfigurationHolder;

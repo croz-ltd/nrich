@@ -29,13 +29,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntitySearchRequestJoin;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -425,9 +425,8 @@ class JpaQueryBuilderTest {
         generateListForSearch(entityManager);
 
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
-
-        SearchJoin<TestEntitySearchRequest> nestedEntityJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("nestedJoinAlias").path("nestedEntity").joinType(JoinType.LEFT).build();
-        SearchJoin<TestEntitySearchRequest> nonAppliedJoin = SearchJoin.<TestEntitySearchRequest>builder().alias("nestedJoinAlias").path("nonExistingPath").condition(value -> false).joinType(JoinType.LEFT).build();
+        SearchJoin<TestEntitySearchRequest> nestedEntityJoin = createTestEntitySearchRequestJoin("nestedJoinAlias", "nestedEntity", value -> true);
+        SearchJoin<TestEntitySearchRequest> nonAppliedJoin = createTestEntitySearchRequestJoin("nestedJoinAlias", "nonExistingPath", value -> false);
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .joinList(Arrays.asList(nestedEntityJoin, nonAppliedJoin))
@@ -488,7 +487,9 @@ class JpaQueryBuilderTest {
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
-            .searchOperatorOverrideList(Arrays.asList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE)))
+            .searchOperatorOverrideList(Arrays.asList(
+                SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ), SearchOperatorOverride.forPath("collectionEntityList.name", DefaultSearchOperator.LIKE))
+            )
             .build();
 
         // when

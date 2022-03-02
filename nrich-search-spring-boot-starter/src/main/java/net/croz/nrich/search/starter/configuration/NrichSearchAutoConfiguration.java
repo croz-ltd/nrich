@@ -26,7 +26,12 @@ public class NrichSearchAutoConfiguration {
     @ConditionalOnMissingBean(name = "searchDefaultStringToTypeConverter")
     @Bean
     public StringToTypeConverter<Object> searchDefaultStringToTypeConverter(NrichSearchProperties searchProperties) {
-        return new DefaultStringToTypeConverter(searchProperties.getStringSearch().getDateFormatList(), searchProperties.getStringSearch().getDecimalNumberFormatList(), searchProperties.getStringSearch().getBooleanTrueRegexPattern(), searchProperties.getStringSearch().getBooleanFalseRegexPattern());
+        List<String> dateFormatList = searchProperties.getStringSearch().getDateFormatList();
+        List<String> decimalFormatList = searchProperties.getStringSearch().getDecimalNumberFormatList();
+        String booleanTrueRegexPattern = searchProperties.getStringSearch().getBooleanTrueRegexPattern();
+        String booleanFalseRegexPattern = searchProperties.getStringSearch().getBooleanFalseRegexPattern();
+
+        return new DefaultStringToTypeConverter(dateFormatList, decimalFormatList, booleanTrueRegexPattern, booleanFalseRegexPattern);
     }
 
     @ConditionalOnMissingBean(name = "searchStringToEntityPropertyMapConverter")

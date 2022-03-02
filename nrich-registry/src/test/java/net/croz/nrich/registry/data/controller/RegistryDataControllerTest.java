@@ -53,7 +53,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/list-bulk").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/list-bulk")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -74,7 +75,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/list").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/list")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -94,7 +96,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), entityName);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/create")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -113,7 +116,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         CreateRegistryRequest request = createRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), null);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/create").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/create")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -127,7 +131,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), entityName);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -147,7 +152,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), null);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -161,7 +167,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         UpdateRegistryRequest request = updateRegistryRequest(objectMapper, RegistryTestEntity.class.getName(), registryTestEntity.getId(), entityName);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/update")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -175,7 +182,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         DeleteRegistryRequest request = createDeleteRegistryRequest(RegistryTestEntity.class.getName(), registryTestEntity.getId());
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/delete").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/delete")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -195,7 +203,8 @@ class RegistryDataControllerTest extends BaseWebTest {
         DeleteRegistryRequest request = createDeleteEmbeddedUserGroupRequest(registryTestEmbeddedUserGroup.getUserGroupId());
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/delete").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/data/delete")
+            .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

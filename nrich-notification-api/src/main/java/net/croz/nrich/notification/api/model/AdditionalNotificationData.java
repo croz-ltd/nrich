@@ -13,7 +13,8 @@ import java.util.Map;
 public class AdditionalNotificationData {
 
     /**
-     * Overridden notification severity. If not specified notification will have severity depending on method that was used to generate (i.e NotificationSeverity.ERROR for createNotificationForException)
+     * Overridden notification severity. If not specified notification will have severity depending on method
+     * that was used to generate (i.e NotificationSeverity.ERROR for createNotificationForException)
      */
     private final NotificationSeverity severity;
 

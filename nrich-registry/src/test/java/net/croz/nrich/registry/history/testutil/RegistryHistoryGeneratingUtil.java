@@ -43,14 +43,14 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static RegistryHistoryTestEntityWithEmbeddedId creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
-        RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey();
+        RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey id = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey();
 
-        primaryKey.setFirstId(1L);
-        primaryKey.setSecondId(1L);
+        id.setFirstId(1L);
+        id.setSecondId(1L);
 
         RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId();
 
-        entity.setId(primaryKey);
+        entity.setId(id);
         entity.setAmount(BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
@@ -66,18 +66,19 @@ public final class RegistryHistoryGeneratingUtil {
         return entity;
     }
 
-    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
+    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(EntityManager entityManager,
+                                                                                                                             PlatformTransactionManager platformTransactionManager) {
         RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
         RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
 
-        RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId primaryKey = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId();
+        RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId id = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId();
 
-        primaryKey.setFirstKey(firstKey);
-        primaryKey.setSecondKey(secondKey);
+        id.setFirstKey(firstKey);
+        id.setSecondKey(secondKey);
 
         RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject();
 
-        entity.setId(primaryKey);
+        entity.setId(id);
         entity.setAmount(BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> {

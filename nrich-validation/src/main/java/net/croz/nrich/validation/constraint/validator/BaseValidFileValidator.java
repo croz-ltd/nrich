@@ -28,7 +28,9 @@ abstract class BaseValidFileValidator {
         }
         else if (value instanceof FilePart) {
             fileName = extractFileName(((FilePart) value).filename());
-            fileContentType = Optional.ofNullable(((FilePart) value).headers().getContentType()).map(Objects::toString).orElse(null);
+            fileContentType = Optional.ofNullable(((FilePart) value).headers().getContentType())
+                .map(Objects::toString)
+                .orElse(null);
         }
         else {
             throw new IllegalArgumentException(String.format("Unable to validate file, unrecognized type: %s", value.getClass()));

@@ -32,12 +32,11 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
-            .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName())).collect(Collectors.joining(" "));
+            .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName()))
+            .collect(Collectors.joining(" "));
 
         String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
-
         String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
-
         String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
 
         @SuppressWarnings("unchecked")
@@ -79,7 +78,9 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         else {
             Object convertedIdValue;
             if (managedTypeWrapper.isEmbeddedIdentifier()) {
-                Assert.isTrue(id instanceof Map || managedTypeWrapper.getEmbeddableIdType().getJavaType().equals(id.getClass()), "Id should be instance of Map or EmbeddedId for @EmbeddedId identifier");
+                boolean isMapOrEmbeddedId = id instanceof Map || managedTypeWrapper.getEmbeddableIdType().getJavaType().equals(id.getClass());
+
+                Assert.isTrue(isMapOrEmbeddedId, "Id should be instance of Map or EmbeddedId for @EmbeddedId identifier");
 
                 convertedIdValue = modelMapper.map(id, managedTypeWrapper.getEmbeddableIdType().getJavaType());
             }

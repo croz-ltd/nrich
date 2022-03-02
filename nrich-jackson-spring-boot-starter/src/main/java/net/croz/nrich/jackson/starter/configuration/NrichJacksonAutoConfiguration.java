@@ -27,6 +27,8 @@ public class NrichJacksonAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.jackson.serialize-class-name", havingValue = "true", matchIfMissing = true)
     @Bean
     public Module classNameSerializerModule(NrichJacksonProperties nrichJacksonProperties) {
-        return JacksonModuleUtil.classNameSerializerModule(nrichJacksonProperties.isSerializeClassNameForEntityAnnotatedClasses(), nrichJacksonProperties.getAdditionalPackageListForClassNameSerialization());
+        return JacksonModuleUtil.classNameSerializerModule(
+            nrichJacksonProperties.isSerializeClassNameForEntityAnnotatedClasses(), nrichJacksonProperties.getAdditionalPackageListForClassNameSerialization()
+        );
     }
 }

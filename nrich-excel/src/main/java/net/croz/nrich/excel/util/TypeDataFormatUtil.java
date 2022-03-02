@@ -22,7 +22,8 @@ public final class TypeDataFormatUtil {
     private TypeDataFormatUtil() {
     }
 
-    public static List<TypeDataFormat> resolveTypeDataFormatList(String dateFormat, String dateTimeFormat, String integerNumberFormat, String decimalNumberFormat, boolean writeDateWithTime, List<TypeDataFormat> additionalTypeDataFormatList) {
+    public static List<TypeDataFormat> resolveTypeDataFormatList(String dateFormat, String dateTimeFormat, String integerNumberFormat, String decimalNumberFormat, boolean writeDateWithTime,
+                                                                 List<TypeDataFormat> additionalTypeDataFormatList) {
         String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
 
         List<TypeDataFormat> nonNullAdditionalDataFormatList = Optional.ofNullable(additionalTypeDataFormatList).orElse(Collections.emptyList());

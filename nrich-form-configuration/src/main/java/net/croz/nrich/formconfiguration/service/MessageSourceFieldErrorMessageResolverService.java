@@ -21,7 +21,8 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
     public String resolveErrorMessage(ConstrainedProperty constrainedProperty, Locale locale) {
         List<String> messageCodeList = resolveConstraintMessageCodeList(constrainedProperty);
         Object[] argumentList = convertArraysInArgumentList(constrainedProperty.getConstraintArgumentList());
-        DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentList, constrainedProperty.getConstraintMessage());
+        String message = constrainedProperty.getConstraintMessage();
+        DefaultMessageSourceResolvable defaultMessageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList.toArray(new String[0]), argumentList, message);
 
         return messageSource.getMessage(defaultMessageSourceResolvable, locale);
     }

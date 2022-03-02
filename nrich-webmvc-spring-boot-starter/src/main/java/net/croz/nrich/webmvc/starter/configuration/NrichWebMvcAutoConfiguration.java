@@ -53,8 +53,14 @@ public class NrichWebMvcAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.webmvc.controller-advice-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NrichWebMvcProperties webMvcProperties, NotificationResponseService<?> notificationResponseService, LoggingService loggingService, @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
-        return new NotificationErrorHandlingRestControllerAdvice(webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
+    public NotificationErrorHandlingRestControllerAdvice notificationRestControllerAdvice(NrichWebMvcProperties webMvcProperties, NotificationResponseService<?> notificationResponseService,
+                                                                                          LoggingService loggingService,
+                                                                                          @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService,
+                                                                                          ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(
+            webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService,
+            exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService
+        );
     }
 
     @ConditionalOnPropertyNotEmpty("nrich.webmvc.allowed-locale-list")

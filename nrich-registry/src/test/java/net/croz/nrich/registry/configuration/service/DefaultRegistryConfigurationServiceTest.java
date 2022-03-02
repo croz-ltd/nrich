@@ -102,8 +102,12 @@ class DefaultRegistryConfigurationServiceTest {
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
         assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("revisionNumber", "revisionTimestamp", "revisionType", "revisionProperty");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder(
+            "Revision number", "Revision timestamp", "Revision type", "Revision property"
+        );
+        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder(
+            "Revision number", "Revision timestamp", "Revision type", "Revision property"
+        );
     }
 
     @Test
@@ -125,7 +129,9 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isEmpty();
 
-        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly(
+            "id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne"
+        );
         assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
         // and when

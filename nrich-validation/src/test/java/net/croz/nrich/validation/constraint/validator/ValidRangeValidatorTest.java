@@ -45,7 +45,9 @@ class ValidRangeValidatorTest {
     @Test
     void shouldThrowExceptionWhenFieldAreOfDifferentType() {
         // given
-        ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(new ValidRangeValidatorNotComparableTestRequest.NotComparable(), new ValidRangeValidatorNotComparableTestRequest.NotComparable());
+        ValidRangeValidatorNotComparableTestRequest.NotComparable firstField = new ValidRangeValidatorNotComparableTestRequest.NotComparable();
+        ValidRangeValidatorNotComparableTestRequest.NotComparable secondField = new ValidRangeValidatorNotComparableTestRequest.NotComparable();
+        ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(firstField, secondField);
 
         // when
         Throwable thrown = catchThrowable(() -> validator.validate(request));

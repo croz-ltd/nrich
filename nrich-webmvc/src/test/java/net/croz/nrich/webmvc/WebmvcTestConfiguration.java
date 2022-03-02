@@ -111,7 +111,12 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService, ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
-        return new NotificationErrorHandlingRestControllerAdvice(Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService, loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService);
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService,
+                                                                                                       ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService,
+                                                                                                       ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+        return new NotificationErrorHandlingRestControllerAdvice(
+            Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService,
+            loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService
+        );
     }
 }

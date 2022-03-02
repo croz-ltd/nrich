@@ -50,7 +50,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private boolean templateOpen = true;
 
-    public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, File outputFile, InputStream template, List<TemplateVariable> templateVariableList, List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
+    public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, File outputFile, InputStream template, List<TemplateVariable> templateVariableList,
+                                   List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputFile = outputFile;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);

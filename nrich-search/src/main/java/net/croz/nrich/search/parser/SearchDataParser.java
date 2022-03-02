@@ -46,7 +46,8 @@ public class SearchDataParser {
         return resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(searchData), propertyPrefix, null, managedType, new HashSet<>(), false);
     }
 
-    private Set<Restriction> resolveRestrictionListInternal(MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper, String propertyPrefix, String path, ManagedType<?> managedType, Set<Restriction> restrictionList, boolean isPluralAttribute) {
+    private Set<Restriction> resolveRestrictionListInternal(MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper, String propertyPrefix, String path,
+                                                            ManagedType<?> managedType, Set<Restriction> restrictionList, boolean isPluralAttribute) {
         List<String> fieldNameList = resolveFieldNameList(wrapper);
         JpaEntityAttributeResolver attributeResolver = new JpaEntityAttributeResolver(managedType);
 
@@ -64,7 +65,9 @@ public class SearchDataParser {
                 String currentPath = resolveCurrentPath(path, fieldNameWithoutPrefixAndSuffix);
 
                 if (attributeHolder.getManagedType() != null) {
-                    resolveRestrictionListInternal(new MapSupportingDirectFieldAccessFallbackBeanWrapper(value), propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
+                    MapSupportingDirectFieldAccessFallbackBeanWrapper currentWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value);
+
+                    resolveRestrictionListInternal(currentWrapper, propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
                     return;
                 }
 
@@ -87,7 +90,8 @@ public class SearchDataParser {
     }
 
     private List<String> resolveFieldNameList(MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper) {
-        List<String> ignoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList() == null ? Collections.emptyList() : searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList();
+        List<String> configuredIgnoredFieldList = searchConfiguration.getSearchPropertyConfiguration().getSearchIgnoredPropertyList();
+        List<String> ignoredFieldList = configuredIgnoredFieldList == null ? Collections.emptyList() : configuredIgnoredFieldList;
 
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
@@ -95,7 +99,8 @@ public class SearchDataParser {
                 .collect(Collectors.toList());
         }
 
-        Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
+        Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic()
+            || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
             .filter(shouldIncludeField)
@@ -105,8 +110,10 @@ public class SearchDataParser {
 
     private String fieldNameWithoutSuffixAndPrefix(String originalFieldName, String prefix) {
         SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
-        String[] suffixListToRemove = new String[] { searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(), searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix() };
-
+        String[] suffixListToRemove = new String[] {
+            searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(),
+            searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix()
+        };
         String fieldName = originalFieldName;
         for (String suffix : suffixListToRemove) {
             if (originalFieldName.endsWith(suffix)) {
@@ -156,7 +163,8 @@ public class SearchDataParser {
     }
 
     private boolean isRangeSearchSupported(Class<?> attributeType) {
-        return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
+        return searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList() != null
+            && searchConfiguration.getSearchPropertyConfiguration().getRangeQuerySupportedClassList().stream().anyMatch(type -> type.isAssignableFrom(attributeType));
     }
 
     private String resolveCurrentPath(String path, String fieldNameWithoutPrefixAndSuffix) {
@@ -205,7 +213,9 @@ public class SearchDataParser {
         SearchOperatorOverride operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> path.equals(value.getPropertyPath()));
 
         if (operatorOverride == null) {
-            operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), value -> value.getPropertyType() != null && attributeType.isAssignableFrom(value.getPropertyType()));
+            Predicate<SearchOperatorOverride> operatorOverridePredicate = value -> value.getPropertyType() != null && attributeType.isAssignableFrom(value.getPropertyType());
+
+            operatorOverride = findOperatorOverride(searchConfiguration.getSearchOperatorOverrideList(), operatorOverridePredicate);
         }
 
         if (operatorOverride != null) {

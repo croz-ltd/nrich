@@ -62,8 +62,13 @@ public class SearchTestConfiguration {
     }
 
     @Bean
-    public StringToTypeConverter<?> defaultStringToTypeConverter() {
-        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$");
+    public StringToTypeConverter<Object> defaultStringToTypeConverter() {
+        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm");
+        List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
+        String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
+        String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
+
+        return new DefaultStringToTypeConverter(dateFormatList, decimalFormatList, booleanTrueRegexPattern, booleanFalseRegexPattern);
     }
 
     @Bean

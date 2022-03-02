@@ -58,7 +58,8 @@ class DefaultNotificationResolverServiceTest {
 
         assertThat(notification.getMessageList()).isNotEmpty();
         assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
-            "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
+            "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5",
+            "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
@@ -224,13 +225,13 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToValidationFailureNotification() {
         // given
-        Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("data", "1")).build();
         Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
         BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
 
         // when
-        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        ValidationFailureNotification notification = defaultNotificationResolverService.createNotificationForValidationFailure(result, NotificationResolverServiceTestRequest.class, notificationData);
 
         // then
         assertThat(notification).isNotNull();
@@ -240,11 +241,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToExceptionNotification() {
         // given
-        Map<String, Object> additionalDataMap = additionalDataMap("data", "1");
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("data", "1")).build();
         Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
-        Notification notification = defaultNotificationResolverService.createNotificationForException(exception, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception, notificationData);
 
         // then
         assertThat(notification).isNotNull();
@@ -254,11 +255,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToSuccessNotification() {
         // given
-        Map<String, Object> additionalDataMap = additionalDataMap("success", "ok");
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("success", "ok")).build();
         String actionName = "upload.finished";
 
         // when
-        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, notificationData);
 
         // then
         assertThat(notification).isNotNull();
@@ -268,11 +269,11 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldIgnoreNotFoundAdditionalDataMessages() {
         // given
-        Map<String, Object> additionalDataMap = additionalDataMap("notFound", "ok");
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("notFound", "ok")).build();
         String actionName = "upload.finished";
 
         // when
-        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, AdditionalNotificationData.builder().messageListDataMap(additionalDataMap).build());
+        Notification notification = defaultNotificationResolverService.createNotificationForAction(actionName, notificationData);
 
         // then
         assertThat(notification).isNotNull();
@@ -295,7 +296,8 @@ class DefaultNotificationResolverServiceTest {
 
         assertThat(notification.getMessageList()).isNotEmpty();
         assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
-            "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5", "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
+            "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5",
+            "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
         assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
@@ -304,7 +306,8 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldNotFailWithNullArguments() {
         // when
-        Throwable thrown = catchThrowable(() -> defaultNotificationResolverService.createNotificationForException(new RuntimeException(), AdditionalNotificationData.builder().build(), (Object[]) null));
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().build();
+        Throwable thrown = catchThrowable(() -> defaultNotificationResolverService.createNotificationForException(new RuntimeException(), notificationData, (Object[]) null));
 
         // then
         assertThat(thrown).isNull();

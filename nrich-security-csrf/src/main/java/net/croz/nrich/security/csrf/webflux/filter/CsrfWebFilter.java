@@ -63,8 +63,9 @@ public class CsrfWebFilter implements WebFilter {
 
     private void addInitialToken(ServerWebExchange exchange, WebSession webSession) {
         if (uri(exchange).endsWith(initialTokenUrl)) {
+            String token = csrfTokenManagerService.generateToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
 
-            exchange.getAttributes().put(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebFluxCsrfTokenKeyHolder(exchange, webSession, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
+            exchange.getAttributes().put(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, token);
 
             updateLastApiCallAttribute(webSession);
         }

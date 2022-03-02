@@ -52,13 +52,11 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
             EncryptionConfiguration encryptResultConfiguration = findEncryptionConfigurationForOperation(foundConfigurationList, EncryptionOperation.ENCRYPT);
             Object[] arguments = invocation.getArguments();
 
-            List<Object> argumentList = Arrays.asList(arguments);
             Object[] decryptedArguments = null;
-
             if (decryptArgumentsConfiguration != null) {
                 log.debug("Found decrypt arguments configuration: {} for method: {}", decryptArgumentsConfiguration, methodName);
 
-                EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();
+                EncryptionContext context = createEncryptionContext(methodName, arguments);
 
                 decryptedArguments = decryptArguments(context, arguments, decryptArgumentsConfiguration.getPropertyToEncryptDecryptList());
 
@@ -68,9 +66,7 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
             if (encryptResultConfiguration != null) {
                 log.debug("Found encrypt result configuration: {} for method: {}", encryptResultConfiguration, methodName);
 
-                List<Object> decryptedArgumentList = Arrays.asList(decryptedArguments == null ? arguments : decryptedArguments);
-
-                EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(decryptedArgumentList).principal(authentication()).build();
+                EncryptionContext context = createEncryptionContext(methodName, decryptedArguments == null ? arguments : decryptedArguments);
 
                 return encryptResult(context, proxyMethodInvocation.proceed(), encryptResultConfiguration.getPropertyToEncryptDecryptList());
             }
@@ -97,5 +93,16 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
             .filter(configuration -> configuration.getEncryptionOperation() == encryptionOperation)
             .findFirst()
             .orElse(null);
+    }
+
+    private EncryptionContext createEncryptionContext(String methodName, Object[] arguments) {
+        List<Object> argumentList = Arrays.asList(arguments);
+
+        return EncryptionContext.builder()
+            .fullyQualifiedMethodName(methodName)
+            .methodArguments(argumentList)
+            .methodDecryptedArguments(argumentList)
+            .principal(authentication())
+            .build();
     }
 }

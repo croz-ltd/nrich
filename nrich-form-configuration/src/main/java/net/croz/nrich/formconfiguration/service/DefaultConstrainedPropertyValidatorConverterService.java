@@ -19,7 +19,9 @@ public class DefaultConstrainedPropertyValidatorConverterService implements Cons
     @Override
     public List<ConstrainedPropertyClientValidatorConfiguration> convert(ConstrainedProperty constrainedProperty) {
         String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, LocaleContextHolder.getLocale());
-        ConstrainedPropertyClientValidatorConfiguration validator = new ConstrainedPropertyClientValidatorConfiguration(constrainedProperty.getType(), constrainedProperty.getConstraintName(), constrainedProperty.getConstraintArgumentMap(), message);
+        ConstrainedPropertyClientValidatorConfiguration validator = new ConstrainedPropertyClientValidatorConfiguration(
+            constrainedProperty.getType(), constrainedProperty.getConstraintName(), constrainedProperty.getConstraintArgumentMap(), message
+        );
 
         return Collections.singletonList(validator);
     }

@@ -52,7 +52,10 @@ public class NrichWebMvcProperties {
      */
     private final List<String> allowedLocaleList;
 
-    public NrichWebMvcProperties(@DefaultValue("true") boolean controllerAdviceEnabled, @DefaultValue("true") boolean exceptionAuxiliaryDataResolvingEnabled, @DefaultValue("true") boolean convertEmptyStringsToNull, @DefaultValue("true") boolean ignoreTransientFields, @DefaultValue("java.util.concurrent.ExecutionException") List<String> exceptionToUnwrapList, @DefaultValue("uuid") List<String> exceptionAuxiliaryDataToIncludeInNotification, String defaultLocale, List<String> allowedLocaleList) {
+    public NrichWebMvcProperties(@DefaultValue("true") boolean controllerAdviceEnabled, @DefaultValue("true") boolean exceptionAuxiliaryDataResolvingEnabled,
+                                 @DefaultValue("true") boolean convertEmptyStringsToNull, @DefaultValue("true") boolean ignoreTransientFields,
+                                 @DefaultValue("java.util.concurrent.ExecutionException") List<String> exceptionToUnwrapList,
+                                 @DefaultValue("uuid") List<String> exceptionAuxiliaryDataToIncludeInNotification, String defaultLocale, List<String> allowedLocaleList) {
         this.controllerAdviceEnabled = controllerAdviceEnabled;
         this.exceptionAuxiliaryDataResolvingEnabled = exceptionAuxiliaryDataResolvingEnabled;
         this.convertEmptyStringsToNull = convertEmptyStringsToNull;

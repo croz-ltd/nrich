@@ -147,7 +147,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService, NrichRegistryProperties registryProperties) {
+    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                                     NrichRegistryProperties registryProperties) {
         List<String> readOnlyPropertyList = Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList());
         RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
@@ -172,12 +173,15 @@ public class NrichRegistryAutoConfiguration {
 
     @Bean
     public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
-                                                   RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList,
-                                                   RegistryEntityFinderService registryEntityFinderService) {
+                                                   RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                   @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         List<RegistryDataInterceptor> resolvedInterceptorList = Optional.ofNullable(interceptorList).orElse(Collections.emptyList());
 
-        return new DefaultRegistryDataService(entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter, registryDataConfigurationHolder, resolvedInterceptorList, registryEntityFinderService);
+        return new DefaultRegistryDataService(
+            entityManager, registryDataModelMapper, registryStringToEntityPropertyMapConverter,
+            registryDataConfigurationHolder, resolvedInterceptorList, registryEntityFinderService
+        );
     }
 
     @ConditionalOnMissingBean
@@ -196,7 +200,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
     @Bean
-    public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
+                                                         RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
 
@@ -212,7 +217,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnBean(name = FORM_CONFIGURATION_MAPPING_BEAN_NAME)
     @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
+    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                                                                     @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
             .map(RegistryDataConfiguration::getRegistryType)
             .collect(Collectors.toList());

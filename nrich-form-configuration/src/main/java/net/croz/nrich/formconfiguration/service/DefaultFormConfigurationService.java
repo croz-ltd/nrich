@@ -41,13 +41,12 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     }
 
     private FormConfiguration resolveFormConfiguration(String formId) {
-        Class<?> validationDefinitionHolder = Optional.ofNullable(formIdConstraintHolderMap.get(formId)).orElseThrow(() -> new IllegalArgumentException(String.format("Form id: %s is not registered", formId)));
+        Class<?> validationDefinitionHolder = Optional.ofNullable(formIdConstraintHolderMap.get(formId))
+            .orElseThrow(() -> new IllegalArgumentException(String.format("Form id: %s is not registered", formId)));
 
-        List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList = new ArrayList<>();
+        List<ConstrainedPropertyConfiguration> propertyConfigurationList = recursiveResolveFieldConfiguration(validationDefinitionHolder, new ArrayList<>(), null);
 
-        recursiveResolveFieldConfiguration(validationDefinitionHolder, constrainedPropertyConfigurationList, null);
-
-        return new FormConfiguration(formId, constrainedPropertyConfigurationList);
+        return new FormConfiguration(formId, propertyConfigurationList);
     }
 
     private List<ConstrainedPropertyConfiguration> recursiveResolveFieldConfiguration(Class<?> type, List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList, String prefix) {
@@ -84,7 +83,8 @@ public class DefaultFormConfigurationService implements FormConfigurationService
             .collect(Collectors.toList());
     }
 
-    private List<ConstrainedPropertyClientValidatorConfiguration> convertProperty(ConstraintDescriptor<?> constraintDescriptor, Class<?> parentType, String propertyPath, PropertyDescriptor propertyDescriptor) {
+    private List<ConstrainedPropertyClientValidatorConfiguration> convertProperty(ConstraintDescriptor<?> constraintDescriptor, Class<?> parentType, String propertyPath,
+                                                                                  PropertyDescriptor propertyDescriptor) {
         ConstrainedProperty constrainedProperty = ConstrainedProperty.builder()
             .constraintDescriptor(constraintDescriptor)
             .parentType(parentType)

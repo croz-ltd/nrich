@@ -46,7 +46,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private final RegistryEntityFinderService registryEntityFinderService;
 
-    public DefaultRegistryDataService(EntityManager entityManager, ModelMapper modelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryDataConfigurationHolder registryDataConfigurationHolder, List<RegistryDataInterceptor> registryDataInterceptorList, RegistryEntityFinderService registryEntityFinderService) {
+    public DefaultRegistryDataService(EntityManager entityManager, ModelMapper modelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter,
+                                      RegistryDataConfigurationHolder registryDataConfigurationHolder, List<RegistryDataInterceptor> registryDataInterceptorList,
+                                      RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.modelMapper = modelMapper;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
@@ -125,7 +127,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(RegistryDataConfigurationHolder registryDataConfigurationHolder) {
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-            .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(), registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType())));
+            .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(),
+                registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType()))
+            );
     }
 
     private List<RegistryDataInterceptor> interceptorList() {
@@ -147,7 +151,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
-            searchRequestMap = stringToEntityPropertyMapConverter.convert(request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType());
+            searchRequestMap = stringToEntityPropertyMapConverter.convert(
+                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType()
+            );
         }
 
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registryDataConfiguration.getSearchConfiguration(), pageable.getSort());

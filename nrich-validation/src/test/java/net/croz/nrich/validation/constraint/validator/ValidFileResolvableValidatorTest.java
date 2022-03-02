@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -36,7 +37,8 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
         // given
-        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("**.txt", FILE_BYTES));
+        MultipartFile file = new MockMultipartFile("**.txt", FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -48,7 +50,8 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
         // given
-        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("someFile.exe", FILE_BYTES));
+        MultipartFile file = new MockMultipartFile("someFile.exe", FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -60,7 +63,8 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldReportErrorWhenContentTypeIsNotValidForMultipartFile() {
         // given
-        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile("someFile.txt", "someFile.txt", MediaType.APPLICATION_JSON_VALUE, FILE_BYTES));
+        MockMultipartFile file = new MockMultipartFile("someFile.txt", "someFile.txt", MediaType.APPLICATION_JSON_VALUE, FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -72,7 +76,8 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldNotReportErrorForValidMultipartFileWithCustomConstraints() {
         // given
-        ValidFileResolvableValidatorMultipartFileCustomTestRequest request = new ValidFileResolvableValidatorMultipartFileCustomTestRequest(new MockMultipartFile("someFile.pdf", "someFile.pdf", MediaType.APPLICATION_PDF_VALUE, FILE_BYTES));
+        MockMultipartFile file = new MockMultipartFile("someFile.pdf", "someFile.pdf", MediaType.APPLICATION_PDF_VALUE, FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileCustomTestRequest request = new ValidFileResolvableValidatorMultipartFileCustomTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileCustomTestRequest>> constraintViolationList = validator.validate(request);
@@ -110,7 +115,8 @@ class ValidFileResolvableValidatorTest {
     @ParameterizedTest
     void shouldValidateMultipartFilename(String fileName) {
         // given
-        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(new MockMultipartFile(fileName, FILE_BYTES));
+        MultipartFile file = new MockMultipartFile(fileName, FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
@@ -134,7 +140,8 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldNotFailOnEmptyPropertyNames() {
         // given
-        ValidFileResolvableValidatorEmptyPropertyTestRequest request = new ValidFileResolvableValidatorEmptyPropertyTestRequest(new MockMultipartFile("someFile.txt", FILE_BYTES));
+        MockMultipartFile file = new MockMultipartFile("someFile.txt", FILE_BYTES);
+        ValidFileResolvableValidatorEmptyPropertyTestRequest request = new ValidFileResolvableValidatorEmptyPropertyTestRequest(file);
 
         // when
         Set<ConstraintViolation<ValidFileResolvableValidatorEmptyPropertyTestRequest>> constraintViolationList = validator.validate(request);

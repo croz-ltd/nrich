@@ -34,16 +34,20 @@ public class Slf4jLoggingService implements LoggingService {
     @Override
     public void logInternalExceptionAtCompactVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
         String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, ", ");
-        String logMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception), exceptionAuxiliaryDataMessage);
-        LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(fetchClassNameForException(exception));
+        String className = fetchClassNameForException(exception);
+        String message = fetchMessageForException(exception);
+        String logMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
+        LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(className);
 
         logOnLevel(loggingLevel, logMessage);
     }
 
     @Override
     public void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
-        String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, fetchClassNameForException(exception), fetchMessageForException(exception));
-        LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(fetchClassNameForException(exception));
+        String className = fetchClassNameForException(exception);
+        String message = fetchMessageForException(exception);
+        String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, className, message);
+        LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(className);
 
         logOnLevel(loggingLevel, "Exception occurred", exception);
 
@@ -71,8 +75,8 @@ public class Slf4jLoggingService implements LoggingService {
 
     private LoggingVerbosityLevel fetchConfiguredLoggingVerbosityLevelForException(Exception exception) {
         MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
-
-        String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, fetchClassNameForException(exception));
+        String className = fetchClassNameForException(exception);
+        String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, className);
         String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingVerbosityLevel.FULL.name())).toUpperCase();
 
         try {

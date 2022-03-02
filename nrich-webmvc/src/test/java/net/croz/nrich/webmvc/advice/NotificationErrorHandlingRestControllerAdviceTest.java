@@ -25,7 +25,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveExceptionNotification() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving")
+            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         String responseString = response.getContentAsString();
 
         // then
@@ -52,7 +53,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveExceptionWithArgumentsNotification() throws Exception {
         // when
-        String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
+        String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments")
+            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
 
         // then
         assertThat(responseString).isNotNull();
@@ -75,7 +77,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveValidationNotification() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving").contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving")
+            .contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
         String responseString = response.getContentAsString();
 
         // then
@@ -166,7 +169,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
     @Test
     void shouldResolveConstraintExceptionNotification() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving")
+            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
         String responseString = response.getContentAsString();
 
         // then

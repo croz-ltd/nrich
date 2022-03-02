@@ -1,6 +1,7 @@
 package net.croz.nrich.jackson.serializer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import net.croz.nrich.jackson.serializer.stub.EntityClassSerializerModifierTestEntity;
@@ -62,7 +63,9 @@ class EntityClassSerializerModifierTest {
     void shouldSerializeClassNameForPackage() throws Exception {
         // given
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(false, Collections.singletonList(EntityClassSerializerModifierTestEntity.class.getPackage().getName())));
+        Module module = JacksonModuleUtil.classNameSerializerModule(false, Collections.singletonList(EntityClassSerializerModifierTestEntity.class.getPackage().getName()));
+
+        objectMapper.registerModule(module);
 
         // when
         Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), MAP_TYPE_REFERENCE);

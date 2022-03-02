@@ -16,6 +16,8 @@ public final class CsrfUriUtil {
         }
 
         return csrfExcludeConfigList.stream()
-            .anyMatch(csrfExcludeConfig -> csrfExcludeConfig.getUri() != null && csrfExcludeConfig.getUri().endsWith(uri) || csrfExcludeConfig.getRegex() != null && uri.matches(csrfExcludeConfig.getRegex()));
+            .anyMatch(csrfExcludeConfig ->
+                csrfExcludeConfig.getUri() != null && csrfExcludeConfig.getUri().endsWith(uri) || csrfExcludeConfig.getRegex() != null && uri.matches(csrfExcludeConfig.getRegex())
+            );
     }
 }

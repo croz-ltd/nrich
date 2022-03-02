@@ -136,12 +136,14 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         PropertyWithType revisionNumberProperty = new PropertyWithType(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, revisionNumberPropertyName, revisionNumberPropertyType);
         PropertyWithType revisionTimestampProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, revisionTimestampPropertyName, revisionTimestampPropertyType);
         PropertyWithType revisionTypeProperty = new PropertyWithType(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, String.class);
+        List<String> displayOrderList = registryConfiguration.getHistoryDisplayOrderList();
 
-        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, revisionTypeProperty, additionalPropertyList, registryConfiguration.getHistoryDisplayOrderList());
+        return new RegistryHistoryConfigurationHolder(revisionNumberProperty, revisionTimestampProperty, revisionTypeProperty, additionalPropertyList, displayOrderList);
     }
 
     private boolean includeManagedType(ManagedType<?> managedType, List<String> includeDomainPatternList, List<String> excludeDomainPatternList) {
-        if (CollectionUtils.isEmpty(includeDomainPatternList) || !(managedType instanceof IdentifiableType) || AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION)) {
+        if (CollectionUtils.isEmpty(includeDomainPatternList) || !(managedType instanceof IdentifiableType)
+            || AnnotationUtil.isAnnotationPresent(managedType.getJavaType(), RegistryEnversConstants.ENVERS_REVISION_ENTITY_ANNOTATION)) {
             return false;
         }
 
@@ -181,6 +183,6 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
     private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(List<SingularAttribute<?, ?>> associationList, String prefix) {
         return associationList.stream()
-            .map(singularAttribute -> singularAttribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + singularAttribute.getName()) : SearchJoin.innerJoinFetch(prefix + singularAttribute.getName()));
+            .map(attribute -> attribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + attribute.getName()) : SearchJoin.innerJoinFetch(prefix + attribute.getName()));
     }
 }
