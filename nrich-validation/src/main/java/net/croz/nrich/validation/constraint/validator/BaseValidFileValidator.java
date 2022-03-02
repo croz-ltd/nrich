@@ -9,6 +9,12 @@ import java.util.Optional;
 
 abstract class BaseValidFileValidator {
 
+    private static final String PATH_SEPARATOR_REGEX = "\\.";
+
+    private static final char UNIX_PATH_SEPARATOR = '/';
+
+    private static final char WINDOWS_PATH_SEPARATOR = '\\';
+
     protected String[] allowedContentTypeList;
 
     protected String[] allowedExtensionList;
@@ -44,7 +50,7 @@ abstract class BaseValidFileValidator {
             valid &= fileName.matches(allowedFileNameRegex);
         }
         if (allowedExtensionList.length > 0) {
-            String[] fileNameList = fileName.split("\\.");
+            String[] fileNameList = fileName.split(PATH_SEPARATOR_REGEX);
 
             String extension;
             if (fileNameList.length > 1) {
@@ -67,10 +73,10 @@ abstract class BaseValidFileValidator {
             return "";
         }
         // Check for Unix-style path
-        int pos = fileName.lastIndexOf('/');
+        int pos = fileName.lastIndexOf(UNIX_PATH_SEPARATOR);
         if (pos == -1) {
             // Check for Windows-style path
-            pos = fileName.lastIndexOf('\\');
+            pos = fileName.lastIndexOf(WINDOWS_PATH_SEPARATOR);
         }
         if (pos != -1) {
             // Any sort of path separator found...

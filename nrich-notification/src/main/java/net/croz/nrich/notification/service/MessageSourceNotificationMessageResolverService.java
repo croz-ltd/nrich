@@ -36,8 +36,8 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
     public String resolveMessageForObjectError(Class<?> validationFailedOwningType, ObjectError objectError) {
         String constraintName = objectError.getCode();
         String fieldName = objectError instanceof FieldError ? ((FieldError) objectError).getField() : null;
-        String name = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getName());
-        String shortName = validationFailedOwningType == null ? "" : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
+        String name = validationFailedOwningType == null ? NotificationConstants.EMPTY_NAME : StringUtils.uncapitalize(validationFailedOwningType.getName());
+        String shortName = validationFailedOwningType == null ? NotificationConstants.EMPTY_NAME : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
 
         List<String> messageCodeList = new ArrayList<>();
 
@@ -86,6 +86,6 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
     }
 
     private String convertToString(Object[] value) {
-        return Arrays.toString(value).replace('[', ' ').replace(']', ' ').trim();
+        return Arrays.toString(value).replace(NotificationConstants.LEFT_BRACKET, NotificationConstants.SPACE).replace(NotificationConstants.RIGHT_BRACKET, NotificationConstants.SPACE).trim();
     }
 }

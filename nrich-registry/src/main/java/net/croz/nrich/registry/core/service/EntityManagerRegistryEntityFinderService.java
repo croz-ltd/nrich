@@ -3,8 +3,8 @@ package net.croz.nrich.registry.core.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
+import net.croz.nrich.registry.core.constants.RegistryQueryConstants;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import org.modelmapper.ModelMapper;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -32,12 +32,12 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
-            .map(attribute -> String.format(RegistryDataConstants.FIND_QUERY_JOIN_FETCH, attribute.getName()))
-            .collect(Collectors.joining(" "));
+            .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.getName()))
+            .collect(Collectors.joining(RegistryQueryConstants.QUERY_JOIN_SEPARATOR));
 
-        String entityWithAlias = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryDataConstants.ENTITY_ALIAS);
-        String querySelectPart = String.format(RegistryDataConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
-        String fullQuery = String.format(RegistryDataConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
+        String entityWithAlias = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryQueryConstants.ENTITY_ALIAS);
+        String querySelectPart = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());
+        String fullQuery = String.format(RegistryQueryConstants.FIND_QUERY, querySelectPart, queryCondition.wherePart);
 
         @SuppressWarnings("unchecked")
         TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(fullQuery);
@@ -95,11 +95,11 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             parameterMap.put(toParameterVariable(idAttributeName, convertParameterToQueryFormat), convertedIdValue);
         }
 
-        return new QueryCondition(String.join(RegistryDataConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
+        return new QueryCondition(String.join(RegistryQueryConstants.FIND_QUERY_SEPARATOR, wherePartList), parameterMap);
     }
 
     private String toParameterExpression(String key, boolean convertParameterToQueryFormat) {
-        return String.format(RegistryDataConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToQueryFormat));
+        return String.format(RegistryQueryConstants.QUERY_PARAMETER_FORMAT, key, toParameterVariable(key, convertParameterToQueryFormat));
     }
 
     private String toParameterVariable(String key, boolean convertParameterToQueryFormat) {
@@ -107,7 +107,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             return key;
         }
 
-        String[] keyList = key.split("\\.");
+        String[] keyList = key.split(RegistryQueryConstants.PATH_SEPARATOR_REGEX);
 
         return Arrays.stream(keyList)
             .map(StringUtils::capitalize)

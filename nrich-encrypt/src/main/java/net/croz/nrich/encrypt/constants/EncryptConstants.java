@@ -6,6 +6,10 @@ public final class EncryptConstants {
 
     public static final String ANY_METHOD_PATTERN = "*";
 
+    public static final String PATH_SEPARATOR_REGEX = "\\.";
+
+    public static final String PATH_SEPARATOR = ".";
+
     private EncryptConstants() {
     }
 }
