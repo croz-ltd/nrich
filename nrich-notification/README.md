@@ -103,7 +103,6 @@ public class NotificationTestController {
 
         return notificationResponseService.responseWithNotificationActionResolvedFromRequest(saved);
     }
-
 }
 
 

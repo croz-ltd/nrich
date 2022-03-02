@@ -85,5 +85,4 @@ class AnnotationUtilTest {
         // then
         assertThat(isAnnotationPresent).isTrue();
     }
-
 }

@@ -74,5 +74,4 @@ public class EncryptTestConfiguration {
     public EncryptionMethodInterceptorTestService encryptionMethodInterceptorTestService() {
         return new DefaultEncryptionMethodInterceptorTestService();
     }
-
 }

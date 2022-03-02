@@ -61,9 +61,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     @Around("@annotation(annotation)")
     public Object aroundEncryptAnnotatedMethods(ProceedingJoinPoint proceedingJoinPoint, EncryptResult annotation) throws Throwable {
         Signature signature = proceedingJoinPoint.getSignature();
-
         Object[] arguments = proceedingJoinPoint.getArgs();
-
         List<Object> argumentList = Arrays.asList(arguments);
 
         EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName(signature)).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();

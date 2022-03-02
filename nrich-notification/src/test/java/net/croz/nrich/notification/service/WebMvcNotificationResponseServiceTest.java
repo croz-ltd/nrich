@@ -144,5 +144,4 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
     }
-
 }

@@ -29,5 +29,4 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, I>, 
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
         return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager);
     }
-
 }

@@ -151,7 +151,6 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
     }
 
-
     @ValueSource(strings = { "unwrappedExceptionValidationFailedResolving", "unwrappedExceptionBindExceptionResolving", "unwrappedExceptionConstraintViolationExceptionExceptionResolving" })
     @ParameterizedTest
     void shouldUnwrapBadRequestExceptions(String url) throws Exception {
@@ -163,7 +162,6 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(responseString).isNotEmpty();
     }
-
 
     @Test
     void shouldResolveConstraintExceptionNotification() throws Exception {
@@ -191,5 +189,4 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
         assertThat(notification.getValidationErrorList()).isNotEmpty();
     }
-
 }

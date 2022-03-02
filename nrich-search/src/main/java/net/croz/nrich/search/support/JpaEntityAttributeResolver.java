@@ -61,5 +61,4 @@ public class JpaEntityAttributeResolver {
             .findFirst()
             .orElse(null);
     }
-
 }

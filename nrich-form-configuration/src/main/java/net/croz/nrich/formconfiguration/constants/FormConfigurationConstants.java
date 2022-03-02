@@ -12,5 +12,4 @@ public final class FormConfigurationConstants {
 
     private FormConfigurationConstants() {
     }
-
 }

@@ -14,5 +14,4 @@ public class RegistryUserFormConfiguration {
     public Map<String, Class<?>> formConfigurationMapping() {
         return new HashMap<>();
     }
-
 }

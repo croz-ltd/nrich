@@ -24,5 +24,4 @@ public final class OibValidatorUtil {
 
         return controlNumber == Integer.parseInt(oib.substring(10));
     }
-
 }

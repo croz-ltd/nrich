@@ -28,5 +28,4 @@ public final class RegistryDataConstants {
 
     private RegistryDataConstants() {
     }
-
 }

@@ -29,5 +29,4 @@ class RegistryDataControllerEndpointTest extends BaseWebTest {
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
-
 }

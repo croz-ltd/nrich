@@ -24,5 +24,4 @@ public class SearchDataParserConfiguration {
     public static SearchDataParserConfiguration fromSearchConfiguration(SearchConfiguration<?, ?, ?> searchConfiguration) {
         return new SearchDataParserConfiguration(searchConfiguration.isResolvePropertyMappingUsingPrefix(), searchConfiguration.getPropertyMappingList(), searchConfiguration.getSearchOperatorOverrideList(), searchConfiguration.getSearchPropertyConfiguration());
     }
-
 }

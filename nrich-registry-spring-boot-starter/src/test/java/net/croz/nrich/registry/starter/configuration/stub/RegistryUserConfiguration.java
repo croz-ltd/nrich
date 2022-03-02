@@ -23,5 +23,4 @@ public class RegistryUserConfiguration {
 
         return registryConfiguration;
     }
-
 }

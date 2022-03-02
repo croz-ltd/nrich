@@ -75,7 +75,6 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     }
 
     private List<ConverterHolder> initializeConverterList() {
-
         return Arrays.asList(
             new ConverterHolder(Boolean.class, (value, type) -> booleanConverter(value)),
             new ConverterHolder(Long.class, (value, type) -> Long.valueOf(value)),

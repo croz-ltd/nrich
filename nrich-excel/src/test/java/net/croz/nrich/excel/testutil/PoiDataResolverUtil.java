@@ -68,5 +68,4 @@ public final class PoiDataResolverUtil {
             return workbook.getSheetAt(0);
         }
     }
-
 }

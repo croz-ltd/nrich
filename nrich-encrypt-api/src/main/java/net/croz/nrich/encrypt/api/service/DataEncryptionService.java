@@ -30,4 +30,5 @@ public interface DataEncryptionService {
      * @return data object with decrypted values
      */
     <T> T decryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext);
+
 }

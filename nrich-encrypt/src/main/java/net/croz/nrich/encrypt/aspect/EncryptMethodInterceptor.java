@@ -56,7 +56,6 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
             Object[] decryptedArguments = null;
 
             if (decryptArgumentsConfiguration != null) {
-
                 log.debug("Found decrypt arguments configuration: {} for method: {}", decryptArgumentsConfiguration, methodName);
 
                 EncryptionContext context = EncryptionContext.builder().fullyQualifiedMethodName(methodName).methodArguments(argumentList).methodDecryptedArguments(argumentList).principal(authentication()).build();

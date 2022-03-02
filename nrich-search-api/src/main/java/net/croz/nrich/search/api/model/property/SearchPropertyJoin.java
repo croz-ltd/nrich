@@ -23,5 +23,4 @@ public class SearchPropertyJoin {
     public static SearchPropertyJoin defaultJoinById() {
         return new SearchPropertyJoin("id", "id");
     }
-
 }
