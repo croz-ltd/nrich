@@ -37,13 +37,17 @@ public class NrichCsrfAutoConfiguration {
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
     @Bean
     public CsrfInterceptor csrfInterceptor(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
-        return new CsrfInterceptor(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfInterceptor(
+            csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList()
+        );
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
     @Bean
     public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
-        return new CsrfWebFilter(csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList());
+        return new CsrfWebFilter(
+            csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList()
+        );
     }
 
     @ConditionalOnBean(CsrfInterceptor.class)

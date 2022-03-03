@@ -31,7 +31,10 @@ class ProjectionListResolverUtilTest {
         assertThat(result).extracting("alias").containsExactly("name", "nestedName", "nestedId", "conditionalName");
 
         // and when
-        SearchProjection<ProjectionListResolverUtilTestEntity> conditionalProjection = result.stream().filter(projection -> "conditionalName".equals(projection.getAlias())).findFirst().orElse(null);
+        SearchProjection<ProjectionListResolverUtilTestEntity> conditionalProjection = result.stream()
+            .filter(projection -> "conditionalName".equals(projection.getAlias()))
+            .findFirst()
+            .orElse(null);
 
         // then
         assertThat(conditionalProjection).isNotNull();

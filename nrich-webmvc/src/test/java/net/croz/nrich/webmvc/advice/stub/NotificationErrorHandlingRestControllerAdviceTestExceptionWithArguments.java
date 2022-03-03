@@ -12,5 +12,4 @@ public class NotificationErrorHandlingRestControllerAdviceTestExceptionWithArgum
         super(message);
         this.argumentList = argumentList;
     }
-
 }

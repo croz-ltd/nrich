@@ -32,5 +32,4 @@ public @interface Projection {
 
     interface DEFAULT extends Predicate<Object> {
     }
-
 }

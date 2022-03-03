@@ -44,6 +44,18 @@ public final class NotificationConstants {
 
     public static final String UNKNOWN_VALIDATION_TARGET = "UNKNOWN_VALIDATION_TARGET";
 
+    public static final String EMPTY_NAME = "";
+
+    public static final char LEFT_BRACKET = '[';
+
+    public static final char RIGHT_BRACKET = ']';
+
+    public static final char SPACE = ' ';
+
+    public static final char REQUEST_PATH_SEPARATOR = '/';
+
+    public static final char MESSAGE_PATH_SEPARATOR = '.';
+
     private NotificationConstants() {
     }
 }

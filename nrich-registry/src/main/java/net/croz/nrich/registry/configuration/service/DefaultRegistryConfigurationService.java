@@ -58,12 +58,12 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         registryGroupDefinitionHolder.getGroupDefinitionList().forEach(registryGroupDefinition -> {
             String registryGroupIdDisplayName = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
 
-            List<RegistryEntityConfiguration> registryEntityConfigurationList = registryGroupDefinition.getRegistryEntityList().stream()
-                    .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
-                    .sorted(Comparator.comparing(RegistryEntityConfiguration::getClassFullName))
-                    .collect(Collectors.toList());
+            List<RegistryEntityConfiguration> configurationList = registryGroupDefinition.getRegistryEntityList().stream()
+                .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
+                .sorted(Comparator.comparing(RegistryEntityConfiguration::getClassFullName))
+                .collect(Collectors.toList());
 
-            RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplayName, registryEntityConfigurationList);
+            RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplayName, configurationList);
 
             registryGroupConfigurationList.add(registryConfiguration);
         });
@@ -73,7 +73,7 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         return registryGroupConfigurationList;
     }
 
-    private RegistryEntityConfiguration resolveRegistryConfiguration(String groupId, ManagedTypeWrapper managedTypeWrapper, List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList) {
+    private RegistryEntityConfiguration resolveRegistryConfiguration(String groupId, ManagedTypeWrapper managedTypeWrapper, List<RegistryPropertyConfiguration> historyPropertyConfigurationList) {
         Class<?> entityType = managedTypeWrapper.getJavaType();
         RegistryOverrideConfiguration registryOverrideConfiguration = resolveRegistryOverrideConfiguration(entityType, registryOverrideConfigurationMap);
 
@@ -86,29 +86,33 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         registryPropertyConfigurationList.sort(new RegistryPropertyComparator(registryPropertyDisplayOrderList));
 
         return RegistryEntityConfiguration.builder()
-                .groupId(groupId)
-                .classFullName(entityType.getName())
-                .name(entityType.getSimpleName())
-                .displayName(registryDisplayName)
-                .propertyConfigurationList(registryPropertyConfigurationList)
-                .embeddedIdPropertyConfigurationList(registryEmbeddedIdPropertyConfigurationList)
-                .historyPropertyConfigurationList(registryPropertyHistoryConfigurationList)
-                .readOnly(registryOverrideConfiguration.isReadOnly())
-                .creatable(registryOverrideConfiguration.isCreatable())
-                .updateable(registryOverrideConfiguration.isUpdateable())
-                .deletable(registryOverrideConfiguration.isDeletable())
-                .isHistoryAvailable(isHistoryAvailable)
-                .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
-                .isIdClassIdentity(managedTypeWrapper.isIdClassIdentifier())
-                .isEmbeddedIdentity(managedTypeWrapper.isEmbeddedIdentifier())
-                .idClassPropertyNameList(managedTypeWrapper.getIdClassPropertyNameList())
-                .build();
+            .groupId(groupId)
+            .classFullName(entityType.getName())
+            .name(entityType.getSimpleName())
+            .displayName(registryDisplayName)
+            .propertyConfigurationList(registryPropertyConfigurationList)
+            .embeddedIdPropertyConfigurationList(registryEmbeddedIdPropertyConfigurationList)
+            .historyPropertyConfigurationList(historyPropertyConfigurationList)
+            .readOnly(registryOverrideConfiguration.isReadOnly())
+            .creatable(registryOverrideConfiguration.isCreatable())
+            .updateable(registryOverrideConfiguration.isUpdateable())
+            .deletable(registryOverrideConfiguration.isDeletable())
+            .isHistoryAvailable(isHistoryAvailable)
+            .isIdentifierAssigned(managedTypeWrapper.isIdentifierAssigned())
+            .isIdClassIdentity(managedTypeWrapper.isIdClassIdentifier())
+            .isEmbeddedIdentity(managedTypeWrapper.isEmbeddedIdentifier())
+            .idClassPropertyNameList(managedTypeWrapper.getIdClassPropertyNameList())
+            .build();
     }
 
     private List<RegistryPropertyConfiguration> resolveRegistryPropertyListForType(ManagedTypeWrapper managedTypeWrapper, RegistryOverrideConfiguration registryOverrideConfiguration) {
-        Predicate<String> isIdAttributePredicate = attributeName -> attributeName.equals(managedTypeWrapper.getIdAttributeName()) || managedTypeWrapper.getIdClassPropertyNameList().contains(attributeName);
+        Predicate<String> isIdAttributePredicate = attributeName -> attributeName.equals(managedTypeWrapper.getIdAttributeName())
+            || managedTypeWrapper.getIdClassPropertyNameList().contains(attributeName);
 
-        return resolveManagedTypePropertyList(managedTypeWrapper.getIdentifiableType(), managedTypeWrapper.getIdentifiableType().getJavaType(), null, isIdAttributePredicate, !managedTypeWrapper.isIdentifierAssigned(), registryOverrideConfiguration);
+        return resolveManagedTypePropertyList(
+            managedTypeWrapper.getIdentifiableType(), managedTypeWrapper.getIdentifiableType().getJavaType(), null,
+            isIdAttributePredicate, !managedTypeWrapper.isIdentifierAssigned(), registryOverrideConfiguration
+        );
     }
 
     private List<RegistryPropertyConfiguration> resolverEmbeddedIdPropertyConfigurationList(ManagedTypeWrapper managedTypeWrapper, RegistryOverrideConfiguration registryOverrideConfiguration) {
@@ -116,10 +120,14 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             return Collections.emptyList();
         }
 
-        return resolveManagedTypePropertyList(managedTypeWrapper.getEmbeddableIdType(), managedTypeWrapper.getIdentifiableType().getJavaType(), managedTypeWrapper.getIdAttributeName(), attribute -> false, true, registryOverrideConfiguration);
+        return resolveManagedTypePropertyList(
+            managedTypeWrapper.getEmbeddableIdType(), managedTypeWrapper.getIdentifiableType().getJavaType(), managedTypeWrapper.getIdAttributeName(),
+            attribute -> false, true, registryOverrideConfiguration
+        );
     }
 
-    private List<RegistryPropertyConfiguration> resolveManagedTypePropertyList(ManagedType<?> managedType, Class<?> entityType, String prefix, Predicate<String> isIdAttributePredicate, boolean isIdReadOnly, RegistryOverrideConfiguration registryOverrideConfiguration) {
+    private List<RegistryPropertyConfiguration> resolveManagedTypePropertyList(ManagedType<?> managedType, Class<?> entityType, String prefix, Predicate<String> isIdAttributePredicate,
+                                                                               boolean isIdReadOnly, RegistryOverrideConfiguration registryOverrideConfiguration) {
         List<String> ignoredPropertyList = Optional.ofNullable(registryOverrideConfiguration.getIgnoredPropertyList()).orElse(Collections.emptyList());
         List<String> readOnlyOverridePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonEditablePropertyList()).orElse(Collections.emptyList());
         List<String> nonSortablePropertyList = Optional.ofNullable(registryOverrideConfiguration.getNonSortablePropertyList()).orElse(Collections.emptyList());
@@ -143,7 +151,10 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
             boolean isSortable = !nonSortablePropertyList.contains(attributeName);
             boolean isSearchable = !nonSearchablePropertyList.contains(attributeName);
 
-            RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation, singularAssociationReferencedClass, isReadOnly, isSortable, isSearchable);
+            RegistryPropertyConfiguration registryPropertyConfiguration = resolveRegistryPropertyConfiguration(
+                entityType.getName(), attributeType, attributeName, isIdAttribute, isSingularAssociation,
+                singularAssociationReferencedClass, isReadOnly, isSortable, isSearchable
+            );
 
             registryPropertyConfigurationList.add(registryPropertyConfiguration);
 
@@ -161,12 +172,18 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         historyPropertyList.addAll(registryHistoryConfiguration.getRevisionAdditionalPropertyList());
 
         return historyPropertyList.stream()
-                .map(propertyWithType -> resolveRegistryPropertyConfiguration(RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false, null, true, true, false))
-                .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.getPropertyDisplayList()))
-                .collect(Collectors.toList());
+            .map(propertyWithType -> resolveRegistryPropertyConfiguration(
+                    RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false,
+                    null, true, true, false
+                )
+            )
+            .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.getPropertyDisplayList()))
+            .collect(Collectors.toList());
     }
 
-    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(String entityTypePrefix, Class<?> attributeType, String attributeName, boolean isIdAttribute, boolean isSingularAssociation, Class<?> singularAssociationReferencedClass, boolean isReadOnly, boolean isSortable, boolean isSearchable) {
+    private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(String entityTypePrefix, Class<?> attributeType, String attributeName, boolean isIdAttribute,
+                                                                               boolean isSingularAssociation, Class<?> singularAssociationReferencedClass, boolean isReadOnly,
+                                                                               boolean isSortable, boolean isSearchable) {
         JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
         boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
@@ -174,19 +191,19 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         String columnHeader = columnHeader(entityTypePrefix, attributeType, attributeName);
 
         return RegistryPropertyConfiguration.builder()
-                .name(attributeName)
-                .originalType(attributeType.getName())
-                .javascriptType(javascriptType)
-                .isDecimal(isDecimal)
-                .isSingularAssociation(isSingularAssociation)
-                .singularAssociationReferencedClass(Optional.ofNullable(singularAssociationReferencedClass).map(Class::getName).orElse(null))
-                .isId(isIdAttribute)
-                .formLabel(formLabel)
-                .columnHeader(columnHeader)
-                .editable(!isReadOnly)
-                .searchable(isSearchable)
-                .sortable(isSortable)
-                .build();
+            .name(attributeName)
+            .originalType(attributeType.getName())
+            .javascriptType(javascriptType)
+            .isDecimal(isDecimal)
+            .isSingularAssociation(isSingularAssociation)
+            .singularAssociationReferencedClass(Optional.ofNullable(singularAssociationReferencedClass).map(Class::getName).orElse(null))
+            .isId(isIdAttribute)
+            .formLabel(formLabel)
+            .columnHeader(columnHeader)
+            .editable(!isReadOnly)
+            .searchable(isSearchable)
+            .sortable(isSortable)
+            .build();
     }
 
     private Class<?> resolveSingularAssociationReferencedClass(Attribute<?, ?> attribute) {
@@ -208,7 +225,8 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     }
 
     private String formLabel(String entityTypePrefix, Class<?> attributeType, String attributeName) {
-        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(labelMessageCodeList(entityTypePrefix, attributeType, attributeName).toArray(new String[0]), attributeName);
+        String[] messageCodeList = labelMessageCodeList(entityTypePrefix, attributeType, attributeName).toArray(new String[0]);
+        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList, attributeName);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
@@ -226,9 +244,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
     private List<String> labelMessageCodeList(String entityTypePrefix, Class<?> attributeType, String attributeName) {
         return Arrays.asList(
-                String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, entityTypePrefix, attributeName),
-                String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, attributeName, attributeType.getName()),
-                String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_SHORT_FORMAT, attributeType.getName())
+            String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, entityTypePrefix, attributeName),
+            String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, attributeName, attributeType.getName()),
+            String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_SHORT_FORMAT, attributeType.getName())
         );
     }
 

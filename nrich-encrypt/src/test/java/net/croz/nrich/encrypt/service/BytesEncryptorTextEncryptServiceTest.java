@@ -56,5 +56,4 @@ class BytesEncryptorTextEncryptServiceTest {
         // then
         assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
     }
-
 }

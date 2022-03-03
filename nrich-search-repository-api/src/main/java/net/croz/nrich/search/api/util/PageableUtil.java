@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 
 /**
  * Util class for converting paging and sort properties to Pageable instances.
- * Unique sort property is here since some databases do not guarantee consistent paging if sorting by non unique properties, it is defined also as a separate arguments since it probably won't be sent from client
+ * Unique sort property is here since some databases do not guarantee consistent paging if sorting by non unique properties,
+ * it is defined also as a separate arguments since it probably won't be sent from client.
  */
 public final class PageableUtil {
 
@@ -59,8 +60,8 @@ public final class PageableUtil {
         }
         else {
             List<Sort.Order> orderList = sortPropertyList.stream()
-                    .map(PageableUtil::convertToSortOrder)
-                    .collect(Collectors.toList());
+                .map(PageableUtil::convertToSortOrder)
+                .collect(Collectors.toList());
 
             if (uniqueSortOrder != null && sortPropertyList.stream().map(SortProperty::getProperty).noneMatch(value -> value.equals(uniqueSortProperty.getProperty()))) {
                 orderList.add(uniqueSortOrder);

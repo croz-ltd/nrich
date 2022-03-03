@@ -6,6 +6,7 @@ import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
+import net.croz.nrich.encrypt.constants.EncryptConstants;
 import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.util.CollectionUtils;
 
@@ -58,12 +59,12 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     }
 
     private void executeEncryptionOperation(EncryptionContext encryptionContext, Object object, String targetPath, EncryptionOperation operation) {
-        String[] pathList = targetPath.split("\\.");
+        String[] pathList = targetPath.split(EncryptConstants.PATH_SEPARATOR_REGEX);
 
         if (pathList.length > 1) {
             String[] remainingPath = Arrays.copyOfRange(pathList, 0, pathList.length - 1);
 
-            encryptDecryptNestedValue(encryptionContext, getPropertyValueByPath(object, String.join(".", remainingPath)), pathList[pathList.length - 1], operation);
+            encryptDecryptNestedValue(encryptionContext, getPropertyValueByPath(object, String.join(EncryptConstants.PATH_SEPARATOR, remainingPath)), pathList[pathList.length - 1], operation);
         }
         else {
             encryptDecryptNestedValue(encryptionContext, object, targetPath, operation);
@@ -96,8 +97,8 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
 
             Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
-                    .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
-                    .collect(Collectors.toList());
+                .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
+                .collect(Collectors.toList());
 
             setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValueList);
         }

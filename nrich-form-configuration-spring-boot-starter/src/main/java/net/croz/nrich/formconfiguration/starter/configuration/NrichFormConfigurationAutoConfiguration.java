@@ -31,7 +31,7 @@ import java.util.Map;
 @Configuration(proxyBeanMethods = false)
 public class NrichFormConfigurationAutoConfiguration {
 
-    public static final String FORM_CONFIGURATION_MAPPING_BEAN_NAME = "formConfigurationMapping";
+    public static final String MAPPING_BEAN_NAME = "formConfigurationMapping";
 
     @ConditionalOnMissingBean
     @Bean
@@ -45,7 +45,7 @@ public class NrichFormConfigurationAutoConfiguration {
         return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);
     }
 
-    @ConditionalOnMissingBean(name = FORM_CONFIGURATION_MAPPING_BEAN_NAME)
+    @ConditionalOnMissingBean(name = MAPPING_BEAN_NAME)
     @Bean
     public Map<String, Class<?>> formConfigurationMapping() {
         return new HashMap<>();
@@ -53,7 +53,8 @@ public class NrichFormConfigurationAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
+    public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, @Qualifier(MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping,
+                                                             List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
         return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList);
     }
 

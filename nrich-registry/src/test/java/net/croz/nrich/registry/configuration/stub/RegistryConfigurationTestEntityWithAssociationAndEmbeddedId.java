@@ -1,9 +1,7 @@
 package net.croz.nrich.registry.configuration.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
@@ -16,10 +14,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
 public class RegistryConfigurationTestEntityWithAssociationAndEmbeddedId {
 

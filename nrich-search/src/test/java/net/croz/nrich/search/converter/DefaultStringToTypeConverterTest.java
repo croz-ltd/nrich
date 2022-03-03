@@ -37,24 +37,24 @@ class DefaultStringToTypeConverterTest {
 
     private static Stream<Arguments> shouldConvertStringValueToRequiredValueMethodSource() {
         return Stream.of(
-                arguments(null, Boolean.class, null),
-                arguments(null, DefaultStringToTypeConverterTest.class, null),
-                arguments("true", Boolean.class, Boolean.TRUE),
-                arguments("yes", Boolean.class, Boolean.TRUE),
-                arguments("no", Boolean.class, Boolean.FALSE),
-                arguments("1", Long.class, 1L),
-                arguments("D", Long.class, null),
-                arguments("5", Integer.class, 5),
-                arguments("5", Short.class, Short.valueOf("5")),
-                arguments("ONE", Value.class, Value.ONE),
-                arguments("01.01.1970", Date.class, dateOf("01.01.1970")),
-                arguments("not a date", Date.class, null),
-                arguments("01.01.1970", LocalDate.class, localDateOf("01.01.1970")),
-                arguments("2020-01-01T11:11", LocalDateTime.class, localDateTimeOf("2020-01-01T11:11")),
-                arguments("1.1", BigDecimal.class, new BigDecimal("1.1")),
-                arguments("1.1", Float.class, Double.valueOf("1.1")),
-                arguments("1.1", Double.class, Double.valueOf("1.1")),
-                arguments("nn", Double.class, null)
+            arguments(null, Boolean.class, null),
+            arguments(null, DefaultStringToTypeConverterTest.class, null),
+            arguments("true", Boolean.class, Boolean.TRUE),
+            arguments("yes", Boolean.class, Boolean.TRUE),
+            arguments("no", Boolean.class, Boolean.FALSE),
+            arguments("1", Long.class, 1L),
+            arguments("D", Long.class, null),
+            arguments("5", Integer.class, 5),
+            arguments("5", Short.class, Short.valueOf("5")),
+            arguments("ONE", Value.class, Value.ONE),
+            arguments("01.01.1970", Date.class, dateOf("01.01.1970")),
+            arguments("not a date", Date.class, null),
+            arguments("01.01.1970", LocalDate.class, localDateOf("01.01.1970")),
+            arguments("2020-01-01T11:11", LocalDateTime.class, localDateTimeOf("2020-01-01T11:11")),
+            arguments("1.1", BigDecimal.class, new BigDecimal("1.1")),
+            arguments("1.1", Float.class, Double.valueOf("1.1")),
+            arguments("1.1", Double.class, Double.valueOf("1.1")),
+            arguments("nn", Double.class, null)
         );
     }
 

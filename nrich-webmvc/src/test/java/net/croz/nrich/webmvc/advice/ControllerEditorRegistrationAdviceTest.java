@@ -30,7 +30,8 @@ class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
         String emptyString = " ";
 
         // when
-        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/convertEmptyStringToNull").param("param", emptyString)).andReturn().getResponse().getContentAsString();
+        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/convertEmptyStringToNull")
+            .param("param", emptyString)).andReturn().getResponse().getContentAsString();
 
         // then
         assertThat(response).isEqualTo("value=null");
@@ -39,7 +40,8 @@ class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
     @Test
     void shouldNotBindTransientFields() throws Exception {
         // when
-        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/ignoreTransientProperty").param("transientProperty", "transient").param("property", "nonTransient")).andReturn().getResponse().getContentAsString();
+        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/ignoreTransientProperty")
+            .param("transientProperty", "transient").param("property", "nonTransient")).andReturn().getResponse().getContentAsString();
 
         // then
         assertThat(response).isEqualTo("value=nonTransient transientValue=null");

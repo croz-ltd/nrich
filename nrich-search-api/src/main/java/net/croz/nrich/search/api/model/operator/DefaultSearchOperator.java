@@ -81,5 +81,4 @@ public enum DefaultSearchOperator implements SearchOperator {
             return inClause;
         }
     }
-
 }

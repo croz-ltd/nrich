@@ -2,11 +2,13 @@ package net.croz.nrich.validation.constraint.util;
 
 public final class OibValidatorUtil {
 
+    private static final String ELEVEN_DIGITS_REGEX = "\\d{11}";
+
     private OibValidatorUtil() {
     }
 
     public static boolean validOib(String oib) {
-        if (!oib.matches("\\d{11}")) {
+        if (!oib.matches(ELEVEN_DIGITS_REGEX)) {
             return false;
         }
 
@@ -24,5 +26,4 @@ public final class OibValidatorUtil {
 
         return controlNumber == Integer.parseInt(oib.substring(10));
     }
-
 }

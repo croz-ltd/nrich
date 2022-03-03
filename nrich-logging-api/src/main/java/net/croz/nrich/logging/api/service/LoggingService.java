@@ -8,7 +8,8 @@ import java.util.Map;
 public interface LoggingService {
 
     /**
-     * Logs exception. Exception verbosity and logging level are resolved from configuration. If no exception or verbosity level is defined defaults are used (LoggingLevel.ERROR and LoggingVerbosityLevel.FULL).
+     * Logs exception. Exception verbosity and logging level are resolved from configuration.
+     * If no exception or verbosity level is defined defaults are used (LoggingLevel.ERROR and LoggingVerbosityLevel.FULL).
      *
      * @param exception              exception to log
      * @param exceptionAuxiliaryData additional data that should be logged
@@ -39,4 +40,5 @@ public interface LoggingService {
      * @param exceptionAuxiliaryData additional data that should be logged
      */
     void logExternalException(String exceptionClassName, String exceptionMessage, Map<String, ?> exceptionAuxiliaryData);
+
 }

@@ -25,50 +25,61 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static RegistryHistoryTestEntity creteRegistryHistoryTestEntityRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
-        RegistryHistoryTestEntity parent = new RegistryHistoryTestEntity(null, "parent", null, null);
-        RegistryHistoryTestEntity related = new RegistryHistoryTestEntity(null, "related", null, null);
-        RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity(null, "first", parent, related);
+        RegistryHistoryTestEntity parent = createRegistryHistoryTestEntity("parent", null, null);
+        RegistryHistoryTestEntity related = createRegistryHistoryTestEntity("related", null, null);
+        RegistryHistoryTestEntity entity = createRegistryHistoryTestEntity("first", parent, related);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 
-        IntStream.range(0, 20).forEach(value -> {
-            executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                RegistryHistoryTestEntity loadedEntity = entityManager.find(RegistryHistoryTestEntity.class, entity.getId());
+        IntStream.range(0, 20).forEach(value -> executeInTransactionWithoutResult(platformTransactionManager, () -> {
+            RegistryHistoryTestEntity loadedEntity = entityManager.find(RegistryHistoryTestEntity.class, entity.getId());
 
-                loadedEntity.setName("name " + value);
+            loadedEntity.setName("name " + value);
 
-                entityManager.persist(loadedEntity);
-            });
-        });
+            entityManager.persist(loadedEntity);
+        }));
 
         return entity;
     }
 
     public static RegistryHistoryTestEntityWithEmbeddedId creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
-        RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey primaryKey = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey(1L, 1L);
-        RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId(primaryKey, BigDecimal.ONE);
+        RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey id = new RegistryHistoryTestEntityWithEmbeddedId.RegistryHistoryTestEntityWithEmbeddedIdPrimaryKey();
+
+        id.setFirstId(1L);
+        id.setSecondId(1L);
+
+        RegistryHistoryTestEntityWithEmbeddedId entity = new RegistryHistoryTestEntityWithEmbeddedId();
+
+        entity.setId(id);
+        entity.setAmount(BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> entityManager.persist(entity));
 
-        IntStream.range(0, 20).forEach(value -> {
-            executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                RegistryHistoryTestEntityWithEmbeddedId loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedId.class, entity.getId());
+        IntStream.range(0, 20).forEach(value -> executeInTransactionWithoutResult(platformTransactionManager, () -> {
+            RegistryHistoryTestEntityWithEmbeddedId loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedId.class, entity.getId());
 
-                loadedEntity.setAmount(BigDecimal.valueOf(value));
+            loadedEntity.setAmount(BigDecimal.valueOf(value));
 
-                entityManager.persist(loadedEntity);
-            });
-        });
+            entityManager.persist(loadedEntity);
+        }));
 
         return entity;
     }
 
-    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(EntityManager entityManager, PlatformTransactionManager platformTransactionManager) {
+    public static RegistryHistoryTestEntityWithEmbeddedObject creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(EntityManager entityManager,
+                                                                                                                             PlatformTransactionManager platformTransactionManager) {
         RegistryHistoryTestEntityWithEmbeddedObjectFirstKey firstKey = new RegistryHistoryTestEntityWithEmbeddedObjectFirstKey();
         RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey = new RegistryHistoryTestEntityWithEmbeddedObjectSecondKey();
 
-        RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId primaryKey = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId(firstKey, secondKey);
-        RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject(primaryKey, BigDecimal.ONE);
+        RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId id = new RegistryHistoryTestEntityWithEmbeddedObject.RegistryHistoryTestEntityWithEmbeddedObjectId();
+
+        id.setFirstKey(firstKey);
+        id.setSecondKey(secondKey);
+
+        RegistryHistoryTestEntityWithEmbeddedObject entity = new RegistryHistoryTestEntityWithEmbeddedObject();
+
+        entity.setId(id);
+        entity.setAmount(BigDecimal.ONE);
 
         executeInTransactionWithoutResult(platformTransactionManager, () -> {
             entityManager.persist(firstKey);
@@ -76,15 +87,13 @@ public final class RegistryHistoryGeneratingUtil {
             entityManager.persist(entity);
         });
 
-        IntStream.range(0, 20).forEach(value -> {
-            executeInTransactionWithoutResult(platformTransactionManager, () -> {
-                RegistryHistoryTestEntityWithEmbeddedObject loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedObject.class, entity.getId());
+        IntStream.range(0, 20).forEach(value -> executeInTransactionWithoutResult(platformTransactionManager, () -> {
+            RegistryHistoryTestEntityWithEmbeddedObject loadedEntity = entityManager.find(RegistryHistoryTestEntityWithEmbeddedObject.class, entity.getId());
 
-                loadedEntity.setAmount(BigDecimal.valueOf(value));
+            loadedEntity.setAmount(BigDecimal.valueOf(value));
 
-                entityManager.persist(loadedEntity);
-            });
-        });
+            entityManager.persist(loadedEntity);
+        }));
 
         return entity;
     }
@@ -93,9 +102,9 @@ public final class RegistryHistoryGeneratingUtil {
         ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
 
         request.setSortPropertyList(Arrays.asList(
-                new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
-                new SortProperty(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, SortDirection.DESC), new SortProperty("name", SortDirection.DESC),
-                new SortProperty("revisionProperty", SortDirection.ASC)
+            new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
+            new SortProperty(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, SortDirection.DESC), new SortProperty("name", SortDirection.DESC),
+            new SortProperty("revisionProperty", SortDirection.ASC)
         ));
 
         return request;
@@ -112,5 +121,15 @@ public final class RegistryHistoryGeneratingUtil {
         request.setPageSize(10);
 
         return request;
+    }
+
+    private static RegistryHistoryTestEntity createRegistryHistoryTestEntity(String name, RegistryHistoryTestEntity parent, RegistryHistoryTestEntity related) {
+        RegistryHistoryTestEntity entity = new RegistryHistoryTestEntity();
+
+        entity.setName(name);
+        entity.setParent(parent);
+        entity.setRelated(related);
+
+        return entity;
     }
 }

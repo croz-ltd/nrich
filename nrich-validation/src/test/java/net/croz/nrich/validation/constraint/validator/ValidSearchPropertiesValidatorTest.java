@@ -42,5 +42,4 @@ class ValidSearchPropertiesValidatorTest {
         // then
         assertThat(constraintViolationList).isEmpty();
     }
-
 }

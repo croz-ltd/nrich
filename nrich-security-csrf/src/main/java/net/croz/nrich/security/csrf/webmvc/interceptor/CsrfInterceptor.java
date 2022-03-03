@@ -76,8 +76,9 @@ public class CsrfInterceptor extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
         if (request.getRequestURI().endsWith(initialTokenUrl)) {
+            String token = csrfTokenManagerService.generateToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME));
 
-            modelAndView.addObject(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, csrfTokenManagerService.generateToken(new WebMvcCsrfTokenKeyHolder(request, response, tokenKeyName, CsrfConstants.CSRF_CRYPTO_KEY_NAME)));
+            modelAndView.addObject(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME, token);
 
             updateLastApiCallAttribute(request.getSession());
         }

@@ -10,9 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ValidFileResolvableValidatorMultipartFileCustomTestRequest {
 
     @ValidFileResolvable(
-            allowedContentTypeListPropertyName = "my.custom.validation.file.allowed-content-type-list",
-            allowedExtensionListPropertyName = "my.custom.validation.file.allowed-extension-list",
-            allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
+        allowedContentTypeListPropertyName = "my.custom.validation.file.allowed-content-type-list",
+        allowedExtensionListPropertyName = "my.custom.validation.file.allowed-extension-list",
+        allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
     )
     private final MultipartFile file;
+
 }

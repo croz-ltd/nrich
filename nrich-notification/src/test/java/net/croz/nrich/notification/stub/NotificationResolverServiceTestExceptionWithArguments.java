@@ -11,5 +11,4 @@ public class NotificationResolverServiceTestExceptionWithArguments extends Runti
         super(message);
         this.argumentList = argumentList;
     }
-
 }

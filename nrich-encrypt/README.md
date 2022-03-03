@@ -91,7 +91,6 @@ public class AccountController {
 
         return accountService.save(account);
     }
-
 }
 ```
 
@@ -132,7 +131,6 @@ public class DemoApplicationConfiguration implements WebMvcConfigurer {
     public DataEncryptionService dataEncryptionService(TextEncryptionService textEncryptionService) {
         return new DefaultDataEncryptService(textEncryptionService);
     }
-
 }
 ```
 

@@ -79,4 +79,5 @@ public interface StringSearchExecutor<T> {
      * @return {@literal true} if the data store contains elements matching conditions applied from search term and property to search list.
      */
     <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
+
 }

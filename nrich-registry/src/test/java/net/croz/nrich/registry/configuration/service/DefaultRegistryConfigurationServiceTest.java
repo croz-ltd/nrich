@@ -39,9 +39,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
         // then
         assertThat(registryEntityConfiguration).isNotNull();
@@ -102,8 +102,12 @@ class DefaultRegistryConfigurationServiceTest {
         // then
         assertThat(registryHistoryPropertyConfigurationList).isNotEmpty();
         assertThat(registryHistoryPropertyConfigurationList).extracting("name").containsExactlyInAnyOrder("revisionNumber", "revisionTimestamp", "revisionType", "revisionProperty");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
-        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder("Revision number", "Revision timestamp", "Revision type", "Revision property");
+        assertThat(registryHistoryPropertyConfigurationList).extracting("formLabel").containsExactlyInAnyOrder(
+            "Revision number", "Revision timestamp", "Revision type", "Revision property"
+        );
+        assertThat(registryHistoryPropertyConfigurationList).extracting("columnHeader").containsExactlyInAnyOrder(
+            "Revision number", "Revision timestamp", "Revision type", "Revision property"
+        );
     }
 
     @Test
@@ -112,9 +116,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
 
         // then
@@ -125,7 +129,9 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).isEmpty();
 
-        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly("id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly(
+            "id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne"
+        );
         assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
 
         // and when
@@ -156,9 +162,9 @@ class DefaultRegistryConfigurationServiceTest {
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
         RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
-                .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
-                .findFirst()
-                .orElse(null);
+            .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
 
 
         // then

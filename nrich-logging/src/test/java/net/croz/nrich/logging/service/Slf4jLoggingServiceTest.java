@@ -60,7 +60,9 @@ class Slf4jLoggingServiceTest {
 
         // then
         assertThat(event.getLevel()).isEqualTo(Level.ERROR);
-        assertThat(event.getMessage()).isEqualTo("---------------- Information about above exception Exception occurred: [className: java.lang.RuntimeException], message: exception:  ----------------");
+        assertThat(event.getMessage()).isEqualTo(
+            "---------------- Information about above exception Exception occurred: [className: java.lang.RuntimeException], message: exception:  ----------------"
+        );
     }
 
     @Test
@@ -83,8 +85,8 @@ class Slf4jLoggingServiceTest {
         IllegalArgumentException exception = new IllegalArgumentException("exception");
 
         doReturn(loggingLevel.name()).when(messageSource).getMessage(
-                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
-                any(Locale.class)
+            argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+            any(Locale.class)
         );
 
         // when
@@ -101,8 +103,8 @@ class Slf4jLoggingServiceTest {
         IllegalStateException exception = new IllegalStateException("exception");
 
         doReturn(LoggingVerbosityLevel.COMPACT.name()).when(messageSource).getMessage(
-                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
-                any(Locale.class)
+            argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+            any(Locale.class)
         );
 
         // when
@@ -119,8 +121,8 @@ class Slf4jLoggingServiceTest {
         IllegalStateException exception = new IllegalStateException("exception");
 
         doReturn(LoggingVerbosityLevel.NONE.name()).when(messageSource).getMessage(
-                argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
-                any(Locale.class)
+            argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
+            any(Locale.class)
         );
 
         // when

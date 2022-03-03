@@ -1,9 +1,7 @@
 package net.croz.nrich.registry.data.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
@@ -14,10 +12,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Audited
 @Entity
 public class RegistryTestEntityWithEmbeddedId {
@@ -27,8 +23,6 @@ public class RegistryTestEntityWithEmbeddedId {
 
     private String name;
 
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Setter
     @Getter
     @EqualsAndHashCode

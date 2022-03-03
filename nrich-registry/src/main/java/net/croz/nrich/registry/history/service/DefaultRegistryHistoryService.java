@@ -53,7 +53,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private final RegistryEntityFinderService registryEntityFinderService;
 
-    public DefaultRegistryHistoryService(EntityManager entityManager, RegistryDataConfigurationHolder registryDataConfigurationHolder, RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, ModelMapper modelMapper, RegistryEntityFinderService registryEntityFinderService) {
+    public DefaultRegistryHistoryService(EntityManager entityManager, RegistryDataConfigurationHolder registryDataConfigurationHolder,
+                                         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder, ModelMapper modelMapper, RegistryEntityFinderService registryEntityFinderService) {
         this.entityManager = entityManager;
         this.registryDataConfigurationHolder = registryDataConfigurationHolder;
         this.registryHistoryConfigurationHolder = registryHistoryConfigurationHolder;
@@ -69,8 +70,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         addOrder(auditQuery, request.getSortPropertyList());
 
         List<?> resultList = auditQuery
-                .setFirstResult(request.getPageNumber())
-                .setMaxResults(request.getPageSize()).getResultList();
+            .setFirstResult(request.getPageNumber())
+            .setMaxResults(request.getPageSize()).getResultList();
 
         List<EntityWithRevision<T>> entityWithRevisionList = convertToEntityRevisionList(resultList);
 
@@ -85,7 +86,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         }
 
         return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-                .collect(Collectors.toMap(RegistryDataConfiguration::getRegistryType, registryDataConfiguration -> entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType())));
+            .collect(Collectors.toMap(RegistryDataConfiguration::getRegistryType, registryDataConfiguration -> entityManager.getMetamodel().managedType(registryDataConfiguration.getRegistryType())));
     }
 
     private <T> AuditQuery createAuditQuery(ListRegistryHistoryRequest request) {
@@ -112,8 +113,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         List<Object[]> objectResultList = (List<Object[]>) resultList;
 
         return Optional.ofNullable(objectResultList).orElse(Collections.emptyList()).stream()
-                .map(value -> new EntityWithRevision<>(initializeEntitySingularAssociations((T) value[0]), convertToRevisionInfo(value[1], (RevisionType) value[2])))
-                .collect(Collectors.toList());
+            .map(value -> new EntityWithRevision<>(initializeEntitySingularAssociations((T) value[0]), convertToRevisionInfo(value[1], (RevisionType) value[2])))
+            .collect(Collectors.toList());
     }
 
     private void addIdCondition(Class<?> type, AuditQuery auditQuery, Object id) {
@@ -178,7 +179,7 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
         Instant revisionDateAsInstant = revisionDate instanceof Long ? Instant.ofEpochMilli((long) revisionDate) : ((Date) revisionDate).toInstant();
 
         Map<String, Object> additionalRevisionPropertyMap = registryHistoryConfigurationHolder.getRevisionAdditionalPropertyList().stream()
-                .collect(Collectors.toMap(PropertyWithType::getName, propertyWithType -> directFieldAccessFallbackBeanWrapper.getPropertyValue(propertyWithType.getOriginalName())));
+            .collect(Collectors.toMap(PropertyWithType::getName, propertyWithType -> directFieldAccessFallbackBeanWrapper.getPropertyValue(propertyWithType.getOriginalName())));
 
         return new RevisionInfo(Long.valueOf(revisionNumber.toString()), revisionDateAsInstant, revisionType.name(), additionalRevisionPropertyMap);
     }
@@ -209,8 +210,8 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
 
     private PropertyWithType findByName(String name) {
         return registryHistoryConfigurationHolder.getRevisionAdditionalPropertyList().stream()
-                .filter(value -> name.equals(value.getName()))
-                .findFirst()
-                .orElse(null);
+            .filter(value -> name.equals(value.getName()))
+            .findFirst()
+            .orElse(null);
     }
 }

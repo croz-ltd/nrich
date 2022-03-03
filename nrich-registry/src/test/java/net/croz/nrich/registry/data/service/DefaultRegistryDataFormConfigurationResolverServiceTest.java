@@ -23,12 +23,14 @@ class DefaultRegistryDataFormConfigurationResolverServiceTest {
     void shouldResolveRegistryFormConfigurationForEntityWithoutCreateRequest() {
         // when
         Map<String, Class<?>> formConfigurationMap = registryDataFormConfigurationResolverService.resolveRegistryFormConfiguration();
+        String entityName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
 
         // then
         assertThat(formConfigurationMap).isNotEmpty();
 
         // and when
-        Class<?> registryCreateClass = formConfigurationMap.get(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntity.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX));
+        Class<?> registryCreateClass = formConfigurationMap.get(formId);
 
         // then
         assertThat(registryCreateClass).isEqualTo(RegistryTestEntity.class);
@@ -38,12 +40,14 @@ class DefaultRegistryDataFormConfigurationResolverServiceTest {
     void shouldResolveRegistryFormConfigurationForEntityWithUpdateRequest() {
         // when
         Map<String, Class<?>> formConfigurationMap = registryDataFormConfigurationResolverService.resolveRegistryFormConfiguration();
+        String entityName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
 
         // then
         assertThat(formConfigurationMap).isNotEmpty();
 
         // and when
-        Class<?> registryCreateClass = formConfigurationMap.get(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntity.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX));
+        Class<?> registryCreateClass = formConfigurationMap.get(formId);
 
         // then
         assertThat(registryCreateClass).isEqualTo(RegistryTestEntityUpdateRequest.class);
@@ -53,12 +57,14 @@ class DefaultRegistryDataFormConfigurationResolverServiceTest {
     void shouldNotAddFormConfigurationForExistingCreateRequest() {
         // when
         Map<String, Class<?>> formConfigurationMap = registryDataFormConfigurationResolverService.resolveRegistryFormConfiguration();
+        String entityName = RegistryTestEntityWithOverriddenFormConfiguration.class.getName();
+        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
 
         // then
         assertThat(formConfigurationMap).isNotEmpty();
 
         // and when
-        Class<?> registryCreateClass = formConfigurationMap.get(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX));
+        Class<?> registryCreateClass = formConfigurationMap.get(formId);
 
         // then
         assertThat(registryCreateClass).isEqualTo(Object.class);
@@ -68,12 +74,14 @@ class DefaultRegistryDataFormConfigurationResolverServiceTest {
     void shouldNotAddFormConfigurationForExistingUpdateRequest() {
         // when
         Map<String, Class<?>> formConfigurationMap = registryDataFormConfigurationResolverService.resolveRegistryFormConfiguration();
+        String entityName = RegistryTestEntityWithOverriddenFormConfiguration.class.getName();
+        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
 
         // then
         assertThat(formConfigurationMap).isNotEmpty();
 
         // and when
-        Class<?> registryCreateClass = formConfigurationMap.get(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX));
+        Class<?> registryCreateClass = formConfigurationMap.get(formId);
 
         // then
         assertThat(registryCreateClass).isEqualTo(Object.class);

@@ -161,8 +161,13 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public StringToTypeConverter<?> defaultStringToTypeConverter() {
-        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$");
+    public StringToTypeConverter<Object> defaultStringToTypeConverter() {
+        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm");
+        List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
+        String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
+        String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
+
+        return new DefaultStringToTypeConverter(dateFormatList, decimalFormatList, booleanTrueRegexPattern, booleanFalseRegexPattern);
     }
 
     @Bean
@@ -208,14 +213,17 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryEntityFinderService registryEntityFinderService(EntityManager entityManager, ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public RegistryEntityFinderService registryEntityFinderService(EntityManager entityManager, ModelMapper registryBaseModelMapper,
+                                                                   RegistryConfigurationResolverService registryConfigurationResolverService) {
         Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap();
 
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
     @Bean
-    public RegistryDataService registryDataService(EntityManager entityManager, ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, RegistryConfigurationResolverService registryConfigurationResolverService, @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryDataService registryDataService(EntityManager entityManager, ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter,
+                                                   RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                   @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         List<RegistryDataInterceptor> interceptors = Optional.ofNullable(interceptorList).orElse(Collections.emptyList());
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
 
@@ -233,7 +241,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryHistoryService registryHistoryService(EntityManager entityManager, RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper, RegistryEntityFinderService registryEntityFinderService) {
+    public RegistryHistoryService registryHistoryService(EntityManager entityManager, RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
+                                                         RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         RegistryHistoryConfigurationHolder historyConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
 
@@ -248,13 +257,14 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-                .map(RegistryDataConfiguration::getRegistryType)
-                .collect(Collectors.toList());
+            .map(RegistryDataConfiguration::getRegistryType)
+            .collect(Collectors.toList());
+        String entityName = RegistryTestEntityWithOverriddenFormConfiguration.class.getName();
 
         Map<String, Class<?>> formConfigurationMap = new HashMap<>();
 
-        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
-        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, RegistryTestEntityWithOverriddenFormConfiguration.class.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
+        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
+        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
 
         return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMap);
     }
@@ -289,13 +299,13 @@ public class RegistryTestConfiguration {
         configurationEntityConfiguration.setDeletable(false);
 
         RegistryOverrideConfigurationHolder configurationEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
+            .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
 
         RegistryOverrideConfiguration interceptorTestEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
         interceptorTestEntityConfiguration.setReadOnly(true);
 
         RegistryOverrideConfigurationHolder interceptorTestEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
+            .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
 
         RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
@@ -304,13 +314,13 @@ public class RegistryTestConfiguration {
         InterceptorTestNonEntityNonModifiableConfiguration.setCreatable(false);
 
         RegistryOverrideConfigurationHolder InterceptorTestNonEntityNonModifiableConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
+            .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
 
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
         RegistryOverrideConfigurationHolder searchConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-                .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
+            .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
         return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
     }

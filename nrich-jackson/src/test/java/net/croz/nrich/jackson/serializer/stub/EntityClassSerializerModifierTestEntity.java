@@ -5,9 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 
-@Entity
 @Setter
 @Getter
+@Entity
 public class EntityClassSerializerModifierTestEntity {
 
     private String name;

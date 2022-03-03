@@ -16,10 +16,10 @@ public class DefaultConstraintConversionService implements ConstraintConversionS
     @Override
     public Object resolveTarget(Set<ConstraintViolation<?>> constraintViolationList) {
         return constraintViolationList.stream()
-                .map(ConstraintViolation::getLeafBean)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
+            .map(ConstraintViolation::getLeafBean)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
     }
 
     @Override

@@ -3,6 +3,7 @@ package net.croz.nrich.security.csrf.webmvc.interceptor;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.exception.CsrfTokenException;
+import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.core.service.stub.CsrfTestController;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,8 +47,9 @@ class CsrfInterceptorTest {
     @BeforeEach
     void setup() {
         CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
+        List<CsrfExcludeConfig> csrfExcludeConfigList = Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null));
 
-        csrfInterceptor = new CsrfInterceptor(csrfTokenManagerService, CSRF_TOKEN_KEY_NAME, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null)));
+        csrfInterceptor = new CsrfInterceptor(csrfTokenManagerService, CSRF_TOKEN_KEY_NAME, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, csrfExcludeConfigList);
     }
 
     @Test
@@ -187,8 +190,8 @@ class CsrfInterceptorTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT)
-                .session(session)
-                .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
+            .session(session)
+            .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

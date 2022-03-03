@@ -19,12 +19,12 @@ public final class ValidationReflectionUtil {
         String capitalizedFieldName = StringUtils.capitalize(fieldName);
 
         return Arrays.stream(METHOD_PATTERN_LIST)
-                .map(value -> String.format(value, capitalizedFieldName))
-                .map(methodName -> ReflectionUtils.findMethod(type, methodName))
-                .map(Optional::ofNullable)
-                .findFirst()
-                .flatMap(Function.identity())
-                .orElse(null);
+            .map(value -> String.format(value, capitalizedFieldName))
+            .map(methodName -> ReflectionUtils.findMethod(type, methodName))
+            .map(Optional::ofNullable)
+            .findFirst()
+            .flatMap(Function.identity())
+            .orElse(null);
     }
 
     public static Object invokeMethod(Method method, Object target) {

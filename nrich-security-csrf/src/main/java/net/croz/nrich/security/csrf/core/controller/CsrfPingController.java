@@ -13,12 +13,14 @@ import java.util.Map;
 @RequestMapping
 public class CsrfPingController {
 
+    private static final String SUCCESS_KEY = "success";
+
     @RequestMapping(CsrfConstants.CSRF_DEFAULT_PING_URI)
     @ResponseBody
     public Map<String, Boolean> ping() {
         Map<String, Boolean> result = new HashMap<>();
 
-        result.put("success", true);
+        result.put(SUCCESS_KEY, true);
 
         return result;
     }

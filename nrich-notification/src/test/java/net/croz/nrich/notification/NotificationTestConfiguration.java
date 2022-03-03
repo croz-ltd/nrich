@@ -44,5 +44,4 @@ public class NotificationTestConfiguration {
     public Validator validator() {
         return new LocalValidatorFactoryBean();
     }
-
 }

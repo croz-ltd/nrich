@@ -52,7 +52,9 @@ class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder(
+            "first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "name 7", "name 8"
+        );
 
         // and when
         EntityWithRevision<RegistryHistoryTestEntity> firstResult = resultList.getContent().get(0);
@@ -82,7 +84,9 @@ class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder(
+            "first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent"
+        );
     }
 
     @Test

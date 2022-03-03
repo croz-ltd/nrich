@@ -69,20 +69,20 @@ public class ManagedTypeWrapper {
 
     private Map<String, Class<?>> resolveIdClassPropertyMap(IdentifiableType<?> identifiableType) {
         return identifiableType.hasSingleIdAttribute() ? Collections.emptyMap() : identifiableType.getIdClassAttributes().stream()
-                .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
+            .collect(Collectors.toMap(Attribute::getName, Attribute::getJavaType));
     }
 
     private boolean resolveIsIdentifierAssigned(IdentifiableType<?> managedType) {
         return managedType.getAttributes().stream()
-                .map(Attribute::getJavaMember)
-                .filter(Field.class::isInstance)
-                .map(Field.class::cast)
-                .map(Field::getDeclaredAnnotations)
-                .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
+            .map(Attribute::getJavaMember)
+            .filter(Field.class::isInstance)
+            .map(Field.class::cast)
+            .map(Field::getDeclaredAnnotations)
+            .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }
 
     private List<SingularAttribute<?, ?>> resolveSingularAssociationList(ManagedType<?> managedType) {
         return managedType.getSingularAttributes().stream()
-                .filter(Attribute::isAssociation).collect(Collectors.toList());
+            .filter(Attribute::isAssociation).collect(Collectors.toList());
     }
 }

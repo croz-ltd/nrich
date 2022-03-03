@@ -1,9 +1,7 @@
 package net.croz.nrich.search.repository.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
@@ -14,10 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
 public class TestEntityWithEmbeddedId {
 
@@ -26,8 +22,6 @@ public class TestEntityWithEmbeddedId {
 
     private String name;
 
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Setter
     @Getter
     @EqualsAndHashCode

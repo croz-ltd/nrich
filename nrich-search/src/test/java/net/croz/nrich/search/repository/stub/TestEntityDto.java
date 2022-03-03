@@ -1,16 +1,14 @@
 package net.croz.nrich.search.repository.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
-@Setter
 public class TestEntityDto {
 
-    private String name;
+    private final String name;
 
-    private String nestedName;
+    private final String nestedName;
 
 }

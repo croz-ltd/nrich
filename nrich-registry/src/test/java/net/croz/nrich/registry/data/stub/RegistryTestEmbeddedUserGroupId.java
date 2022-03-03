@@ -1,8 +1,6 @@
 package net.croz.nrich.registry.data.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
@@ -10,10 +8,8 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Embeddable
 public class RegistryTestEmbeddedUserGroupId implements Serializable {
 

@@ -11,4 +11,5 @@ public class ValidFileResolvableValidatorEmptyPropertyTestRequest {
 
     @ValidFileResolvable(allowedContentTypeListPropertyName = "", allowedExtensionListPropertyName = "", allowedFileNameRegexPropertyName = "")
     private final MultipartFile file;
+
 }

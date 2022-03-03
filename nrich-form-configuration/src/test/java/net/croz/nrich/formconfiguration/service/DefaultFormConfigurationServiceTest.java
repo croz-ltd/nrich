@@ -50,7 +50,9 @@ class DefaultFormConfigurationServiceTest {
         // then
         assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
         assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).hasSize(4);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder("name", "lastName", "timestamp", "value");
+        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder(
+            "name", "lastName", "timestamp", "value"
+        );
 
         assertThat(formConfiguration.getConstrainedPropertyConfigurationList().get(0).getValidatorList()).hasSize(1);
 
@@ -84,7 +86,9 @@ class DefaultFormConfigurationServiceTest {
         // then
         assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
         assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).hasSize(5);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder("name", "request.name", "request.lastName", "request.timestamp", "request.value");
+        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder(
+            "name", "request.name", "request.lastName", "request.timestamp", "request.value"
+        );
 
         formConfiguration.getConstrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::getPath));
 

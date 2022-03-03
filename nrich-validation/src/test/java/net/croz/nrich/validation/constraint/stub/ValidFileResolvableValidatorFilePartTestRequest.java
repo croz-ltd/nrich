@@ -11,4 +11,5 @@ public class ValidFileResolvableValidatorFilePartTestRequest {
 
     @ValidFileResolvable
     private final FilePart file;
+
 }

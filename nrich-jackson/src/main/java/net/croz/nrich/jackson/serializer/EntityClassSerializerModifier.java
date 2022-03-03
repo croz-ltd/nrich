@@ -51,6 +51,6 @@ public class EntityClassSerializerModifier extends BeanSerializerModifier {
 
     private boolean isEntity(Class<?> type) {
         return Arrays.stream(type.getAnnotations())
-                .anyMatch(annotation -> ENTITY_ANNOTATION.equals(annotation.annotationType().getName()));
+            .anyMatch(annotation -> ENTITY_ANNOTATION.equals(annotation.annotationType().getName()));
     }
 }

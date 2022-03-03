@@ -1,17 +1,13 @@
 package net.croz.nrich.registry.configuration.stub;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
 public class RegistryConfigurationTestEntity {
 

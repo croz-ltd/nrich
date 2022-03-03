@@ -17,14 +17,17 @@ class NrichValidationAutoConfigurationTest {
     @Test
     void shouldConfigureDefaultConfiguration() {
         // expect
-        contextRunner.run(context -> assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class));
+        contextRunner.run(context ->
+            assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class)
+        );
     }
 
     @Test
     void shouldNotRegisterValidationMessagesWhenDisabledViaProperty() {
         // expect
-        contextRunner.withPropertyValues("nrich.validation.register-messages=false")
-                .run(context -> assertThat(context).doesNotHaveBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class));
+        contextRunner.withPropertyValues("nrich.validation.register-messages=false").run(context ->
+            assertThat(context).doesNotHaveBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class)
+        );
     }
 
     @Test
@@ -34,7 +37,7 @@ class NrichValidationAutoConfigurationTest {
 
         // expect
         contextRunner.withBean(MessageSource.class, () -> messageSource).run(context ->
-                verify(messageSource).addBasenames(NrichValidationAutoConfiguration.VALIDATION_MESSAGES_NAME)
+            verify(messageSource).addBasenames(NrichValidationAutoConfiguration.VALIDATION_MESSAGES_NAME)
         );
     }
 }

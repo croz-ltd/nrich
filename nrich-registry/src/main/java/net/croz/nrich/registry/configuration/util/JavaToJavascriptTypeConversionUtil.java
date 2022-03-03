@@ -28,10 +28,10 @@ public final class JavaToJavascriptTypeConversionUtil {
 
     public static JavascriptType fromJavaType(Class<?> type) {
         return CLASS_JAVASCRIPT_TYPE_MAP.entrySet().stream()
-                .filter(entry -> entry.getKey().isAssignableFrom(type))
-                .findFirst()
-                .map(Map.Entry::getValue)
-                .orElse(JavascriptType.OBJECT);
+            .filter(entry -> entry.getKey().isAssignableFrom(type))
+            .findFirst()
+            .map(Map.Entry::getValue)
+            .orElse(JavascriptType.OBJECT);
     }
 
     public static boolean isDecimal(Class<?> type) {

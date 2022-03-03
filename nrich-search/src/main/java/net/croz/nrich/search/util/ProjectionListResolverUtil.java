@@ -22,9 +22,9 @@ public final class ProjectionListResolverUtil {
         Predicate<Field> shouldIncludeField = field -> !(field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
         return Arrays.stream(projectionType.getDeclaredFields())
-                .filter(shouldIncludeField)
-                .map(ProjectionListResolverUtil::<R>convertToProjection)
-                .collect(Collectors.toList());
+            .filter(shouldIncludeField)
+            .map(ProjectionListResolverUtil::<R>convertToProjection)
+            .collect(Collectors.toList());
     }
 
     private static <R> SearchProjection<R> convertToProjection(Field field) {
@@ -59,15 +59,15 @@ public final class ProjectionListResolverUtil {
 
     private static Value findValueAnnotation(Annotation[] annotationList) {
         return (Value) Arrays.stream(annotationList)
-                .filter(annotation -> Value.class.isAssignableFrom(annotation.annotationType()))
-                .findFirst()
-                .orElse(null);
+            .filter(annotation -> Value.class.isAssignableFrom(annotation.annotationType()))
+            .findFirst()
+            .orElse(null);
     }
 
     private static Projection findProjectionAnnotation(Annotation[] annotationList) {
         return (Projection) Arrays.stream(annotationList)
-                .filter(annotation -> Projection.class.isAssignableFrom(annotation.annotationType()))
-                .findFirst()
-                .orElse(null);
+            .filter(annotation -> Projection.class.isAssignableFrom(annotation.annotationType()))
+            .findFirst()
+            .orElse(null);
     }
 }

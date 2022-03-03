@@ -29,7 +29,8 @@ public class NrichEncryptProperties {
     private final String textEncryptCharset;
 
     /**
-     * Whether an aspect bean {@link net.croz.nrich.encrypt.aspect.EncryptDataAspect} that handles encryption for {@link net.croz.nrich.encrypt.api.annotation.EncryptResult} amd {@link net.croz.nrich.encrypt.api.annotation.DecryptArgument} is active
+     * Whether an aspect bean {@link net.croz.nrich.encrypt.aspect.EncryptDataAspect} that handles encryption for {@link net.croz.nrich.encrypt.api.annotation.EncryptResult}
+     * and {@link net.croz.nrich.encrypt.api.annotation.DecryptArgument} is active
      */
     private final boolean encryptAspectEnabled;
 
@@ -50,7 +51,8 @@ public class NrichEncryptProperties {
      */
     private final String encryptSalt;
 
-    public NrichEncryptProperties(List<EncryptionConfiguration> encryptionConfigurationList, List<String> ignoredMethodList, @DefaultValue("UTF-8") String textEncryptCharset, @DefaultValue("true") boolean encryptAspectEnabled, @DefaultValue("true") boolean encryptAdvisorEnabled, String encryptPassword, String encryptSalt) {
+    public NrichEncryptProperties(List<EncryptionConfiguration> encryptionConfigurationList, List<String> ignoredMethodList, @DefaultValue("UTF-8") String textEncryptCharset,
+                                  @DefaultValue("true") boolean encryptAspectEnabled, @DefaultValue("true") boolean encryptAdvisorEnabled, String encryptPassword, String encryptSalt) {
         this.encryptionConfigurationList = encryptionConfigurationList;
         this.ignoredMethodList = ignoredMethodList;
         this.textEncryptCharset = textEncryptCharset;

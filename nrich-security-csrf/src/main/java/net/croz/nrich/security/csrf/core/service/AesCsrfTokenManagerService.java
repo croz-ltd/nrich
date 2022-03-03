@@ -98,7 +98,9 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
 
         byte[] csrfTokenDecryptedBytes;
         try {
-            csrfTokenDecryptedBytes = cipher.doFinal(csrfTokenEncryptedBytes, AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH, csrfTokenEncryptedBytes.length - AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH);
+            int inputLength = csrfTokenEncryptedBytes.length - AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH;
+
+            csrfTokenDecryptedBytes = cipher.doFinal(csrfTokenEncryptedBytes, AesCsrfTokenConstants.INITIALIZATION_VECTOR_LENGTH, inputLength);
         }
         catch (Exception exception) {
             throw new CsrfTokenException("Csrf token can't be decrypted.", exception);
@@ -130,9 +132,9 @@ public class AesCsrfTokenManagerService implements CsrfTokenManagerService {
         byte[] initializationVector = cipher.getIV();
 
         return ByteBuffer.allocate(initializationVector.length + encryptedCurrentTimeInBytes.length)
-                .put(initializationVector)
-                .put(encryptedCurrentTimeInBytes)
-                .array();
+            .put(initializationVector)
+            .put(encryptedCurrentTimeInBytes)
+            .array();
     }
 
     @SneakyThrows

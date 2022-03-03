@@ -168,9 +168,9 @@ class JpaSearchExecutorTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .distinct(true)
-                .joinList(Collections.singletonList(SearchJoin.leftJoin("collectionEntityList")))
-                .build();
+            .distinct(true)
+            .joinList(Collections.singletonList(SearchJoin.leftJoin("collectionEntityList")))
+            .build();
 
         // when
         long result = testEntitySearchRepository.count(request, searchConfiguration);
@@ -187,9 +187,9 @@ class JpaSearchExecutorTest {
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
-                .distinct(true)
-                .joinList(Collections.singletonList(SearchJoin.innerJoinFetch("collectionEntityList")))
-                .build();
+            .distinct(true)
+            .joinList(Collections.singletonList(SearchJoin.innerJoinFetch("collectionEntityList")))
+            .build();
         // when
         long result = testEntitySearchRepository.count(request, searchConfiguration);
 
@@ -203,17 +203,17 @@ class JpaSearchExecutorTest {
         generateListForSearch(entityManager);
 
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
-                .rootEntity(TestEntityCollectionWithReverseAssociation.class)
-                .propertyPrefix("subqueryRestriction")
-                .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
+            .rootEntity(TestEntityCollectionWithReverseAssociation.class)
+            .propertyPrefix("subqueryRestriction")
+            .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-                .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
-                .build();
+            .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+            .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
-                .subqueryRestrictionName("first0-association-1")
-                .build();
+            .subqueryRestrictionName("first0-association-1")
+            .build();
 
         // when
         long result = testEntitySearchRepository.count(request, searchConfiguration);

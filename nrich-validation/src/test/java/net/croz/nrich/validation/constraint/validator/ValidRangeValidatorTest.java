@@ -45,7 +45,9 @@ class ValidRangeValidatorTest {
     @Test
     void shouldThrowExceptionWhenFieldAreOfDifferentType() {
         // given
-        ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(new ValidRangeValidatorNotComparableTestRequest.NotComparable(), new ValidRangeValidatorNotComparableTestRequest.NotComparable());
+        ValidRangeValidatorNotComparableTestRequest.NotComparable firstField = new ValidRangeValidatorNotComparableTestRequest.NotComparable();
+        ValidRangeValidatorNotComparableTestRequest.NotComparable secondField = new ValidRangeValidatorNotComparableTestRequest.NotComparable();
+        ValidRangeValidatorNotComparableTestRequest request = new ValidRangeValidatorNotComparableTestRequest(firstField, secondField);
 
         // when
         Throwable thrown = catchThrowable(() -> validator.validate(request));
@@ -84,12 +86,12 @@ class ValidRangeValidatorTest {
         Instant now = Instant.now();
 
         return Stream.of(
-                arguments(null, null, true),
-                arguments(now, null, true),
-                arguments(null, now, true),
-                arguments(now, now.plus(1, ChronoUnit.DAYS), true),
-                arguments(now.plus(1, ChronoUnit.DAYS), now, false),
-                arguments(now, now, false)
+            arguments(null, null, true),
+            arguments(now, null, true),
+            arguments(null, now, true),
+            arguments(now, now.plus(1, ChronoUnit.DAYS), true),
+            arguments(now.plus(1, ChronoUnit.DAYS), now, false),
+            arguments(now, now, false)
         );
     }
 }

@@ -40,5 +40,4 @@ class ConditionalOnPropertyNotEmptyTest {
             assertThat(context).hasSingleBean(ConditionalOnPropertyNotEmptyConfiguration.MapListConditionBean.class);
         });
     }
-
 }

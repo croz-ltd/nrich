@@ -12,5 +12,4 @@ public class NotificationErrorHandlingRestControllerAdviceTestService {
     public String validationFailedResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
-
 }

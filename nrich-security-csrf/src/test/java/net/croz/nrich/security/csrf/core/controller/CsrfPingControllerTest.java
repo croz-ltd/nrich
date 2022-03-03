@@ -18,7 +18,8 @@ class CsrfPingControllerTest {
     @Test
     void shouldReturnPingRequest() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post(CsrfConstants.CSRF_DEFAULT_PING_URI).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post(CsrfConstants.CSRF_DEFAULT_PING_URI).accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

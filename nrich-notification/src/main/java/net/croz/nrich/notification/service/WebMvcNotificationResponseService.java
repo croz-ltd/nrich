@@ -6,6 +6,7 @@ import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.response.ResponseWithNotification;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.notification.constant.NotificationConstants;
 import org.springframework.validation.Errors;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -69,6 +70,6 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     private String extractActionNameFromRequest(HttpServletRequest request) {
         String path = new UrlPathHelper().getPathWithinApplication(request);
 
-        return path.substring(1).replace("/", ".");
+        return path.substring(1).replace(NotificationConstants.REQUEST_PATH_SEPARATOR, NotificationConstants.MESSAGE_PATH_SEPARATOR);
     }
 }

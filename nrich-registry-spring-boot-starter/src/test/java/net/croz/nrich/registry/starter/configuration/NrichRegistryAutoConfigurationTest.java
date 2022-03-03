@@ -29,9 +29,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NrichRegistryAutoConfigurationTest {
 
-    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class));
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(
+        AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class)
+    );
 
-    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class));
+    private final WebApplicationContextRunner webContextRunner = new WebApplicationContextRunner().withConfiguration(
+        AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class)
+    );
 
     @Test
     void shouldConfigureDefaultConfiguration() {
@@ -70,13 +74,16 @@ class NrichRegistryAutoConfigurationTest {
     @Test
     void shouldRegisterFormConfigurationResolverServiceWhenFormConfigurationBeanIsDefined() {
         // expect
-        contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class).withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class)
-                .run(context -> assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class));
+        contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class, RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context ->
+            assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class)
+        );
     }
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
-        contextRunner.withPropertyValues("nrich.registry.default-converter-enabled=false").run(context -> assertThat(context).doesNotHaveBean(StringToTypeConverter.class));
+        contextRunner.withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
+            assertThat(context).doesNotHaveBean(StringToTypeConverter.class)
+        );
     }
 
     @Test

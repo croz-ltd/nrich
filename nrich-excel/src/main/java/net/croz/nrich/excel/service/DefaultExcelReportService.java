@@ -38,8 +38,8 @@ public class DefaultExcelReportService implements ExcelReportService {
             }
 
             Arrays.stream(rowBatchData)
-                    .filter(Objects::nonNull)
-                    .forEach(excelReportGenerator::writeRowData);
+                .filter(Objects::nonNull)
+                .forEach(excelReportGenerator::writeRowData);
 
             start += limit;
         }
@@ -51,11 +51,11 @@ public class DefaultExcelReportService implements ExcelReportService {
 
     private CreateReportGeneratorRequest toCreateReportGeneratorRequest(CreateExcelReportRequest reportRequest) {
         return CreateReportGeneratorRequest.builder()
-                .columnDataFormatList(reportRequest.getColumnDataFormatList())
-                .firstRowIndex(reportRequest.getFirstRowIndex())
-                .outputFile(reportRequest.getOutputFile())
-                .templatePath(reportRequest.getTemplatePath())
-                .templateVariableList(reportRequest.getTemplateVariableList())
-                .build();
+            .columnDataFormatList(reportRequest.getColumnDataFormatList())
+            .firstRowIndex(reportRequest.getFirstRowIndex())
+            .outputFile(reportRequest.getOutputFile())
+            .templatePath(reportRequest.getTemplatePath())
+            .templateVariableList(reportRequest.getTemplateVariableList())
+            .build();
     }
 }

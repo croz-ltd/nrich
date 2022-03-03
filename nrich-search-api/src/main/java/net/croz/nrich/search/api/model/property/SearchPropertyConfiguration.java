@@ -59,13 +59,13 @@ public class SearchPropertyConfiguration {
 
     public static SearchPropertyConfiguration defaultSearchPropertyConfiguration() {
         return new SearchPropertyConfigurationBuilder()
-                .rangeQuerySupportedClassList(Arrays.asList(Date.class, java.util.Date.class, Temporal.class, Number.class))
-                .defaultSubqueryJoinAttribute("id")
-                .rangeQueryFromIncludingSuffix("FromIncluding")
-                .rangeQueryFromSuffix("From")
-                .rangeQueryToIncludingSuffix("ToIncluding")
-                .rangeQueryToSuffix("To")
-                .collectionQuerySuffix("SearchList")
-                .build();
+            .rangeQuerySupportedClassList(Arrays.asList(Date.class, java.util.Date.class, Temporal.class, Number.class))
+            .defaultSubqueryJoinAttribute("id")
+            .rangeQueryFromIncludingSuffix("FromIncluding")
+            .rangeQueryFromSuffix("From")
+            .rangeQueryToIncludingSuffix("ToIncluding")
+            .rangeQueryToSuffix("To")
+            .collectionQuerySuffix("SearchList")
+            .build();
     }
 }
