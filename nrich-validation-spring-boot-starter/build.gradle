@@ -17,5 +17,6 @@ dependencies {
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.mockito:mockito-core"
+  testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework.boot:spring-boot-test"
 }

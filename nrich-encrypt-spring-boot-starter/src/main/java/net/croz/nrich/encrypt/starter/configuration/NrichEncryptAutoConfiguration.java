@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.keygen.KeyGenerators;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 @EnableConfigurationProperties(NrichEncryptProperties.class)
 @Configuration(proxyBeanMethods = false)
@@ -29,8 +29,8 @@ public class NrichEncryptAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
-        String password = StringUtils.isEmpty(encryptProperties.getEncryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptPassword();
-        String salt = StringUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptSalt();
+        String password = ObjectUtils.isEmpty(encryptProperties.getEncryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptPassword();
+        String salt = ObjectUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptSalt();
         BytesEncryptor encryptor = Encryptors.standard(password, salt);
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());
