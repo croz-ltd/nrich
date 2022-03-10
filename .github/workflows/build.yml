@@ -58,3 +58,16 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean build
+
+      - name: JaCoCo Coverage Report
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: aggregateJacocoReport
+
+      - name: Publish JaCoCo Coverage Report
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
+        uses: codecov/codecov-action@v2
+        with:
+          name: Aggregated JaCoCo Report
+          files: build/reports/jacoco/aggregate/jacocoTestReport.xml

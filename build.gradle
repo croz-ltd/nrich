@@ -2,6 +2,15 @@
 plugins {
   id "fr.brouillard.oss.gradle.jgitver" version "$gradleJgitverPluginVersion"
   id "io.github.gradle-nexus.publish-plugin" version "$gradlePublishPluginVersion"
+  id "org.kordamp.gradle.jacoco" version "$gradleKordampPluginVersion"
+}
+
+config {
+  coverage {
+    jacoco {
+      setToolVersion("$jacocoVersion")
+    }
+  }
 }
 
 jgitver {
@@ -39,7 +48,6 @@ subprojects {
     apply plugin: "java-platform"
   }
   else {
-    apply plugin: "jacoco"
     apply plugin: "java"
     apply plugin: "java-library"
 
@@ -88,22 +96,22 @@ subprojects {
 
         pom {
           name = getProject().getName()
-          description = "$projectDescription"
-          url = "$projectRepositoryUrl"
+          description = projectDescription
+          url = projectRepositoryUrl
 
           licenses {
             license {
-              name = "$licenseName"
-              url = "$licenseUrl"
+              name = licenseName
+              url = licenseUrl
             }
           }
 
           developers {
             developer {
-              name = "$developerName"
-              email = "$developerEmail"
-              organization = "$developerOrganization"
-              organizationUrl = "$developerOrganizationUrl"
+              name = developerName
+              email = developerEmail
+              organization = developerOrganization
+              organizationUrl = developerOrganizationUrl
             }
           }
 
@@ -111,7 +119,7 @@ subprojects {
           scm {
             connection = gitRepositoryUrl
             developerConnection = gitRepositoryUrl
-            url = "$projectRepositoryUrl"
+            url = projectRepositoryUrl
           }
         }
       }
@@ -137,7 +145,7 @@ nexusPublishing {
       nexusUrl = uri("$sonatypeNexusUrl/service/local/")
       snapshotRepositoryUrl = uri("$sonatypeNexusUrl/content/repositories/snapshots/")
 
-      username = "$sonatypeUsername"
+      username = sonatypeUsername
       password = System.getenv("SONATYPE_PASSWORD")
 
       // Specifying the configuration property explicitly rather than relying on the API call
