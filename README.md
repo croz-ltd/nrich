@@ -17,6 +17,10 @@ In Spring Boot environment only spring boot starter modules should be added as d
 
 nrich is composed of following modules:
 
+### nrich-bom
+
+Provides managed dependencies for all nrich modules as well as for libraries used inside those modules that are not covered by Spring Boot dependencies.
+
 ### nrich-core-api
 
 Contains common classes that are used throughout library

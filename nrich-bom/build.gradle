@@ -1,0 +1,13 @@
+List<Project> nrichProjectList = rootProject.subprojects.findAll { !it.name.endsWith(project.name) }.sort { it.name }
+
+dependencies {
+  constraints {
+    nrichProjectList.each {
+      api project(":${it.name}")
+    }
+
+    api "org.apache.poi:poi:$apachePoiVersion"
+    api "org.apache.poi:poi-ooxml:$apachePoiVersion"
+    api "org.modelmapper:modelmapper:$modelMapperVersion"
+  }
+}

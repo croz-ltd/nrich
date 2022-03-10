@@ -30,46 +30,60 @@ allprojects {
 }
 
 subprojects {
-  apply plugin: "jacoco"
-  apply plugin: "java"
-  apply plugin: "java-library"
+  boolean isPlatformProject = it.name.endsWith("bom")
+
   apply plugin: "maven-publish"
   apply plugin: "signing"
 
-  group = "net.croz.nrich"
+  if (isPlatformProject) {
+    apply plugin: "java-platform"
+  }
+  else {
+    apply plugin: "jacoco"
+    apply plugin: "java"
+    apply plugin: "java-library"
 
-  sourceCompatibility = "1.8"
+    sourceCompatibility = "1.8"
 
-  java {
-    ["envers", "reactor", "web", "webMvc", "webFlux"].forEach {
-      registerFeature(it) {
-        usingSourceSet(sourceSets.main)
+    java {
+      ["envers", "reactor", "web", "webMvc", "webFlux"].forEach {
+        registerFeature(it) {
+          usingSourceSet(sourceSets.main)
+        }
+      }
+
+      withSourcesJar()
+      withJavadocJar()
+    }
+
+    dependencies {
+      springBom platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+
+      constraints {
+        implementation "org.apache.poi:poi:$apachePoiVersion"
+        implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
+        implementation "org.modelmapper:modelmapper:$modelMapperVersion"
       }
     }
 
-    withSourcesJar()
-    withJavadocJar()
-  }
+    test {
+      useJUnitPlatform()
+      jvmArgs = ["-noverify", "-XX:TieredStopAtLevel=1"]
+    }
 
-  dependencies {
-    springBom platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+    tasks.withType(JavaCompile) {
+      options.encoding = "UTF-8"
 
-    constraints {
-      implementation "org.apache.poi:poi:$apachePoiVersion"
-      implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
-      implementation "org.modelmapper:modelmapper:$modelMapperVersion"
     }
   }
 
-  test {
-    useJUnitPlatform()
-    jvmArgs = ["-noverify", "-XX:TieredStopAtLevel=1"]
-  }
+  group = "net.croz.nrich"
 
   publishing {
     publications {
       mavenJava(MavenPublication) {
-        from components.java
+        from isPlatformProject ? components.javaPlatform : components.java
+
         suppressAllPomMetadataWarnings()
 
         pom {
@@ -93,7 +107,7 @@ subprojects {
             }
           }
 
-          def gitRepositoryUrl = "scm:git:${projectRepositoryUrl}.git"
+          String gitRepositoryUrl = "scm:git:${projectRepositoryUrl}.git"
           scm {
             connection = gitRepositoryUrl
             developerConnection = gitRepositoryUrl
@@ -108,10 +122,6 @@ subprojects {
     // The gpg private key needs to be stored in ascii-armored format
     useInMemoryPgpKeys(System.getenv("GPG_PRIVATE_KEY"), System.getenv("GPG_PASSPHRASE"))
     sign publishing.publications.mavenJava
-  }
-
-  tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
   }
 
   tasks.withType(Sign) {
