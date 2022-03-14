@@ -4,17 +4,20 @@
 
 ## Overview
 
-nrich-security-csrf is a library intended for CSRF protection. It generates a initial token from parameter initial token url and later expects token to be present in each request either as an HTTP
-parameter or HTTP header, if token is present it validates and refreshes token (token not present or invalid token generate a `CsrfTokenException`). It can function with Spring Web MVC and Spring
-WebFlux environments.
+`nrich-security-csrf` is a library intended for CSRF protection. It generates a initial token from initial token url and later expects token to be present in each request either as an HTTP
+parameter or HTTP header. If token is present it validates and refreshes token. If token is not present or the token is invalid, `CsrfTokenException` is thrown.
+It works in both Spring Web MVC and Spring WebFlux environments.
 
 ## Setting up Spring beans
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
 
     @Bean
     public CsrfTokenManagerService tokenManagerService() {
-        return new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1),, 128);
+        return new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
     }
 
     @Bean
@@ -32,16 +35,6 @@ WebFlux environments.
         return new CsrfInterceptor(csrfTokenManagerService, "X-CSRF-Token", "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
     }
 
-    // when in reactive environment (Spring WebFlux)
-    @Bean
-    public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService) {
-        CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
-
-        csrfExcludeConfig.setUri("app/app");
-
-        return new CsrfWebFilter(csrfTokenManagerService, "X-CSRF-Token", "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
-    }
-
     @Bean
     public WebMvcConfigurer csrfInterceptorWebMvcConfigurer(CsrfInterceptor csrfInterceptor) {
         return new WebMvcConfigurer() {
@@ -54,6 +47,16 @@ WebFlux environments.
         };
     }
 
+    // when in reactive environment (Spring WebFlux)
+    @Bean
+    public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService) {
+        CsrfExcludeConfig csrfExcludeConfig = new CsrfExcludeConfig();
+
+        csrfExcludeConfig.setUri("app/app");
+
+        return new CsrfWebFilter(csrfTokenManagerService, "X-CSRF-Token", "app/app", "/nrich/csrf/ping", Collections.singletonList(csrfExcludeConfig));
+    }
+}
 
 ```
 
@@ -61,14 +64,14 @@ WebFlux environments.
 uses `AES` algorithm for encryption with key length passed in as argument (in the former configuration it is 128). It also accepts token expiration interval, token future threshold (allows tokes to be
 in the future because of unsynchronized time between the client and server).
 
-`CsrfPingController` is a controller that will be used as a ping call for Csrf token.
+`CsrfPingController` is a controller that will be used for a ping call for Csrf token.
 
-`CsrfInterceptor` is used when in Spring Web MVC environment it is an implementation of `HandlerInterceptorAdapter` and it intercepts every request verifying token for every request except excluded
-list and adding generated token for initial token url. Besides `CsrfTokenManagerService` it accepts the token name, initial token url, ping url and a list of `CsrfExcludeConfig` that contains either
-urls or regex that matches urls that will be skipped for CSRF token verification.
+`CsrfInterceptor` is used when in Spring Web MVC environment. It is an implementation of `HandlerInterceptorAdapter` which intercepts every request and verifies token for every request
+except excluded list. It also adds generated token for initial token url. Besides `CsrfTokenManagerService` it accepts the token name, initial token url, ping url and a list of `CsrfExcludeConfig`
+that contains either urls or regex that matches urls that will be skipped for CSRF token verification.
 
-`CsrfWebFilter` is used when in Spring WebFlux environment it is an implementation of `WebFilter` it has the same behaviour and arguments as `CsrfInterceptor` with a difference it operates in reactive
-environment.
+`CsrfWebFilter` is used when in Spring WebFlux environment. It is an implementation of `WebFilter` and has the same behaviour and arguments as `CsrfInterceptor` with a difference it operates in
+reactive environment.
 
 ## Usage
 
