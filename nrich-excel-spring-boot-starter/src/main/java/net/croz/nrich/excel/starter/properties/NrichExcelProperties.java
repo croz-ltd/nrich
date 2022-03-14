@@ -31,27 +31,27 @@ import java.util.List;
 public class NrichExcelProperties {
 
     /**
-     * Date format used to set excel cell style for date values (i.e. {@link java.time.LocalDate})
+     * Date format used to set excel cell style for date values (i.e. {@link java.time.LocalDate}).
      */
     private final String dateFormat;
 
     /**
-     * Date time format used to set excel cell style for date time values (i.e. {@link java.time.LocalDateTime})
+     * Date time format used to set excel cell style for date time values (i.e. {@link java.time.LocalDateTime}).
      */
     private final String dateTimeFormat;
 
     /**
-     * Whether dateFormat or dateTimeFormat should be used for date time values
+     * Whether dateFormat or dateTimeFormat should be used for date time values.
      */
     private final boolean writeDateWithTime;
 
     /**
-     * Integer number format used to set excel cell style for integer numbers (short, integer, long, BigInteger)
+     * Integer number format used to set excel cell style for integer numbers (short, integer, long, BigInteger).
      */
     private final String integerNumberFormat;
 
     /**
-     * Decimal number format used to set excel cell style for decimal numbers (float, double, BigDecimal)
+     * Decimal number format used to set excel cell style for decimal numbers (float, double, BigDecimal).
      */
     private final String decimalNumberFormat;
 
@@ -61,7 +61,7 @@ public class NrichExcelProperties {
     private final List<TypeDataFormat> typeDataFormatList;
 
     /**
-     * Whether default converter {@link net.croz.nrich.excel.converter.DefaultCellValueConverter} should be enabled. It handles conversion of objects to values
+     * Whether default converter {@link net.croz.nrich.excel.converter.DefaultCellValueConverter} should be enabled. It handles conversion of objects to value
      * accepted by excel generator implementation.
      */
     private final boolean defaultConverterEnabled;
