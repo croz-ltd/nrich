@@ -68,7 +68,7 @@ public class RegistryPropertyConfiguration {
     private final String formLabel;
 
     /**
-     * Header for this property in grid view.
+     * Header for this property in table view.
      */
     private final String columnHeader;
 

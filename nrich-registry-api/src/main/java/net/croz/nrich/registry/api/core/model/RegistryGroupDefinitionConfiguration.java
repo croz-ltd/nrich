@@ -30,7 +30,7 @@ import java.util.List;
 public class RegistryGroupDefinitionConfiguration {
 
     /**
-     * Unique id of group
+     * Unique id of group.
      */
     private String groupId;
 
