@@ -46,7 +46,7 @@ public interface CsrfTokenKeyHolder {
     Key getCryptoKey();
 
     /**
-     * Stores crypto key
+     * Stores crypto key.
      *
      * @param cryptoKey crypto key to store
      */

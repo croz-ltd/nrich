@@ -36,7 +36,7 @@ public interface CsrfTokenManagerService {
      * Generates token from key resolved from {@link CsrfTokenKeyHolder} if key is null a new key is generated and stored.
      *
      * @param csrfTokenKeyHolder holder for csrf tokens and encryption keys
-     * @return generated CSRF token.
+     * @return generated CSRF token
      */
     String generateToken(CsrfTokenKeyHolder csrfTokenKeyHolder);
 
