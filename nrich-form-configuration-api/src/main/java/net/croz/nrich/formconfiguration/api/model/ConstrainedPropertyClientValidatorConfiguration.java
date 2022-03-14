@@ -30,22 +30,22 @@ import java.util.Map;
 public class ConstrainedPropertyClientValidatorConfiguration {
 
     /**
-     * Type of constrained property
+     * Type of constrained property.
      */
     private final Class<?> propertyType;
 
     /**
-     * Constraint name (i.e. NotNull)
+     * Constraint name (i.e. NotNull).
      */
     private final String name;
 
     /**
-     * Constraint arguments as a map
+     * Constraint arguments as a map.
      */
     private final Map<String, Object> argumentMap;
 
     /**
-     * Error message that should be shown if validation fails
+     * Error message that should be shown if validation fails.
      */
     private final String errorMessage;
 

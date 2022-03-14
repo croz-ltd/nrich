@@ -31,7 +31,7 @@ public interface FormConfigurationService {
      * Returns a list of {@link FormConfiguration} instances for a list of form ids.
      *
      * @param formIdList list of form ids for which to fetch form configuration
-     * @return a list of of form configuration instances
+     * @return a list of form configuration instances
      */
     List<FormConfiguration> fetchFormConfigurationList(List<String> formIdList);
 
