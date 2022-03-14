@@ -50,7 +50,7 @@ public interface LoggingService {
     void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData);
 
     /**
-     * Logs external exception (i.e. exceptions for which a class is not on classpath)
+     * Logs external exception (i.e. exceptions for which a class is not on classpath).
      *
      * @param exceptionClassName     class name of exception
      * @param exceptionMessage       exception message
