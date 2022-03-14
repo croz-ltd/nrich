@@ -4,21 +4,22 @@
 
 ## Overview
 
-nrich-webmvc library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
+`nrich-webmvc` library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
 `NotificationErrorHandlingRestControllerAdvice` and providing notification response to client. It also contains additional utility classes that disable binding of transient properties, convert empty
 strings to null etc.
 
-nrich-webmvc
-
 ## Setting up Spring beans
 
-nrich-webmvc depends on nrich-logging and nrich-notification libraries but users can provide their own implementations of `NotificationResponseService` and `LoggingService`.
+`nrich-webmvc` module depends on `nrich-logging` and `nrich-notification` modules but users can provide their own implementations of `NotificationResponseService` and `LoggingService`.
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
 
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
-       return new DefaultTransientPropertyResolverService();
+        return new DefaultTransientPropertyResolverService();
     }
 
     @Bean
@@ -43,9 +44,9 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 
     @Bean
     public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver() {
-        return new ConstrainedSessionLocaleResolver("en", Arrays.asList("en", "hr));
+        return new ConstrainedSessionLocaleResolver("en", Arrays.asList("en", "hr"));
     }
-
+}
 
 ```
 
@@ -76,13 +77,13 @@ Example response on exception is:
 
 ```json
 
- {
-   "notification": {
-     "title": "Error",
-     "content": "Error occurred",
-     "messageList": [],
-     "severity": "ERROR"
-   }
- }
+{
+    "notification": {
+        "title": "Error",
+        "content": "Error occurred",
+        "messageList": [],
+        "severity": "ERROR"
+    }
+}
 
 ```
