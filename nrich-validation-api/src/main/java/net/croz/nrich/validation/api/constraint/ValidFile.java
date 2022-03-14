@@ -59,7 +59,7 @@ public @interface ValidFile {
     String[] allowedContentTypeList() default {};
 
     /**
-     * Allowed extension list (case insensitive, empty value allows all content types).
+     * Allowed extension list (case-insensitive, empty value allows all content types).
      *
      * @return allowed extension list
      */

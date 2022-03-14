@@ -34,7 +34,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * The annotated element must be in the specified list of values. toString method is called on annotated element and
+ * The annotated element must be in the specified list of values. toString method is called on annotated element, and
  * it is validated against allowed list of values.
  */
 @SuppressWarnings("unused")

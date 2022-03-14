@@ -55,7 +55,7 @@ public @interface ValidSearchProperties {
     PropertyGroup[] propertyGroup();
 
     /**
-     * Holder for a list of property names
+     * Holder for a list of property names.
      */
     @Target(ANNOTATION_TYPE)
     @Retention(RUNTIME)

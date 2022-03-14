@@ -30,7 +30,7 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotated element from property must be less than (or equal to if inclusive is true) to to property.
+ * Annotated element from property must be less than (or equal to if inclusive is true) to property.
  */
 @SuppressWarnings("unused")
 @Target({ ANNOTATION_TYPE, TYPE_USE, TYPE })
@@ -61,9 +61,9 @@ public @interface ValidRange {
     String toPropertyName();
 
     /**
-     * Whether from property can be equal to to property.
+     * Whether from property can be equal to property.
      *
-     * @return whether property from can be equal to to property
+     * @return whether property from can be equal to property
      */
     boolean inclusive() default false;
 

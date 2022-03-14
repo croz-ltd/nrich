@@ -59,7 +59,7 @@ public @interface ValidFileResolvable {
     String allowedContentTypeListPropertyName() default "nrich.constraint.file.allowed-content-type-list";
 
     /**
-     * Property name from which allowed extension list is resolved (case insensitive, empty value allows all content types).
+     * Property name from which allowed extension list is resolved (case-insensitive, empty value allows all content types).
      *
      * @return allowed extension list
      */
