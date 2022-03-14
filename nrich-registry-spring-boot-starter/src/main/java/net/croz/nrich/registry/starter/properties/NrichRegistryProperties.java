@@ -31,17 +31,17 @@ import java.util.List;
 public class NrichRegistryProperties {
 
     /**
-     * List of property names that should always be marked as readonly
+     * List of property names that should always be marked as readonly.
      */
     private final List<String> defaultReadOnlyPropertyList;
 
     /**
-     * Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}
+     * Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}.
      */
     private final RegistrySearchProperties registrySearch;
 
     /**
-     * Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when querying registry is enabled
+     * Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when searching registry is enabled.
      */
     private final boolean defaultConverterEnabled;
 
@@ -62,22 +62,22 @@ public class NrichRegistryProperties {
     public static class RegistrySearchProperties {
 
         /**
-         * List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values
+         * List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
          */
         private final List<String> dateFormatList;
 
         /**
-         * List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value
+         * List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value.
          */
         private final List<String> decimalNumberFormatList;
 
         /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values
+         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values.
          */
         private final String booleanTrueRegexPattern;
 
         /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values
+         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values.
          */
         private final String booleanFalseRegexPattern;
 
