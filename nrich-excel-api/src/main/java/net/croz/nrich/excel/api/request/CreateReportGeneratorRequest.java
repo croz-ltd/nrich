@@ -35,7 +35,7 @@ public class CreateReportGeneratorRequest {
     private final OutputStream outputStream;
 
     /**
-     * Path to template (template is resolved from this path using Springs ResourceLoader)
+     * Path to template (template is resolved from this path using Springs ResourceLoader).
      */
     private final String templatePath;
 
@@ -50,7 +50,7 @@ public class CreateReportGeneratorRequest {
     private final List<ColumnDataFormat> columnDataFormatList;
 
     /**
-     * Row index from which data should be written to report (if for example template holds column headers in first couple of rows).
+     * Row index from which data should be written to report (if for example template holds column headers in first a couple of rows).
      */
     private final int firstRowIndex;
 

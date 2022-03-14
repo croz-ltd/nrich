@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Holder for variable that will be replaced in excel report template .
+ * Holder for variable that will be replaced in excel report template.
  * Variables are defined in template in following form <pre>${variableName}</pre>
  */
 @RequiredArgsConstructor

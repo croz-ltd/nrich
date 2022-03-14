@@ -25,7 +25,7 @@ import net.croz.nrich.excel.api.model.CellHolder;
 public interface CellValueConverter {
 
     /**
-     * Set cell value, perform conversion if necessary
+     * Set cell value, perform conversion if necessary.
      *
      * @param cell  cell to set value on
      * @param value value to set
@@ -33,7 +33,7 @@ public interface CellValueConverter {
     void setCellValue(CellHolder cell, Object value);
 
     /**
-     * Returns true if this converter supports cell and value combination
+     * Returns true if this converter supports cell and value combination.
      *
      * @param cell  cell that value will be set
      * @param value value to be set
