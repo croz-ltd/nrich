@@ -30,22 +30,22 @@ import java.util.List;
 public class NrichJacksonProperties {
 
     /**
-     * Whether empty strings should be converted to null values
+     * Whether empty strings should be converted to null values.
      */
     private final boolean convertEmptyStringsToNull;
 
     /**
-     * Whether class name should be serialized
+     * Whether class name should be serialized.
      */
     private final boolean serializeClassName;
 
     /**
-     * Whether class name should be serialized for classes annotated with JPA Entity annotation
+     * Whether class name should be serialized for classes annotated with JPA Entity annotation.
      */
     private final boolean serializeClassNameForEntityAnnotatedClasses;
 
     /**
-     * Package list for which class name should be also be serialized
+     * Package list for which class name should be also be serialized.
      */
     private final List<String> additionalPackageListForClassNameSerialization;
 
