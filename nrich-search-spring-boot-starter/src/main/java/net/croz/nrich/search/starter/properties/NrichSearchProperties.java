@@ -31,12 +31,12 @@ public class NrichSearchProperties {
 
     /**
      * String search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}
-     * that is used for string search by {@link net.croz.nrich.search.api.repository.StringSearchExecutor}
+     * that is used for string search by {@link net.croz.nrich.search.api.repository.StringSearchExecutor}.
      */
     private final StringSearchProperties stringSearch;
 
     /**
-     * Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when querying is enabled
+     * Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when querying is enabled.
      */
     private final boolean defaultConverterEnabled;
 
@@ -49,22 +49,22 @@ public class NrichSearchProperties {
     public static class StringSearchProperties {
 
         /**
-         * List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values
+         * List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
          */
         private final List<String> dateFormatList;
 
         /**
-         * List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value
+         * List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value.
          */
         private final List<String> decimalNumberFormatList;
 
         /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values
+         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values.
          */
         private final String booleanTrueRegexPattern;
 
         /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values
+         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values.
          */
         private final String booleanFalseRegexPattern;
 
