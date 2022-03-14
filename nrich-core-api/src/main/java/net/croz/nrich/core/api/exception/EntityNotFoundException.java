@@ -17,6 +17,10 @@
 
 package net.croz.nrich.core.api.exception;
 
+/**
+ * Exception indicating an entity has not been found.
+ * Inside the argument list a name and id of the entity can be provided and then a custom message can be resolved using those arguments.
+ */
 public class EntityNotFoundException extends RuntimeException implements ExceptionWithArguments {
 
     private final transient Object[] argumentList;

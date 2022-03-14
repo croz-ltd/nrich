@@ -17,6 +17,9 @@
 
 package net.croz.nrich.core.api.exception;
 
+/**
+ * Implementing this interface enables adding arguments for exception message resolving from <pre>{@code MessageSource}</pre>.
+ */
 public interface ExceptionWithArguments {
 
     Object[] getArgumentList();
