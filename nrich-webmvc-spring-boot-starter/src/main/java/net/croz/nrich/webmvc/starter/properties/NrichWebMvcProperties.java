@@ -30,42 +30,42 @@ import java.util.List;
 public class NrichWebMvcProperties {
 
     /**
-     * Whether {@link net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice} controller advice is enabled
+     * Whether {@link net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice} controller advice is enabled.
      */
     private final boolean controllerAdviceEnabled;
 
     /**
-     * Whether default {@link net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService} is enabled
+     * Whether default {@link net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService} is enabled.
      */
     private final boolean exceptionAuxiliaryDataResolvingEnabled;
 
     /**
-     * Whether empty strings should be converted to null when binding requests
+     * Whether empty strings should be converted to null when binding requests.
      */
     private final boolean convertEmptyStringsToNull;
 
     /**
-     * Whether transient fields should be ignored when binding requests
+     * Whether transient fields should be ignored when binding requests.
      */
     private final boolean ignoreTransientFields;
 
     /**
-     * List of exceptions that will be unwrapping their cause
+     * List of exceptions that will be unwrapping their cause.
      */
     private final List<String> exceptionToUnwrapList;
 
     /**
-     * List of exception auxiliary data to be included in notification sent to client
+     * List of exception auxiliary data to be included in notification sent to client.
      */
     private final List<String> exceptionAuxiliaryDataToIncludeInNotification;
 
     /**
-     * Optional property. Default locale
+     * Optional property. Default locale.
      */
     private final String defaultLocale;
 
     /**
-     * Optional property. List of locales users can set
+     * Optional property. List of locales users can set.
      */
     private final List<String> allowedLocaleList;
 

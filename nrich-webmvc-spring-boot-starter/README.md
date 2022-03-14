@@ -4,9 +4,9 @@
 
 ## Overview
 
-Spring Boot starter for `nrich-webmvc` module. The main purpose of `nrich-webmvc` is to provide an `@RestController` advice that handles exceptions. Exceptions are logged using `nrich-logging`
+Spring Boot starter for `nrich-webmvc` module. The main purpose of `nrich-webmvc` module is to provide an `@RestController` advice that handles exceptions. Exceptions are logged using `nrich-logging`
 module and a notification is created using `nrich-notification` module. Other useful features include providing a way of adding additional data to responses by implementing
-`ExceptionAuxiliaryDataResolverService` (default implementation is provided), resolving status of exceptions, limiting locale selection ignoring serialization of transient properties and converting
+`ExceptionAuxiliaryDataResolverService` (default implementation is provided), resolving status of exceptions, limiting locale selection, ignoring serialization of transient properties and converting
 empty strings to null. Starter module provides a `@Configuration` class (`NrichWebMvcAutoConfiguration`) with default configuration of `nrich-webmvc` module
 (while allowing for overriding with conditional annotations) and `@ConfigurationProperties` class (`NrichWebMvcProperties`) with default configured values
 and does automatic registration through `spring.factories`.
