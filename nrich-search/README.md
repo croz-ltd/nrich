@@ -4,20 +4,29 @@
 
 ## Overview
 
-nrich-search is a library whose purpose is to make querying of JPA entities easier. Motivation for it creation were complex search form on multiple projects. It build on top of Spring Data JPA library
-and takes care of query composition from classes holding property values and addition `SearchConfigration` that defines how those property values should be applied (i.e. what operator should be used),
-what clases should be returned etc.
+`nrich-search` is a library whose purpose is to make querying of JPA entities easier. Motivation for its creation were complex search forms on multiple projects. It's built on top of Spring Data JPA
+library and takes care of query composition from classes holding property values and additional `SearchConfigration` that defines how those property values should be applied (i.e. what operator should
+be used), what classes should be returned etc.
 
 ## Setting up Spring beans
 
-To be able to use this library Jpa repositories should be enabled with custom factory by placing `@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)`
+To be able to use this library JPA repositories should be enabled with custom factory by placing `@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)`
 annotation on `@Configuration` class and following beans should be defined in context:
 
-```
+```java
+
+@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)
+@Configuration(proxyTargetClass = false)
+public class ApplicationConfiguration {
 
     @Bean
-    public StringToTypeConverter<?> defaultStringToTypeConverter() {
-        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'"), Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$");
+    public StringToTypeConverter<Object> defaultStringToTypeConverter() {
+        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm");
+        List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
+        String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
+        String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
+
+        return new DefaultStringToTypeConverter(dateFormatList, decimalFormatList, booleanTrueRegexPattern, booleanFalseRegexPattern);
     }
 
     @Bean
@@ -29,29 +38,31 @@ annotation on `@Configuration` class and following beans should be defined in co
     public RepositoryFactorySupportFactory searchRepositoryFactorySupportFactory(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
         return new SearchRepositoryFactorySupportFactory(stringToEntityPropertyMapConverter);
     }
+}
 
 ```
 
-`StringToTypeConverter<?>` performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
-accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
+`StringToTypeConverter<Object>` performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
+accepts a list of data formats and regular expressions that are used to convert string to type found in properties of entity classes.
 
-`StringToEntityPropertyMapConverter` is also used for querying registry entities, it is responsible for assembling conditions Map from query string and a list of properties to search (
+`StringToEntityPropertyMapConverter` is also used for querying registry entities. It is responsible for creating conditions from query string and a list of properties to search (
 conversion to typed instances is delegated to `StringToTypeConverter<?>`). When searching using `StringSearchExecutor` it accepts a query string, and a list of properties to be searched that are then
 converted using  `StringToEntityPropertyMapConverter` to properties.
 
-`RepositoryFactorySupportFactory` implementation `SearchRepositoryFactorySupportFactory` is reponsible for creating backing classes for repository that implement `StringSearchExecutor` or
-`SearchExecutor` interfaces.
+`RepositoryFactorySupportFactory` implementation `SearchRepositoryFactorySupportFactory` is responsible for creating backing classes for repositories that implement `StringSearchExecutor` or
+`SearchExecutor` interface.
 
 ## Usage
 
-Users have htree interfaces available for usage `SearchExecutor`, `StringSearchExecutor` and `NaturalIdSearchExecutor`. First accepts a class holding properties that will be used for query creation and `SearchConfiguration` and
-second accepts a query string, list of properties for search and `SearchConfiguration`, second is best used for quick search functionality and former for standard search form functionality.
-`NaturalIdSearchExecturor` only works with Hibernate JPA implementation and enables users to search entities by properties annotated with `@NaturalId` annotation.
+Users have three interfaces available for usage `SearchExecutor`, `StringSearchExecutor` and `NaturalIdSearchExecutor`. `SearchExecutor` accepts a class holding properties that will be used for query
+creation and `SearchConfiguration`, it is best used for standard search form functionality. `StringSearchExecutor`  accepts a query string, list of properties for search
+and `SearchConfiguration` it is best used for quick search functionality. `NaturalIdSearchExecturor` only works with Hibernate JPA implementation and enables users to search entities by properties
+annotated with `@NaturalId` annotation.
 Since this library augments Spring Data JPA in their own repository interfaces users should also implement one of Spring Data JPA repository interfaces.
 
 A custom repository interface for searching entities of type Car:
 
-```
+```java
 
 @Setter
 @Getter
@@ -79,7 +90,7 @@ public class Car {
 
 looks like this (if both standard and quick search functionality is required)
 
-```
+```java
 
 
 public interface CarRepository extends JpaRepository<Car, Long>, SearchExecutor<Car>, StringSearchExecutor<Car> {
@@ -89,10 +100,10 @@ public interface CarRepository extends JpaRepository<Car, Long>, SearchExecutor<
 
 ```
 
-When searching for Car instances using `SearchExecutor<Car>` it is necessary to define a class holding all properties that will be searched in this case that would look something like this
-(`BaseSortablePageableRequest` is a class provided by library but it is not strictly necessary to extend it just makes it easier to handle paging and sorting parameters):
+When searching for Car instances using `SearchExecutor<Car>` it is necessary to define a class holding all properties that will be searched. In this case that would look something like this
+(`BaseSortablePageableRequest` is a class provided by library, but it is not strictly necessary to extend it just makes it easier to handle paging and sorting parameters):
 
-```
+```java
 
 @Setter
 @Getter
@@ -118,9 +129,9 @@ public class SearchCarRequest extends BaseSortablePageableRequest {
 
 ```
 
-Assuming we want to return a projection instead of Car entities then we would also define a projection class.
+Assuming we want to return a projection instead of Car entities then we would also define a projection class:
 
-```
+```java
 
 @RequiredArgsConstructor
 @Getter
@@ -137,7 +148,7 @@ public class CarSearchResult {
     @Projection(path = "carType.make")
     private final String carTypeMake;
 
-    @Projection(path = "carType.make")
+    @Projection(path = "carType.model")
     private final String carTypeModel;
 }
 
@@ -146,23 +157,29 @@ public class CarSearchResult {
 
 Then in our service we would invoke it like this:
 
-```
+```java
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class CarSearchDemoService {
+public class CarSearchService {
 
     private final CarRepository carRepository;
 
     public Page<CarSearchResult> search(SearchCarRequest request) {
-        SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+        SearchConfiguration<Car, CarSearchResult, SearchCarRequest> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, SearchCarRequest>builder()
+            .resolvePropertyMappingUsingPrefix(true)
+            .resultClass(CarSearchResult.class)
+            .build();
 
         return carRepository.findAll(request, searchConfiguration, PageableUtil.convertToPageable(request));
     }
 
     public List<CarSearchResult> simpleSearch(String query) {
-        SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder().resolvePropertyMappingUsingPrefix(true).resultClass(CarSearchResult.class).build();
+        SearchConfiguration<Car, CarSearchResult, Map<String, Object>> searchConfiguration = SearchConfiguration.<Car, CarSearchResult, Map<String, Object>>builder()
+            .resolvePropertyMappingUsingPrefix(true)
+            .resultClass(CarSearchResult.class)
+            .build();
 
         return carSearchRepository.findAll(query, Arrays.asList("registrationNumber", "price"), searchConfiguration);
     }
@@ -182,8 +199,8 @@ projections using `projectionList` property, users can define joins (fetches) (s
 by using `joinList`. `resolvePropertyMappingUsingPrefix` resolves properties by prefix but it is also possible to write explicit property mapping from search request to searched entity by using
 `propertyMappingList`. Default operators (see `DefaultSearchOperator`) are for String ILIKE (uses `criteriaBuilder.like` with lower call before), for range search GT (
 uses `criteriaBuilder.greaterThan`), LT (uses `criteriaBuilder.lessThan`), GE (uses `criteriaBuilder.greaterThanOrEqualTo`), LE (uses `criteriaBuilder.lessThanOrEqualTo`) and for all other classes EQ
-but this cane be overriden either on type level or on property level by using `searchOperatorOverrideList`. Queries on plural associations are done using exists query (to avoid duplicate results) but
-that can be overriden by property `pluralAssociationRestrictionType`. Additional restrictions (not dependent on data in search request, for example security restrictions) can be specified
+but this cane be overridden either on type level or on property level by using `searchOperatorOverrideList`. Queries on plural associations are done using exists query (to avoid duplicate results) but
+that can be overridden by property `pluralAssociationRestrictionType`. Additional restrictions (not dependent on data in search request, for example security restrictions) can be specified
 using `additionalRestrictionResolverList`. When searching also by entity that doesn't have a direct association to root entity `subqueryConfigurationList` property needs to be defined.
 `SearchConfigration` also supports matching any value (or operator is used when creating query) by setting `anyMatch` parameter to `true` or matching all values (default behaviour) and operator is
 used for query.
