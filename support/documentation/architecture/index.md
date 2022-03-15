@@ -11,3 +11,4 @@ The template is copied from https://github.com/adr/madr.
 - [ADR-0003 - Use Lombok](decisions/0003-use-lombok.md)
 - [ADR-0004 - Project structure](decisions/0004-project-structure.md)
 - [ADR-0005 - Use JUnit 5 with AssertJ and Mockito](decisions/0005-use-junit5-with-assertj-and-mockito.md)
+- [ADR-0006 - Test structure](decisions/0006-test-structure.md)
