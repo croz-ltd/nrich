@@ -10,3 +10,4 @@ The template is copied from https://github.com/adr/madr.
 - [ADR-0002 - Use Java version 8](decisions/0002-use-java-version-8.md)
 - [ADR-0003 - Use Lombok](decisions/0003-use-lombok.md)
 - [ADR-0004 - Project structure](decisions/0004-project-structure.md)
+- [ADR-0005 - Use JUnit 5 with AssertJ and Mockito](decisions/0005-use-junit5-with-assertj-and-mockito.md)
