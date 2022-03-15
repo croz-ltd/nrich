@@ -40,6 +40,7 @@ public class NrichWebMvcAutoConfiguration {
         return new DefaultExceptionAuxiliaryDataResolverService();
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(NrichWebMvcProperties webMvcProperties, TransientPropertyResolverService transientPropertyResolverService) {
         return new ControllerEditorRegistrationAdvice(webMvcProperties.isConvertEmptyStringsToNull(), webMvcProperties.isIgnoreTransientFields(), transientPropertyResolverService);
@@ -54,9 +55,8 @@ public class NrichWebMvcAutoConfiguration {
     @ConditionalOnProperty(name = "nrich.webmvc.controller-advice-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
     public NotificationErrorHandlingRestControllerAdvice notificationRestControllerAdvice(NrichWebMvcProperties webMvcProperties, NotificationResponseService<?> notificationResponseService,
-                                                                                          LoggingService loggingService,
-                                                                                          @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService,
-                                                                                          ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
+                                                                                          LoggingService loggingService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService,
+                                                                                          @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(
             webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService,
             exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService
@@ -64,6 +64,7 @@ public class NrichWebMvcAutoConfiguration {
     }
 
     @ConditionalOnPropertyNotEmpty("nrich.webmvc.allowed-locale-list")
+    @ConditionalOnMissingBean
     @Bean
     public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(NrichWebMvcProperties webMvcProperties) {
         return new ConstrainedSessionLocaleResolver(webMvcProperties.getDefaultLocale(), webMvcProperties.getAllowedLocaleList());
