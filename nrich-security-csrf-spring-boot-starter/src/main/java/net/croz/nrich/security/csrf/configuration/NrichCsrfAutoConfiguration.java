@@ -35,6 +35,7 @@ public class NrichCsrfAutoConfiguration {
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean
     @Bean
     public CsrfInterceptor csrfInterceptor(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfInterceptor(
@@ -43,6 +44,7 @@ public class NrichCsrfAutoConfiguration {
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
+    @ConditionalOnMissingBean
     @Bean
     public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfWebFilter(

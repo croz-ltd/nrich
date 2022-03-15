@@ -157,7 +157,8 @@ public class NrichRegistryAutoConfiguration {
         return new DefaultRegistryConfigurationService(messageSource, readOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap);
     }
 
-    @ConditionalOnWebApplication
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean
     @Bean
     public RegistryConfigurationController registryConfigurationController(RegistryConfigurationService registryConfigurationService) {
         return new RegistryConfigurationController(registryConfigurationService);
@@ -171,6 +172,7 @@ public class NrichRegistryAutoConfiguration {
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
                                                    RegistryConfigurationResolverService registryConfigurationResolverService,
@@ -192,13 +194,15 @@ public class NrichRegistryAutoConfiguration {
         return new DefaultRegistryDataRequestConversionService(objectMapper, registryDataConfigurationHolder);
     }
 
-    @ConditionalOnWebApplication
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean
     @Bean
     public RegistryDataController registryDataController(RegistryDataService registryDataService, RegistryDataRequestConversionService registryDataRequestConversionService, Validator validator) {
         return new RegistryDataController(registryDataService, registryDataRequestConversionService, validator);
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
+    @ConditionalOnMissingBean
     @Bean
     public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
                                                          RegistryEntityFinderService registryEntityFinderService) {
@@ -209,13 +213,15 @@ public class NrichRegistryAutoConfiguration {
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
-    @ConditionalOnWebApplication
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean
     @Bean
     public RegistryHistoryController registryHistoryController(RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
     }
 
     @ConditionalOnBean(name = FORM_CONFIGURATION_MAPPING_BEAN_NAME)
+    @ConditionalOnMissingBean
     @Bean
     public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService,
                                                                                                      @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {

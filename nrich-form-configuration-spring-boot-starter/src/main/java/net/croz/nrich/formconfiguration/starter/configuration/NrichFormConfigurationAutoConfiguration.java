@@ -58,6 +58,7 @@ public class NrichFormConfigurationAutoConfiguration {
         return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList);
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
         return new FormConfigurationController(formConfigurationService);
