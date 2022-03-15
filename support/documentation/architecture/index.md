@@ -9,3 +9,4 @@ The template is copied from https://github.com/adr/madr.
 - [ADR-0001 - Record architecture decisions](decisions/0001-record-architecture-decisions.md)
 - [ADR-0002 - Use Java version 8](decisions/0002-use-java-version-8.md)
 - [ADR-0003 - Use Lombok](decisions/0003-use-lombok.md)
+- [ADR-0004 - Project structure](decisions/0004-project-structure.md)
