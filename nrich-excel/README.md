@@ -5,7 +5,7 @@
 ## Overview
 
 nrich-excel is a library intended to simplify excel report generation for simple reports (i.e. exporting search results). It uses Apache POI library for excel creation. Excel reports are generated
-from templates (standard excel files) and library also supports template variable resolving.
+from templates (standard excel files) and library also supports template variable resolving. The data is written to a provided OutputStream (users are expected to close it, library doesn't close it).
 
 ## Setting up Spring beans
 
@@ -45,7 +45,7 @@ that uses Apache POI library for writing data.
 
 ## Usage
 
-To be able to create reports users should inject `ExcelReportService` and call `File createExcelReport(CreateExcelReportRequest request)`
+To be able to create reports users should inject `ExcelReportService` and call `void createExcelReport(CreateExcelReportRequest request)`
 method.
 
 Method accepts argument of type `CreateExcelReportRequest` when processing report `ExcelReportService` will then call `Object[][] resolveMultiRowData(int start, int limit)` method
@@ -103,9 +103,12 @@ Example usage of `ExcelReportService` is:
     // data format for columns 2 and 3 is overriden one date is written with dd-MM-yyyy format and another with dd-MM-yyyy HH:mm format
     List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
 
-    // first row index is 3 since first two rows contain column headers
-    CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputFile(file).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
+    try (FileOutputStream outputStream = new FileOutputStream(file)) {
+        // first row index is 3 since first two rows contain column headers
+        CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputStream(outputStream).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
 
-    File createdFile = ExcelReportService.createExcelReport(request);
+        excelReportService.createExcelReport(request);
+    }
+
 
 ```
