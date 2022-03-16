@@ -9,7 +9,6 @@ import net.croz.nrich.excel.api.request.CreateReportGeneratorRequest;
 import net.croz.nrich.excel.api.service.ExcelReportService;
 import org.springframework.util.Assert;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ public class DefaultExcelReportService implements ExcelReportService {
     private final ExcelReportGeneratorFactory excelReportGeneratorFactory;
 
     @Override
-    public File createExcelReport(CreateExcelReportRequest request) {
+    public void createExcelReport(CreateExcelReportRequest request) {
         Assert.notNull(request.getMultiRowDataProvider(), "Row data provider cannot be null!");
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
@@ -44,16 +43,14 @@ public class DefaultExcelReportService implements ExcelReportService {
             start += limit;
         }
 
-        excelReportGenerator.flushAndClose();
-
-        return request.getOutputFile();
+        excelReportGenerator.flush();
     }
 
     private CreateReportGeneratorRequest toCreateReportGeneratorRequest(CreateExcelReportRequest reportRequest) {
         return CreateReportGeneratorRequest.builder()
             .columnDataFormatList(reportRequest.getColumnDataFormatList())
             .firstRowIndex(reportRequest.getFirstRowIndex())
-            .outputFile(reportRequest.getOutputFile())
+            .outputStream(reportRequest.getOutputStream())
             .templatePath(reportRequest.getTemplatePath())
             .templateVariableList(reportRequest.getTemplateVariableList())
             .build();

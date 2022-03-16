@@ -2,19 +2,16 @@ package net.croz.nrich.excel.api.service;
 
 import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 
-import java.io.File;
-
 /**
- * Creates and writes excel report to a file.
+ * Creates and writes excel report to the provided OutputStream.
  */
 public interface ExcelReportService {
 
     /**
-     * Returns file with excel report data written to it.
+     * Writes the excel report to  the provided OutputStream.
      *
      * @param request configuration options for excel report with data to be written
-     * @return file with excel report
      */
-    File createExcelReport(CreateExcelReportRequest request);
+    void createExcelReport(CreateExcelReportRequest request);
 
 }

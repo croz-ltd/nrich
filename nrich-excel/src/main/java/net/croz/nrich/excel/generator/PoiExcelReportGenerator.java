@@ -16,9 +16,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private final List<CellValueConverter> cellValueConverterList;
 
-    private final File outputFile;
+    private final OutputStream outputStream;
 
     private final SXSSFWorkbook workbook;
 
@@ -50,10 +49,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private boolean templateOpen = true;
 
-    public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, File outputFile, InputStream template, List<TemplateVariable> templateVariableList,
+    public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
                                    List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
         this.cellValueConverterList = cellValueConverterList;
-        this.outputFile = outputFile;
+        this.outputStream = outputStream;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
         this.sheet = workbook.getSheetAt(0);
         this.creationHelper = workbook.getCreationHelper();
@@ -80,10 +79,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     @SneakyThrows
     @Override
-    public void flushAndClose() {
-        try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-            workbook.write(outputStream);
-        }
+    public void flush() {
+        workbook.write(outputStream);
         this.templateOpen = false;
     }
 

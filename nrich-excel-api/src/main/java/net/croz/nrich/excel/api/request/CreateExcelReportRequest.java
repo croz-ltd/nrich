@@ -6,7 +6,7 @@ import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.MultiRowDataProvider;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 
-import java.io.File;
+import java.io.OutputStream;
 import java.util.List;
 
 @Getter
@@ -14,9 +14,9 @@ import java.util.List;
 public class CreateExcelReportRequest {
 
     /**
-     * File where report will be written to.
+     * OutputStream where report will be written to (keep in mind closing of it is users responsibility).
      */
-    private final File outputFile;
+    private final OutputStream outputStream;
 
     /**
      * Path to template (template is resolved from this path using Springs ResourceLoader)
