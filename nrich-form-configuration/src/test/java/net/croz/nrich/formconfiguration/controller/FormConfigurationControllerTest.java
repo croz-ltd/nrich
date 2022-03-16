@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,23 +37,19 @@ class FormConfigurationControllerTest {
     @InjectMocks
     private FormConfigurationController formConfigurationController;
 
-    private MockMvc mockMvc;
-
-    @BeforeEach
-    void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(formConfigurationController).build();
-    }
-
-    @Test
-    void shouldReturnFormConfiguration() throws Exception {
+    @CsvSource({ ",/nrich/form/configuration/fetch", "/api/form/configuration,/api/form/configuration/fetch" })
+    @ParameterizedTest
+    void shouldReturnFormConfiguration(String endpointPath, String uri) throws Exception {
         // given
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(formConfigurationController).addPlaceholderValue("nrich.form-configuration.endpoint-path", endpointPath).build();
+
         FetchFormConfigurationRequest request = createFetchFormConfigurationRequest();
         FormConfiguration formConfiguration = createFormConfiguration();
 
         doReturn(Collections.singletonList(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList(request.getFormIdList());
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/form/configuration/fetch")
+        MockHttpServletResponse response = mockMvc.perform(post(uri)
             .content(objectMapper.writeValueAsString(request)).accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
