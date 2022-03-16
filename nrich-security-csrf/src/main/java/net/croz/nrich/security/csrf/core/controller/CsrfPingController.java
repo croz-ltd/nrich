@@ -15,7 +15,7 @@ public class CsrfPingController {
 
     private static final String SUCCESS_KEY = "success";
 
-    @RequestMapping(CsrfConstants.CSRF_DEFAULT_PING_URI)
+    @RequestMapping("${nrich.security.csrf.endpoint-path:" + CsrfConstants.CSRF_DEFAULT_PING_URI + "}")
     @ResponseBody
     public Map<String, Boolean> ping() {
         Map<String, Boolean> result = new HashMap<>();

@@ -1,7 +1,7 @@
 package net.croz.nrich.security.csrf.core.controller;
 
-import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,12 +13,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 class CsrfPingControllerTest {
 
-    private final MockMvc mockMvc = MockMvcBuilders.standaloneSetup(CsrfPingController.class).build();
+    @CsvSource({ ",/nrich/csrf/ping", "/api/csrf/ping,/api/csrf/ping" })
+    @ParameterizedTest
+    void shouldReturnPingRequest(String endpointPath, String uri) throws Exception {
+        // given
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(CsrfPingController.class).addPlaceholderValue("nrich.security.csrf.endpoint-path", endpointPath).build();
 
-    @Test
-    void shouldReturnPingRequest() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post(CsrfConstants.CSRF_DEFAULT_PING_URI).accept(MediaType.APPLICATION_JSON)
+        MockHttpServletResponse response = mockMvc.perform(post(uri).accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // then
