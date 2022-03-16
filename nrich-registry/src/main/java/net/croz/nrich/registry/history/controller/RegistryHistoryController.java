@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("${croz.nrich.registry.domain:}/nrich/registry/history")
+@RequestMapping("${nrich.registry.history.endpoint-path:nrich/registry/history}")
 @ResponseBody
 public class RegistryHistoryController {
 

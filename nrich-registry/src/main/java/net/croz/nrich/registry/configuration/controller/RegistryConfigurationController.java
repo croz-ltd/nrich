@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("${croz.nrich.registry.domain:}/nrich/registry/configuration")
+@RequestMapping("${nrich.registry.configuration.endpoint-path:nrich/registry/configuration}")
 @ResponseBody
 public class RegistryConfigurationController {
 

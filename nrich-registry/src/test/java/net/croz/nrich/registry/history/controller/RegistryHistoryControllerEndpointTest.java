@@ -13,7 +13,7 @@ import static net.croz.nrich.registry.history.testutil.RegistryHistoryGenerating
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@TestPropertySource(locations = "/application-test.yml")
+@TestPropertySource(properties = "nrich.registry.history.endpoint-path=api/registry/history")
 class RegistryHistoryControllerEndpointTest extends BaseWebTest {
 
     @Test
@@ -22,7 +22,7 @@ class RegistryHistoryControllerEndpointTest extends BaseWebTest {
         ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), 1L);
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/domain/nrich/registry/history/list")
+        MockHttpServletResponse response = mockMvc.perform(post("/api/registry/history/list")
             .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then
