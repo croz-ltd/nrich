@@ -1,3 +1,5 @@
+description = "Nrich Registry API"
+
 dependencies {
   api project(":nrich-search-api")
 

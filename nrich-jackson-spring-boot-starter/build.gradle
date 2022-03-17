@@ -1,3 +1,5 @@
+description = "Nrich Jackson Spring Boot starter. Additionally configures some useful defaults for Jackson"
+
 dependencies {
   annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
   annotationProcessor "org.projectlombok:lombok"

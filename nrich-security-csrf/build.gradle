@@ -1,3 +1,5 @@
+description = "Provides CSRF support"
+
 dependencies {
   api project(":nrich-security-csrf-api")
 

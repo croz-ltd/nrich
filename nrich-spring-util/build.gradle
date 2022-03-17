@@ -1,3 +1,5 @@
+description = "Provides additional functionality on top of Spring"
+
 dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"

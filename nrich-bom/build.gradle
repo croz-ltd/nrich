@@ -1,3 +1,5 @@
+description = "Nrich Bill of Materials (BOM)"
+
 List<Project> nrichProjectList = rootProject.subprojects.findAll { !it.name.endsWith(project.name) }.sort { it.name }
 
 dependencies {

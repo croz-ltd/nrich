@@ -1,3 +1,5 @@
+description = "Nrich Web MVC Spring Boot starter"
+
 dependencies {
   api project(":nrich-webmvc-api")
 

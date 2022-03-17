@@ -1,3 +1,5 @@
+description = "Nrich Search Repository API"
+
 dependencies {
   api project(":nrich-search-api")
   api "org.springframework.data:spring-data-commons"

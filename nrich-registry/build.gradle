@@ -1,3 +1,8 @@
+description = """
+  Provides a representation of JPA entities in a format that can be used on the client side to build dynamic forms and tables,
+  as well as a REST API for querying, updating and deleting those entities
+"""
+
 dependencies {
   api project(":nrich-registry-api")
   api "jakarta.validation:jakarta.validation-api"

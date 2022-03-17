@@ -1,3 +1,5 @@
+description = "Nrich Logging API"
+
 dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"

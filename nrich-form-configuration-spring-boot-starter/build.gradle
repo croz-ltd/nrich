@@ -1,3 +1,5 @@
+description = "Nrich Form Configuration Spring Boot starter"
+
 dependencies {
   api project(":nrich-form-configuration-api")
 
