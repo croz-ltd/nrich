@@ -10,13 +10,13 @@ import org.springframework.test.context.TestPropertySource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@TestPropertySource(locations = "/application-test.yml")
+@TestPropertySource(properties = "nrich.registry.configuration.endpoint-path=api/registry/configuration")
 class RegistryConfigurationControllerEndpointTest extends BaseWebTest {
 
     @Test
     void shouldFetchRegistryConfiguration() throws Exception {
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/domain/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        MockHttpServletResponse response = mockMvc.perform(post("/api/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
         // then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

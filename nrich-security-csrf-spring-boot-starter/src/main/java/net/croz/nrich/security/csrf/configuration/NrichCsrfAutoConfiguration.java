@@ -1,7 +1,6 @@
 package net.croz.nrich.security.csrf.configuration;
 
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
-import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
 import net.croz.nrich.security.csrf.core.service.AesCsrfTokenManagerService;
 import net.croz.nrich.security.csrf.properties.NrichCsrfProperties;
@@ -28,7 +27,7 @@ public class NrichCsrfAutoConfiguration {
         return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getCryptoKeyLength());
     }
 
-    @ConditionalOnProperty(name = "nrich.security.csrf.csrf-ping-url", havingValue = CsrfConstants.CSRF_DEFAULT_PING_URI, matchIfMissing = true)
+    @ConditionalOnMissingBean
     @Bean
     public CsrfPingController csrfPingController() {
         return new CsrfPingController();

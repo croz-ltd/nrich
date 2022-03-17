@@ -13,7 +13,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@TestPropertySource(locations = "/application-test.yml")
+@TestPropertySource(properties = "nrich.registry.data.endpoint-path=api/registry/data")
 class RegistryDataControllerEndpointTest extends BaseWebTest {
 
     @Test
@@ -23,7 +23,7 @@ class RegistryDataControllerEndpointTest extends BaseWebTest {
 
         // when
         MockHttpServletResponse response = mockMvc.perform(
-            post("/domain/nrich/registry/data/list").contentType(MediaType.APPLICATION_JSON)
+            post("/api/registry/data/list").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
 
         // then

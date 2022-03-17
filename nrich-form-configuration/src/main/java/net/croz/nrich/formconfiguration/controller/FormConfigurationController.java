@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("nrich/form/configuration")
+@RequestMapping("${nrich.form-configuration.endpoint-path:nrich/form/configuration}")
 public class FormConfigurationController {
 
     private final FormConfigurationService formConfigurationService;
