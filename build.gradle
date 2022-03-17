@@ -95,8 +95,11 @@ subprojects {
         suppressAllPomMetadataWarnings()
 
         pom {
-          name = getProject().getName()
-          description = projectDescription
+          afterEvaluate {
+            name = project.name
+            description = project.description
+          }
+
           url = projectRepositoryUrl
 
           licenses {
