@@ -8,15 +8,18 @@ import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.bean.MapSupportingDirectFieldAccessFallbackBeanWrapper;
 import net.croz.nrich.search.model.AttributeHolder;
+import net.croz.nrich.search.model.AttributeHolderWithPath;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
+import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -61,7 +64,7 @@ public class SearchDataParser {
 
             AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(fieldNameWithoutPrefixAndSuffix);
 
-            if (attributeHolder.getAttribute() != null) {
+            if (attributeHolder.isFound()) {
                 String currentPath = resolveCurrentPath(path, fieldNameWithoutPrefixAndSuffix);
 
                 if (attributeHolder.getManagedType() != null) {
@@ -74,14 +77,11 @@ public class SearchDataParser {
                 restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isPluralAttribute));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
-                String mappedPath = resolveAttributeHolderFromSecurityConfiguration(originalFieldName);
+                AttributeHolderWithPath attributeWithPath = resolveAttributeFromSearchConfigurationOrPrefix(attributeResolver, originalFieldName);
 
-                if (mappedPath != null) {
-                    attributeHolder = attributeResolver.resolveAttributeByPath(mappedPath);
-
-                    if (attributeHolder.getAttribute() != null) {
-                        restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, mappedPath, value, attributeHolder.isPlural()));
-                    }
+                if (attributeWithPath.isFound()) {
+                    attributeHolder = attributeWithPath.getAttributeHolder();
+                    restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, attributeWithPath.getPath(), value, attributeHolder.isPlural()));
                 }
             }
         });
@@ -99,13 +99,15 @@ public class SearchDataParser {
                 .collect(Collectors.toList());
         }
 
-        Predicate<Field> shouldIncludeField = field -> !(ignoredFieldList.contains(field.getName()) || field.isSynthetic()
-            || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
-
         return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
-            .filter(shouldIncludeField)
+            .filter(field -> shouldIncludeField(ignoredFieldList, field))
             .map(Field::getName)
             .collect(Collectors.toList());
+    }
+
+    private boolean shouldIncludeField(List<String> ignoredFieldList, Field field) {
+        return !(ignoredFieldList.contains(field.getName()) || field.isSynthetic()
+            || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
     }
 
     private String fieldNameWithoutSuffixAndPrefix(String originalFieldName, String prefix) {
@@ -171,14 +173,44 @@ public class SearchDataParser {
         return path == null ? fieldNameWithoutPrefixAndSuffix : String.format(PATH_FORMAT, path, fieldNameWithoutPrefixAndSuffix);
     }
 
-    private String resolveAttributeHolderFromSecurityConfiguration(String originalFieldName) {
+    private AttributeHolderWithPath resolveAttributeFromSearchConfigurationOrPrefix(JpaEntityAttributeResolver attributeResolver, String originalFieldName) {
         String mappedPath = findPathUsingMapping(searchConfiguration.getPropertyMappingList(), originalFieldName);
 
         if (mappedPath == null) {
-            mappedPath = findPathUsingAttributePrefix(originalFieldName, managedType);
+            return resolveAttributeByPrefix(attributeResolver, originalFieldName, new ArrayList<>());
         }
 
-        return mappedPath;
+        return new AttributeHolderWithPath(mappedPath, attributeResolver.resolveAttributeByPath(mappedPath));
+    }
+
+    private AttributeHolderWithPath resolveAttributeByPrefix(JpaEntityAttributeResolver attributeResolver, String path, List<String> previousPathList) {
+        String mappedPath = findPathUsingAttributePrefix(path, attributeResolver.getManagedType());
+
+        if (mappedPath == null) {
+            return AttributeHolderWithPath.notFound();
+        }
+
+        AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(mappedPath);
+
+        if (attributeHolder.isFound()) {
+            String fullPath = PathResolvingUtil.joinPath(previousPathList, mappedPath);
+
+            return new AttributeHolderWithPath(fullPath, attributeHolder);
+        }
+        else {
+            String[] currentPath = PathResolvingUtil.convertToPathList(mappedPath);
+            String currentPrefix = currentPath[0];
+            attributeHolder = attributeResolver.resolveAttributeByPath(currentPrefix);
+
+            if (attributeHolder.isFound()) {
+                String leftOverPath = PathResolvingUtil.removeFirstPathElement(currentPath);
+                previousPathList.add(currentPrefix);
+
+                return resolveAttributeByPrefix(new JpaEntityAttributeResolver(attributeHolder.getManagedType()), leftOverPath, previousPathList);
+            }
+        }
+
+        return AttributeHolderWithPath.notFound();
     }
 
     private String findPathUsingMapping(List<SearchPropertyMapping> propertyMappingList, String fieldName) {
