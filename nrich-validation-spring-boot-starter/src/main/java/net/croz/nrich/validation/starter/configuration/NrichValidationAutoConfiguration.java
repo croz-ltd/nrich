@@ -11,7 +11,7 @@ import org.springframework.context.support.AbstractResourceBasedMessageSource;
 @Configuration(proxyBeanMethods = false)
 public class NrichValidationAutoConfiguration {
 
-    public static final String VALIDATION_MESSAGES_NAME = "validationMessages";
+    public static final String VALIDATION_MESSAGES_NAME = "nrich-validation-messages";
 
     @ConditionalOnProperty(name = "nrich.validation.register-messages", havingValue = "true", matchIfMissing = true)
     @Bean
