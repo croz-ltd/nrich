@@ -63,7 +63,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     @Override
     public void writeRowData(Object... reportDataList) {
-        Assert.isTrue(templateOpen, "Template has benn closed and cannot be written anymore");
+        Assert.isTrue(templateOpen, "Template has been closed and cannot be written anymore");
 
         Row row = sheet.createRow(currentRowNumber++);
 

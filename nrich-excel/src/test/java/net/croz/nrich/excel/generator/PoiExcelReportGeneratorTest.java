@@ -100,7 +100,7 @@ class PoiExcelReportGeneratorTest {
         Throwable thrown = catchThrowable(() -> excelReportGenerator.writeRowData(rowData));
 
         // then
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has benn closed and cannot be written anymore");
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has been closed and cannot be written anymore");
     }
 
     @Test
