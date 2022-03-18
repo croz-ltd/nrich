@@ -2,6 +2,7 @@ package net.croz.nrich.search.repository.testutil;
 
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.repository.stub.TestCollectionEntity;
+import net.croz.nrich.search.repository.stub.TestDoubleNestedEntity;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
 import net.croz.nrich.search.repository.stub.TestEntityEmbedded;
@@ -96,7 +97,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     }
 
     private static TestEntity createTestEntity(Integer value, Integer numberOfCollectionEntities) {
-        TestNestedEntity nestedEntity = createTestNestedEntity("nested" + value, "nested alias" + value);
+        TestNestedEntity nestedEntity = createTestNestedEntity(value);
         List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities)
             .mapToObj(counter -> createTestCollectionEntity("collection" + (value + counter)))
             .collect(Collectors.toList());
@@ -114,11 +115,20 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         return entity;
     }
 
-    private static TestNestedEntity createTestNestedEntity(String nestedEntityName, String nestedEntityAliasName) {
+    private static TestNestedEntity createTestNestedEntity(Integer value) {
         TestNestedEntity entity = new TestNestedEntity();
 
-        entity.setNestedEntityName(nestedEntityName);
-        entity.setNestedEntityAliasName(nestedEntityAliasName);
+        entity.setNestedEntityName("nested" + value);
+        entity.setNestedEntityAliasName("nested alias" + value);
+        entity.setDoubleNestedEntity(createTestDoubleNestedEntity(value));
+
+        return entity;
+    }
+
+    private static TestDoubleNestedEntity createTestDoubleNestedEntity(Integer value) {
+        TestDoubleNestedEntity entity = new TestDoubleNestedEntity();
+
+        entity.setName("double nested" + value);
 
         return entity;
     }

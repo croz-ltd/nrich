@@ -711,6 +711,48 @@ class JpaQueryBuilderTest {
         assertThat(results).hasSize(1);
     }
 
+    @Test
+    void shouldSupportSearchingByAnyLevelOfNestedPath() {
+        // given
+        generateListForSearch(entityManager);
+
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityDoubleNestedEntityName("double nested1").build();
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldNotFailWhenAttributeByPrefixDoesntExist() {
+        // given
+        generateListForSearch(entityManager);
+
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityNonExisting("non existing").build();
+
+        // when
+        Throwable thrown = catchThrowable(() -> executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve()));
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
+    void shouldNotFailWhenDoubleNestedAttributeByPrefixDoesntExist() {
+        // given
+        generateListForSearch(entityManager);
+
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityDoubleNestedEntityNonExisting("double nested1").build();
+
+        // when
+        Throwable thrown = catchThrowable(() -> executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve()));
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }
