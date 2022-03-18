@@ -9,9 +9,8 @@ import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -35,14 +34,11 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 class PoiExcelReportGeneratorTest {
 
-    private static final String REPORT_FILE_NAME = "report.xlsx";
-
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 
     private PoiExcelReportGenerator excelReportGenerator;
 
-    @TempDir
-    File temporaryDirectory;
+    private ByteArrayOutputStream outputStream;
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
@@ -59,8 +55,10 @@ class PoiExcelReportGeneratorTest {
             "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, additionalFormatList
         );
 
+        outputStream = new ByteArrayOutputStream();
+
         excelReportGenerator = new PoiExcelReportGenerator(
-            cellValueConverterList, new File(temporaryDirectory, REPORT_FILE_NAME), template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX
+            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX
         );
     }
 
@@ -77,10 +75,10 @@ class PoiExcelReportGeneratorTest {
 
         // when
         excelReportGenerator.writeRowData(rowData);
-        excelReportGenerator.flushAndClose();
+        excelReportGenerator.flush();
 
         // and when
-        Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
+        Sheet sheet = createWorkbookAndResolveSheet(outputStream);
 
         // then
         assertThat(sheet).isNotNull();
@@ -96,13 +94,13 @@ class PoiExcelReportGeneratorTest {
         Object[] rowData = new Object[] { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
 
         excelReportGenerator.writeRowData(rowData);
-        excelReportGenerator.flushAndClose();
+        excelReportGenerator.flush();
 
         // when
         Throwable thrown = catchThrowable(() -> excelReportGenerator.writeRowData(rowData));
 
         // then
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class);
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has been closed and cannot be written anymore");
     }
 
     @Test
@@ -113,10 +111,10 @@ class PoiExcelReportGeneratorTest {
 
         // when
         excelReportGenerator.writeRowData(rowData);
-        excelReportGenerator.flushAndClose();
+        excelReportGenerator.flush();
 
         // and when
-        Sheet sheet = createWorkbookAndResolveSheet(new File(temporaryDirectory, REPORT_FILE_NAME));
+        Sheet sheet = createWorkbookAndResolveSheet(outputStream);
 
         // then
         assertThat(getRowCellStyleList(sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX))).containsExactly(

@@ -24,14 +24,14 @@ public class PoiExcelReportGeneratorFactory implements ExcelReportGeneratorFacto
 
     @Override
     public ExcelReportGenerator createReportGenerator(CreateReportGeneratorRequest request) {
-        Assert.isTrue(request.getOutputFile() != null && request.getOutputFile().exists(), "Output file cannot be null");
+        Assert.isTrue(request.getOutputStream() != null, "OutputStream cannot be null");
         Assert.hasText(request.getTemplatePath(), "Template path cannot be null");
         Assert.isTrue(request.getFirstRowIndex() >= 0, "Row index must be greater or equal to 0");
 
         InputStream template = resolveTemplate(request.getTemplatePath());
 
         return new PoiExcelReportGenerator(
-            cellValueConverterList, request.getOutputFile(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex()
+            cellValueConverterList, request.getOutputStream(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex()
         );
     }
 

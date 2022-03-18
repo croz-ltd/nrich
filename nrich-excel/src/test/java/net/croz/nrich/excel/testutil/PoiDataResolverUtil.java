@@ -5,10 +5,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,11 +61,7 @@ public final class PoiDataResolverUtil {
     }
 
     @SneakyThrows
-    public static Sheet createWorkbookAndResolveSheet(File file) {
-        // it is necessary to close the workbook, i.e. unlock the file, in order to avoid an IOException (on some OSs)
-        // in case the file is inside a @TempDir which gets automatically deleted afterwards
-        try (Workbook workbook = new XSSFWorkbook(file)) {
-            return workbook.getSheetAt(0);
-        }
+    public static Sheet createWorkbookAndResolveSheet(ByteArrayOutputStream outputStream) {
+        return new XSSFWorkbook(new ByteArrayInputStream(outputStream.toByteArray())).getSheetAt(0);
     }
 }

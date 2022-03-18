@@ -13,8 +13,8 @@ public interface ExcelReportGenerator {
     void writeRowData(Object... reportDataList);
 
     /**
-     * Flushes data to report and closes it. No further writing is possible after this call.
+     * Flushes data to report (the OutputStream is not closed that's the user responsibility). No further writing is possible after this call.
      */
-    void flushAndClose();
+    void flush();
 
 }
