@@ -1,3 +1,5 @@
+description = "Provides @RestControllerAdvice for exception logging and notification resolving and additional serialization and locale features"
+
 dependencies {
   api project(":nrich-webmvc-api")
 
@@ -30,5 +32,4 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.mockito:mockito-core"
   testImplementation "org.springframework:spring-test"
-
 }

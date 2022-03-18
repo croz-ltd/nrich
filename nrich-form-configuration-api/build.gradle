@@ -1,3 +1,5 @@
+description = "Nrich Form Configuration API"
+
 dependencies {
   api "jakarta.validation:jakarta.validation-api"
 

@@ -1,3 +1,5 @@
+description = "Nrich Web MVC API"
+
 dependencies {
   api "jakarta.servlet:jakarta.servlet-api"
 }

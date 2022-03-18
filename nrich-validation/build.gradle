@@ -1,3 +1,5 @@
+description = "Provides additional Bean Validation constraints"
+
 dependencies {
   api project(":nrich-validation-api")
 

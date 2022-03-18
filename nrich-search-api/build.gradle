@@ -1,8 +1,9 @@
+description = "Nrich Search API"
+
 dependencies {
   api "jakarta.persistence:jakarta.persistence-api"
   api "jakarta.validation:jakarta.validation-api"
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
-
 }

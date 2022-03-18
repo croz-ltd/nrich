@@ -1,3 +1,5 @@
+description = "Provides a unified way of logging exceptions"
+
 dependencies {
   api project(":nrich-logging-api")
 

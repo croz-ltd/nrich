@@ -1,3 +1,5 @@
+description = "Nrich Validation API"
+
 dependencies {
   api "jakarta.validation:jakarta.validation-api"
 }

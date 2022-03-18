@@ -1,3 +1,5 @@
+description = "Converts server side Bean Validation constraints to a form that can be used to apply them on the client side"
+
 dependencies {
   api project(":nrich-form-configuration-api")
 

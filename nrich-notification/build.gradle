@@ -1,3 +1,5 @@
+description = "Provides a unified response format for data returned to clients"
+
 dependencies {
   api project(":nrich-notification-api")
 
