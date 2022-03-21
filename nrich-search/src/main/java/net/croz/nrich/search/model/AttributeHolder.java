@@ -16,4 +16,11 @@ public class AttributeHolder {
 
     private final boolean isPlural;
 
+    public boolean isFound() {
+        return attribute != null;
+    }
+
+    public static AttributeHolder notFound() {
+        return new AttributeHolder(null, null, false);
+    }
 }

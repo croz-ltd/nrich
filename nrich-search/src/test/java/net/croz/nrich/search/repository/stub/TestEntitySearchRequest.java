@@ -48,6 +48,12 @@ public class TestEntitySearchRequest {
 
     private String testEntityEmbeddedEmbeddedName;
 
+    private String nestedEntityDoubleNestedEntityName;
+
+    private String nestedEntityDoubleNestedEntityNonExisting;
+
+    private String nestedEntityNonExisting;
+
     public TestEntitySearchRequest(String name) {
         this.name = name;
     }

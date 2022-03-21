@@ -1,5 +1,6 @@
 package net.croz.nrich.search.support;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.util.PathResolvingUtil;
@@ -11,6 +12,7 @@ import javax.persistence.metamodel.PluralAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.Arrays;
 
+@Getter
 @RequiredArgsConstructor
 public class JpaEntityAttributeResolver {
 
