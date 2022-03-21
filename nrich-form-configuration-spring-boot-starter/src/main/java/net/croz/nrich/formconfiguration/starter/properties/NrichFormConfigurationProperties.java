@@ -19,6 +19,9 @@ public class NrichFormConfigurationProperties {
      */
     private final boolean defaultConverterEnabled;
 
+    /**
+     * Mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side).
+     */
     private final Map<String, Class<?>> formConfigurationMapping;
 
     public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, Map<String, Class<?>> formConfigurationMapping) {
