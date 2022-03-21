@@ -8,7 +8,6 @@ import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,17 +20,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @AutoConfigureAfter(ValidationAutoConfiguration.class)
 @ConditionalOnBean(LocalValidatorFactoryBean.class)
 @EnableConfigurationProperties(NrichFormConfigurationProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichFormConfigurationAutoConfiguration {
-
-    public static final String MAPPING_BEAN_NAME = "formConfigurationMapping";
 
     @ConditionalOnMissingBean
     @Bean
@@ -45,17 +40,11 @@ public class NrichFormConfigurationAutoConfiguration {
         return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);
     }
 
-    @ConditionalOnMissingBean(name = MAPPING_BEAN_NAME)
-    @Bean
-    public Map<String, Class<?>> formConfigurationMapping() {
-        return new HashMap<>();
-    }
-
     @ConditionalOnMissingBean
     @Bean
-    public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, @Qualifier(MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping,
+    public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, NrichFormConfigurationProperties configurationProperties,
                                                              List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
-        return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList);
+        return new DefaultFormConfigurationService(validator, configurationProperties.getFormConfigurationMapping(), constrainedPropertyValidatorConverterServiceList);
     }
 
     @ConditionalOnMissingBean
