@@ -62,7 +62,7 @@ class DefaultExcelReportServiceTest {
     void shouldThrowExceptionOnMissingRowDataProvider() {
         // given
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        CreateExcelReportRequest request = createExcelReportRequest((Object[][]) null, 10, outputStream, TEMPLATE_DATA_FIRST_ROW_INDEX);
+        CreateExcelReportRequest request = createExcelReportRequest((MultiRowDataProvider) null, 10, outputStream, TEMPLATE_DATA_FIRST_ROW_INDEX);
 
         // when
         Throwable thrown = catchThrowable(() -> excelReportService.createExcelReport(request));

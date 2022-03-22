@@ -48,4 +48,27 @@ public class CreateExcelReportRequest {
      */
     private final MultiRowDataProvider multiRowDataProvider;
 
+    /**
+     * Creates {@link CreateExcelReportRequest} Builder instance from flat data.
+     *
+     * @param data Flat data to be written
+     * @return A {@link CreateExcelReportRequest} builder instance
+     */
+    public static CreateExcelReportRequest.CreateExcelReportRequestBuilder fromFlatData(Object[][] data) {
+        return CreateExcelReportRequest.builder().multiRowDataProvider((start, limit) -> start == 0 ? data : null);
+    }
+
+    /**
+     * Creates {@link CreateExcelReportRequest} Builder instance from {@link MultiRowDataProvider} instance.
+     *
+     * @param multiRowDataProvider Row provider for data to be written
+     * @return A {@link CreateExcelReportRequest} builder instance
+     */
+    public static CreateExcelReportRequest.CreateExcelReportRequestBuilder fromRowDataProvider(MultiRowDataProvider multiRowDataProvider) {
+        return CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider);
+    }
+
+    private static CreateExcelReportRequest.CreateExcelReportRequestBuilder builder() {
+        return new CreateExcelReportRequest.CreateExcelReportRequestBuilder();
+    }
 }
