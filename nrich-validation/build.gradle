@@ -7,6 +7,7 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation "org.hibernate.validator:hibernate-validator"
+  implementation "org.glassfish:jakarta.el"
   implementation "org.springframework:spring-context"
 
   webImplementation "org.springframework:spring-web"
@@ -18,9 +19,7 @@ dependencies {
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "io.projectreactor:reactor-core"
-  testImplementation "jakarta.validation:jakarta.validation-api"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.mockito:mockito-core"
