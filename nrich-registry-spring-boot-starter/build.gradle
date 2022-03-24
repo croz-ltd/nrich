@@ -10,8 +10,8 @@ dependencies {
   implementation project(":nrich-registry")
   implementation project(":nrich-spring-boot")
 
-  implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.apache.tomcat.embed:tomcat-embed-el"
+  implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.springframework.boot:spring-boot-starter-data-jpa"
 
   testAnnotationProcessor "org.projectlombok:lombok"

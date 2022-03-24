@@ -23,8 +23,8 @@ dependencies {
 
   testImplementation "com.fasterxml.jackson.core:jackson-core"
   testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.hamcrest:hamcrest"
   testImplementation "com.jayway.jsonpath:json-path"

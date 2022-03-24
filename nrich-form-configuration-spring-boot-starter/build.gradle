@@ -9,7 +9,7 @@ dependencies {
 
   implementation project(":nrich-form-configuration")
 
-  implementation "org.glassfish:jakarta.el"
+  implementation "org.apache.tomcat.embed:tomcat-embed-el"
   implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 

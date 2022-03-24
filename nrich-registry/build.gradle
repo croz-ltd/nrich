@@ -28,8 +28,8 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.hamcrest:hamcrest"

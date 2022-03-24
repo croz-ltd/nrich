@@ -17,8 +17,8 @@ dependencies {
   testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.mockito:mockito-core"
