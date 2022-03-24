@@ -9,16 +9,9 @@ dependencies {
 
   implementation project(":nrich-validation")
 
-  implementation "org.hibernate.validator:hibernate-validator"
-  implementation "org.springframework:spring-context"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.mockito:mockito-core"
-  testImplementation "org.springframework:spring-test"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
