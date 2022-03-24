@@ -1,8 +1,8 @@
 package net.croz.nrich.notification.starter;
 
-import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
-import net.croz.nrich.notification.service.ConstraintConversionService;
+import net.croz.nrich.notification.api.service.ConstraintConversionService;
+import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.starter.configuration.NrichNotificationAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
