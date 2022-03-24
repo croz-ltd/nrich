@@ -6,7 +6,6 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-context"
 
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
@@ -18,7 +17,6 @@ dependencies {
   testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "jakarta.validation:jakarta.validation-api"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
