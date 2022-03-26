@@ -1,6 +1,7 @@
 package net.croz.nrich.excel.starter.configuration;
 
 import net.croz.nrich.excel.starter.configuration.stub.FormConfigurationTestRequest;
+import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,6 +66,23 @@ class NrichFormConfigurationAutoConfigurationTest {
 
             // then
             assertThat(formConfigurationMapping).containsEntry(createKey, requestType).containsEntry(updateKey, requestType);
+        });
+    }
+
+    @Test
+    void shouldAllowForCustomizationOfFormConfigurationMapping() {
+        // given
+        String createKey = "create-form-customized";
+        Class<?> requestType = FormConfigurationTestRequest.class;
+        String[] propertyValues = new String[] { String.format(ENTRY_FORMAT, createKey, requestType.getName()) };
+        Supplier<FormConfigurationMappingCustomizer> supplier = () -> formConfigurationMapping -> formConfigurationMapping.put(createKey, requestType);
+
+        contextRunner.withBean(LocalValidatorFactoryBean.class).withBean(FormConfigurationMappingCustomizer.class, supplier).withPropertyValues(propertyValues).run(context -> {
+            // when
+            Map<String, Class<?>> formConfigurationMapping = context.getBean(NrichFormConfigurationProperties.class).getFormConfigurationMapping();
+
+            // then
+            assertThat(formConfigurationMapping).containsEntry(createKey, requestType);
         });
     }
 }

@@ -1,6 +1,7 @@
-package net.croz.nrich.registry.data.service;
+package net.croz.nrich.registry.data.customizer;
 
-import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
+import lombok.RequiredArgsConstructor;
+import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 
@@ -8,22 +9,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultRegistryDataFormConfigurationResolverService implements RegistryDataFormConfigurationResolverService {
+@RequiredArgsConstructor
+public class RegistryDataFormConfigurationMappingCustomizer implements FormConfigurationMappingCustomizer {
 
     private final List<Class<?>> registryClassList;
 
-    private final Map<String, Class<?>> formConfigurationMap;
-
-    public DefaultRegistryDataFormConfigurationResolverService(List<Class<?>> registryClassList, Map<String, Class<?>> formConfigurationMap) {
-        this.registryClassList = registryClassList;
-        this.formConfigurationMap = formConfigurationMap;
-
-        registerRegistryFormConfiguration(formConfigurationMap);
-    }
-
     @Override
-    public Map<String, Class<?>> resolveRegistryFormConfiguration() {
-        return formConfigurationMap;
+    public void customizeConfigurationMapping(Map<String, Class<?>> formConfigurationMapping) {
+        registerRegistryFormConfiguration(formConfigurationMapping);
     }
 
     private void registerRegistryFormConfiguration(Map<String, Class<?>> formConfigurationMap) {

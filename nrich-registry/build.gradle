@@ -5,6 +5,7 @@ description = """
 
 dependencies {
   api project(":nrich-registry-api")
+  api project(":nrich-form-configuration-api")
   api "jakarta.validation:jakarta.validation-api"
 
   annotationProcessor "org.projectlombok:lombok"
