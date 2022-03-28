@@ -82,7 +82,7 @@ each request in a header or as a parameter.
 
 Adds additional functionality to Spring Boot. i.e. `ConditionalOnPropertyNotEmpty` annotation that checks if a property is not empty.
 
-### nrich-spring-util
+### nrich-spring
 
 Contains utility classes for Spring access. i.e. `ApplicationContextHolder` for resolving of `ApplicationContext`
 from static context.
