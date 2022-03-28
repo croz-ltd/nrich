@@ -94,8 +94,6 @@ Example usage of `ExcelReportService` is:
     File file = new File("directory/excel-report.xlsx");
     // rows in excel
     Object[][] rowData = new Object[][] { { 1.1, "value 1", new Date(), new Date() }, { 2.2, "value 2", new Date(), new Date() };
-    // no need for batching since we have only two records
-    MultiRowDataProvider multiRowDataProvider = (start, limit) -> start == 0 ? rowData : null;
 
     // template variable defined in template with value ${templateVariable} will be replaced with resolvedValue
     List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
@@ -105,7 +103,7 @@ Example usage of `ExcelReportService` is:
 
     try (FileOutputStream outputStream = new FileOutputStream(file)) {
         // first row index is 3 since first two rows contain column headers
-        CreateExcelReportRequest request = CreateExcelReportRequest.builder().templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).multiRowDataProvider(multiRowDataProvider).batchSize(10).outputStream(outputStream).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
+        CreateExcelReportRequest request = CreateExcelReportRequest.fromFlatData(rowData).templateVariableList(templateVariableList).columnDataFormatList(columnDataFormatList).batchSize(10).outputStream(outputStream).templatePath("classpath:excel/template.xlsx").firstRowIndex(3).build();
 
         excelReportService.createExcelReport(request);
     }
