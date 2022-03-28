@@ -4,7 +4,7 @@
 
 ## Overview
 
-`nrich-registry` is a library whose purpose is to make administration of registry entities on client side easier. It transforms JPA entities in a format that client can interpret to create dynamic
+`nrich-registry` is a module whose purpose is to make administration of registry entities on client side easier. It transforms JPA entities in a format that client can interpret to create dynamic
 forms and tables for administration of entities without additional implementation on server side. Library provides REST API for searching, creating, updating and deleting entities.
 Users are only required to provide list of regular expressions for including entities they want to administrate. Optionally, users can provide display labels and headers for forms and tables
 in `messages.properties` files. For searching, it relies on `nrich-search` module and provides capability of overriding `SearchConfiguration` for each entity
@@ -12,8 +12,8 @@ in `messages.properties` files. For searching, it relies on `nrich-search` modul
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required. If Jackson's `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
-validation of registry entities) library is not on classpath then `RegistryDataFormConfigurationMappingCustomizer` bean is not needed. History requires `hibernate-envers` dependency and if history is
+To be able to use this module following configuration is required. If Jackson's `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
+validation of registry entities) module is not on classpath then `RegistryDataFormConfigurationMappingCustomizer` bean is not needed. History requires `hibernate-envers` dependency and if history is
 not needed then all beans with history suffix can be omitted.
 
 ```java
@@ -153,13 +153,13 @@ public class ApplicationConfiguration {
 
 `ModelMapper registryDataModelMapper` is used to map request data to entity instances.
 
-`ModelMapper registryBaseModelMapper` is used for other mappings in library.
+`ModelMapper registryBaseModelMapper` is used for other mappings in module.
 
-`StringToTypeConverter<?>` is an interface from `nrich-search` library that performs conversion from string to typed instances and is used when querying registry entities. Default
+`StringToTypeConverter<?>` is an interface from `nrich-search` module that performs conversion from string to typed instances and is used when querying registry entities. Default
 implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
 
-`StringToEntityPropertyMapConverter` is also an interface from `nrich-search` library that is used for querying registry entities, it is responsible for assembling conditions Map from query string and
+`StringToEntityPropertyMapConverter` is also an interface from `nrich-search` module that is used for querying registry entities, it is responsible for assembling conditions Map from query string and
 a list of properties to search (
 conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties to be searched.
 
@@ -198,7 +198,7 @@ instances (for example when wanting to update only part of properties), it searc
 
 `RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity  (a list of `EntityWithRevision`) to client.
 
-`RegistryDataFormConfigurationMappingCustomizer` is used to register registry entities with `nrich-form-configuration` library so clients can fetch validations for specific entities.
+`RegistryDataFormConfigurationMappingCustomizer` is used to register registry entities with `nrich-form-configuration` module so clients can fetch validations for specific entities.
 
 ## Usage
 

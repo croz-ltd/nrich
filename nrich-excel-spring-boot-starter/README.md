@@ -12,7 +12,7 @@ class (`NrichExcelProperties`) with default configured values and does automatic
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -65,7 +65,7 @@ nrich.excel:
 
 ```
 
-### Using the library
+### Using the module
 
 After adding the dependency and adjusting the properties if necessary a bean of type `ExcelExportService` is available for dependency injection. An example usage is given bellow (more detailed
 examples are found in `nrich-excel` [README.MD](../nrich-excel/README.md)):

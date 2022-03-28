@@ -4,7 +4,7 @@
 
 ## Overview
 
-`nrich-webmvc` library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
+`nrich-webmvc` module provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
 `NotificationErrorHandlingRestControllerAdvice` and providing notification response to client. It also contains additional utility classes that disable binding of transient properties, convert empty
 strings to null etc.
 
@@ -69,7 +69,7 @@ used for logging, data resolving and notification creation.
 
 ## Usage
 
-For usage it is enough to add library as dependency and set up beans. `NotificationErrorHandlingRestControllerAdvice`
+For usage it is enough to add module as dependency and set up beans. `NotificationErrorHandlingRestControllerAdvice`
 handles all exceptions thrown by user code (including binding and validation exceptions) and it uses `LoggingService` to log errors and `NotificationResponseService`
 to create notifications that are sent to client in JSON format.
 

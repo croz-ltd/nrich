@@ -13,7 +13,7 @@ Spring Boot's `ObjectMapper` instance with some useful defaults defined in nrich
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -79,7 +79,7 @@ spring.jackson:
 
 ```
 
-### Using the library
+### Using the module
 
-This library configures `ObjectMapper` instance by adding additional modules and options to it. It is used when serializing or deserializing JSON using `ObjectMapper` bean.
+This module configures `ObjectMapper` instance by adding additional modules and options to it. It is used when serializing or deserializing JSON using `ObjectMapper` bean.
 For example if `nrich.jackson.convert-empty-strings-to-null` is active and received JSON contains empty strings they will be converted to null values when deserializing JSON to class instance.

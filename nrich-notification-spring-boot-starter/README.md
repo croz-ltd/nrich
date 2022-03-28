@@ -13,7 +13,7 @@ annotations)  and does automatic registration through `spring.factories`.
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -57,9 +57,9 @@ nrich.notification:
 The standard notification messages are given in `notificationMessages` file and contain default error, success and info messages that will be returned to the client if no other messages are
 configured.
 
-### Using the library
+### Using the module
 
-Once added to the classpath if running in the servlet environment the library automatically registers a `@RestControllerAdvice` that handles exceptions and provides a consistent exception response
+Once added to the classpath if running in the servlet environment the module automatically registers a `@RestControllerAdvice` that handles exceptions and provides a consistent exception response
 format. If users want to return all the responses in a standard way they should inject `NotificationResponseService` bean and call one of the methods
 available (`responseWithNotificationActionResolvedFromRequest`). Example is given bellow:
 

@@ -4,20 +4,28 @@
 
 ## Overview
 
-nrich-spring is a library containing add-ons on Spring framework. Currently, no additional configuration is needed, just adding the library as dependency is enough. This library contains
- `ApplicationContextHolder` util class that provides access to `ApplicationContext` in static context as well as `YamlPropertySourceFactory` that enables using yaml files
+`nrich-spring` is a library containing add-ons on Spring framework. Currently, no additional configuration is needed, just adding the library as dependency is enough. This library contains
+`ApplicationContextHolder` util class that provides access to `ApplicationContext` in static context as well as `YamlPropertySourceFactory` that enables using yaml files
 with `@PropertySource` annotation.
 
 ## Usage
 
 If `ApplicationContext` is required in static context:
 
-```
-    ApplicationContextHolder.getApplicationContext()
+```java
+
+public class SomeComponentNotAutowiredBySpring {
+
+    public void useContext() {
+        ApplicationContext applicationContext = ApplicationContextHolder.getApplicationContext();
+
+        // do something with application context
+    }
+}
 
 ```
 
-If yaml files want to be loaded through `@PropertySource` annotation
+If loading of yaml files through `@PropertySource` annotation is needed:
 
 ```java
 

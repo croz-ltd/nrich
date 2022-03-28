@@ -4,7 +4,7 @@
 
 ## Overview
 
-This library can help in situations when sensitive data needs to be encrypted before it is returned (to the client side of a webapp for example) and then decrypted before it is used again. It provides
+This module can help in situations when sensitive data needs to be encrypted before it is returned (to the client side of a webapp for example) and then decrypted before it is used again. It provides
 the possibility of encrypting and decrypting whole objects of data or only parts of them. Currently, only Strings are supported for encryption and decryption.
 
 Let's say you have a REST service in your webapp that returns user details data. This service call could look like this for example
@@ -119,7 +119,7 @@ dependencies {
 }
 ```
 
-After that to be able to use this library **AspectJ** should be enabled (i.e. by adding `@EnableAspectJAutoProxy` on `@Configuration` class) and following beans should be defined in context:
+After that to be able to use this module **AspectJ** should be enabled (i.e. by adding `@EnableAspectJAutoProxy` on `@Configuration` class) and following beans should be defined in context:
 
 ```java
 
@@ -171,7 +171,7 @@ After that you can use `@EncryptResult` and `@DecryptArgument` annotations on yo
 
 ## Encrypt and Decrypt using Spring configuration
 
-Library can also be used by specifying fully qualified method names and additional arguments using `EncryptionConfiguration` list.
+Module can also be used by specifying fully qualified method names and additional arguments using `EncryptionConfiguration` list.
 
 `EncryptionConfiguration` consists of the following data:
 

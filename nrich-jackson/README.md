@@ -4,13 +4,13 @@
 
 ## Overview
 
-`nrich-jackson` is a library that adds additional Jackson's serializers and deserializers that have proved to be useful in projects
+`nrich-jackson` is a module that adds additional Jackson's serializers and deserializers that have proved to be useful in projects
 (i.e. serializing empty strings to null, deserializing class property with certain classes etc.)
 
 ## Setting up Spring beans
 
-Functionalities of this library are defined as separate Jackson modules and are located in `JacksonModuleUtil` class. Modules can be declared as beans in which case they will be registered
-automatically when Spring Boot is used with default `ObjectMapper` registered through `JacksonAutoConfiguration`, or they can be manually registered on `ObjectMapper` instance.
+Functionalities of this module are defined as separate Jackson modules and are located in `JacksonModuleUtil` class. Modules can be declared as beans in which case they will be registered
+automatically when Spring Boot is used with default `ObjectMapper` registered through `JacksonAutoConfiguration`, or they can be manually registered on any `ObjectMapper` instance.
 
 ```java
 

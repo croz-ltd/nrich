@@ -13,7 +13,7 @@ annotations) and does automatic registration through `spring.factories`.
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -54,7 +54,7 @@ nrich.validation:
 
 ```
 
-### Using the library
+### Using the module
 
 Users should just add the dependency on classpath and then use the provided constraints. If custom messages are required they should be defined in `messages.properties` file
 and default ones disabled then through `nrich.validation.register-messages` property set to false. A list of available constraints and descriptions is given bellow:

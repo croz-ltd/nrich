@@ -4,13 +4,13 @@
 
 ## Overview
 
-`nrich-search` is a library whose purpose is to make querying of JPA entities easier. Motivation for its creation were complex search forms on multiple projects. It's built on top of Spring Data JPA
+`nrich-search` is a module whose purpose is to make querying of JPA entities easier. Motivation for its creation were complex search forms on multiple projects. It's built on top of Spring Data JPA
 library and takes care of query composition from classes holding property values and additional `SearchConfigration` that defines how those property values should be applied (i.e. what operator should
 be used), what classes should be returned etc.
 
 ## Setting up Spring beans
 
-To be able to use this library JPA repositories should be enabled with custom factory by placing `@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)`
+To be able to use this module JPA repositories should be enabled with custom factory by placing `@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class)`
 annotation on `@Configuration` class and following beans should be defined in context:
 
 ```java
@@ -45,8 +45,8 @@ public class ApplicationConfiguration {
 `StringToTypeConverter<Object>` performs conversion from string to typed instances and is used when querying registry entities. Default implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regular expressions that are used to convert string to type found in properties of entity classes.
 
-`StringToEntityPropertyMapConverter` is also used for querying registry entities. It is responsible for creating conditions from query string and a list of properties to search (
-conversion to typed instances is delegated to `StringToTypeConverter<?>`). When searching using `StringSearchExecutor` it accepts a query string, and a list of properties to be searched that are then
+`StringToEntityPropertyMapConverter` is also used for querying registry entities. It is responsible for creating conditions from query string and a list of properties to search (conversion to typed
+instances is delegated to `StringToTypeConverter<?>`). When searching using `StringSearchExecutor` it accepts a query string, and a list of properties to be searched that are then
 converted using  `StringToEntityPropertyMapConverter` to properties.
 
 `RepositoryFactorySupportFactory` implementation `SearchRepositoryFactorySupportFactory` is responsible for creating backing classes for repositories that implement `StringSearchExecutor` or
@@ -58,7 +58,7 @@ Users have three interfaces available for usage `SearchExecutor`, `StringSearchE
 creation and `SearchConfiguration`, it is best used for standard search form functionality. `StringSearchExecutor`  accepts a query string, list of properties for search
 and `SearchConfiguration` it is best used for quick search functionality. `NaturalIdSearchExecturor` only works with Hibernate JPA implementation and enables users to search entities by properties
 annotated with `@NaturalId` annotation.
-Since this library augments Spring Data JPA in their own repository interfaces users should also implement one of Spring Data JPA repository interfaces.
+Since this module augments Spring Data JPA in their own repository interfaces users should also implement one of Spring Data JPA repository interfaces.
 
 A custom repository interface for searching entities of type Car:
 
@@ -101,7 +101,7 @@ public interface CarRepository extends JpaRepository<Car, Long>, SearchExecutor<
 ```
 
 When searching for Car instances using `SearchExecutor<Car>` it is necessary to define a class holding all properties that will be searched. In this case that would look something like this
-(`BaseSortablePageableRequest` is a class provided by library, but it is not strictly necessary to extend it just makes it easier to handle paging and sorting parameters):
+(`BaseSortablePageableRequest` is a class provided by the module, but it is not strictly necessary to extend it just makes it easier to handle paging and sorting parameters):
 
 ```java
 

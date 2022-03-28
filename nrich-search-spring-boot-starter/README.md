@@ -14,7 +14,7 @@ and a `@ConfigurationProperties` class (`NrichSearchProperties`) with default co
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -69,12 +69,12 @@ nrich.search:
 
 ```
 
-### Using the library
+### Using the module
 
 Module provides `SearchExecutor<T>` interface that enables searching by properties defined in a class and `StringSearchExecutor<T>` interface that enables searching by a string and provided list of
 properties to search. WHen using Hibernate as JPA implementation `NaturalIdSearchExecutor` is also available that enables searching by `@NaturalId` annotated properties.
 
-To use the library users should first enable custom repository factory:
+To use the module users should first enable custom repository factory:
 
 ```java
 

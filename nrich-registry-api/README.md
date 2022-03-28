@@ -4,6 +4,6 @@
 
 ## Overview
 
-Contains classes that represent the API (interfaces, configuration classes and data classes) for `nrich-registry` library. The interfaces have default implementations provided in
-`nrich-registry` library but users can provide their own implementations. Unless some overriding is required only classes from this library should be used directly, other configuration should be
+Contains classes that represent the API (interfaces, configuration classes and data classes) for `nrich-registry` module. The interfaces have default implementations provided in
+`nrich-registry` module but users can provide their own implementations. Unless some overriding is required only classes from this module should be used directly, other configuration should be
 provided through property files.

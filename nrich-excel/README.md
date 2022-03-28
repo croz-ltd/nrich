@@ -4,12 +4,12 @@
 
 ## Overview
 
-`nrich-excel` is a library intended to simplify excel report generation for simple reports (i.e. exporting search results). It uses Apache POI library for excel creation. Excel reports are generated
-from templates (standard Excel files) and library also supports template variable resolving. The data is written to a provided OutputStream (users are expected to close it, library doesn't close it).
+`nrich-excel` is a module intended to simplify excel report generation for simple reports (i.e. exporting search results). It uses Apache POI library for excel creation. Excel reports are generated
+from templates (standard Excel files) and module also supports template variable resolving. The data is written to a provided OutputStream (users are expected to close it, module doesn't close it).
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required:
+To be able to use this module following configuration is required:
 
 ```java
 
@@ -84,7 +84,8 @@ public class ExampleRepositoryMultiRowDataProvider implements MultiRowDataProvid
 
     @Override
     public Object[][] resolveMultiRowData(int start, int limit) {
-        Page<Example> exampleList = exampleRepository.findAll(PageableUtil.convertToPageable(start, limit));
+        Pageable pageable = PageRequest.of(start / limit, limit, Sort.by("id"));
+        Page<Example> exampleList = excelDemoRepository.findAll(pageable);
 
         return exampleList.getContent().stream()
             .map(value -> new Object[] { value.getName(), value.getDate() })

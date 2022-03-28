@@ -4,13 +4,13 @@
 
 ## Overview
 
-`nrich-notification` is a library intended for creation of notifications on server side which are shown on the client side. It supports info (i.e. 'Entity has been saved'), warning (i.e. 'Validation
+`nrich-notification` is a module intended for creation of notifications on server side which are shown on the client side. It supports info (i.e. 'Entity has been saved'), warning (i.e. 'Validation
 failed') and error (i.e. 'Exception occurred') notification severity levels, and can also send a list of validation errors to client side along with original notification. Notification messages are
 resolved by message keys from Springs `MessageSource`. Keys can be either fixed strings or in case of exceptions their class names.
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required:
+To be able to use this module following configuration is required:
 
 ```
 

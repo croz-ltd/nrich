@@ -4,7 +4,7 @@
 
 ## Overview
 
-`nrich-security-csrf` is a library intended for CSRF protection. It generates a initial token from initial token url and later expects token to be present in each request either as an HTTP
+`nrich-security-csrf` is a module intended for CSRF protection. It generates an initial token from initial token url and later expects token to be present in each request either as an HTTP
 parameter or HTTP header. If token is present it validates and refreshes token. If token is not present or the token is invalid, `CsrfTokenException` is thrown.
 It works in both Spring Web MVC and Spring WebFlux environments.
 

@@ -14,7 +14,7 @@ with default configured values and does automatic registration through `spring.f
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -70,9 +70,9 @@ nrich.registry:
 
 ```
 
-### Using the library
+### Using the module
 
-This library is meant to be used through REST API and as such exposes multiple endpoints. For a detailed description of each endpoint see `nrich-registry` [README.MD](../nrich-registry/README.md).
+This module is meant to be used through REST API and as such exposes multiple endpoints. For a detailed description of each endpoint see `nrich-registry` [README.MD](../nrich-registry/README.md).
 Bellow is just a short overview of available endpoints (all methods use HTTP POST method):
 
 | request path                          | description                                                                                    |

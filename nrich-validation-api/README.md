@@ -4,4 +4,4 @@
 
 ## Overview
 
-Contains classes that represent the API (validation constraint annotations) for `nrich-validation` library.
+Contains classes that represent the API (validation constraint annotations) for `nrich-validation` module.

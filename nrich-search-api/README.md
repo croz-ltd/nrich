@@ -4,6 +4,6 @@
 
 ## Overview
 
-Contains classes that represent the API (configuration classes and data classes) for `nrich-search` library. The interfaces have default implementations provided in
-`nrich-search` library but users can provide their own implementations. Unless some overriding is required only classes from this library should be used directly, other configuration should be
+Contains classes that represent the API (configuration classes and data classes) for `nrich-search` module. The interfaces have default implementations provided in
+`nrich-search` module but users can provide their own implementations. Unless some overriding is required only classes from this module should be used directly, other configuration should be
 provided through property files.

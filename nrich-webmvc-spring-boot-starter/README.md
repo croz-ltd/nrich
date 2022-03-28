@@ -15,7 +15,7 @@ and does automatic registration through `spring.factories`.
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -70,9 +70,9 @@ nrich.webmvc:
 
 ```
 
-### Using the library
+### Using the module
 
-After adding the dependency and adjusting the properties if necessary the library is active by default. If a custom message and/or status needs to be registered for an exception it is done using
+After adding the dependency and adjusting the properties if necessary the module is active by default. If a custom message and/or status needs to be registered for an exception it is done using
 message.properties. Messages for exceptions are searched by class name.
 Bellow an example is given on how to structure messages for `net.croz.nrich.notification.NotificationResolverServiceTestException`:
 

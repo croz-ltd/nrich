@@ -4,5 +4,5 @@
 
 ## Overview
 
-Contains classes that represent the API (interface and models) for `nrich-logging` library. The interfaces have default implementations provided in `nrich-logging` library but users can provide their
-own implementations. Unless some overriding is required only classes from this library should be used directly, other configuration should be provided through property files.
+Contains classes that represent the API (interface and models) for `nrich-logging` module. The interfaces have default implementations provided in `nrich-logging` module but users can provide their
+own implementations. Unless some overriding is required only classes from this module should be used directly, other configuration should be provided through property files.

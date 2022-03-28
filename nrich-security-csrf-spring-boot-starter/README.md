@@ -13,7 +13,7 @@ and does automatic registration through `spring.factories`.
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -68,9 +68,9 @@ nrich.security.csrf:
 
 ```
 
-### Using the library
+### Using the module
 
-The library supports both reactive and servlet environments and will register either a custom `HandlerInterceptor` if in a servlet environment or a custom `WebFilter`
+The module supports both reactive and servlet environments and will register either a custom `HandlerInterceptor` if in a servlet environment or a custom `WebFilter`
 if in a reactive environment. An example configuration from properties file is given bellow:
 
 ```yaml

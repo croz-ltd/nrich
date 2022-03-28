@@ -13,7 +13,7 @@ and a `@ConfigurationProperties` class (`NrichFormConfigurationProperties`) with
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -57,10 +57,10 @@ nrich.form-configuration:
 ```
 
 The default converter should be enabled unless users want to provide a completely custom implementation. Overriding of specific constraint properties display configuration resolving can be
-done by implementing a `ConstrainedPropertyValidatorConverterService` interface. That interface implementation will be picked up by the library and used before default converter if `supports`
+done by implementing a `ConstrainedPropertyValidatorConverterService` interface. That interface implementation will be picked up by the module and used before default converter if `supports`
 method returns true.
 
-### Using the library
+### Using the module
 
 Users should specify a form-configuration-mapping property list that will contain mappings between client side form identifier and server side input. An example configuration is given bellow:
 
@@ -74,6 +74,6 @@ nrich.form-configuration:
 
 ```
 
-This library should be used from the client side and for that a REST endpoint is exposed on `nrich/form/configuration/fetch` URL. The endpoint expects a list of formIdList
+This module should be used from the client side and for that a REST endpoint is exposed on `nrich/form/configuration/fetch` URL. The endpoint expects a list of formIdList
 (key inside form-configuration-mapping map) for which the `FormConfiguration` list will be returned. `FormConfiguration` contains a list of properties with defined constraints, clients can then
 convert that configuration to specific client configurations and apply them to their forms.

@@ -4,16 +4,16 @@
 
 ## Overview
 
-Spring Boot starter for nrich-logging module. The purpose of nrich-logging is to provide a unified and configurable logging format. It is used by nrich-webmvc module to log exceptions, it also allows
-logging level and logging verbosity (details about exception) to be easily configured through `message.properties`.
-Starter module provides a `@Configuration` class with default configuration of nrich-logging module (while allowing for overriding with conditional annotations) and does automatic registration
-through `spring.factories`.
+Spring Boot starter for `nrich-logging` module. The purpose of `nrich-logging` is to provide a unified and configurable logging format. It is used by nrich-webmvc module to log exceptions,
+it also allows logging level and logging verbosity (details about exception) to be easily configured through `message.properties`.
+Starter module provides a `@Configuration` class (`NrichLoggingAutoConfiguration`) with default configuration of `nrich-logging` module (while allowing for overriding with conditional annotations)
+and does automatic registration through `spring.factories`.
 
 ## Usage
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
+`The artifact is published on `[Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -33,9 +33,9 @@ With Gradle:
 implementation "net.croz.nrich:nrich-logging-spring-boot-starter:${nrich.version}"
 ```
 
-Note if using nrich-bom dependency versions should be omitted.
+Note if using `nrich-bom` dependency versions should be omitted.
 
-### Using the library
+### Using the module
 
 After adding the dependency a bean of type `LoggingService` is available for dependency injection. The purpose of the `LoggingService` it to be used by `NotificationErrorHandlingRestControllerAdvice`
 to log uncaught exception but users can also use it to manually log caught exceptions. An example usage is given bellow (more detailed examples are found in nrich-logging

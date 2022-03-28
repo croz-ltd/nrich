@@ -12,7 +12,7 @@ and a `@ConfigurationProperties` class (`NrichEncryptProperties`) with default c
 
 ### Adding the Dependency
 
-The artifact is published on [Maven Central Repository][Maven Central]. To include the dependency use the following configurations.
+The artifact is published on [Maven Central Repository](https://search.maven.org/). To include the dependency use the following configurations.
 
 With Maven:
 
@@ -65,9 +65,9 @@ nrich.encrypt:
 
 ```
 
-### Using the library
+### Using the module
 
-There are two ways of using the library, one is defining all the methods for encryption/decryption inside a properties file and the other is using the annotations.
+There are two ways of using the module, one is defining all the methods for encryption/decryption inside a properties file and the other is using the annotations.
 
 #### Using property file
 

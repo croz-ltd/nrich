@@ -4,9 +4,9 @@
 
 ## Overview
 
-`nrich-validation` is a library intended to add additional `jakarta.validation-api` constraints that have proved to be useful on multiple occasions.
+`nrich-validation` is a module intended to add additional `jakarta.validation-api` constraints that have proved to be useful on multiple occasions.
 It contains a list of constraints and corresponding validators. Registration of validators is tied to `hibernate-validator` implementation.
-It also contains a list of messages for standard and additional constraints in english and croatian (`validationMessages`).
+It also contains a list of messages for standard and additional constraints in english and croatian (`nrich-validation-messages`).
 
 ## Setting up Spring beans
 
@@ -43,7 +43,7 @@ public class ApplicationConfiguration {
 
 ## Usage
 
-The library provides following constraints:
+The module provides following constraints:
 
 #### InList
 
