@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.starter.properties;
 
 import lombok.Getter;
+import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -27,10 +28,17 @@ public class NrichRegistryProperties {
      */
     private final boolean defaultConverterEnabled;
 
-    public NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue RegistrySearchProperties registrySearch, @DefaultValue("true") boolean defaultConverterEnabled) {
+    /**
+     * Registry configuration used for defining entities and groups which will be managed.
+     */
+    private final RegistryConfiguration registryConfiguration;
+
+    public NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue RegistrySearchProperties registrySearch, @DefaultValue("true") boolean defaultConverterEnabled,
+                                   RegistryConfiguration registryConfiguration) {
         this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
         this.registrySearch = registrySearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
+        this.registryConfiguration = registryConfiguration;
     }
 
     @Getter

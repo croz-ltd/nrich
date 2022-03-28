@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
@@ -35,6 +34,7 @@ import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
+import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -64,7 +64,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AutoConfigureAfter({ ValidationAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-@ConditionalOnBean({ EntityManagerFactory.class, LocalValidatorFactoryBean.class, RegistryConfiguration.class })
+@ConditionalOnBean({ EntityManagerFactory.class, LocalValidatorFactoryBean.class })
+@ConditionalOnPropertyNotEmpty("nrich.registry.registry-configuration.group-definition-configuration-list")
 @EnableConfigurationProperties(NrichRegistryProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichRegistryAutoConfiguration {
@@ -132,8 +133,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationResolverService registryConfigurationResolverService(RegistryConfiguration registryConfiguration) {
-        return new DefaultRegistryConfigurationResolverService(entityManager, registryConfiguration);
+    public RegistryConfigurationResolverService registryConfigurationResolverService(NrichRegistryProperties registryProperties) {
+        return new DefaultRegistryConfigurationResolverService(entityManager, registryProperties.getRegistryConfiguration());
     }
 
     @ConditionalOnMissingBean
