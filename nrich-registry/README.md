@@ -13,7 +13,7 @@ of overriding
 ## Setting up Spring beans
 
 To be able to use this library following configuration is required. If Jacksons `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
-validation of registry entities) libary is not on classpath then `RegistryDataFormConfigurationResolverService` bean is not needed. History requires `hibernate-envers` dependency and if history is not
+validation of registry entities) libary is not on classpath then `RegistryDataFormConfigurationMappingCustomizer` bean is not needed. History requires `hibernate-envers` dependency and if history is not
 needed then all beans with history suffix can be omitted.
 
 ```
@@ -112,12 +112,12 @@ needed then all beans with history suffix can be omitted.
     }
 
     @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService, @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
+    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-                .map(RegistryDataConfiguration::getRegistryType)
-                .collect(Collectors.toList());
+            .map(RegistryDataConfiguration::getRegistryType)
+            .collect(Collectors.toList());
 
-        return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMapping);
+        return new RegistryDataFormConfigurationMappingCustomizer(registryClassList);
     }
 
 
@@ -172,7 +172,7 @@ instances (for example when wanting to update only part of properties), it searc
 
 `RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity  (a list of `EntityWithRevision`) to client.
 
-`RegistryDataFormConfigurationResolverService` is used to register registry entities with `nrich-form-configuration` library so clients can fetch validations for specific entities.
+`RegistryDataFormConfigurationMappingCustomizer` is used to register registry entities with `nrich-form-configuration` library so clients can fetch validations for specific entities.
 
 ## Usage
 

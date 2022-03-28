@@ -11,13 +11,11 @@ import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
-import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
@@ -25,13 +23,10 @@ import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolver
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
-import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
-import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
@@ -69,11 +64,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @EnableTransactionManagement
 @EnableWebMvc
@@ -252,21 +245,6 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryHistoryController registryHistoryController(RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
-    }
-
-    @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService) {
-        List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-            .map(RegistryDataConfiguration::getRegistryType)
-            .collect(Collectors.toList());
-        String entityName = RegistryTestEntityWithOverriddenFormConfiguration.class.getName();
-
-        Map<String, Class<?>> formConfigurationMap = new HashMap<>();
-
-        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX), Object.class);
-        formConfigurationMap.put(String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entityName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX), Object.class);
-
-        return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMap);
     }
 
     private List<RegistryGroupDefinitionConfiguration> createRegistryGroupDefinitionConfigurationList() {

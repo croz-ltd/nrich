@@ -1,8 +1,8 @@
 package net.croz.nrich.registry.starter.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
-import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
@@ -13,7 +13,6 @@ import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.starter.configuration.stub.ModelMapperTestEntity;
 import net.croz.nrich.registry.starter.configuration.stub.RegistryUserConfiguration;
-import net.croz.nrich.registry.starter.configuration.stub.RegistryUserFormConfiguration;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.junit.jupiter.api.Test;
@@ -53,10 +52,10 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryDataService.class);
             assertThat(context).hasSingleBean(RegistryDataRequestConversionService.class);
             assertThat(context).hasSingleBean(RegistryHistoryService.class);
+            assertThat(context).hasSingleBean(FormConfigurationMappingCustomizer.class);
 
             assertThat(context).doesNotHaveBean(RegistryConfigurationController.class);
             assertThat(context).doesNotHaveBean(RegistryDataController.class);
-            assertThat(context).doesNotHaveBean(RegistryDataFormConfigurationResolverService.class);
             assertThat(context).doesNotHaveBean(RegistryHistoryController.class);
         });
     }
@@ -69,14 +68,6 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryDataController.class);
             assertThat(context).hasSingleBean(RegistryHistoryController.class);
         });
-    }
-
-    @Test
-    void shouldRegisterFormConfigurationResolverServiceWhenFormConfigurationBeanIsDefined() {
-        // expect
-        contextRunner.withUserConfiguration(RegistryUserFormConfiguration.class, RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context ->
-            assertThat(context).hasSingleBean(RegistryDataFormConfigurationResolverService.class)
-        );
     }
 
     @Test

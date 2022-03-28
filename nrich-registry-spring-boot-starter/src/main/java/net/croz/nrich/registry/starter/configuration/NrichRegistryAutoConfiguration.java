@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
-import net.croz.nrich.registry.api.data.service.RegistryDataFormConfigurationResolverService;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
@@ -23,7 +23,7 @@ import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderSer
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
-import net.croz.nrich.registry.data.service.DefaultRegistryDataFormConfigurationResolverService;
+import net.croz.nrich.registry.data.customizer.RegistryDataFormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
@@ -39,7 +39,6 @@ import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -69,8 +68,6 @@ import java.util.stream.Collectors;
 @EnableConfigurationProperties(NrichRegistryProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichRegistryAutoConfiguration {
-
-    public static final String FORM_CONFIGURATION_MAPPING_BEAN_NAME = "formConfigurationMapping";
 
     private static final String ENVERS_AUDIT_READER_FACTORY = "org.hibernate.envers.AuditReaderFactory";
 
@@ -220,15 +217,13 @@ public class NrichRegistryAutoConfiguration {
         return new RegistryHistoryController(registryHistoryService);
     }
 
-    @ConditionalOnBean(name = FORM_CONFIGURATION_MAPPING_BEAN_NAME)
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(name = "registryDataFormConfigurationMappingCustomizer")
     @Bean
-    public RegistryDataFormConfigurationResolverService registryFormConfigurationRegistrationService(RegistryConfigurationResolverService registryConfigurationResolverService,
-                                                                                                     @Qualifier(FORM_CONFIGURATION_MAPPING_BEAN_NAME) Map<String, Class<?>> formConfigurationMapping) {
+    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
             .map(RegistryDataConfiguration::getRegistryType)
             .collect(Collectors.toList());
 
-        return new DefaultRegistryDataFormConfigurationResolverService(registryClassList, formConfigurationMapping);
+        return new RegistryDataFormConfigurationMappingCustomizer(registryClassList);
     }
 }
