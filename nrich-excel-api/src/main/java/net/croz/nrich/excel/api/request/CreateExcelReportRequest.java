@@ -68,6 +68,12 @@ public class CreateExcelReportRequest {
         return CreateExcelReportRequest.builder().multiRowDataProvider(multiRowDataProvider);
     }
 
+    /**
+     * CreateExcelReportRequest builder (explicit to avoid errors while publishing javadoc).
+     */
+    public static class CreateExcelReportRequestBuilder { // NOSONAR
+    }
+
     private static CreateExcelReportRequest.CreateExcelReportRequestBuilder builder() {
         return new CreateExcelReportRequest.CreateExcelReportRequestBuilder();
     }
