@@ -30,7 +30,7 @@ To be able to use this library following configuration is required:
     }
 
     @Bean
-    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
+    public NotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
@@ -62,7 +62,7 @@ advice would look something like this:
 @RequiredArgsConstructor
 public class NotificationErrorHandlingRestControllerAdvice {
 
-    private NotificationResponseService<?> notificationResponseService;
+    private NotificationResponseService notificationResponseService;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception, HttpServletRequest request) {
@@ -93,7 +93,7 @@ Users can also use `NotificationResponseService` to return notifications with re
 @RequiredArgsConstructor
 public class NotificationTestController {
 
-    private NotificationResponseService<ResponseWithNotification<?>> notificationResponseService;
+    private NotificationResponseService notificationResponseService;
 
     private ExampleService exampleService;
 
