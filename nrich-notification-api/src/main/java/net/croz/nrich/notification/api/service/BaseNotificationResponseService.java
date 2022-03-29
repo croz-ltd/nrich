@@ -46,23 +46,19 @@ public interface BaseNotificationResponseService<T> {
     /**
      * Returns response with {@link net.croz.nrich.notification.api.model.Notification} instance.
      *
-     * @param data                       data to include in response
+     * @param actionName                 name of the action for which to resolve notification
      * @param additionalNotificationData additional notification data to add to notification
-     * @param <D>                        type of data
      * @return response with notification
      */
-    <D> T responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData);
+    T responseWithNotification(String actionName, AdditionalNotificationData additionalNotificationData);
 
     /**
      * Returns response with {@link net.croz.nrich.notification.api.model.Notification} instance.
      *
-     * @param data                       data to include in response
-     * @param actionName                 name of the action for which to resolve notification
      * @param additionalNotificationData additional notification data to add to notification
-     * @param <D>                        type of data
      * @return response with notification
      */
-    <D> T responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData);
+    T responseWithNotificationActionResolvedFromRequest(AdditionalNotificationData additionalNotificationData);
 
     NotificationResolverService notificationResolverService();
 
@@ -78,19 +74,11 @@ public interface BaseNotificationResponseService<T> {
         return responseWithExceptionNotification(throwable, AdditionalNotificationData.empty(), additionalMessageArgumentList);
     }
 
-    default <D> T responseWithNotificationActionResolvedFromRequest(D data) {
-        return responseWithNotificationActionResolvedFromRequest(data, AdditionalNotificationData.empty());
-    }
-
-    default <D> T responseWithNotification(D data, String actionName) {
-        return responseWithNotification(data, actionName, AdditionalNotificationData.empty());
-    }
-
     default T responseWithNotificationActionResolvedFromRequest() {
-        return responseWithNotificationActionResolvedFromRequest(null, AdditionalNotificationData.empty());
+        return responseWithNotificationActionResolvedFromRequest(AdditionalNotificationData.empty());
     }
 
     default T responseWithNotification(String actionName) {
-        return responseWithNotification(null, actionName, AdditionalNotificationData.empty());
+        return responseWithNotification(actionName, AdditionalNotificationData.empty());
     }
 }

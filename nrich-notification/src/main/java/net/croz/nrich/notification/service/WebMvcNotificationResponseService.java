@@ -44,6 +44,20 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     }
 
     @Override
+    public NotificationResponse responseWithNotificationActionResolvedFromRequest(AdditionalNotificationData additionalNotificationData) {
+        String actionName = extractActionNameFromCurrentRequest();
+
+        return responseWithNotification(actionName, additionalNotificationData);
+    }
+
+    @Override
+    public NotificationResponse responseWithNotification(String actionName, AdditionalNotificationData additionalNotificationData) {
+        Notification notification = notificationResolverService.createNotificationForAction(actionName, additionalNotificationData);
+
+        return new NotificationResponse(notification);
+    }
+
+    @Override
     public <D> NotificationDataResponse<D> responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
         String actionName = extractActionNameFromCurrentRequest();
 

@@ -25,12 +25,12 @@ public class NotificationResponseTestService implements BaseNotificationResponse
     }
 
     @Override
-    public <D> Object responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
+    public Object responseWithNotification(String actionName, AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 
     @Override
-    public <D> Object responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData) {
+    public Object responseWithNotificationActionResolvedFromRequest(AdditionalNotificationData additionalNotificationData) {
         return null;
     }
 
