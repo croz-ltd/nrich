@@ -3,7 +3,8 @@ package net.croz.nrich.notification.service;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
-import net.croz.nrich.notification.api.response.ResponseWithNotification;
+import net.croz.nrich.notification.api.response.NotificationDataResponse;
+import net.croz.nrich.notification.api.response.NotificationResponse;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.constant.NotificationConstants;
@@ -17,43 +18,43 @@ import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-public class WebMvcNotificationResponseService implements NotificationResponseService<ResponseWithNotification<?>> {
+public class WebMvcNotificationResponseService implements NotificationResponseService {
 
     private final NotificationResolverService notificationResolverService;
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData) {
+    public NotificationResponse responseWithValidationFailureNotification(Errors errors, Class<?> validationFailedOwningType, AdditionalNotificationData additionalNotificationData) {
         Notification notification = notificationResolverService.createNotificationForValidationFailure(errors, validationFailedOwningType, additionalNotificationData);
 
-        return new ResponseWithNotification<>(null, notification);
+        return new NotificationResponse(notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithValidationFailureNotification(ConstraintViolationException exception, AdditionalNotificationData additionalNotificationData) {
+    public NotificationResponse responseWithValidationFailureNotification(ConstraintViolationException exception, AdditionalNotificationData additionalNotificationData) {
         Notification notification = notificationResolverService.createNotificationForValidationFailure(exception, additionalNotificationData);
 
-        return new ResponseWithNotification<>(null, notification);
+        return new NotificationResponse(notification);
     }
 
     @Override
-    public ResponseWithNotification<?> responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
+    public NotificationResponse responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
         Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData, exceptionMessageArgumentList);
 
-        return new ResponseWithNotification<>(null, notification);
+        return new NotificationResponse(notification);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
+    public <D> NotificationDataResponse<D> responseWithNotificationActionResolvedFromRequest(D data, AdditionalNotificationData additionalNotificationData) {
         String actionName = extractActionNameFromCurrentRequest();
 
         return responseWithNotification(data, actionName, additionalNotificationData);
     }
 
     @Override
-    public <D> ResponseWithNotification<D> responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData) {
+    public <D> NotificationDataResponse<D> responseWithNotification(D data, String actionName, AdditionalNotificationData additionalNotificationData) {
         Notification notification = notificationResolverService.createNotificationForAction(actionName, additionalNotificationData);
 
-        return new ResponseWithNotification<>(data, notification);
+        return new NotificationDataResponse<>(notification, data);
     }
 
     @Override

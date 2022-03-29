@@ -3,6 +3,7 @@ package net.croz.nrich.webmvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.logging.service.Slf4jLoggingService;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
@@ -81,7 +82,7 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationResponseService<?> notificationResponseService(NotificationResolverService notificationResolverService) {
+    public NotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
@@ -111,7 +112,7 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(NotificationResponseService<?> notificationResponseService, LoggingService loggingService,
+    public NotificationErrorHandlingRestControllerAdvice notificationErrorHandlingRestControllerAdvice(BaseNotificationResponseService<?> notificationResponseService, LoggingService loggingService,
                                                                                                        ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService,
                                                                                                        ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(

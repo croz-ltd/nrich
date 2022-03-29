@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.notification.api.model.AdditionalNotificationData;
-import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.api.service.ExceptionHttpStatusResolverService;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
 
     private final List<String> exceptionAuxiliaryDataToIncludeInNotification;
 
-    private final NotificationResponseService<?> notificationResponseService;
+    private final BaseNotificationResponseService<?> notificationResponseService;
 
     private final LoggingService loggingService;
 

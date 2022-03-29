@@ -1,7 +1,7 @@
 package net.croz.nrich.notification.starter;
 
 import net.croz.nrich.notification.api.service.NotificationResolverService;
-import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.starter.configuration.NrichNotificationAutoConfiguration;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class NrichNotificationAutoConfigurationTest {
         contextRunner.run(context -> {
             assertThat(context).hasSingleBean(ConstraintConversionService.class);
             assertThat(context).hasSingleBean(NotificationResolverService.class);
-            assertThat(context).doesNotHaveBean(NotificationResponseService.class);
+            assertThat(context).doesNotHaveBean(BaseNotificationResponseService.class);
             assertThat(context).hasSingleBean(NrichNotificationAutoConfiguration.NotificationMessageSourceRegistrar.class);
         });
     }
@@ -44,7 +44,7 @@ class NrichNotificationAutoConfigurationTest {
     void shouldIncludeNotificationResponseServiceWhenRunningInWebEnvironment() {
         // expect
         webContextRunner.run(context ->
-            assertThat(context).hasSingleBean(NotificationResponseService.class)
+            assertThat(context).hasSingleBean(BaseNotificationResponseService.class)
         );
     }
 
