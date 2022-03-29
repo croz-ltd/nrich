@@ -9,6 +9,7 @@ dependencies {
 
   implementation project(":nrich-registry")
   implementation project(":nrich-search")
+  implementation project(":nrich-spring-boot")
 
   implementation "org.hibernate:hibernate-core"
   implementation "org.modelmapper:modelmapper"

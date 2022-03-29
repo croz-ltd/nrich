@@ -3,6 +3,8 @@ package net.croz.nrich.registry.starter.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
@@ -12,7 +14,7 @@ import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.starter.configuration.stub.ModelMapperTestEntity;
-import net.croz.nrich.registry.starter.configuration.stub.RegistryUserConfiguration;
+import net.croz.nrich.registry.starter.properties.NrichRegistryProperties;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.junit.jupiter.api.Test;
@@ -24,9 +26,16 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NrichRegistryAutoConfigurationTest {
+
+    private static final String[] REGISTRY_CONFIGURATION = new String[] {
+        "nrich.registry.registry-configuration.group-definition-configuration-list[0].group-id=DATA",
+        "nrich.registry.registry-configuration.group-definition-configuration-list[0].include-entity-pattern-list=^net.croz.nrich.registry.data.stub.*$"
+    };
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner().withConfiguration(
         AutoConfigurations.of(DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, NrichRegistryAutoConfiguration.class)
@@ -37,9 +46,72 @@ class NrichRegistryAutoConfigurationTest {
     );
 
     @Test
+    void shouldNotRegisterConfigurationWhenNoPropertyValuesHaveBeenConfigured() {
+        // expect
+        contextRunner.withBean(LocalValidatorFactoryBean.class).run(context -> {
+            assertThat(context).doesNotHaveBean("registryDataModelMapper");
+            assertThat(context).doesNotHaveBean("registryBaseModelMapper");
+            assertThat(context).doesNotHaveBean(RegistryConfigurationResolverService.class);
+            assertThat(context).doesNotHaveBean(RegistryConfigurationUpdateInterceptor.class);
+            assertThat(context).doesNotHaveBean(RegistryConfigurationService.class);
+            assertThat(context).doesNotHaveBean(RegistryDataService.class);
+            assertThat(context).doesNotHaveBean(RegistryDataRequestConversionService.class);
+            assertThat(context).doesNotHaveBean(RegistryHistoryService.class);
+            assertThat(context).doesNotHaveBean(FormConfigurationMappingCustomizer.class);
+        });
+    }
+
+    @Test
+    void shouldMapConfigurationProperties() {
+        // given
+        String[] properties = new String[] {
+            "nrich.registry.default-read-only-property-list=id,version",
+            "nrich.registry.registry-search.date-format-list=dd.mm.YYYY",
+            "nrich.registry.registry-search.decimal-number-format-list=#0.00",
+            "nrich.registry.registry-search.boolean-true-regex-pattern=^(?i)\\s*(true|yes)\\s*$",
+            "nrich.registry.registry-search.boolean-false-regex-pattern=^(?i)\\s*(false|no)\\s*$",
+            "nrich.registry.registry-configuration.group-display-order-list=DATA",
+            "nrich.registry.registry-configuration.history-display-order-list=id,name",
+            "nrich.registry.registry-configuration.group-definition-configuration-list[0].group-id=DATA",
+            "nrich.registry.registry-configuration.group-definition-configuration-list[0].include-entity-pattern-list=^net.croz.nrich.registry.data.stub.*$",
+            "nrich.registry.registry-configuration.group-definition-configuration-list[0].exclude-entity-pattern-list=^net.croz.nrich.registry.data.stub.exclude.*$"
+        };
+
+        contextRunner.withPropertyValues(properties).withBean(LocalValidatorFactoryBean.class).run(context -> {
+            // when
+            NrichRegistryProperties registryProperties = context.getBean(NrichRegistryProperties.class);
+
+            // then
+            assertThat(registryProperties.getDefaultReadOnlyPropertyList()).containsExactly("id", "version");
+
+            assertThat(registryProperties.getRegistrySearch()).isNotNull();
+
+            NrichRegistryProperties.RegistrySearchProperties registrySearchProperties = registryProperties.getRegistrySearch();
+
+            assertThat(registrySearchProperties.getDateFormatList()).containsExactly("dd.mm.YYYY");
+            assertThat(registrySearchProperties.getDecimalNumberFormatList()).containsExactly("#0.00");
+            assertThat(registrySearchProperties.getBooleanTrueRegexPattern()).isEqualTo("^(?i)\\s*(true|yes)\\s*$");
+            assertThat(registrySearchProperties.getBooleanFalseRegexPattern()).isEqualTo("^(?i)\\s*(false|no)\\s*$");
+
+            assertThat(registryProperties.getRegistryConfiguration()).isNotNull();
+
+            RegistryConfiguration registryConfiguration = registryProperties.getRegistryConfiguration();
+
+            assertThat(registryConfiguration.getGroupDisplayOrderList()).containsExactly("DATA");
+            assertThat(registryConfiguration.getHistoryDisplayOrderList()).containsExactly("id", "name");
+
+            List<RegistryGroupDefinitionConfiguration> registryGroupDefinitionList = registryProperties.getRegistryConfiguration().getGroupDefinitionConfigurationList();
+
+            assertThat(registryGroupDefinitionList).extracting("groupId").containsExactly("DATA");
+            assertThat(registryGroupDefinitionList).flatExtracting("includeEntityPatternList").containsExactly("^net.croz.nrich.registry.data.stub.*$");
+            assertThat(registryGroupDefinitionList).flatExtracting("excludeEntityPatternList").containsExactly("^net.croz.nrich.registry.data.stub.exclude.*$");
+        });
+    }
+
+    @Test
     void shouldConfigureDefaultConfiguration() {
         // expect
-        contextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).run(context -> {
             assertThat(context).hasBean("registryDataModelMapper");
             assertThat(context).hasBean("registryBaseModelMapper");
 
@@ -63,7 +135,7 @@ class NrichRegistryAutoConfigurationTest {
     @Test
     void shouldRegisterControllersInWebEnvironment() {
         // expect
-        webContextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
+        webContextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).run(context -> {
             assertThat(context).hasSingleBean(RegistryConfigurationController.class);
             assertThat(context).hasSingleBean(RegistryDataController.class);
             assertThat(context).hasSingleBean(RegistryHistoryController.class);
@@ -72,14 +144,14 @@ class NrichRegistryAutoConfigurationTest {
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
-        contextRunner.withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
             assertThat(context).doesNotHaveBean(StringToTypeConverter.class)
         );
     }
 
     @Test
     void shouldSkipIdCopyInRegisteredModelMapperInstance() {
-        contextRunner.withUserConfiguration(RegistryUserConfiguration.class).withBean(LocalValidatorFactoryBean.class).run(context -> {
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).run(context -> {
             // given
             ModelMapper modelMapper = context.getBean("registryDataModelMapper", ModelMapper.class);
             ModelMapperTestEntity modelMapperTestEntity = new ModelMapperTestEntity();
