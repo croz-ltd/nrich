@@ -144,7 +144,7 @@ class NrichRegistryAutoConfigurationTest {
 
     @Test
     void shouldNotCreateDefaultValueConverterWhenCreationIsDisabled() {
-        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
             assertThat(context).doesNotHaveBean(StringToTypeConverter.class)
         );
     }
