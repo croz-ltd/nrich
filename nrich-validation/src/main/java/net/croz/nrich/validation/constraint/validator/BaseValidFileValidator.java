@@ -29,7 +29,7 @@ abstract class BaseValidFileValidator {
         String fileName;
         String fileContentType;
         if (value instanceof MultipartFile) {
-            fileName = extractFileName(((MultipartFile) value).getName());
+            fileName = extractFileName(((MultipartFile) value).getOriginalFilename());
             fileContentType = ((MultipartFile) value).getContentType();
         }
         else if (value instanceof FilePart) {

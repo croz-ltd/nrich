@@ -37,7 +37,7 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
         // given
-        MultipartFile file = new MockMultipartFile("**.txt", FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", "**.txt", null, FILE_BYTES);
         ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
@@ -50,7 +50,7 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
         // given
-        MultipartFile file = new MockMultipartFile("someFile.exe", FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", "someFile.exe", null, FILE_BYTES);
         ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
@@ -115,7 +115,7 @@ class ValidFileResolvableValidatorTest {
     @ParameterizedTest
     void shouldValidateMultipartFilename(String fileName) {
         // given
-        MultipartFile file = new MockMultipartFile(fileName, FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", fileName, null, FILE_BYTES);
         ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
@@ -140,7 +140,7 @@ class ValidFileResolvableValidatorTest {
     @Test
     void shouldNotFailOnEmptyPropertyNames() {
         // given
-        MockMultipartFile file = new MockMultipartFile("someFile.txt", FILE_BYTES);
+        MockMultipartFile file = new MockMultipartFile("file", "someFile.txt", null, FILE_BYTES);
         ValidFileResolvableValidatorEmptyPropertyTestRequest request = new ValidFileResolvableValidatorEmptyPropertyTestRequest(file);
 
         // when

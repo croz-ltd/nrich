@@ -33,7 +33,7 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
         // given
-        MultipartFile file = new MockMultipartFile("**.txt", FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", "**.txt", null, FILE_BYTES);
         ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
 
         // when
@@ -46,7 +46,7 @@ class ValidFileValidatorTest {
     @Test
     void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
         // given
-        MultipartFile file = new MockMultipartFile("1.exe", FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", "1.exe", null, FILE_BYTES);
         ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
 
         // when
@@ -73,7 +73,7 @@ class ValidFileValidatorTest {
     @ParameterizedTest
     void shouldNotReportErrorForValidMultipartFile(String filename) {
         // given
-        MultipartFile file = new MockMultipartFile(filename, FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", filename, null, FILE_BYTES);
         ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
 
         // when
