@@ -8,7 +8,7 @@ import javax.validation.ConstraintViolationException;
 
 
 /**
- * Helper service that helps creation response with notification.
+ * Helper service for creation of response with notification.
  *
  * @param <T> Type of response with notification i.e. {@link NotificationDataResponse}
  */

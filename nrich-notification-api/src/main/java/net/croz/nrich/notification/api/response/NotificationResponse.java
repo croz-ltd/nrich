@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.notification.api.model.Notification;
 
 /**
- * Response that hold notification.
+ * Response that holds notification.
  */
 @RequiredArgsConstructor
 @Getter
