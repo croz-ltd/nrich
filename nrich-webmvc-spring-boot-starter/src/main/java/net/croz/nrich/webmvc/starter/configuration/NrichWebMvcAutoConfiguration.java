@@ -1,7 +1,7 @@
 package net.croz.nrich.webmvc.starter.configuration;
 
 import net.croz.nrich.logging.api.service.LoggingService;
-import net.croz.nrich.notification.api.service.NotificationResponseService;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
@@ -22,7 +22,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnBean({ NotificationResponseService.class, LoggingService.class })
+@ConditionalOnBean({ BaseNotificationResponseService.class, LoggingService.class })
 @EnableConfigurationProperties(NrichWebMvcProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichWebMvcAutoConfiguration {
@@ -54,7 +54,7 @@ public class NrichWebMvcAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.webmvc.controller-advice-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
-    public NotificationErrorHandlingRestControllerAdvice notificationRestControllerAdvice(NrichWebMvcProperties webMvcProperties, NotificationResponseService<?> notificationResponseService,
+    public NotificationErrorHandlingRestControllerAdvice notificationRestControllerAdvice(NrichWebMvcProperties webMvcProperties, BaseNotificationResponseService<?> notificationResponseService,
                                                                                           LoggingService loggingService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService,
                                                                                           @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(

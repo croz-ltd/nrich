@@ -4,7 +4,8 @@ import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
-import net.croz.nrich.notification.api.response.ResponseWithNotification;
+import net.croz.nrich.notification.api.response.NotificationDataResponse;
+import net.croz.nrich.notification.api.response.NotificationResponse;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,37 +59,37 @@ class WebMvcNotificationResponseServiceTest {
     @Test
     void shouldCreateResponseForValidationFailure() {
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(Errors.class), Object.class);
+        NotificationResponse notificationResponse = notificationResponseService.responseWithValidationFailureNotification(mock(Errors.class), Object.class);
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Validation failed 1");
+        assertThat(notificationResponse).isNotNull();
+        assertThat(notificationResponse.getNotification()).isNotNull();
+        assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 1");
     }
 
     @Test
     void shouldCreateResponseForValidationFailureForConstraintViolation() {
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithValidationFailureNotification(mock(ConstraintViolationException.class));
+        NotificationResponse notificationResponse = notificationResponseService.responseWithValidationFailureNotification(mock(ConstraintViolationException.class));
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Validation failed 2");
+        assertThat(notificationResponse).isNotNull();
+        assertThat(notificationResponse.getNotification()).isNotNull();
+        assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 2");
     }
 
     @Test
     void shouldCreateResponseForException() {
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithExceptionNotification(new Exception());
+        NotificationResponse notificationResponse = notificationResponseService.responseWithExceptionNotification(new Exception());
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.ERROR);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Exception");
+        assertThat(notificationResponse).isNotNull();
+        assertThat(notificationResponse.getNotification()).isNotNull();
+        assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.ERROR);
+        assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Exception");
     }
 
     @Test
@@ -99,14 +100,14 @@ class WebMvcNotificationResponseServiceTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest(data);
+        NotificationDataResponse<String> notificationDataResponse = notificationResponseService.responseWithNotificationActionResolvedFromRequest(data);
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getData()).isEqualTo(data);
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse).isNotNull();
+        assertThat(notificationDataResponse.getData()).isEqualTo(data);
+        assertThat(notificationDataResponse.getNotification()).isNotNull();
+        assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
     }
 
     @Test
@@ -115,14 +116,14 @@ class WebMvcNotificationResponseServiceTest {
         String data = "data";
 
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification(data, "actionPrefix.actionSuffix");
+        NotificationDataResponse<String> notificationDataResponse = notificationResponseService.responseWithNotification(data, "actionPrefix.actionSuffix");
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getData()).isEqualTo(data);
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse).isNotNull();
+        assertThat(notificationDataResponse.getData()).isEqualTo(data);
+        assertThat(notificationDataResponse.getNotification()).isNotNull();
+        assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
     }
 
     @Test
@@ -132,24 +133,24 @@ class WebMvcNotificationResponseServiceTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotificationActionResolvedFromRequest();
+        NotificationResponse notificationDataResponse = notificationResponseService.responseWithNotificationActionResolvedFromRequest();
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse).isNotNull();
+        assertThat(notificationDataResponse.getNotification()).isNotNull();
+        assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
     }
 
     @Test
     void shouldCreateNotificationFromActionNameWithoutData() {
         // when
-        ResponseWithNotification<?> responseWithNotification = notificationResponseService.responseWithNotification("actionPrefix.actionSuffix");
+        NotificationResponse notificationDataResponse = notificationResponseService.responseWithNotification("actionPrefix.actionSuffix");
 
         // then
-        assertThat(responseWithNotification).isNotNull();
-        assertThat(responseWithNotification.getNotification()).isNotNull();
-        assertThat(responseWithNotification.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
-        assertThat(responseWithNotification.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse).isNotNull();
+        assertThat(notificationDataResponse.getNotification()).isNotNull();
+        assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
+        assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
     }
 }

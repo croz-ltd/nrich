@@ -3,6 +3,7 @@ package net.croz.nrich.notification.starter.configuration;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
@@ -42,9 +43,9 @@ public class NrichNotificationAutoConfiguration {
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-    @ConditionalOnMissingBean(NotificationResponseService.class)
+    @ConditionalOnMissingBean(BaseNotificationResponseService.class)
     @Bean
-    public WebMvcNotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
+    public NotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
 
