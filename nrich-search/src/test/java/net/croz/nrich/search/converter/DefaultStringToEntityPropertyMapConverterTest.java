@@ -27,7 +27,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
     @Test
     void shouldConvertStringToEntityPropertyMap() {
         // given
-        String value = "01.01.1970";
+        String value = "01-01-1970";
 
         // when
         Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity());
