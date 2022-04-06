@@ -136,7 +136,7 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         String responseString = response.getContentAsString();
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
         assertThat(responseString).isNotEmpty();
 
         // and when
@@ -192,5 +192,15 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
         assertThat(notification.getContent()).isEqualTo("Found validation errors:");
         assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
         assertThat(notification.getValidationErrorList()).isNotEmpty();
+    }
+
+    @Test
+    void shouldResolveStatusForUnwrappedException() throws Exception {
+        // when
+        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionStatusResolving")
+            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+
+        // then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }
