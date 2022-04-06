@@ -81,4 +81,9 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
             throw new ExecutionException(exception);
         }
     }
+
+    @PostMapping("unwrappedExceptionStatusResolving")
+    public void unwrappedExceptionStatusResolving() throws Exception {
+        throw new ExecutionException(new NotificationErrorHandlingRestControllerAdviceTestExceptionWithStatus());
+    }
 }

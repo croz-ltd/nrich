@@ -92,9 +92,9 @@ public class NotificationErrorHandlingRestControllerAdvice {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
 
-        HttpStatus status = resolveHttpStatusForException(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        HttpStatus status = resolveHttpStatusForException(unwrappedException, HttpStatus.INTERNAL_SERVER_ERROR);
         AdditionalNotificationData additionalNotificationData = AdditionalNotificationData.builder().messageListDataMap(notificationAuxiliaryData).build();
-        Object[] argumentList = resolveExceptionArgumentList(exception);
+        Object[] argumentList = resolveExceptionArgumentList(unwrappedException);
 
         return ResponseEntity.status(status).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, additionalNotificationData, argumentList));
     }
@@ -108,7 +108,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     private void logExceptionWithResolvedAuxiliaryData(Exception exception, HttpServletRequest request) {
-        Map<String, ?> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
+        Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
     }
