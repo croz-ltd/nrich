@@ -1,33 +1,26 @@
 package net.croz.nrich.registry.configuration.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
-import net.croz.nrich.registry.test.BaseWebTest;
+import net.croz.nrich.registry.test.BaseControllerTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
-class RegistryConfigurationControllerTest extends BaseWebTest {
+class RegistryConfigurationControllerTest extends BaseControllerTest {
 
     @Test
     void shouldFetchRegistryConfiguration() throws Exception {
+        // given
+        String requestUrl = "/nrich/registry/configuration/fetch";
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/nrich/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasSize(3)));
 
-        // and when
-        List<RegistryGroupConfiguration> convertedResponse = objectMapper.readValue(response.getContentAsString(), new TypeReference<List<RegistryGroupConfiguration>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull().hasSize(3);
     }
 }

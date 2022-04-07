@@ -2,31 +2,27 @@ package net.croz.nrich.registry.data.controller;
 
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
-import net.croz.nrich.registry.test.BaseWebTest;
+import net.croz.nrich.registry.test.BaseControllerTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource(properties = "nrich.registry.data.endpoint-path=api/registry/data")
-class RegistryDataControllerEndpointTest extends BaseWebTest {
+class RegistryDataControllerEndpointTest extends BaseControllerTest {
 
     @Test
     void shouldListRegistryOnCustomDomain() throws Exception {
         // given
+        String requestUrl = "/api/registry/data/list";
         ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(
-            post("/api/registry/data/list").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))).andReturn().getResponse();
+        ResultActions result = performPostRequest(requestUrl, request);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        result.andExpect(status().isOk());
     }
 }

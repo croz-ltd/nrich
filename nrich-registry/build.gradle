@@ -32,6 +32,8 @@ dependencies {
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.hibernate:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
+  testImplementation "org.hamcrest:hamcrest"
+  testImplementation "com.jayway.jsonpath:json-path"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.springframework:spring-test"
