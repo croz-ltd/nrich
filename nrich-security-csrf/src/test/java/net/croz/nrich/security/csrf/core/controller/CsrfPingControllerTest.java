@@ -2,14 +2,13 @@ package net.croz.nrich.security.csrf.core.controller;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CsrfPingControllerTest {
 
@@ -20,10 +19,11 @@ class CsrfPingControllerTest {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(CsrfPingController.class).addPlaceholderValue("nrich.security.csrf.endpoint-path", endpointPath).build();
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(post(uri).accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        ResultActions result = mockMvc.perform(post(uri)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON));
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        result.andExpect(status().isOk());
     }
 }
