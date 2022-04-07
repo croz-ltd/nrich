@@ -4,19 +4,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("controllerEditorRegistrationAdviceTestController")
+@RequestMapping("controller-editor-registration-advice-test-controller")
 @RestController
 public class ControllerEditorRegistrationAdviceTestController {
 
     private static final String TRANSIENT_PROPERTY_IGNORE_RESPONSE_FORMAT = "value=%s transientValue=%s";
 
-    @PostMapping("convertEmptyStringToNull")
-    public String convertEmptyStringToNull(String param) {
+    @PostMapping("empty-strings-to-null")
+    public String emptyStringsToNull(String param) {
         return "value=" + param;
     }
 
-    @PostMapping("ignoreTransientProperty")
-    public String ignoreTransientProperty(ControllerEditorRegistrationAdviceTestRequest request) {
+    @PostMapping("transient-properties-serialization")
+    public String transientPropertiesSerialization(ControllerEditorRegistrationAdviceTestRequest request) {
         return String.format(TRANSIENT_PROPERTY_IGNORE_RESPONSE_FORMAT, request.getProperty(), request.getTransientProperty());
     }
 }

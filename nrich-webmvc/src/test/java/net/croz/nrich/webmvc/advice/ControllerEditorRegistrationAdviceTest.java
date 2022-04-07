@@ -1,15 +1,19 @@
 package net.croz.nrich.webmvc.advice;
 
-import net.croz.nrich.webmvc.test.BaseWebTest;
+import net.croz.nrich.webmvc.test.BaseControllerTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.WebDataBinder;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Map;
+
+import static net.croz.nrich.webmvc.advice.testutil.MapGeneratingUtil.createMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
+class ControllerEditorRegistrationAdviceTest extends BaseControllerTest {
 
     @Test
     void shouldNotRegisterBindersWhenDisabled() {
@@ -26,24 +30,33 @@ class ControllerEditorRegistrationAdviceTest extends BaseWebTest {
 
     @Test
     void shouldConvertEmptyStringsToNull() throws Exception {
-        // given
-        String emptyString = " ";
+        String requestUrl = fullUrl("empty-strings-to-null");
+        Map<String, String> request = createMap("nonEmptyString", "value", "emptyString", "");
 
         // when
-        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/convertEmptyStringToNull")
-            .param("param", emptyString)).andReturn().getResponse().getContentAsString();
+        ResultActions result = performFormPostRequest(requestUrl, request);
 
         // then
-        assertThat(response).isEqualTo("value=null");
+        result.andExpect(status().isOk())
+            .andExpect(content().string("value=null"));
     }
 
     @Test
     void shouldNotBindTransientFields() throws Exception {
+        // given
+        String requestUrl = fullUrl("transient-properties-serialization");
+        String value = "value";
+        Map<String, String> request = createMap("transientProperty", "transient", "property", "nonTransient");
+
         // when
-        String response = mockMvc.perform(post("/controllerEditorRegistrationAdviceTestController/ignoreTransientProperty")
-            .param("transientProperty", "transient").param("property", "nonTransient")).andReturn().getResponse().getContentAsString();
+        ResultActions result = performFormPostRequest(requestUrl, request);
 
         // then
-        assertThat(response).isEqualTo("value=nonTransient transientValue=null");
+        result.andExpect(status().isOk())
+            .andExpect(content().string("value=nonTransient transientValue=null"));
+    }
+
+    private String fullUrl(String path) {
+        return String.format("/controller-editor-registration-advice-test-controller/%s", path);
     }
 }
