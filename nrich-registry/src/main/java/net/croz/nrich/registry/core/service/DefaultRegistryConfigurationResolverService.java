@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
+import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
@@ -172,8 +173,8 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         List<SearchJoin<Map<String, Object>>> searchJoinList = Stream.concat(
-                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), ""),
-                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + "."))
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), RegistryCoreConstants.BLANK),
+                createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + RegistryCoreConstants.DOT))
             .collect(Collectors.toList());
 
         searchConfiguration.setJoinList(searchJoinList);
