@@ -7,6 +7,7 @@ import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.search.factory.SearchRepositoryFactorySupportFactory;
 import net.croz.nrich.search.starter.properties.NrichSearchProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,13 +15,19 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @AutoConfigureAfter(HibernateJpaAutoConfiguration.class)
 @EnableConfigurationProperties(NrichSearchProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichSearchAutoConfiguration {
+
+    private static final String SEARCH_CONVERTER = "search";
 
     @ConditionalOnProperty(name = "nrich.search.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "searchDefaultStringToTypeConverter")
@@ -36,8 +43,13 @@ public class NrichSearchAutoConfiguration {
 
     @ConditionalOnMissingBean(name = "searchStringToEntityPropertyMapConverter")
     @Bean
-    public StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
+    public StringToEntityPropertyMapConverter searchStringToEntityPropertyMapConverter(@Lazy @Autowired(required = false) Map<String, StringToTypeConverter<?>> stringToTypeConverterList) {
+        List<StringToTypeConverter<?>> searchConverters = stringToTypeConverterList.entrySet().stream()
+            .filter(entry -> entry.getKey().toLowerCase(Locale.ROOT).contains(SEARCH_CONVERTER))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList());
+
+        return new DefaultStringToEntityPropertyMapConverter(searchConverters);
     }
 
     @ConditionalOnMissingBean
