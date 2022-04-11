@@ -52,6 +52,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -60,6 +61,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,6 +74,8 @@ import java.util.stream.Collectors;
 public class NrichRegistryAutoConfiguration {
 
     private static final String ENVERS_AUDIT_READER_FACTORY = "org.hibernate.envers.AuditReaderFactory";
+
+    private static final String REGISTRY_CONVERTER = "registry";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -127,11 +131,15 @@ public class NrichRegistryAutoConfiguration {
         );
     }
 
-    // TODO qualifier on a list, prefix maybe, this way it will pick up from search also?
     @ConditionalOnMissingBean(name = "registryStringToEntityPropertyMapConverter")
     @Bean
-    public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(List<StringToTypeConverter<?>> stringToTypeConverterList) {
-        return new DefaultStringToEntityPropertyMapConverter(stringToTypeConverterList);
+    public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(@Lazy @Autowired(required = false) Map<String, StringToTypeConverter<?>> stringToTypeConverterList) {
+        List<StringToTypeConverter<?>> registryConverters = stringToTypeConverterList.entrySet().stream()
+            .filter(entry -> entry.getKey().toLowerCase(Locale.ROOT).contains(REGISTRY_CONVERTER))
+            .map(Map.Entry::getValue)
+            .collect(Collectors.toList());
+
+        return new DefaultStringToEntityPropertyMapConverter(registryConverters);
     }
 
     @ConditionalOnMissingBean
