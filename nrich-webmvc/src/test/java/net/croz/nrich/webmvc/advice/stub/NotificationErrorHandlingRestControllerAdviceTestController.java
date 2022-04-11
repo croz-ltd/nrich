@@ -16,43 +16,38 @@ import java.util.concurrent.ExecutionException;
 import static org.mockito.Mockito.mock;
 
 @RequiredArgsConstructor
-@RequestMapping("notificationErrorHandlingRestControllerAdviceTest")
+@RequestMapping("notification-error-handling-test-controller")
 @RestController
 public class NotificationErrorHandlingRestControllerAdviceTestController {
 
     private final NotificationErrorHandlingRestControllerAdviceTestService notificationErrorHandlingRestControllerAdviceTestService;
 
-    @PostMapping("exceptionResolving")
+    @PostMapping("exception-resolving")
     public void exceptionResolving() {
         throw new NotificationErrorHandlingRestControllerAdviceTestException();
     }
 
-    @PostMapping("exceptionResolvingWithArguments")
+    @PostMapping("exception-resolving-with-arguments")
     public void exceptionResolvingWithArguments() {
         throw new NotificationErrorHandlingRestControllerAdviceTestExceptionWithArguments("message", 1);
     }
 
-    @PostMapping("validationFailedResolving")
+    @PostMapping("validation-failed-resolving")
     public String validationFailedResolving(@Valid @RequestBody NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 
-    @PostMapping("bindValidationFailedResolving")
+    @PostMapping("bind-validation-failed-resolving")
     public String bindValidationFailedResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
         return request.getName();
     }
 
-    @PostMapping("validationFailedBindExceptionResolving")
-    public String validationFailedBindExceptionResolving(@Valid NotificationErrorHandlingRestControllerAdviceTestRequest request) {
-        return request.getName();
-    }
-
-    @PostMapping("unwrappedExceptionResolving")
+    @PostMapping("unwrapped-exception-resolving")
     public void unwrappedExceptionResolving() throws Exception {
         throw new ExecutionException(new NotificationErrorHandlingRestControllerAdviceTestException());
     }
 
-    @PostMapping("unwrappedExceptionValidationFailedResolving")
+    @PostMapping("unwrapped-exception-validation-failed-resolving")
     public void unwrappedExceptionValidationFailedResolving() throws Exception {
         MethodParameter methodParameter = new MethodParameter(this.getClass().getMethods()[1], -1);
         MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, mock(BindingResult.class));
@@ -60,19 +55,19 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
         throw new ExecutionException(exception);
     }
 
-    @PostMapping("unwrappedExceptionBindExceptionResolving")
+    @PostMapping("unwrapped-exception-bind-exception-resolving")
     public void unwrappedExceptionBindExceptionResolving() throws Exception {
         BindException exception = new BindException(mock(BindingResult.class));
 
         throw new ExecutionException(exception);
     }
 
-    @PostMapping("constraintViolationExceptionResolving")
+    @PostMapping("constraint-violation-exception-resolving")
     public String constraintViolationExceptionResolving() {
         return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
     }
 
-    @PostMapping("unwrappedExceptionConstraintViolationExceptionExceptionResolving")
+    @PostMapping("unwrapped-exception-constraint-violation-exception-resolving")
     public String unwrappedExceptionConstraintViolationExceptionExceptionResolving() throws Exception {
         try {
             return notificationErrorHandlingRestControllerAdviceTestService.validationFailedResolving(new NotificationErrorHandlingRestControllerAdviceTestRequest());
@@ -82,7 +77,7 @@ public class NotificationErrorHandlingRestControllerAdviceTestController {
         }
     }
 
-    @PostMapping("unwrappedExceptionStatusResolving")
+    @PostMapping("unwrapped-exception-status-resolving")
     public void unwrappedExceptionStatusResolving() throws Exception {
         throw new ExecutionException(new NotificationErrorHandlingRestControllerAdviceTestExceptionWithStatus());
     }

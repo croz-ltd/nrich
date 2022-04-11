@@ -1,206 +1,143 @@
 package net.croz.nrich.webmvc.advice;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import net.croz.nrich.notification.api.model.Notification;
-import net.croz.nrich.notification.api.model.ValidationFailureNotification;
-import net.croz.nrich.webmvc.test.BaseWebTest;
+import net.croz.nrich.webmvc.test.BaseControllerTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Map;
+import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+class NotificationErrorHandlingRestControllerAdviceTest extends BaseControllerTest {
 
-class NotificationErrorHandlingRestControllerAdviceTest extends BaseWebTest {
+    private static final String NOTIFICATION_TITLE_PATH = "$.notification.title";
 
-    private static final String DEFAULT_ERROR_MESSAGE = "Error message";
+    private static final String NOTIFICATION_CONTENT_PATH = "$.notification.content";
 
-    private static final String NOTIFICATION_KEY = "notification";
+    private static final String NOTIFICATION_MESSAGE_LIST_PATH = "$.notification.messageList[0]";
+
+    private static final String NOTIFICATION_VALIDATION_ERROR_LIST_PATH = "$.notification.validationErrorList[0]";
 
     @Test
     void shouldResolveExceptionNotification() throws Exception {
+        // given
+        String requestUrl = fullUrl("exception-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolving")
-            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
-        assertThat(responseString).isNotEmpty();
-
-        // and when
-        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
-        assertThat(notification.getMessageList()).hasSize(1);
-        assertThat(notification.getMessageList().get(0)).startsWith("UUID");
+        result.andExpect(status().isBadGateway())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Error"))
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Error message"))
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value(startsWith("UUID")));
     }
 
     @Test
     void shouldResolveExceptionWithArgumentsNotification() throws Exception {
+        // given
+        String requestUrl = fullUrl("exception-resolving-with-arguments");
+
         // when
-        String responseString = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/exceptionResolvingWithArguments")
-            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse().getContentAsString();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(responseString).isNotNull();
-
-        // and when
-        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
+        result.andExpect(status().is5xxServerError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Error"))
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Error message with arguments: 1"));
     }
 
     @Test
     void shouldResolveValidationNotification() throws Exception {
+        // given
+        String requestUrl = fullUrl("validation-failed-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/validationFailedResolving")
-            .contentType(MediaType.APPLICATION_JSON).content("{}")).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(responseString).isNotEmpty();
-
-        // and when
-        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
-        assertThat(notification.getValidationErrorList()).isNotEmpty();
+        result.andExpect(status().is4xxClientError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Validation failed"))
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Found validation errors:"))
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value("name: Name really cannot be null"))
+            .andExpect(jsonPath(NOTIFICATION_VALIDATION_ERROR_LIST_PATH).isNotEmpty());
     }
 
     @Test
     void shouldResolveValidationBindFailedNotification() throws Exception {
+        // given
+        String requestUrl = fullUrl("bind-validation-failed-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/bindValidationFailedResolving")).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performFormPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(responseString).isNotEmpty();
-
-        // and when
-        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
-        assertThat(notification.getValidationErrorList()).isNotEmpty();
+        result.andExpect(status().is4xxClientError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Validation failed"))
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Found validation errors:"))
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value("name: Name really cannot be null"))
+            .andExpect(jsonPath(NOTIFICATION_VALIDATION_ERROR_LIST_PATH).isNotEmpty());
     }
 
     @Test
     void shouldUnwrapException() throws Exception {
+        // given
+        String requestUrl = fullUrl("unwrapped-exception-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionResolving")).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_GATEWAY.value());
-        assertThat(responseString).isNotEmpty();
+        result.andExpect(status().isBadGateway())
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Error message"))
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value(startsWith("UUID")));
 
-        // and when
-        Map<String, Notification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, Notification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        Notification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo(DEFAULT_ERROR_MESSAGE);
     }
 
-    @ValueSource(strings = { "unwrappedExceptionValidationFailedResolving", "unwrappedExceptionBindExceptionResolving", "unwrappedExceptionConstraintViolationExceptionExceptionResolving" })
+    @ValueSource(strings = { "unwrapped-exception-validation-failed-resolving", "unwrapped-exception-bind-exception-resolving", "unwrapped-exception-constraint-violation-exception-resolving" })
     @ParameterizedTest
     void shouldUnwrapBadRequestExceptions(String url) throws Exception {
+        // given
+        String requestUrl = fullUrl(url);
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/" + url)).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performFormPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(responseString).isNotEmpty();
+        result.andExpect(status().is4xxClientError());
     }
 
     @Test
     void shouldResolveConstraintExceptionNotification() throws Exception {
+        // given
+        String requestUrl = fullUrl("constraint-violation-exception-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/constraintViolationExceptionResolving")
-            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
-        String responseString = response.getContentAsString();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(responseString).isNotEmpty();
-
-        // and when
-        Map<String, ValidationFailureNotification> convertedResponse = objectMapper.readValue(responseString, new TypeReference<Map<String, ValidationFailureNotification>>() {
-        });
-
-        // then
-        assertThat(convertedResponse).isNotNull();
-        assertThat(convertedResponse.get(NOTIFICATION_KEY)).isNotNull();
-
-        // and when
-        ValidationFailureNotification notification = convertedResponse.get(NOTIFICATION_KEY);
-
-        // then
-        assertThat(notification.getContent()).isEqualTo("Found validation errors:");
-        assertThat(notification.getMessageList()).contains("name: Name really cannot be null");
-        assertThat(notification.getValidationErrorList()).isNotEmpty();
+        result.andExpect(status().is4xxClientError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Validation failed"))
+            .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Found validation errors:"))
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value("name: Name really cannot be null"))
+            .andExpect(jsonPath(NOTIFICATION_VALIDATION_ERROR_LIST_PATH).isNotEmpty());
     }
 
     @Test
     void shouldResolveStatusForUnwrappedException() throws Exception {
+        // given
+        String requestUrl = fullUrl("unwrapped-exception-status-resolving");
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/notificationErrorHandlingRestControllerAdviceTest/unwrappedExceptionStatusResolving")
-            .contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        result.andExpect(status().isBadRequest());
+    }
+
+    private String fullUrl(String path) {
+        return String.format("/notification-error-handling-test-controller/%s", path);
     }
 }

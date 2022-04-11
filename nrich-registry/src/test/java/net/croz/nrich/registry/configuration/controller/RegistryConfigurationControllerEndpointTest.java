@@ -1,24 +1,24 @@
 package net.croz.nrich.registry.configuration.controller;
 
-import net.croz.nrich.registry.test.BaseWebTest;
+import net.croz.nrich.registry.test.BaseControllerTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.ResultActions;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestPropertySource(properties = "nrich.registry.configuration.endpoint-path=api/registry/configuration")
-class RegistryConfigurationControllerEndpointTest extends BaseWebTest {
+class RegistryConfigurationControllerEndpointTest extends BaseControllerTest {
 
     @Test
     void shouldFetchRegistryConfiguration() throws Exception {
+        // given
+        String requestUrl = "/api/registry/configuration/fetch";
+
         // when
-        MockHttpServletResponse response = mockMvc.perform(post("/api/registry/configuration/fetch").contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        ResultActions result = performPostRequest(requestUrl);
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        result.andExpect(status().isOk());
     }
 }

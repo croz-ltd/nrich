@@ -10,13 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
@@ -27,8 +24,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
+import static net.croz.nrich.security.csrf.webmvc.testutil.CsrfInterceptorGeneratingUtil.createHttpServletRequest;
+import static net.croz.nrich.security.csrf.webmvc.testutil.CsrfInterceptorGeneratingUtil.createHttpServletRequestWithHeader;
+import static net.croz.nrich.security.csrf.webmvc.testutil.CsrfInterceptorGeneratingUtil.createHttpServletRequestWithParam;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CsrfInterceptorTest {
 
@@ -55,7 +58,7 @@ class CsrfInterceptorTest {
     @Test
     void shouldPassThroughRequestWithoutPath() {
         // given
-        HttpServletRequest emptyRequest = MockMvcRequestBuilders.post(CsrfConstants.EMPTY_PATH).buildRequest(new MockServletContext());
+        HttpServletRequest emptyRequest = createHttpServletRequest(CsrfConstants.EMPTY_PATH);
 
         // when
         boolean result = csrfInterceptor.preHandle(emptyRequest, new MockHttpServletResponse(), new Object());
@@ -67,7 +70,7 @@ class CsrfInterceptorTest {
     @Test
     void shouldPassThroughRequestForResource() {
         // given
-        HttpServletRequest emptyRequest = MockMvcRequestBuilders.post("/css/style.css").buildRequest(new MockServletContext());
+        HttpServletRequest emptyRequest = createHttpServletRequest("/css/style.css");
 
         // when
         boolean result = csrfInterceptor.preHandle(emptyRequest, new MockHttpServletResponse(), new ResourceHttpRequestHandler());
@@ -79,7 +82,7 @@ class CsrfInterceptorTest {
     @Test
     void shouldUpdateLastRealApiCallForExcludedUrl() {
         // given
-        HttpServletRequest excludedRequest = MockMvcRequestBuilders.post(CSRF_EXCLUDED_URI).session(new MockHttpSession()).buildRequest(new MockServletContext());
+        HttpServletRequest excludedRequest = createHttpServletRequest(CSRF_EXCLUDED_URI);
 
         // when
         boolean result = csrfInterceptor.preHandle(excludedRequest, new MockHttpServletResponse(), new Object());
@@ -98,7 +101,7 @@ class CsrfInterceptorTest {
         session.setMaxInactiveInterval(10);
         session.setAttribute(CsrfConstants.NRICH_LAST_REAL_API_REQUEST_MILLIS, 0L);
 
-        HttpServletRequest pingRequest = MockMvcRequestBuilders.post(CSRF_PING_URL).session(session).buildRequest(new MockServletContext());
+        HttpServletRequest pingRequest = createHttpServletRequest(CSRF_PING_URL, session);
 
         // when
         boolean result = csrfInterceptor.preHandle(pingRequest, new MockHttpServletResponse(), new Object());
@@ -112,7 +115,7 @@ class CsrfInterceptorTest {
     void shouldReturnInitialTokenWhenAccessingInitialTokenUrl() {
         // given
         ModelAndView modelAndView = new ModelAndView();
-        HttpServletRequest initialTokenRequest = MockMvcRequestBuilders.post(CSRF_INITIAL_TOKEN_URL).session(new MockHttpSession()).buildRequest(new MockServletContext());
+        HttpServletRequest initialTokenRequest = createHttpServletRequest(CSRF_INITIAL_TOKEN_URL, new MockHttpSession());
 
         // when
         csrfInterceptor.postHandle(initialTokenRequest, new MockHttpServletResponse(), new Object(), modelAndView);
@@ -124,7 +127,7 @@ class CsrfInterceptorTest {
     @Test
     void shouldReturnErrorWhenTokenDoesntExist() {
         // given
-        HttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(new MockHttpSession()).buildRequest(new MockServletContext());
+        HttpServletRequest securedUrlRequest = createHttpServletRequest(CSRF_SECURED_ENDPOINT);
 
         // when
         Throwable thrown = catchThrowable(() -> csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object()));
@@ -136,7 +139,7 @@ class CsrfInterceptorTest {
     @Test
     void shouldThrowExceptionWhenSessionDoesntExist() {
         // given
-        HttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).buildRequest(new MockServletContext());
+        HttpServletRequest securedUrlRequest = createHttpServletRequest(CSRF_SECURED_ENDPOINT, null);
 
         // when
         Throwable thrown = catchThrowable(() -> csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object()));
@@ -151,7 +154,7 @@ class CsrfInterceptorTest {
         // given
         MockHttpSession session = new MockHttpSession();
         String csrfToken = generateCsrfToken(session);
-        HttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(uri).session(session).header(CSRF_TOKEN_KEY_NAME, csrfToken).buildRequest(new MockServletContext());
+        HttpServletRequest securedUrlRequest = createHttpServletRequestWithHeader(uri, session, CSRF_TOKEN_KEY_NAME, csrfToken);
 
         // when
         boolean result = csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object());
@@ -165,13 +168,13 @@ class CsrfInterceptorTest {
         // given
         MockHttpSession session = new MockHttpSession();
         ModelAndView modelAndView = new ModelAndView();
-        HttpServletRequest initialTokenRequest = MockMvcRequestBuilders.post(CSRF_INITIAL_TOKEN_URL).session(session).buildRequest(new MockServletContext());
+        HttpServletRequest initialTokenRequest = createHttpServletRequest(CSRF_INITIAL_TOKEN_URL, session);
 
         csrfInterceptor.postHandle(initialTokenRequest, new MockHttpServletResponse(), new Object(), modelAndView);
 
         String csrfToken = (String) modelAndView.getModel().get(CsrfConstants.CSRF_INITIAL_TOKEN_ATTRIBUTE_NAME);
 
-        MockHttpServletRequest securedUrlRequest = MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT).session(session).param(CSRF_TOKEN_KEY_NAME, csrfToken).buildRequest(new MockServletContext());
+        HttpServletRequest securedUrlRequest = createHttpServletRequestWithParam(CSRF_SECURED_ENDPOINT, session, CSRF_TOKEN_KEY_NAME, csrfToken);
 
         // when
         boolean result = csrfInterceptor.preHandle(securedUrlRequest, new MockHttpServletResponse(), new Object());
@@ -189,18 +192,18 @@ class CsrfInterceptorTest {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new CsrfTestController()).addInterceptors(csrfInterceptor).build();
 
         // when
-        MockHttpServletResponse response = mockMvc.perform(MockMvcRequestBuilders.post(CSRF_SECURED_ENDPOINT)
+        ResultActions result = mockMvc.perform(post(CSRF_SECURED_ENDPOINT)
             .session(session)
-            .header(CSRF_TOKEN_KEY_NAME, csrfToken)).andReturn().getResponse();
+            .header(CSRF_TOKEN_KEY_NAME, csrfToken));
 
         // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("result");
+        result.andExpect(status().isOk())
+            .andExpect(content().string("result"));
     }
 
     private String generateCsrfToken(MockHttpSession session) {
         ModelAndView modelAndView = new ModelAndView();
-        HttpServletRequest initialTokenRequest = MockMvcRequestBuilders.post(CSRF_INITIAL_TOKEN_URL).session(session).buildRequest(new MockServletContext());
+        HttpServletRequest initialTokenRequest = createHttpServletRequest(CSRF_INITIAL_TOKEN_URL, session);
 
         csrfInterceptor.postHandle(initialTokenRequest, new MockHttpServletResponse(), new Object(), modelAndView);
 
