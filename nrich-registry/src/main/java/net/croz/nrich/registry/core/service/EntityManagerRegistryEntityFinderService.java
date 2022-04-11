@@ -3,6 +3,7 @@ package net.croz.nrich.registry.core.service;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
+import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.constants.RegistryQueryConstants;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
             .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.getName()))
-            .collect(Collectors.joining(RegistryQueryConstants.QUERY_JOIN_SEPARATOR));
+            .collect(Collectors.joining(RegistryCoreConstants.SPACE));
 
         String entityWithAlias = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryQueryConstants.ENTITY_ALIAS);
         String querySelectPart = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, entityWithAlias, joinFetchQueryPart.trim());

@@ -11,12 +11,14 @@ import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurati
 import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
 import net.croz.nrich.registry.configuration.util.JavaToJavascriptTypeConversionUtil;
+import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -30,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -187,8 +190,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
         boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
 
-        String formLabel = formLabel(entityTypePrefix, attributeType, attributeName);
-        String columnHeader = columnHeader(entityTypePrefix, attributeType, attributeName);
+        String attributeDisplayName = convertToDisplayValue(attributeName);
+        String formLabel = formLabel(entityTypePrefix, attributeType, attributeName, attributeDisplayName);
+        String columnHeader = columnHeader(entityTypePrefix, attributeType, attributeName, attributeDisplayName);
 
         return RegistryPropertyConfiguration.builder()
             .name(attributeName)
@@ -224,20 +228,20 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    private String formLabel(String entityTypePrefix, Class<?> attributeType, String attributeName) {
+    private String formLabel(String entityTypePrefix, Class<?> attributeType, String attributeName, String attributeDisplayName) {
         String[] messageCodeList = labelMessageCodeList(entityTypePrefix, attributeType, attributeName).toArray(new String[0]);
-        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList, attributeName);
+        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(messageCodeList, attributeDisplayName);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
-    private String columnHeader(String entityTypePrefix, Class<?> attributeType, String attributeName) {
+    private String columnHeader(String entityTypePrefix, Class<?> attributeType, String attributeName, String attributeDisplayName) {
         List<String> headerMessageCodeList = new ArrayList<>();
 
         headerMessageCodeList.add(String.format(RegistryConfigurationConstants.REGISTRY_COLUMN_HEADER_FORMAT, entityTypePrefix, attributeName));
         headerMessageCodeList.addAll(labelMessageCodeList(entityTypePrefix, attributeType, attributeName));
 
-        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(headerMessageCodeList.toArray(new String[0]), attributeName);
+        DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(headerMessageCodeList.toArray(new String[0]), attributeDisplayName);
 
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
@@ -264,5 +268,14 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
         }
 
         return registryOverrideConfigurationMap.get(type);
+    }
+
+    private String convertToDisplayValue(String attributeName) {
+        List<String> attributeWordList = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(attributeName))
+            .map(value -> value.trim().toLowerCase(Locale.ROOT))
+            .filter(value -> !RegistryCoreConstants.DOT.equals(value))
+            .collect(Collectors.toList());
+
+        return StringUtils.capitalize(String.join(RegistryCoreConstants.SPACE, attributeWordList));
     }
 }

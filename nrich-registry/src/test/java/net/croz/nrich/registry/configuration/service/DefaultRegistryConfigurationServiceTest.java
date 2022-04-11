@@ -62,6 +62,12 @@ class DefaultRegistryConfigurationServiceTest {
 
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).hasSize(5);
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber");
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("formLabel").containsExactly(
+            "Name of property", "Id", "Non editable property", "Float number", "Double number"
+        );
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("columnHeader").containsExactly(
+            "Header of property", "Id", "Non editable property", "Float number", "Double number"
+        );
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("isDecimal").containsExactly(false, false, false, true, true);
 
         // and when
