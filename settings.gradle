@@ -1,4 +1,4 @@
-rootProject.name = "nrichcode"
+rootProject.name = "nrich"
 
 include(
   "nrich-bom",
