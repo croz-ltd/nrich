@@ -4,6 +4,7 @@ import net.croz.nrich.search.SearchTestConfiguration;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.repository.stub.TestEntityStringSearchRepository;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,11 +37,13 @@ class JpaStringSearchExecutorTest {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @BeforeEach
+    void setup() {
+        generateListForStringSearch(entityManager);
+    }
+
     @Test
     void shouldFindOne() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
 
@@ -50,9 +53,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldReturnEmptyOptionalWhenNoResultsHaveBeenFound() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
 
@@ -63,8 +63,6 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindOneMatchingAnyProperty() {
         // given
-        generateListForStringSearch(entityManager);
-
         SearchConfiguration<TestStringSearchEntity, TestStringSearchEntity, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         // when
@@ -76,9 +74,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldFindAll() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name 1", Collections.singletonList("name"), EMPTY_CONFIGURATION);
 
@@ -88,9 +83,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldFindAllWithSort() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name", Collections.singletonList("name"), EMPTY_CONFIGURATION, Sort.by(Sort.Order.desc("name")));
 
@@ -101,9 +93,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldFindAllWithPaging() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("51", Collections.singletonList("age"), EMPTY_CONFIGURATION, PageRequest.of(0, 1));
 
@@ -113,9 +102,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldReturnWholeResultListWhenRequestIsUnpaged() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", Collections.singletonList("ageFrom"), EMPTY_CONFIGURATION, Pageable.unpaged());
 
@@ -127,9 +113,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldCount() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         long result = testEntityStringSearchRepository.count("51", Collections.singletonList("age"), EMPTY_CONFIGURATION);
 
@@ -139,9 +122,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldReturnZeroWhenThereAreNoResults() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), EMPTY_CONFIGURATION);
 
@@ -151,9 +131,6 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldReturnTrueWhenEntityExists() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         boolean result = testEntityStringSearchRepository.exists("51", Collections.singletonList("age"), EMPTY_CONFIGURATION);
 
@@ -163,13 +140,19 @@ class JpaStringSearchExecutorTest {
 
     @Test
     void shouldReturnFalseWhenEntityDoesntExist() {
-        // given
-        generateListForStringSearch(entityManager);
-
         // when
         boolean result = testEntityStringSearchRepository.exists("51111", Collections.singletonList("age"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isFalse();
+    }
+
+    @Test
+    void shouldFindByRangeQuery() {
+        // when
+        long result = testEntityStringSearchRepository.count("02.01.1970.", Collections.singletonList("localDateFrom"), EMPTY_CONFIGURATION);
+
+        // then
+        assertThat(result).isEqualTo(3);
     }
 }
