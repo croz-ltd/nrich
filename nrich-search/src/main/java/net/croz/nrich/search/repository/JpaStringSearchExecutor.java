@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.ManagedType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,20 +29,20 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     private final EntityManager entityManager;
 
-    private final JpaEntityInformation<T, ?> jpaEntityInformation;
-
     private final JpaQueryBuilder<T> queryBuilder;
+
+    private final ManagedType<?> managedType;
 
     public JpaStringSearchExecutor(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, EntityManager entityManager, JpaEntityInformation<T, ?> jpaEntityInformation) {
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.entityManager = entityManager;
-        this.jpaEntityInformation = jpaEntityInformation;
         this.queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
+        this.managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
     }
 
     @Override
     public <P> Optional<P> findOne(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
 
@@ -55,7 +56,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     @Override
     public <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
 
@@ -64,7 +65,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     @Override
     public <P> List<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Sort sort) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, sort);
 
@@ -73,7 +74,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     @Override
     public <P> Page<P> findAll(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Pageable pageable) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, pageable.getSort());
         TypedQuery<P> typedQuery = entityManager.createQuery(query);
@@ -89,20 +90,20 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     @Override
     public <P> long count(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted()));
     }
 
     @Override
     public <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
-        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList);
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
         return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted())) > 0;
     }
 
-    private Map<String, Object> convertToMap(String searchTerm, List<String> propertyToSearchList) {
-        return stringToEntityPropertyMapConverter.convert(searchTerm, propertyToSearchList, jpaEntityInformation.getRequiredIdAttribute().getDeclaringType());
+    private Map<String, Object> convertToMap(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, ?, Map<String, Object>> searchConfiguration) {
+        return stringToEntityPropertyMapConverter.convert(searchTerm, propertyToSearchList, managedType, searchConfiguration.getSearchPropertyConfiguration());
     }
 
     private long executeCountQuery(CriteriaQuery<?> query) {
