@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalQuery;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
@@ -51,14 +53,13 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
             return null;
         }
 
-        ConverterHolder converterHolder = converterHolderList.stream().filter(holder -> holder.getType().isAssignableFrom(requiredType)).findFirst().orElse(null);
+        Optional<ConverterHolder> converterHolder = converterHolderList.stream()
+            .filter(holder -> holder.getType().isAssignableFrom(requiredType))
+            .findFirst();
 
-        Object convertedValue = null;
-        if (converterHolder != null) {
-            convertedValue = convertWithExceptionIgnored(() -> converterHolder.getConversionFunction().apply(value, requiredType));
-        }
-
-        return convertedValue;
+        return converterHolder
+            .map(holder -> convertWithExceptionIgnored(() -> holder.getConversionFunction().apply(value, requiredType)))
+            .orElse(null);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     private Object dateConverter(String value) {
         return dateFormatList.stream()
             .map(SimpleDateFormat::new)
-            .map(format -> convertWithExceptionIgnored(() -> parseDate(format, value)))
+            .map(formatter -> convertWithExceptionIgnored(() -> parseDate(formatter, value)))
             .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
@@ -126,8 +127,8 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
 
     private Object temporalConverter(String value, TemporalQuery<?> query) {
         return dateFormatList.stream()
-            .map(DateTimeFormatter::ofPattern)
-            .map(format -> convertWithExceptionIgnored(() -> format.parse(value, query)))
+            .map(pattern -> DateTimeFormatter.ofPattern(pattern).withZone(ZoneId.systemDefault()))
+            .map(formatter -> convertWithExceptionIgnored(() -> formatter.parse(value, query)))
             .filter(Objects::nonNull)
             .findFirst()
             .orElse(null);
