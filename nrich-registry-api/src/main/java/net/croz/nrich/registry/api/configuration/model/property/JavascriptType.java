@@ -5,10 +5,5 @@ package net.croz.nrich.registry.api.configuration.model.property;
  */
 public enum JavascriptType {
 
-    STRING, BOOLEAN, NUMBER, DATE, OBJECT;
-
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+    STRING, BOOLEAN, NUMBER, DATE, OBJECT
 }
