@@ -236,7 +236,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
         "propertyConfigurationList": [
           {
             "name": "id",
-            "javascriptType": "NUMBER",
+            "javascriptType": "number",
             "originalType": "java.lang.Long",
             "formLabel": "Id",
             "columnHeader": "Id",
@@ -249,7 +249,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "firstName",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "First name",
             "columnHeader": "First name",
@@ -262,7 +262,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "lastName",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "Last name",
             "columnHeader": "Last name",
@@ -292,7 +292,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
         "historyPropertyConfigurationList": [
           {
             "name": "revisionNumber",
-            "javascriptType": "NUMBER",
+            "javascriptType": "number",
             "originalType": "java.lang.Integer",
             "formLabel": "revisionNumber",
             "columnHeader": "revisionNumber",
@@ -305,7 +305,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "revisionTimestamp",
-            "javascriptType": "DATE",
+            "javascriptType": "date",
             "originalType": "java.util.Date",
             "formLabel": "revisionTimestamp",
             "columnHeader": "revisionTimestamp",
@@ -318,7 +318,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "revisionType",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "revisionType",
             "columnHeader": "revisionType",
@@ -348,7 +348,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
         "propertyConfigurationList": [
           {
             "name": "id",
-            "javascriptType": "NUMBER",
+            "javascriptType": "number",
             "originalType": "java.lang.Long",
             "formLabel": "Id",
             "columnHeader": "Id",
@@ -361,7 +361,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "isbn",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "Isbn",
             "columnHeader": "Isbn",
@@ -374,7 +374,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "title",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "Title",
             "columnHeader": "Title",
@@ -390,7 +390,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
         "historyPropertyConfigurationList": [
           {
             "name": "revisionNumber",
-            "javascriptType": "NUMBER",
+            "javascriptType": "number",
             "originalType": "java.lang.Integer",
             "formLabel": "revisionNumber",
             "columnHeader": "revisionNumber",
@@ -403,7 +403,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "revisionTimestamp",
-            "javascriptType": "DATE",
+            "javascriptType": "date",
             "originalType": "java.util.Date",
             "formLabel": "revisionTimestamp",
             "columnHeader": "revisionTimestamp",
@@ -416,7 +416,7 @@ Client then invokes REST API POST method `nrich/registry/configuration/fetch` an
           },
           {
             "name": "revisionType",
-            "javascriptType": "STRING",
+            "javascriptType": "string",
             "originalType": "java.lang.String",
             "formLabel": "revisionType",
             "columnHeader": "revisionType",
