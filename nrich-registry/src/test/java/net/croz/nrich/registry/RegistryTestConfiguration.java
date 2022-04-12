@@ -1,6 +1,7 @@
 package net.croz.nrich.registry;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -125,7 +126,7 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper(List<Module> moduleList) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.findAndRegisterModules();
@@ -135,6 +136,8 @@ public class RegistryTestConfiguration {
         objectMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
         objectMapper.setDateFormat(new StdDateFormat());
+
+        objectMapper.registerModules(moduleList);
 
         return objectMapper;
     }

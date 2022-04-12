@@ -37,6 +37,7 @@ dependencies {
   testImplementation "com.jayway.jsonpath:json-path"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
+  testImplementation "org.mockito:mockito-junit-jupiter"
   testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework:spring-webmvc"
 }

@@ -8,5 +8,6 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
+  implementation "com.fasterxml.jackson.core:jackson-annotations"
   implementation "org.springframework.data:spring-data-commons"
 }

@@ -1,6 +1,7 @@
 package net.croz.nrich.registry.starter.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -99,7 +100,7 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public ObjectMapper registryObjectMapper() {
+    public ObjectMapper registryObjectMapper(List<Module> moduleList) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         objectMapper.findAndRegisterModules();
@@ -110,6 +111,8 @@ public class NrichRegistryAutoConfiguration {
         objectMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
         objectMapper.setDateFormat(new StdDateFormat());
+
+        objectMapper.registerModules(moduleList);
 
         return objectMapper;
     }
