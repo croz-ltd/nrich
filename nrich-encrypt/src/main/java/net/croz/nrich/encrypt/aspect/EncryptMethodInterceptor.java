@@ -102,7 +102,6 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
             .fullyQualifiedMethodName(methodName)
             .methodArguments(argumentList)
             .methodDecryptedArguments(argumentList)
-            .principal(authentication())
             .build();
     }
 }
