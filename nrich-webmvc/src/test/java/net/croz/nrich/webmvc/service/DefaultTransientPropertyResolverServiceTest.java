@@ -26,12 +26,5 @@ class DefaultTransientPropertyResolverServiceTest {
 
         // then
         assertThat(resultList).containsExactlyInAnyOrder("value", "anotherValue");
-
-        // and when
-        List<String> cachedResultList = transientPropertyResolverService.resolveTransientPropertyList(type);
-
-        // then
-        assertThat(cachedResultList).containsExactlyInAnyOrder("value", "anotherValue");
-
     }
 }
