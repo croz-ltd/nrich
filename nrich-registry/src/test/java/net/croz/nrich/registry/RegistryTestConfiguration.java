@@ -158,7 +158,7 @@ public class RegistryTestConfiguration {
 
     @Bean
     public StringToTypeConverter<Object> defaultStringToTypeConverter() {
-        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm");
+        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'");
         List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
         String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
         String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
