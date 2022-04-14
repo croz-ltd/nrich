@@ -2,13 +2,13 @@
 plugins {
   id "fr.brouillard.oss.gradle.jgitver" version "$gradleJgitverPluginVersion"
   id "io.github.gradle-nexus.publish-plugin" version "$gradlePublishPluginVersion"
-  id "org.kordamp.gradle.jacoco" version "$gradleKordampPluginVersion"
+  id "jacoco-report-aggregation"
 }
 
-config {
-  coverage {
-    jacoco {
-      setToolVersion("$jacocoVersion")
+reporting {
+  reports {
+    testCodeCoverageReport(JacocoCoverageReport) {
+      testType = TestSuiteType.UNIT_TEST
     }
   }
 }
@@ -38,8 +38,11 @@ allprojects {
   }
 }
 
+Project parent = project
+
 subprojects {
-  boolean isPlatformProject = it.name.endsWith("bom")
+  Project subproject = it
+  boolean isPlatformProject = subproject.name.endsWith("bom")
 
   apply plugin: "maven-publish"
   apply plugin: "signing"
@@ -50,6 +53,7 @@ subprojects {
   else {
     apply plugin: "java"
     apply plugin: "java-library"
+    apply plugin: "jacoco"
 
     sourceCompatibility = "1.8"
 
@@ -81,7 +85,10 @@ subprojects {
 
     tasks.withType(JavaCompile) {
       options.encoding = "UTF-8"
+    }
 
+    parent.dependencies {
+      jacocoAggregation subproject
     }
   }
 

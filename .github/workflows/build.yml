@@ -63,11 +63,11 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: aggregateJacocoReport
+          arguments: jacocoTestReport testCodeCoverageReport
 
       - name: Publish JaCoCo Coverage Report
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
         uses: codecov/codecov-action@v2
         with:
           name: Aggregated JaCoCo Report
-          files: build/reports/jacoco/aggregate/jacocoTestReport.xml
+          files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
