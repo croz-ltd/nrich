@@ -27,7 +27,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class DefaultStringToTypeConverterTest {
 
     private final DefaultStringToTypeConverter defaultStringToTypeConverter = new DefaultStringToTypeConverter(
-        Arrays.asList("dd-MM-yyyy", "dd-MM-yyyy'T'HH:mm", "dd-MM-yyyy'T'HH:mm'Z'", "dd-MM-yyyy'T'HH:mmXXX", "HH:mmXXX"),
+        Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'", "dd.MM.yyyy.'T'HH:mmXXX", "HH:mmXXX"),
         Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$"
     );
 
@@ -59,14 +59,14 @@ class DefaultStringToTypeConverterTest {
             arguments("5", Integer.class, 5),
             arguments("5", Short.class, Short.valueOf("5")),
             arguments("ONE", Value.class, Value.ONE),
-            arguments("01-01-1970", Date.class, dateOf("01-01-1970")),
+            arguments("01.01.1970.", Date.class, dateOf("01.01.1970.")),
             arguments("not a date", Date.class, null),
-            arguments("01-01-2020T11:11", Instant.class, instantOf("01-01-2020T11:11")),
-            arguments("01-01-1970", LocalDate.class, localDateOf("01-01-1970")),
-            arguments("01-01-2020T11:11", LocalDateTime.class, localDateTimeOf("01-01-2020T11:11")),
-            arguments("01-01-2020T11:11Z", OffsetDateTime.class, instantOf("01-01-2020T11:11").atZone(defaultZone).toOffsetDateTime()),
-            arguments("11:11Z", OffsetTime.class, instantOf("01-01-2020T11:11").atZone(defaultZone).toOffsetDateTime().toOffsetTime()),
-            arguments("01-01-2020T11:11Z", ZonedDateTime.class, instantOf("01-01-2020T11:11").atZone(defaultZone)),
+            arguments("01.01.2020.T11:11", Instant.class, instantOf("01.01.2020.T11:11")),
+            arguments("01.01.1970.", LocalDate.class, localDateOf("01.01.1970.")),
+            arguments("01.01.2020.T11:11", LocalDateTime.class, localDateTimeOf("01.01.2020.T11:11")),
+            arguments("01.01.2020.T11:11Z", OffsetDateTime.class, instantOf("01.01.2020.T11:11").atZone(defaultZone).toOffsetDateTime()),
+            arguments("11:11Z", OffsetTime.class, instantOf("01.01.2020.T11:11").atZone(defaultZone).toOffsetDateTime().toOffsetTime()),
+            arguments("01.01.2020.T11:11Z", ZonedDateTime.class, instantOf("01.01.2020.T11:11").atZone(defaultZone)),
             arguments("1.1", BigDecimal.class, new BigDecimal("1.1")),
             arguments("1.1", Float.class, Double.valueOf("1.1")),
             arguments("1.1", Double.class, Double.valueOf("1.1")),

@@ -53,7 +53,7 @@ needed then all beans with history suffix can be omitted.
 
     @Bean
     public StringToTypeConverter<?> defaultStringToTypeConverter() {
-        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy", "yyyy-MM-dd'T'HH:mm"), Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$");
+        return new DefaultStringToTypeConverter(Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'"), Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$");
     }
 
     @Bean

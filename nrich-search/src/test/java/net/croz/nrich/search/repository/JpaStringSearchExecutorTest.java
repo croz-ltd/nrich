@@ -42,7 +42,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01-01-1970", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isNotEmpty();
@@ -54,7 +54,7 @@ class JpaStringSearchExecutorTest {
         generateListForStringSearch(entityManager);
 
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01-01-2000", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isEmpty();
@@ -68,7 +68,7 @@ class JpaStringSearchExecutorTest {
         SearchConfiguration<TestStringSearchEntity, TestStringSearchEntity, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01-01-1970", Arrays.asList("age", "localDate", "name"), searchConfiguration);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", Arrays.asList("age", "localDate", "name"), searchConfiguration);
 
         // then
         assertThat(result).isNotEmpty();

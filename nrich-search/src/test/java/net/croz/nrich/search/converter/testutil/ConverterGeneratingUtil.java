@@ -12,9 +12,9 @@ import java.util.Date;
 
 public final class ConverterGeneratingUtil {
 
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
+    private static final String DATE_PATTERN = "dd.MM.yyyy.";
 
-    private static final String DATE_TIME_PATTERN = "dd-MM-yyyy'T'HH:mm";
+    private static final String DATE_TIME_PATTERN = "dd.MM.yyyy.'T'HH:mm";
 
     private ConverterGeneratingUtil() {
     }
