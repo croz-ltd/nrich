@@ -9,6 +9,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.api.util.PageableUtil;
@@ -139,6 +140,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
     private <T, P> Page<P> registryListInternal(ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
         RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
+        SearchConfiguration<T, P, Map<String, Object>> searchConfiguration = registryDataConfiguration.getSearchConfiguration();
 
         @SuppressWarnings("unchecked")
         JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
@@ -152,11 +154,12 @@ public class DefaultRegistryDataService implements RegistryDataService {
         Map<String, Object> searchRequestMap = Collections.emptyMap();
         if (request.getSearchParameter() != null) {
             searchRequestMap = stringToEntityPropertyMapConverter.convert(
-                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType()
+                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType(),
+                searchConfiguration.getSearchPropertyConfiguration()
             );
         }
 
-        CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, registryDataConfiguration.getSearchConfiguration(), pageable.getSort());
+        CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, searchConfiguration, pageable.getSort());
 
         TypedQuery<P> typedQuery = entityManager.createQuery(query);
 

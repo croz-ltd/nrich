@@ -3,8 +3,10 @@ package net.croz.nrich.search.converter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
+import net.croz.nrich.search.util.PropertyNameUtil;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -20,7 +22,7 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
     private final List<StringToTypeConverter<?>> converterList;
 
     @Override
-    public Map<String, Object> convert(String value, List<String> propertyToSearchList, ManagedType<?> managedType) {
+    public Map<String, Object> convert(String value, List<String> propertyToSearchList, ManagedType<?> managedType, SearchPropertyConfiguration searchPropertyConfiguration) {
         if (value == null || CollectionUtils.isEmpty(propertyToSearchList)) {
             return Collections.emptyMap();
         }
@@ -34,7 +36,13 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
         propertyToSearchList.forEach(property -> {
             AttributeHolder attributeHolder = attributeResolver.resolveAttributeByPath(property);
 
-            if (attributeHolder.getAttribute() == null) {
+            if (!attributeHolder.isFound()) {
+                String propertyWithoutSuffix = PropertyNameUtil.propertyNameWithoutSuffix(property, searchPropertyConfiguration);
+
+                attributeHolder = attributeResolver.resolveAttributeByPath(propertyWithoutSuffix);
+            }
+
+            if (!attributeHolder.isFound()) {
                 return;
             }
 

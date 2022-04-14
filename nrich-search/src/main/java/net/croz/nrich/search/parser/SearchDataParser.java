@@ -13,6 +13,7 @@ import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import net.croz.nrich.search.util.PathResolvingUtil;
+import net.croz.nrich.search.util.PropertyNameUtil;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
@@ -111,18 +112,7 @@ public class SearchDataParser {
     }
 
     private String fieldNameWithoutSuffixAndPrefix(String originalFieldName, String prefix) {
-        SearchPropertyConfiguration searchPropertyConfiguration = searchConfiguration.getSearchPropertyConfiguration();
-        String[] suffixListToRemove = new String[] {
-            searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(),
-            searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix()
-        };
-        String fieldName = originalFieldName;
-        for (String suffix : suffixListToRemove) {
-            if (originalFieldName.endsWith(suffix)) {
-                fieldName = originalFieldName.substring(0, originalFieldName.lastIndexOf(suffix));
-                break;
-            }
-        }
+        String fieldName = PropertyNameUtil.propertyNameWithoutSuffix(originalFieldName, searchConfiguration.getSearchPropertyConfiguration());
 
         if (prefix != null && fieldName.length() > prefix.length()) {
             return StringUtils.uncapitalize(fieldName.substring(prefix.length()));
