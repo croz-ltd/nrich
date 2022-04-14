@@ -3,7 +3,6 @@ package net.croz.nrich.encrypt.api.model;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -27,10 +26,5 @@ public class EncryptionContext {
      * Decrypted method arguments (same as methodArguments for decrypt operation).
      */
     private final List<Object> methodDecryptedArguments;
-
-    /**
-     * Current user {@link Principal}.
-     */
-    private final Principal principal;
 
 }

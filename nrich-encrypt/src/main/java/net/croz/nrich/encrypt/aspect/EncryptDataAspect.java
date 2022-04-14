@@ -86,7 +86,6 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
             .fullyQualifiedMethodName(methodName)
             .methodArguments(argumentList)
             .methodDecryptedArguments(argumentList)
-            .principal(authentication())
             .build();
     }
 }
