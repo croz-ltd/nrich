@@ -6,9 +6,9 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation "com.fasterxml.jackson.core:jackson-databind"
   implementation "org.springframework:spring-context"
 
+  webMvcImplementation "com.fasterxml.jackson.core:jackson-databind"
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
   webMvcImplementation "org.springframework:spring-webmvc"
 
