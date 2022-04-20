@@ -9,7 +9,6 @@ dependencies {
 
   implementation project(":nrich-security-csrf")
 
-  implementation "org.springframework:spring-web"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
