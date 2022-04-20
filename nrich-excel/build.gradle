@@ -6,7 +6,7 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation "org.springframework:spring-context"
+  implementation "org.springframework:spring-core"
   implementation "org.apache.poi:poi"
   implementation "org.apache.poi:poi-ooxml"
 
@@ -20,5 +20,6 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.mockito:mockito-junit-jupiter"
+  testImplementation "org.springframework:spring-context"
   testImplementation "org.springframework:spring-test"
 }

@@ -9,14 +9,9 @@ dependencies {
 
   implementation project(":nrich-excel")
 
-  implementation "org.apache.poi:poi"
-  implementation "org.apache.poi:poi-ooxml"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

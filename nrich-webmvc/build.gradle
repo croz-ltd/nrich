@@ -1,17 +1,15 @@
 description = "Provides @RestControllerAdvice for exception logging and notification resolving and additional serialization and locale features"
 
 dependencies {
+  api project(":nrich-core-api")
+  api project(":nrich-logging-api")
+  api project(":nrich-notification-api")
   api project(":nrich-webmvc-api")
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation project(":nrich-core-api")
-  implementation project(":nrich-logging-api")
-  implementation project(":nrich-notification-api")
-
   implementation "jakarta.validation:jakarta.validation-api"
-  implementation "org.springframework:spring-context"
   implementation "org.springframework:spring-webmvc"
 
   testAnnotationProcessor "org.projectlombok:lombok"
@@ -25,8 +23,8 @@ dependencies {
 
   testImplementation "com.fasterxml.jackson.core:jackson-core"
   testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.hamcrest:hamcrest"
   testImplementation "com.jayway.jsonpath:json-path"

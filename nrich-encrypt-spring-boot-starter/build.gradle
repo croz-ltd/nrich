@@ -10,17 +10,9 @@ dependencies {
   implementation project(":nrich-encrypt")
   implementation project(":nrich-spring-boot")
 
-  implementation "org.aspectj:aspectjrt"
-  implementation "org.aspectj:aspectjweaver"
-  implementation "org.slf4j:slf4j-api"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
-  implementation "org.springframework.security:spring-security-core"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.junit.jupiter:junit-jupiter-params"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

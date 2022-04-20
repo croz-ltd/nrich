@@ -3,12 +3,10 @@ description = "Provides an easy way of querying of JPA entities through automati
 dependencies {
   api project(":nrich-search-api")
   api project(":nrich-search-repository-api")
+  api "org.springframework.data:spring-data-jpa"
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
-
-  implementation "jakarta.persistence:jakarta.persistence-api"
-  implementation "org.springframework.data:spring-data-jpa"
 
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"

@@ -4,21 +4,23 @@ description = """
 """
 
 dependencies {
-  api project(":nrich-registry-api")
   api project(":nrich-form-configuration-api")
-  api "jakarta.validation:jakarta.validation-api"
+  api project(":nrich-registry-api")
+  api project(":nrich-search")
+  api "com.fasterxml.jackson.core:jackson-databind"
+  api "org.modelmapper:modelmapper"
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
   enversImplementation "org.hibernate:hibernate-envers"
 
-  implementation project(":nrich-search")
   implementation "org.apache.commons:commons-lang3"
-  implementation "com.fasterxml.jackson.core:jackson-databind"
-  implementation "org.springframework.data:spring-data-jpa"
-  implementation "org.modelmapper:modelmapper"
-  implementation "org.springframework:spring-web"
+
+  runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+  webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
+  webMvcImplementation "org.springframework:spring-webmvc"
 
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
@@ -27,10 +29,8 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
-  testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.hibernate:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.hamcrest:hamcrest"
@@ -39,5 +39,4 @@ dependencies {
   testImplementation "org.junit.jupiter:junit-jupiter-params"
   testImplementation "org.mockito:mockito-junit-jupiter"
   testImplementation "org.springframework:spring-test"
-  testImplementation "org.springframework:spring-webmvc"
 }

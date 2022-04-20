@@ -1,4 +1,4 @@
-package net.croz.nrich.notification.service;
+package net.croz.nrich.notification.api.service;
 
 import org.springframework.validation.Errors;
 

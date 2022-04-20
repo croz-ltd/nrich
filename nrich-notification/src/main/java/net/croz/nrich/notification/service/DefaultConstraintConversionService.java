@@ -1,5 +1,6 @@
 package net.croz.nrich.notification.service;
 
+import net.croz.nrich.notification.api.service.ConstraintConversionService;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.CustomValidatorBean;

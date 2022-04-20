@@ -8,30 +8,22 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation project(":nrich-registry")
-  implementation project(":nrich-search")
   implementation project(":nrich-spring-boot")
 
-  implementation "org.hibernate:hibernate-core"
-  implementation "org.modelmapper:modelmapper"
-  implementation "com.fasterxml.jackson.core:jackson-databind"
-  implementation "org.springframework:spring-web"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
+  runtimeOnly "org.hibernate.validator:hibernate-validator"
+  runtimeOnly "org.springframework.boot:spring-boot-starter-data-jpa"
 
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "com.h2database:h2"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "jakarta.servlet:jakarta.servlet-api"
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
   testImplementation "org.hibernate:hibernate-envers"
-  testImplementation "org.hibernate.validator:hibernate-validator"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.springframework:spring-test"
   testImplementation "org.springframework:spring-webmvc"
-  testImplementation "org.springframework.boot:spring-boot-starter-data-jpa"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

@@ -1,8 +1,8 @@
 package net.croz.nrich.notification;
 
+import net.croz.nrich.notification.api.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
-import net.croz.nrich.notification.service.ConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultNotificationResolverService;
 import net.croz.nrich.notification.service.MessageSourceNotificationMessageResolverService;

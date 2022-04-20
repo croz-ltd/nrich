@@ -11,12 +11,10 @@ dependencies {
 
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
-  testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  runtimeOnly "org.hibernate.validator:hibernate-validator"
+  runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.glassfish:jakarta.el"
-  testImplementation "org.hibernate.validator:hibernate-validator"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testRuntimeOnly "ch.qos.logback:logback-classic"
+
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

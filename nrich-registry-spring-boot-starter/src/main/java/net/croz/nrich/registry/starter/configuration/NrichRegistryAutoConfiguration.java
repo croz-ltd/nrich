@@ -67,7 +67,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AutoConfigureAfter({ ValidationAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-@ConditionalOnBean({ EntityManagerFactory.class, LocalValidatorFactoryBean.class })
+@ConditionalOnBean({ EntityManagerFactory.class })
 @ConditionalOnPropertyNotEmpty("nrich.registry.registry-configuration.group-definition-configuration-list")
 @EnableConfigurationProperties(NrichRegistryProperties.class)
 @Configuration(proxyBeanMethods = false)
@@ -79,6 +79,12 @@ public class NrichRegistryAutoConfiguration {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @ConditionalOnMissingBean
+    @Bean
+    public Validator validator() {
+        return new LocalValidatorFactoryBean();
+    }
 
     @ConditionalOnMissingBean(name = "registryDataModelMapper")
     @Bean

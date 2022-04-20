@@ -7,18 +7,11 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation project(":nrich-validation")
-
-  implementation "org.hibernate.validator:hibernate-validator"
-  implementation "org.springframework:spring-context"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
-  testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  runtimeOnly project(":nrich-validation")
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.mockito:mockito-core"
-  testImplementation "org.springframework:spring-test"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testRuntimeOnly "ch.qos.logback:logback-classic"
+
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

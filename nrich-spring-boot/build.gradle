@@ -1,12 +1,9 @@
 description = "Provides additional functionality on top of Spring Boot"
 
 dependencies {
-  implementation "org.springframework.boot:spring-boot-autoconfigure"
+  implementation "org.springframework.boot:spring-boot"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
-  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
-  testImplementation "org.assertj:assertj-core"
-  testImplementation "org.junit.jupiter:junit-jupiter-api"
-  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
