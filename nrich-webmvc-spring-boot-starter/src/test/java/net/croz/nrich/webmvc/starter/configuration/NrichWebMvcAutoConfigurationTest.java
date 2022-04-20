@@ -7,7 +7,6 @@ import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 import net.croz.nrich.webmvc.api.service.ExceptionHttpStatusResolverService;
 import net.croz.nrich.webmvc.localeresolver.ConstrainedSessionLocaleResolver;
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
-import net.croz.nrich.webmvc.starter.configuration.stub.LoggingTestService;
 import net.croz.nrich.webmvc.starter.configuration.stub.NotificationResponseTestService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -23,7 +22,7 @@ class NrichWebMvcAutoConfigurationTest {
     @Test
     void shouldConfigureDefaultConfiguration() {
         // expect
-        webApplicationContextRunner.withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context -> {
+        webApplicationContextRunner.withBean(ResourceBundleMessageSource.class).withBean(NotificationResponseTestService.class).run(context -> {
             assertThat(context).hasSingleBean(LoggingService.class);
             assertThat(context).hasSingleBean(TransientPropertyResolverService.class);
             assertThat(context).hasSingleBean(ExceptionAuxiliaryDataResolverService.class);
@@ -38,7 +37,7 @@ class NrichWebMvcAutoConfigurationTest {
     void shouldAddConstrainedLocaleResolverWhenAllowedLocaleListIsNotEmpty() {
         // expect
         webApplicationContextRunner.withPropertyValues("nrich.webmvc.allowed-locale-list=hr,en")
-            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context ->
+            .withBean(ResourceBundleMessageSource.class).withBean(NotificationResponseTestService.class).run(context ->
                 assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class)
             );
     }
@@ -47,7 +46,7 @@ class NrichWebMvcAutoConfigurationTest {
     void shouldNotAddAdviceWhenItsDisabled() {
         // expect
         webApplicationContextRunner.withPropertyValues("nrich.webmvc.controller-advice-enabled=false")
-            .withBean(ResourceBundleMessageSource.class).withBean(LoggingTestService.class).withBean(NotificationResponseTestService.class).run(context ->
+            .withBean(ResourceBundleMessageSource.class).withBean(NotificationResponseTestService.class).run(context ->
                 assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class)
             );
     }

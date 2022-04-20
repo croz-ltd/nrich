@@ -1,6 +1,7 @@
 package net.croz.nrich.webmvc.starter.configuration;
 
 import net.croz.nrich.logging.api.service.LoggingService;
+import net.croz.nrich.logging.service.Slf4jLoggingService;
 import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
@@ -22,7 +23,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnBean({ BaseNotificationResponseService.class, LoggingService.class })
+@ConditionalOnBean(BaseNotificationResponseService.class)
 @EnableConfigurationProperties(NrichWebMvcProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichWebMvcAutoConfiguration {
@@ -50,6 +51,12 @@ public class NrichWebMvcAutoConfiguration {
     @Bean
     public ExceptionHttpStatusResolverService exceptionHttpStatusResolverService(MessageSource messageSource) {
         return new MessageSourceExceptionHttpStatusResolverService(messageSource);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public LoggingService loggingService(MessageSource messageSource) {
+        return new Slf4jLoggingService(messageSource);
     }
 
     @ConditionalOnProperty(name = "nrich.webmvc.controller-advice-enabled", havingValue = "true", matchIfMissing = true)
