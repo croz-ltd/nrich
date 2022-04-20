@@ -31,7 +31,6 @@ allprojects {
     compileOnly.extendsFrom(annotationProcessor)
 
     springBom
-    compileOnly.extendsFrom(springBom)
     annotationProcessor.extendsFrom(springBom)
     implementation.extendsFrom(springBom)
     testAnnotationProcessor.extendsFrom(springBom)
@@ -40,8 +39,7 @@ allprojects {
 
 Project parent = project
 
-subprojects {
-  Project subproject = it
+subprojects { Project subproject ->
   boolean isPlatformProject = subproject.name.endsWith("bom")
 
   apply plugin: "maven-publish"
