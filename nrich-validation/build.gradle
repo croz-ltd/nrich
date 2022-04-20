@@ -6,8 +6,9 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation "org.apache.tomcat.embed:tomcat-embed-el"
   implementation "org.hibernate.validator:hibernate-validator"
+
+  runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 
   webImplementation "org.springframework:spring-web"
 
