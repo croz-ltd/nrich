@@ -1,7 +1,7 @@
 description = "Provides additional functionality on top of Spring Boot"
 
 dependencies {
-  implementation "org.springframework.boot:spring-boot-autoconfigure"
+  implementation "org.springframework.boot:spring-boot"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
 
