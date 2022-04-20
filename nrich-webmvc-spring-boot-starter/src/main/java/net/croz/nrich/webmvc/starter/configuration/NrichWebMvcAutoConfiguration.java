@@ -15,7 +15,6 @@ import net.croz.nrich.webmvc.service.MessageSourceExceptionHttpStatusResolverSer
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.starter.properties.NrichWebMvcProperties;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,7 +22,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@ConditionalOnBean(BaseNotificationResponseService.class)
 @EnableConfigurationProperties(NrichWebMvcProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichWebMvcAutoConfiguration {

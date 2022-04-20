@@ -15,6 +15,8 @@ dependencies {
 
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
+  testImplementation project(":nrich-notification-spring-boot-starter")
+
   testRuntimeOnly "ch.qos.logback:logback-classic"
 
   testImplementation "org.springframework:spring-web"
