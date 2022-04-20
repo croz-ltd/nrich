@@ -10,9 +10,10 @@ dependencies {
   implementation project(":nrich-registry")
   implementation project(":nrich-spring-boot")
 
-  implementation "org.apache.tomcat.embed:tomcat-embed-el"
-  implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+
+  runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
+  runtimeOnly "org.hibernate.validator:hibernate-validator"
 
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
