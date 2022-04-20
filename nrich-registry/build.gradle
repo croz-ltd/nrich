@@ -15,8 +15,9 @@ dependencies {
 
   enversImplementation "org.hibernate:hibernate-envers"
 
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
   implementation "org.apache.commons:commons-lang3"
+
+  runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
   webMvcImplementation "org.springframework:spring-webmvc"
