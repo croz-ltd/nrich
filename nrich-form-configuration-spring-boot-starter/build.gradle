@@ -9,9 +9,10 @@ dependencies {
 
   implementation project(":nrich-form-configuration")
 
-  implementation "org.apache.tomcat.embed:tomcat-embed-el"
-  implementation "org.hibernate.validator:hibernate-validator"
   implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  runtimeOnly "org.hibernate.validator:hibernate-validator"
+  runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
 
