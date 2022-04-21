@@ -71,3 +71,19 @@ jobs:
         with:
           name: Aggregated JaCoCo Report
           files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
+
+      - name: Aggregate Javadoc
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: aggregateJavadoc
+
+      - name: Deploy Javadoc to GitHub Pages
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          branch: gh-pages
+          folder: build/docs/aggregateJavadoc
+          target-folder: docs
+          clean: true
+          single-commit: true

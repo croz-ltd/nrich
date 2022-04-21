@@ -2,6 +2,7 @@
 [![Codecov](https://codecov.io/gh/croz-ltd/nrich/branch/master/graph/badge.svg)](https://codecov.io/gh/croz-ltd/nrich)
 [![License](https://img.shields.io/github/license/croz-ltd/nrich?color=yellow&logo=apache)](https://github.com/croz-ltd/nrich/blob/master/LICENSE)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.croz.nrich/nrich-core-api/badge.svg?color=blue)](https://search.maven.org/search?q=net.croz.nrich)
+[![JavaDoc](https://img.shields.io/badge/API%20doc-Javadoc-brightgreen)](https://croz-ltd.github.io/nrich/docs/index.html)
 
 # nrich
 
