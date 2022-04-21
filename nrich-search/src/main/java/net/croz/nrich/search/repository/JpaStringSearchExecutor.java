@@ -99,7 +99,11 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     public <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
         Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
-        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted())) > 0;
+        CriteriaQuery<?> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
+
+        CriteriaQuery<Integer> existsQuery = queryBuilder.convertToExistsQuery(query);
+
+        return entityManager.createQuery(existsQuery).setMaxResults(1).getResultList().size() == 1;
     }
 
     private Map<String, Object> convertToMap(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, ?, Map<String, Object>> searchConfiguration) {

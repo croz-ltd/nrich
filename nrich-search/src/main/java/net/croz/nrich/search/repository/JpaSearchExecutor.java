@@ -79,7 +79,11 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     @Override
     public <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration) {
-        return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted())) > 0;
+        CriteriaQuery<?> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+
+        CriteriaQuery<Integer> existsQuery = queryBuilder.convertToExistsQuery(query);
+
+        return entityManager.createQuery(existsQuery).setMaxResults(1).getResultList().size() == 1;
     }
 
     private long executeCountQuery(CriteriaQuery<?> query) {

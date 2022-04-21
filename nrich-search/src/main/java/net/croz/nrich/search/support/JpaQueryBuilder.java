@@ -107,13 +107,10 @@ public class JpaQueryBuilder<T> {
         @SuppressWarnings("unchecked")
         CriteriaQuery<Long> countQuery = (CriteriaQuery<Long>) query;
 
-        query.orderBy(Collections.emptyList());
+        clearSortAndFetchesFromQuery(countQuery);
 
-        Root<?> root = query.getRoots().iterator().next();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        // fetches are not allowed in count query
-        root.getFetches().clear();
+        Root<?> root = query.getRoots().iterator().next();
 
         if (countQuery.isDistinct()) {
             countQuery.select(builder.countDistinct(root));
@@ -123,6 +120,17 @@ public class JpaQueryBuilder<T> {
         }
 
         return countQuery;
+    }
+
+    public CriteriaQuery<Integer> convertToExistsQuery(CriteriaQuery<?> query) {
+        @SuppressWarnings("unchecked")
+        CriteriaQuery<Integer> existsQuery = (CriteriaQuery<Integer>) query;
+
+        clearSortAndFetchesFromQuery(existsQuery);
+
+        existsQuery.select(entityManager.getCriteriaBuilder().literal(1));
+
+        return existsQuery;
     }
 
     // TODO try to use result set mapper, jpa projections require constructors with all parameters
@@ -340,5 +348,11 @@ public class JpaQueryBuilder<T> {
             .searchPropertyConfiguration(searchPropertyConfiguration)
             .resolvePropertyMappingUsingPrefix(resolvePropertyMappingUsingPrefix)
             .build();
+    }
+
+    private void clearSortAndFetchesFromQuery(CriteriaQuery<?> query) {
+        query.orderBy(Collections.emptyList());
+
+        query.getRoots().forEach(root -> root.getFetches().clear());
     }
 }
