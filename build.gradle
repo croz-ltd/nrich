@@ -1,5 +1,6 @@
 plugins {
   id "fr.brouillard.oss.gradle.jgitver" version "$gradleJgitverPluginVersion"
+  id "io.freefair.aggregate-javadoc" version "$gradleAggregateJavadocPluginVersion"
   id "io.github.gradle-nexus.publish-plugin" version "$gradlePublishPluginVersion"
   id "jacoco-report-aggregation"
 }
