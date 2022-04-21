@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SearchDataParser {
 
-    private static final String PATH_FORMAT = "%s.%s";
-
     private final ManagedType<?> managedType;
 
     private final Object searchData;
@@ -160,7 +158,7 @@ public class SearchDataParser {
     }
 
     private String resolveCurrentPath(String path, String fieldNameWithoutPrefixAndSuffix) {
-        return path == null ? fieldNameWithoutPrefixAndSuffix : String.format(PATH_FORMAT, path, fieldNameWithoutPrefixAndSuffix);
+        return path == null ? fieldNameWithoutPrefixAndSuffix : PathResolvingUtil.joinPath(path, fieldNameWithoutPrefixAndSuffix);
     }
 
     private AttributeHolderWithPath resolveAttributeFromSearchConfigurationOrPrefix(JpaEntityAttributeResolver attributeResolver, String originalFieldName) {
@@ -221,7 +219,7 @@ public class SearchDataParser {
 
         return attributeNameList.stream()
             .filter(attribute -> isFieldNameValid(originalFieldName, attribute))
-            .map(attribute -> String.format(PATH_FORMAT, attribute, StringUtils.uncapitalize(originalFieldName.substring(attribute.length()))))
+            .map(attribute -> PathResolvingUtil.joinPath(attribute, StringUtils.uncapitalize(originalFieldName.substring(attribute.length()))))
             .findFirst()
             .orElse(null);
     }

@@ -18,6 +18,10 @@ public final class PathResolvingUtil {
         return path.split(PATH_REGEX);
     }
 
+    public static String joinPath(String... pathList) {
+        return String.join(PATH_SEPARATOR, pathList);
+    }
+
     public static String joinPath(List<String> pathList, String currentPath) {
         List<String> fullPathList = new ArrayList<>(pathList);
 
