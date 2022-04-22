@@ -7,14 +7,15 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation project(":nrich-logging")
   implementation project(":nrich-spring-boot")
   implementation project(":nrich-webmvc")
 
+  runtimeOnly project(":nrich-logging-spring-boot-starter")
   runtimeOnly project(":nrich-notification-spring-boot-starter")
 
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
+  testImplementation project(":nrich-logging-spring-boot-starter")
   testImplementation project(":nrich-notification-spring-boot-starter")
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
