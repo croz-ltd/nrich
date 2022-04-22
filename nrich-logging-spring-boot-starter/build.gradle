@@ -1,0 +1,11 @@
+dependencies {
+  api project(":nrich-logging-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  implementation project(":nrich-logging")
+
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
