@@ -107,13 +107,10 @@ public class JpaQueryBuilder<T> {
         @SuppressWarnings("unchecked")
         CriteriaQuery<Long> countQuery = (CriteriaQuery<Long>) query;
 
-        query.orderBy(Collections.emptyList());
+        clearSortAndFetchesFromQuery(countQuery);
 
-        Root<?> root = query.getRoots().iterator().next();
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-
-        // fetches are not allowed in count query
-        root.getFetches().clear();
+        Root<?> root = query.getRoots().iterator().next();
 
         if (countQuery.isDistinct()) {
             countQuery.select(builder.countDistinct(root));
@@ -123,6 +120,17 @@ public class JpaQueryBuilder<T> {
         }
 
         return countQuery;
+    }
+
+    public CriteriaQuery<Integer> convertToExistsQuery(CriteriaQuery<?> query) {
+        @SuppressWarnings("unchecked")
+        CriteriaQuery<Integer> existsQuery = (CriteriaQuery<Integer>) query;
+
+        clearSortAndFetchesFromQuery(existsQuery);
+
+        existsQuery.select(entityManager.getCriteriaBuilder().literal(1));
+
+        return existsQuery;
     }
 
     // TODO try to use result set mapper, jpa projections require constructors with all parameters
@@ -196,7 +204,7 @@ public class JpaQueryBuilder<T> {
                 mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(pluralRestrictionList, root, criteriaBuilder));
             }
             else {
-                Subquery<?> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, SearchPropertyJoin.defaultJoinById());
+                Subquery<Integer> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, SearchPropertyJoin.defaultJoinById());
 
                 mainQueryPredicateList.add(criteriaBuilder.exists(subquery));
             }
@@ -211,14 +219,12 @@ public class JpaQueryBuilder<T> {
         return mainQueryPredicateList;
     }
 
-    private Subquery<?> createSubqueryRestriction(Class<?> resultType, Root<?> parent, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
-                                                  Collection<Restriction> restrictionList, SearchPropertyJoin searchPropertyJoin) {
-        Subquery<?> subquery = query.subquery(resultType);
+    private Subquery<Integer> createSubqueryRestriction(Class<?> subqueryEntityType, Root<?> parent, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
+                                                        Collection<Restriction> restrictionList, SearchPropertyJoin searchPropertyJoin) {
+        Subquery<Integer> subquery = query.subquery(Integer.class);
+        Root<?> subqueryRoot = subquery.from(subqueryEntityType);
 
-        Root<?> subqueryRoot = subquery.from(resultType);
-
-        // TODO fix me, ideally select 1
-        subquery.select(subqueryRoot.get("id"));
+        subquery.select(criteriaBuilder.literal(1));
 
         List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder);
 
@@ -233,21 +239,19 @@ public class JpaQueryBuilder<T> {
     private List<Predicate> convertRestrictionListToPredicateList(Collection<Restriction> restrictionList, Root<?> rootPath, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicateList = new ArrayList<>();
 
-        restrictionList.forEach(restriction -> {
-            if (restriction.getValue() != null) {
-                String[] pathList = PathResolvingUtil.convertToPathList(restriction.getPath());
+        restrictionList.stream().filter(Objects::nonNull).forEach(restriction -> {
+            String[] pathList = PathResolvingUtil.convertToPathList(restriction.getPath());
 
-                if (restriction.isPluralAttribute()) {
-                    String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
-                    Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList);
+            if (restriction.isPluralAttribute()) {
+                String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
+                Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList);
 
-                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
-                }
-                else {
-                    Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, pathList);
+                predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
+            }
+            else {
+                Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, pathList);
 
-                    predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
-                }
+                predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
             }
         });
 
@@ -267,8 +271,8 @@ public class JpaQueryBuilder<T> {
             .collect(Collectors.toList());
     }
 
-    private <R> Subquery<?> buildSubquery(R request, SearchPropertyConfiguration searchPropertyConfiguration, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
-                                          SubqueryConfiguration subqueryConfiguration) {
+    private <R> Subquery<Integer> buildSubquery(R request, SearchPropertyConfiguration searchPropertyConfiguration, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
+                                                SubqueryConfiguration subqueryConfiguration) {
         ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
         Set<Restriction> subqueryRestrictionList;
@@ -285,7 +289,7 @@ public class JpaQueryBuilder<T> {
             subqueryRestrictionList = searchDataParser.resolveRestrictionList();
         }
 
-        Subquery<?> subquery = null;
+        Subquery<Integer> subquery = null;
         if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
             subquery = createSubqueryRestriction(subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy());
         }
@@ -344,5 +348,11 @@ public class JpaQueryBuilder<T> {
             .searchPropertyConfiguration(searchPropertyConfiguration)
             .resolvePropertyMappingUsingPrefix(resolvePropertyMappingUsingPrefix)
             .build();
+    }
+
+    private void clearSortAndFetchesFromQuery(CriteriaQuery<?> query) {
+        query.orderBy(Collections.emptyList());
+
+        query.getRoots().forEach(root -> root.getFetches().clear());
     }
 }
