@@ -22,8 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.Objects;
 
 public final class ValidationReflectionUtil {
 
@@ -38,9 +37,8 @@ public final class ValidationReflectionUtil {
         return Arrays.stream(METHOD_PATTERN_LIST)
             .map(value -> String.format(value, capitalizedFieldName))
             .map(methodName -> ReflectionUtils.findMethod(type, methodName))
-            .map(Optional::ofNullable)
+            .filter(Objects::nonNull)
             .findFirst()
-            .flatMap(Function.identity())
             .orElse(null);
     }
 
