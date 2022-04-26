@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
@@ -126,9 +127,11 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         String revisionTimestampPropertyName = RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_DEFAULT_ORIGINAL_NAME;
         // actually a long but for easier client handling it can be treated as a date
         Class<?> revisionTimestampPropertyType = Date.class;
+        @SuppressWarnings("unchecked")
+        Set<Attribute<?, ?>> attributes = (Set<Attribute<?, ?>>) Optional.ofNullable(revisionEntityManagedType).map(ManagedType::getAttributes).orElse(Collections.emptySet());
 
         List<PropertyWithType> additionalPropertyList = new ArrayList<>();
-        for (Attribute<?, ?> attribute : Optional.ofNullable(revisionEntityManagedType).map(ManagedType::getAttributes).orElse(Collections.emptySet())) {
+        for (Attribute<?, ?> attribute : attributes) {
             String attributeName = attribute.getName();
             Class<?> attributeType = attribute.getJavaType();
 
@@ -173,7 +176,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
             return includeType;
         }
 
-        return excludeDomainPatternList.stream().noneMatch(classFullName::matches);
+        return excludeDomainPatternList.stream().filter(Objects::nonNull).noneMatch(classFullName::matches);
     }
 
     private SearchConfiguration<Object, Object, Map<String, Object>> resolveSearchConfiguration(ManagedTypeWrapper managedTypeWrapper) {
