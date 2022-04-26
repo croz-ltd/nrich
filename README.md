@@ -17,6 +17,19 @@ Most modules are composed of multiple submodules:
 
 In Spring Boot environment only spring boot starter modules should be added as dependencies.
 
+## Compatibility
+
+The following table contains nrich versions with corresponding minimum Java and Spring version.
+
+| Nrich version | Java version | Spring Boot Version |
+|---------------|--------------|---------------------|
+| 1.x.x         | 1.8          | 2.3.3.RELEASE       |
+| 1.2.x         | 1.8          | 2.6.4               |
+| 1.3.x         | 1.8          | 2.6.6               |
+
+
+## Modules
+
 nrich is composed of following modules:
 
 ### nrich-bom
