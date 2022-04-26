@@ -16,6 +16,7 @@ include(
   "nrich-jackson-spring-boot-starter",
   "nrich-logging-api",
   "nrich-logging",
+  "nrich-logging-spring-boot-starter",
   "nrich-notification-api",
   "nrich-notification",
   "nrich-notification-spring-boot-starter",

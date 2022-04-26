@@ -1,6 +1,7 @@
 package net.croz.nrich.webmvc.starter.configuration;
 
 import net.croz.nrich.logging.api.service.LoggingService;
+import net.croz.nrich.logging.starter.configuration.NrichLoggingAutoConfiguration;
 import net.croz.nrich.notification.starter.configuration.NrichNotificationAutoConfiguration;
 import net.croz.nrich.webmvc.advice.ControllerEditorRegistrationAdvice;
 import net.croz.nrich.webmvc.advice.NotificationErrorHandlingRestControllerAdvice;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NrichWebMvcAutoConfigurationTest {
 
     private final WebApplicationContextRunner webApplicationContextRunner = new WebApplicationContextRunner()
-        .withConfiguration(AutoConfigurations.of(NrichNotificationAutoConfiguration.class, NrichWebMvcAutoConfiguration.class));
+        .withConfiguration(AutoConfigurations.of(NrichLoggingAutoConfiguration.class, NrichNotificationAutoConfiguration.class, NrichWebMvcAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {
@@ -37,18 +38,16 @@ class NrichWebMvcAutoConfigurationTest {
     @Test
     void shouldAddConstrainedLocaleResolverWhenAllowedLocaleListIsNotEmpty() {
         // expect
-        webApplicationContextRunner.withPropertyValues("nrich.webmvc.allowed-locale-list=hr,en")
-            .withBean(ResourceBundleMessageSource.class).run(context ->
-                assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class)
-            );
+        webApplicationContextRunner.withPropertyValues("nrich.webmvc.allowed-locale-list=hr,en").withBean(ResourceBundleMessageSource.class).run(context ->
+            assertThat(context).hasSingleBean(ConstrainedSessionLocaleResolver.class)
+        );
     }
 
     @Test
     void shouldNotAddAdviceWhenItsDisabled() {
         // expect
-        webApplicationContextRunner.withPropertyValues("nrich.webmvc.controller-advice-enabled=false")
-            .withBean(ResourceBundleMessageSource.class).run(context ->
-                assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class)
-            );
+        webApplicationContextRunner.withPropertyValues("nrich.webmvc.controller-advice-enabled=false").withBean(ResourceBundleMessageSource.class).run(context ->
+            assertThat(context).doesNotHaveBean(NotificationErrorHandlingRestControllerAdvice.class)
+        );
     }
 }
