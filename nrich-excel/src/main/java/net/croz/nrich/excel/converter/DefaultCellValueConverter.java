@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
     private List<ConverterHolder> initializeConverterList() {
         return Arrays.asList(
             new ConverterHolder(Date.class, CellHolder::setCellValue),
+            new ConverterHolder(Calendar.class, CellHolder::setCellValue),
             new ConverterHolder(Instant.class, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
             new ConverterHolder(LocalDate.class, CellHolder::setCellValue),
             new ConverterHolder(LocalDateTime.class, CellHolder::setCellValue),
