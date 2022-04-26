@@ -50,6 +50,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         return messageSource.getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
     }
 
+    @Override
     public String resolveMessageForObjectError(Class<?> validationFailedOwningType, ObjectError objectError) {
         String constraintName = objectError.getCode();
         String fieldName = objectError instanceof FieldError ? ((FieldError) objectError).getField() : null;
@@ -72,17 +73,19 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
 
         String message = resolveMessage(messageCodeList, argumentsWithoutMessageCodeResolvable(objectError.getArguments()), objectError.getDefaultMessage());
 
-        if (fieldName != null) {
-            messageCodeList.clear();
-
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.FIELD_LABEL_SUFFIX));
-
-            String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
-
-            message = String.format(NotificationConstants.FIELD_ERROR_FORMAT, fieldNameMessage, message);
+        if (fieldName == null) {
+            return message;
         }
+
+        messageCodeList.clear();
+
+        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.FIELD_LABEL_SUFFIX));
+
+        String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
+
+        message = String.format(NotificationConstants.FIELD_ERROR_FORMAT, fieldNameMessage, message);
 
         return message;
     }
@@ -93,7 +96,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         }
 
         Object[] filteredArguments = arguments;
-        if ((arguments[0] instanceof DefaultMessageSourceResolvable)) {
+        if (arguments[0] instanceof DefaultMessageSourceResolvable) {
             filteredArguments = Arrays.copyOfRange(arguments, 1, arguments.length);
         }
 
