@@ -18,8 +18,10 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.repository.NaturalIdSearchExecutor;
 import net.croz.nrich.search.api.repository.SearchExecutor;
 import net.croz.nrich.search.api.repository.StringSearchExecutor;
+import net.croz.nrich.search.repository.HibernateNaturalIdSearchExecutor;
 import net.croz.nrich.search.repository.JpaSearchExecutor;
 import net.croz.nrich.search.repository.JpaStringSearchExecutor;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
@@ -46,18 +48,23 @@ public class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
     @Override
     protected RepositoryComposition.RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
         RepositoryComposition.RepositoryFragments fragments = super.getRepositoryFragments(metadata);
+        JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
+        Class<?> repositoryInterface = metadata.getRepositoryInterface();
 
-        if (SearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-            SearchExecutor<?> searchExecutorFragment = instantiateClass(JpaSearchExecutor.class, entityManager, getEntityInformation(metadata.getDomainType()));
+        if (SearchExecutor.class.isAssignableFrom(repositoryInterface)) {
+            SearchExecutor<?> searchExecutorFragment = instantiateClass(JpaSearchExecutor.class, entityManager, entityInformation);
 
             fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
         }
-        if (StringSearchExecutor.class.isAssignableFrom(metadata.getRepositoryInterface())) {
-            JpaEntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
-
+        if (StringSearchExecutor.class.isAssignableFrom(repositoryInterface)) {
             StringSearchExecutor<?> stringSearchExecutorFragment = instantiateClass(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
 
             fragments = fragments.append(RepositoryFragment.implemented(StringSearchExecutor.class, stringSearchExecutorFragment));
+        }
+        if (NaturalIdSearchExecutor.class.isAssignableFrom(repositoryInterface)) {
+            NaturalIdSearchExecutor<?> naturalIdSearchExecutorFragment = instantiateClass(HibernateNaturalIdSearchExecutor.class, entityManager, metadata.getDomainType());
+
+            fragments = fragments.append(RepositoryFragment.implemented(NaturalIdSearchExecutor.class, naturalIdSearchExecutorFragment));
         }
 
         return fragments;
