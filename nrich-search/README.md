@@ -44,9 +44,10 @@ converted using  `StringToEntityPropertyMapConverter` to properties.
 
 ## Usage
 
-Users have two interfaces available for usage `SearchExecutor` and `StringSearchExecutor`. First accepts a class holding properties that will be used for query creation and `SearchConfiguration` and
-second accepts a query string, list of properties for search and `SearchConfiguration`, later is best used for quick search functionality and former for standard search form functionality. Since this
-library augments Spring Data JPA in their own repository interfaces users should also implement one of Spring Data JPA repository interfaces.
+Users have htree interfaces available for usage `SearchExecutor`, `StringSearchExecutor` and `NaturalIdSearchExecutor`. First accepts a class holding properties that will be used for query creation and `SearchConfiguration` and
+second accepts a query string, list of properties for search and `SearchConfiguration`, second is best used for quick search functionality and former for standard search form functionality.
+`NaturalIdSearchExecturor` only works with Hibernate JPA implementation and enables users to search entities by properties annotated with `@NaturalId` annotation.
+Since this library augments Spring Data JPA in their own repository interfaces users should also implement one of Spring Data JPA repository interfaces.
 
 A custom repository interface for searching entities of type Car:
 
