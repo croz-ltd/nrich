@@ -26,7 +26,7 @@ import java.util.List;
 @Getter
 public class DataEncryptionServiceTestObject {
 
-    private String fieldToEncryptDecrypt;
+    private String propertyToEncryptDecrypt;
 
     private List<String> listToEncrypt;
 

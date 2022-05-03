@@ -45,42 +45,42 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptSimpleData() {
         // given
-        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
         String textToEncrypt = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
-        data.setFieldToEncryptDecrypt(textToEncrypt);
+        data.setPropertyToEncryptDecrypt(textToEncrypt);
 
         // when
         DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getFieldToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
+        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
     }
 
     @Test
     void shouldDecryptSimpleData() {
         // given
-        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
         String textToEncrypt = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
-        data.setFieldToEncryptDecrypt(textToEncrypt);
+        data.setPropertyToEncryptDecrypt(textToEncrypt);
 
         // when
         DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getFieldToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
+        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
 
         // and when
         DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
-        assertThat(decryptResult.getFieldToEncryptDecrypt()).isEqualTo(textToEncrypt);
+        assertThat(decryptResult.getPropertyToEncryptDecrypt()).isEqualTo(textToEncrypt);
     }
 
     @Test
@@ -158,7 +158,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValues() {
         // given
-        List<String> propertyList = Arrays.asList("fieldToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
+        List<String> propertyList = Arrays.asList("propertyToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then
@@ -185,7 +185,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenEncryptingData() {
         // given
-        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = null;
 
         // when
@@ -198,7 +198,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenDecryptingData() {
         // given
-        List<String> propertyList = Collections.singletonList("fieldToEncryptDecrypt");
+        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = null;
 
         // when
