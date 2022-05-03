@@ -19,6 +19,7 @@ package net.croz.nrich.encrypt.service;
 
 import net.croz.nrich.encrypt.EncryptTestConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionContext;
+import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceArrayTestObject;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceNestedTestObject;
 import net.croz.nrich.encrypt.service.stub.DataEncryptionServiceTestObject;
 import org.junit.jupiter.api.Test;
@@ -30,14 +31,19 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
 class DefaultDataEncryptServiceTest {
+
+    private static final String TEXT_TO_ENCRYPT_DECRYPT = "some text";
 
     @Autowired
     private DefaultDataEncryptService dataEncryptionService;
@@ -46,41 +52,39 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptSimpleData() {
         // given
         List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
-        String textToEncrypt = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
-        data.setPropertyToEncryptDecrypt(textToEncrypt);
+        data.setPropertyToEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
 
         // when
         DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
+        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(TEXT_TO_ENCRYPT_DECRYPT);
     }
 
     @Test
     void shouldDecryptSimpleData() {
         // given
         List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
-        String textToEncrypt = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
-        data.setPropertyToEncryptDecrypt(textToEncrypt);
+        data.setPropertyToEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
 
         // when
         DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(textToEncrypt);
+        assertThat(result.getPropertyToEncryptDecrypt()).isNotEqualTo(TEXT_TO_ENCRYPT_DECRYPT);
 
         // and when
         DataEncryptionServiceTestObject decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
-        assertThat(decryptResult.getPropertyToEncryptDecrypt()).isEqualTo(textToEncrypt);
+        assertThat(decryptResult.getPropertyToEncryptDecrypt()).isEqualTo(TEXT_TO_ENCRYPT_DECRYPT);
     }
 
     @Test
@@ -213,22 +217,21 @@ class DefaultDataEncryptServiceTest {
         // given
         String key = "mapKey";
         List<String> propertyList = Collections.singletonList(key);
-        String textToEncrypt = "some text";
         Map<String, String> data = new HashMap<>();
 
-        data.put(key, textToEncrypt);
+        data.put(key, TEXT_TO_ENCRYPT_DECRYPT);
 
         // when
         Map<String, String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
-        assertThat(result).doesNotContainEntry(key, textToEncrypt);
+        assertThat(result).doesNotContainEntry(key, TEXT_TO_ENCRYPT_DECRYPT);
 
         // and when
         Map<String, String> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
-        assertThat(decryptResult).containsEntry(key, textToEncrypt);
+        assertThat(decryptResult).containsEntry(key, TEXT_TO_ENCRYPT_DECRYPT);
     }
 
     @Test
@@ -236,11 +239,10 @@ class DefaultDataEncryptServiceTest {
         // given
         String key = "mapKey";
         List<String> propertyList = Collections.singletonList("mapKey.mapKey");
-        String textToEncrypt = "some text";
         Map<String, Map<String, String>> data = new HashMap<>();
         Map<String, String> nestedData = new HashMap<>();
 
-        nestedData.put(key, textToEncrypt);
+        nestedData.put(key, TEXT_TO_ENCRYPT_DECRYPT);
 
         data.put(key, nestedData);
 
@@ -249,13 +251,121 @@ class DefaultDataEncryptServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.get(key)).doesNotContainEntry(key, textToEncrypt);
+        assertThat(result.get(key)).doesNotContainEntry(key, TEXT_TO_ENCRYPT_DECRYPT);
 
         // and when
         Map<String, Map<String, String>> decryptResult = dataEncryptionService.decryptData(data, propertyList, EncryptionContext.builder().build());
 
         // then
         assertThat(decryptResult).isNotNull();
-        assertThat(result.get(key)).containsEntry(key, textToEncrypt);
+        assertThat(result.get(key)).containsEntry(key, TEXT_TO_ENCRYPT_DECRYPT);
+    }
+
+    @Test
+    void shouldEncryptDecryptArrayData() {
+        // given
+        DataEncryptionServiceArrayTestObject testObject = new DataEncryptionServiceArrayTestObject();
+        List<String> propertyList = Arrays.asList("propertyEncryptDecrypt", "arrayEncrypt");
+        DataEncryptionServiceArrayTestObject[] data = new DataEncryptionServiceArrayTestObject[] { testObject };
+
+        testObject.setArrayEncrypt(new String[] { TEXT_TO_ENCRYPT_DECRYPT });
+        testObject.setPropertyEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // when
+        DataEncryptionServiceArrayTestObject[] result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result[0].getPropertyEncryptDecrypt()).isNotEqualTo(TEXT_TO_ENCRYPT_DECRYPT);
+        assertThat(result[0].getArrayEncrypt()).isNotEmpty();
+        assertThat(result[0].getArrayEncrypt()[0]).isNotEqualTo(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // and when
+        DataEncryptionServiceArrayTestObject[] decryptResult = dataEncryptionService.decryptData(result, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).usingRecursiveComparison().isEqualTo(data);
+    }
+
+    @Test
+    void shouldNotFailWithUnsupportedTypes() {
+        // given
+        int[] data = new int[] { 1 };
+        List<String> propertyList = Collections.singletonList("property");
+
+        // when
+        Throwable thrown = catchThrowable(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build()));
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
+    void shouldEncryptDecryptStringCollection() {
+        // given
+        List<String> propertyList = Collections.emptyList();
+        List<String> data = Collections.singletonList(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // when
+        List<String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotEmpty().doesNotContain(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // and when
+        List<String> decryptResult = dataEncryptionService.decryptData(result, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).containsExactly(TEXT_TO_ENCRYPT_DECRYPT);
+    }
+
+    @Test
+    void shouldEncryptDecryptStringArray() {
+        // given
+        List<String> propertyList = Collections.emptyList();
+        String[] data = new String[] { TEXT_TO_ENCRYPT_DECRYPT };
+
+        // when
+        String[] result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotEmpty().doesNotContain(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // and when
+        String[] decryptResult = dataEncryptionService.decryptData(result, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).containsExactly(TEXT_TO_ENCRYPT_DECRYPT);
+    }
+
+    @Test
+    void shouldEncryptDecryptStringSet() {
+        // given
+        List<String> propertyList = Collections.emptyList();
+        Set<String> data = new HashSet<>(Collections.singleton(TEXT_TO_ENCRYPT_DECRYPT));
+
+        // when
+        Set<String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotEmpty().doesNotContain(TEXT_TO_ENCRYPT_DECRYPT);
+
+        // and when
+        Set<String> decryptResult = dataEncryptionService.decryptData(result, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(decryptResult).containsExactly(TEXT_TO_ENCRYPT_DECRYPT);
+    }
+
+    @Test
+    void shouldNotFailForNonStringCollectionArray() {
+        // given
+        Object[] data = new Object[] { "value", Integer.MAX_VALUE };
+
+        // when
+        Throwable thrown = catchThrowable(() -> dataEncryptionService.encryptData(data, Collections.emptyList(), EncryptionContext.builder().build()));
+
+        // then
+        assertThat(thrown).isNull();
     }
 }

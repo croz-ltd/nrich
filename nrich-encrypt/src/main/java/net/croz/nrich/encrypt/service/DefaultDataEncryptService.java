@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -45,11 +47,11 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             return null;
         }
 
-        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
+        if (CollectionUtils.isEmpty(pathToEncryptDecryptList)) {
             @SuppressWarnings("unchecked")
-            T encryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.ENCRYPT);
+            T encryptedValue = (T) encryptDecryptValue(encryptionContext, data, EncryptionOperation.ENCRYPT);
 
-            return encryptedText;
+            return encryptedValue == null ? data : encryptedValue;
         }
 
         pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.ENCRYPT));
@@ -63,11 +65,11 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             return null;
         }
 
-        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
+        if (CollectionUtils.isEmpty(pathToEncryptDecryptList)) {
             @SuppressWarnings("unchecked")
-            T decryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.DECRYPT);
+            T decryptedValue = (T) encryptDecryptValue(encryptionContext, data, EncryptionOperation.DECRYPT);
 
-            return decryptedText;
+            return decryptedValue == null ? data : decryptedValue;
         }
 
         pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.DECRYPT));
@@ -93,6 +95,9 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             if (objectContainingFieldsToEncryptOrDecrypt instanceof Collection) {
                 ((Collection<?>) objectContainingFieldsToEncryptOrDecrypt).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
             }
+            else if (objectContainingFieldsToEncryptOrDecrypt instanceof Object[]) {
+                Arrays.stream(((Object[]) objectContainingFieldsToEncryptOrDecrypt)).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
+            }
             else {
                 encryptDecryptValue(encryptionContext, objectContainingFieldsToEncryptOrDecrypt, propertyName, operation);
             }
@@ -101,24 +106,41 @@ public class DefaultDataEncryptService implements DataEncryptionService {
 
     private void encryptDecryptValue(EncryptionContext encryptionContext, Object objectContainingFieldsToEncryptOrDecrypt, String propertyName, EncryptionOperation operation) {
         Object value = getPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName);
+        Object result = encryptDecryptValue(encryptionContext, value, operation);
 
+        if (result == null) {
+            return;
+        }
+
+        setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, result);
+    }
+
+    private Object encryptDecryptValue(EncryptionContext encryptionContext, Object value, EncryptionOperation operation) {
         if (value instanceof String) {
             String textToEncryptOrDecrypt = (String) value;
-            String encryptedValue = encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
 
-            setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValue);
-
+            return encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
         }
-        else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
+        else if (isSupportedCollection(value) && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
             @SuppressWarnings("unchecked")
             Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
+            Collector<? super String, ?, ?> collector = value instanceof Set ? Collectors.toSet() : Collectors.toList();
 
-            Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
+            return textToEncryptOrDecryptList.stream()
                 .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
-                .collect(Collectors.toList());
-
-            setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValueList);
+                .collect(collector);
         }
+        else if (value instanceof String[]) {
+            String[] textToEncryptOrDecryptList = (String[]) value;
+
+            return Arrays.stream(textToEncryptOrDecryptList)
+                .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
+                .toArray(String[]::new);
+        }
+
+        log.warn("Unable to {} property, check if the specified path is correct and if the specified property is a string", operation.name().toLowerCase());
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -143,6 +165,10 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         else {
             PropertyAccessorFactory.forDirectFieldAccess(holder).setPropertyValue(path, value);
         }
+    }
+
+    private boolean isSupportedCollection(Object value) {
+        return value instanceof List || value instanceof Set;
     }
 
     private String encryptDecryptText(EncryptionContext encryptionContext, String text, EncryptionOperation operation) {
