@@ -43,36 +43,27 @@ public class DefaultDataEncryptService implements DataEncryptionService {
 
     @Override
     public <T> T encryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
-        if (data == null) {
-            return null;
-        }
-
-        if (CollectionUtils.isEmpty(pathToEncryptDecryptList)) {
-            @SuppressWarnings("unchecked")
-            T encryptedValue = (T) encryptDecryptValue(encryptionContext, data, EncryptionOperation.ENCRYPT);
-
-            return encryptedValue == null ? data : encryptedValue;
-        }
-
-        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.ENCRYPT));
-
-        return data;
+        return encryptDecryptData(data, pathToEncryptDecryptList, encryptionContext, EncryptionOperation.ENCRYPT);
     }
 
     @Override
     public <T> T decryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
+        return encryptDecryptData(data, pathToEncryptDecryptList, encryptionContext, EncryptionOperation.DECRYPT);
+    }
+
+    private <T> T encryptDecryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext, EncryptionOperation encryptionOperation) {
         if (data == null) {
             return null;
         }
 
         if (CollectionUtils.isEmpty(pathToEncryptDecryptList)) {
             @SuppressWarnings("unchecked")
-            T decryptedValue = (T) encryptDecryptValue(encryptionContext, data, EncryptionOperation.DECRYPT);
+            T encryptedDecryptedValue = (T) encryptDecryptValue(encryptionContext, data, encryptionOperation);
 
-            return decryptedValue == null ? data : decryptedValue;
+            return encryptedDecryptedValue == null ? data : encryptedDecryptedValue;
         }
 
-        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.DECRYPT));
+        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, encryptionOperation));
 
         return data;
     }
