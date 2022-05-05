@@ -60,26 +60,26 @@ jobs:
           arguments: clean build
 
       - name: JaCoCo Coverage Report
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: gradle/gradle-build-action@v2
         with:
           arguments: jacocoTestReport testCodeCoverageReport
 
       - name: Publish JaCoCo Coverage Report
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         uses: codecov/codecov-action@v2
         with:
           name: Aggregated JaCoCo Report
           files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
 
       - name: Aggregate Javadoc
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        if: ${{ matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         uses: gradle/gradle-build-action@v2
         with:
           arguments: aggregateJavadoc
 
       - name: Deploy Javadoc to GitHub Pages
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '8' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        if: ${{ matrix.os == 'ubuntu-latest' && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         uses: JamesIves/github-pages-deploy-action@v4.3.0
         with:
           branch: gh-pages
