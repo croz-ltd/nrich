@@ -5,6 +5,7 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation "org.springframework:spring-context"
+  implementation "org.yaml:snakeyaml"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
