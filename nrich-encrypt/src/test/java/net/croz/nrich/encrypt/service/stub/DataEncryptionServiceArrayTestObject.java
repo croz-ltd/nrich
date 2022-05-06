@@ -20,18 +20,12 @@ package net.croz.nrich.encrypt.service.stub;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
-public class DataEncryptionServiceTestObject {
+public class DataEncryptionServiceArrayTestObject {
 
-    private String propertyToEncryptDecrypt;
+    private String propertyEncryptDecrypt;
 
-    private List<String> listToEncrypt;
-
-    private DataEncryptionServiceNestedTestObject nestedTestObject;
-
-    private List<DataEncryptionServiceNestedTestObject> nestedTestObjectList;
+    private String[] arrayEncrypt;
 
 }

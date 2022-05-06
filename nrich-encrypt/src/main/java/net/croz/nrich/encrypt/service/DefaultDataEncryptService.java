@@ -31,6 +31,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -41,36 +43,27 @@ public class DefaultDataEncryptService implements DataEncryptionService {
 
     @Override
     public <T> T encryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
-        if (data == null) {
-            return null;
-        }
-
-        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
-            @SuppressWarnings("unchecked")
-            T encryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.ENCRYPT);
-
-            return encryptedText;
-        }
-
-        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.ENCRYPT));
-
-        return data;
+        return encryptDecryptData(data, pathToEncryptDecryptList, encryptionContext, EncryptionOperation.ENCRYPT);
     }
 
     @Override
     public <T> T decryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext) {
+        return encryptDecryptData(data, pathToEncryptDecryptList, encryptionContext, EncryptionOperation.DECRYPT);
+    }
+
+    private <T> T encryptDecryptData(T data, List<String> pathToEncryptDecryptList, EncryptionContext encryptionContext, EncryptionOperation encryptionOperation) {
         if (data == null) {
             return null;
         }
 
-        if (CollectionUtils.isEmpty(pathToEncryptDecryptList) && data instanceof String) {
+        if (CollectionUtils.isEmpty(pathToEncryptDecryptList)) {
             @SuppressWarnings("unchecked")
-            T decryptedText = (T) encryptDecryptText(encryptionContext, (String) data, EncryptionOperation.DECRYPT);
+            T encryptedDecryptedValue = (T) encryptDecryptValue(encryptionContext, data, encryptionOperation);
 
-            return decryptedText;
+            return encryptedDecryptedValue == null ? data : encryptedDecryptedValue;
         }
 
-        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, EncryptionOperation.DECRYPT));
+        pathToEncryptDecryptList.forEach(path -> executeEncryptionOperation(encryptionContext, data, path, encryptionOperation));
 
         return data;
     }
@@ -93,6 +86,9 @@ public class DefaultDataEncryptService implements DataEncryptionService {
             if (objectContainingFieldsToEncryptOrDecrypt instanceof Collection) {
                 ((Collection<?>) objectContainingFieldsToEncryptOrDecrypt).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
             }
+            else if (objectContainingFieldsToEncryptOrDecrypt instanceof Object[]) {
+                Arrays.stream(((Object[]) objectContainingFieldsToEncryptOrDecrypt)).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
+            }
             else {
                 encryptDecryptValue(encryptionContext, objectContainingFieldsToEncryptOrDecrypt, propertyName, operation);
             }
@@ -101,24 +97,41 @@ public class DefaultDataEncryptService implements DataEncryptionService {
 
     private void encryptDecryptValue(EncryptionContext encryptionContext, Object objectContainingFieldsToEncryptOrDecrypt, String propertyName, EncryptionOperation operation) {
         Object value = getPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName);
+        Object result = encryptDecryptValue(encryptionContext, value, operation);
 
+        if (result == null) {
+            return;
+        }
+
+        setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, result);
+    }
+
+    private Object encryptDecryptValue(EncryptionContext encryptionContext, Object value, EncryptionOperation operation) {
         if (value instanceof String) {
             String textToEncryptOrDecrypt = (String) value;
-            String encryptedValue = encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
 
-            setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValue);
-
+            return encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
         }
-        else if (value instanceof Collection && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
+        else if (isSupportedCollection(value) && ((Collection<?>) value).stream().allMatch(String.class::isInstance)) {
             @SuppressWarnings("unchecked")
             Collection<String> textToEncryptOrDecryptList = (Collection<String>) value;
+            Collector<? super String, ?, ?> collector = value instanceof Set ? Collectors.toSet() : Collectors.toList();
 
-            Collection<String> encryptedValueList = textToEncryptOrDecryptList.stream()
+            return textToEncryptOrDecryptList.stream()
                 .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
-                .collect(Collectors.toList());
-
-            setPropertyValueByPath(objectContainingFieldsToEncryptOrDecrypt, propertyName, encryptedValueList);
+                .collect(collector);
         }
+        else if (value instanceof String[]) {
+            String[] textToEncryptOrDecryptList = (String[]) value;
+
+            return Arrays.stream(textToEncryptOrDecryptList)
+                .map(textToEncryptOrDecrypt -> encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation))
+                .toArray(String[]::new);
+        }
+
+        log.warn("Unable to {} property, check if the specified path is correct and if the specified property is a string", operation.name().toLowerCase());
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -143,6 +156,10 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         else {
             PropertyAccessorFactory.forDirectFieldAccess(holder).setPropertyValue(path, value);
         }
+    }
+
+    private boolean isSupportedCollection(Object value) {
+        return value instanceof List || value instanceof Set;
     }
 
     private String encryptDecryptText(EncryptionContext encryptionContext, String text, EncryptionOperation operation) {
