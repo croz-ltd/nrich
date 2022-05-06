@@ -31,119 +31,119 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class PageableUtilTest {
 
+    private static final int PAGE_NUMBER = 0;
+
+    private static final int PAGE_SIZE = 10;
+
+    private static final String SORT_PROPERTY = "name";
+
+    private static final String UNIQUE_SORT_PROPERTY = "id";
+
     @Test
     void shouldConvertPageableSortableRequestWithUniqueSortPropertyToPageable() {
         // given
-        int pageNumber = 0;
-        int pageSize = 10;
-        String sortProperty = "name";
-        String uniqueSortProperty = "id";
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC));
-        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, sortPropertyList);
+        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // when
-        Pageable pageable = PageableUtil.convertToPageable(request, new SortProperty(uniqueSortProperty, SortDirection.ASC));
+        Pageable pageable = PageableUtil.convertToPageable(request, new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC));
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
         assertThat(pageable.getSort().isSorted()).isTrue();
-        assertThat(pageable.getSort().getOrderFor(sortProperty)).isEqualTo(Sort.Order.desc(sortProperty));
-        assertThat(pageable.getSort().getOrderFor(uniqueSortProperty)).isEqualTo(Sort.Order.asc(uniqueSortProperty));
+        assertThat(pageable.getSort().getOrderFor(SORT_PROPERTY)).isEqualTo(Sort.Order.desc(SORT_PROPERTY));
+        assertThat(pageable.getSort().getOrderFor(UNIQUE_SORT_PROPERTY)).isEqualTo(Sort.Order.asc(UNIQUE_SORT_PROPERTY));
     }
 
     @Test
     void shouldConvertPageableSortableRequestToPageable() {
         // given
-        int pageNumber = 0;
-        int pageSize = 10;
-        String sortProperty = "name";
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC));
-        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(pageNumber, pageSize, sortPropertyList);
+        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // when
         Pageable pageable = PageableUtil.convertToPageable(request);
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
         assertThat(pageable.getSort().isSorted()).isTrue();
-        assertThat(pageable.getSort().getOrderFor(sortProperty)).isEqualTo(Sort.Order.desc(sortProperty));
+        assertThat(pageable.getSort().getOrderFor(SORT_PROPERTY)).isEqualTo(Sort.Order.desc(SORT_PROPERTY));
     }
 
     @Test
     void shouldConvertUnsortedPageDataToPageable() {
-        // given
-        int pageNumber = 0;
-        int pageSize = 10;
-
         // when
-        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize);
+        Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE);
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
     }
 
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyToPageable() {
         // given
-        int pageNumber = 0;
-        int pageSize = 10;
-        String uniqueSortProperty = "id";
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(uniqueSortProperty, SortDirection.ASC));
+        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC));
 
         // when
-        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, sortPropertyList);
+        Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
         assertThat(pageable.getSort().isSorted()).isTrue();
-        assertThat(pageable.getSort().getOrderFor(uniqueSortProperty)).isEqualTo(Sort.Order.asc(uniqueSortProperty));
+        assertThat(pageable.getSort().getOrderFor(UNIQUE_SORT_PROPERTY)).isEqualTo(Sort.Order.asc(UNIQUE_SORT_PROPERTY));
     }
 
     @Test
     void shouldConvertPageDataWithSortPropertyToListPageable() {
         // given
-        int pageNumber = 0;
-        int pageSize = 10;
-        String sortProperty = "name";
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
 
         // when
-        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, sortPropertyList);
+        Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
         assertThat(pageable.getSort().isSorted()).isTrue();
-        assertThat(pageable.getSort().getOrderFor(sortProperty)).isEqualTo(Sort.Order.desc(sortProperty));
+        assertThat(pageable.getSort().getOrderFor(SORT_PROPERTY)).isEqualTo(Sort.Order.desc(SORT_PROPERTY));
     }
 
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyAndSortPropertyToListPageable() {
         // given
-        int pageNumber = 0;
-        int pageSize = 10;
-        String uniqueSortProperty = "id";
-        String sortProperty = "name";
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(sortProperty, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
 
         // when
-        Pageable pageable = PageableUtil.convertToPageable(pageNumber, pageSize, new SortProperty(uniqueSortProperty, SortDirection.ASC), sortPropertyList);
+        Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC), sortPropertyList);
 
         // then
         assertThat(pageable).isNotNull();
-        assertThat(pageable.getPageNumber()).isEqualTo(pageNumber);
-        assertThat(pageable.getPageSize()).isEqualTo(pageSize);
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
         assertThat(pageable.getSort().isSorted()).isTrue();
-        assertThat(pageable.getSort().getOrderFor(uniqueSortProperty)).isEqualTo(Sort.Order.asc(uniqueSortProperty));
-        assertThat(pageable.getSort().getOrderFor(sortProperty)).isEqualTo(Sort.Order.desc(sortProperty));
+        assertThat(pageable.getSort().getOrderFor(UNIQUE_SORT_PROPERTY)).isEqualTo(Sort.Order.asc(UNIQUE_SORT_PROPERTY));
+        assertThat(pageable.getSort().getOrderFor(SORT_PROPERTY)).isEqualTo(Sort.Order.desc(SORT_PROPERTY));
+    }
+
+    @Test
+    void shouldConvertToPageableWithUniqueSortProperty() {
+        // when
+        Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC));
+
+        // then
+        assertThat(pageable).isNotNull();
+        assertThat(pageable.getPageNumber()).isEqualTo(PAGE_NUMBER);
+        assertThat(pageable.getPageSize()).isEqualTo(PAGE_SIZE);
+        assertThat(pageable.getSort().isSorted()).isTrue();
+        assertThat(pageable.getSort().getOrderFor(UNIQUE_SORT_PROPERTY)).isEqualTo(Sort.Order.asc(UNIQUE_SORT_PROPERTY));
     }
 }
