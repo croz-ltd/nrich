@@ -51,11 +51,8 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
-        // and when
-        Class<?> registryCreateClass = formConfiguration.get(formId);
-
         // then
-        assertThat(registryCreateClass).isEqualTo(RegistryTestEntity.class);
+        assertThat(formConfiguration).containsEntry(formId, RegistryTestEntity.class);
     }
 
     @Test
@@ -68,11 +65,8 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
-        // and when
-        Class<?> registryCreateClass = formConfiguration.get(formId);
-
         // then
-        assertThat(registryCreateClass).isEqualTo(RegistryTestEntityUpdateRequest.class);
+        assertThat(formConfiguration).containsEntry(formId, RegistryTestEntityUpdateRequest.class);
     }
 
     @Test
@@ -85,11 +79,8 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
-        // and when
-        Class<?> registryCreateClass = formConfiguration.get(formId);
-
         // then
-        assertThat(registryCreateClass).isEqualTo(Object.class);
+        assertThat(formConfiguration).containsEntry(formId, Object.class);
     }
 
     @Test
@@ -102,11 +93,8 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
-        // and when
-        Class<?> registryCreateClass = formConfiguration.get(formId);
-
         // then
-        assertThat(registryCreateClass).isEqualTo(Object.class);
+        assertThat(formConfiguration).containsEntry(formId, Object.class);
     }
 
     @Test
@@ -118,10 +106,7 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
-        // and when
-        Class<?> registryCreateClass = formConfiguration.get(formId);
-
         // then
-        assertThat(registryCreateClass).isEqualTo(RegistryCustomizerTestEntityCreateRequest.class);
+        assertThat(formConfiguration).containsEntry(formId, RegistryCustomizerTestEntityCreateRequest.class);
     }
 }
