@@ -38,14 +38,14 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
 
     @Override
     public Object convertEntityDataToTyped(CreateRegistryRequest request) {
-        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.CREATE_REQUEST_SUFFIX);
+        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.CREATE_REQUEST_CLASS_NAME_FORMAT);
 
         return convertStringToInstance(request.getJsonEntityData(), type);
     }
 
     @Override
     public Object convertEntityDataToTyped(UpdateRegistryRequest request) {
-        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.UPDATE_REQUEST_SUFFIX);
+        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.UPDATE_REQUEST_CLASS_NAME_FORMAT);
 
         return convertStringToInstance(request.getJsonEntityData(), type);
     }
@@ -53,7 +53,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
     private Class<?> resolveClassWithConfigurationVerification(String classFullName, String classLoadingInitialPrefix) {
         registryDataConfigurationHolder.verifyConfigurationExists(classFullName);
 
-        List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_SUFFIX, classFullName), classFullName);
+        List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_CLASS_NAME_FORMAT, classFullName), classFullName);
 
         return ClassLoadingUtil.loadClassFromList(classNameList);
     }
