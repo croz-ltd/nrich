@@ -58,7 +58,7 @@ should be converted to null).
 `ExceptionAuxiliaryDataResolverService` resolves additional data for each exception that will be logged and (if configured) sent to client with notification (this can be current time, uuid etc).
 Default implementation returns uuid, current time, request uri and request method.
 
-`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using Springs `MessageSource`.
+`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using Spring's `MessageSource`.
 Message code for resolving is `fullyQualifiedExceptionName.httpStatus`
 
 `NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client. It

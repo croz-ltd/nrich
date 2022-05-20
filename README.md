@@ -70,7 +70,7 @@ be replaced with custom implementation.
 
 Allows for resolving of client notifications from server side. Notifications can be resolved for controller actions (i.e. `Entity has successfully been saved`), for exceptions (i.e. `Error occurred`)
 and for validation errors (i.e. `Validation errors found in request`). Validation notification also return a list of validation errors with properties that failed validation. Notification messages are
-resolved by message keys or exception class names from Springs `MessageSource`. Users can also return responses with notification. `webmvc` module uses this module to send notification responses to
+resolved by message keys or exception class names from Spring's `MessageSource`. Users can also return responses with notification. `webmvc` module uses this module to send notification responses to
 client on exceptions with registered
 `@RestControllerAdvice`.
 

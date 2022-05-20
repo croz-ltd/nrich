@@ -142,7 +142,7 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 
 ```
 
-Default implementation of `TextEncryptionService` is `BytesEncryptorTextEncryptService` and uses Springs BytesEncryptor that is passed in as argument for text encryption. `BytesEncryptor` can be
+Default implementation of `TextEncryptionService` is `BytesEncryptorTextEncryptService` and uses Spring's BytesEncryptor that is passed in as argument for text encryption. `BytesEncryptor` can be
 created with fixed password and salt or using random generated on each restart (in former case encrypted data should not be persisted). It also accepts charset used for converting byte array to string
 and vice versa.
 

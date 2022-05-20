@@ -6,7 +6,7 @@
 
 `nrich-notification` is a module intended for creation of notifications on server side which are shown on the client side. It supports info (i.e. 'Entity has been saved'), warning (i.e. 'Validation
 failed') and error (i.e. 'Exception occurred') notification severity levels, and can also send a list of validation errors to client side along with original notification. Notification messages are
-resolved by message keys from Springs `MessageSource`. Keys can be either fixed strings or in case of exceptions their class names.
+resolved by message keys from Spring's `MessageSource`. Keys can be either fixed strings or in case of exceptions their class names.
 
 ## Setting up Spring beans
 
@@ -38,10 +38,10 @@ To be able to use this module following configuration is required:
 ```
 
 `ConstraintConversionService` is a service responsible for converting `javax.validation.ConstraintViolation` list to Spring `Errors`
-instances making implementation of `NotificationResolverService` less complex since it only needs to work with Springs `Errors` when processing validation errors.
+instances making implementation of `NotificationResolverService` less complex since it only needs to work with Spring's `Errors` when processing validation errors.
 
 `NotificationMessageResolverService` is a service responsible for resolving messages from message codes and
-`ObjectErrors`. Default implementation is `MessageSourceNotificationMessageResolverService` that resolves messages from Springs `MessageSource`.
+`ObjectErrors`. Default implementation is `MessageSourceNotificationMessageResolverService` that resolves messages from Spring's `MessageSource`.
 
 `NotificationResolverService` is main service that is responsible for creating notifications. It can create notifications for validation errors, exceptions or action names.
 Consequently, it accepts either Spring's `Errors` or Jakarta `ConstraintViolationException` for creating validation notifications, `Throwable` for creating error notifications and

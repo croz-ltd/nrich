@@ -501,7 +501,7 @@ requests for searching Author:
 
 `classFullName` is class name to search, `propertyNameList` is a list of properties to search on that class. `searchParameter` and  `sortPropertyList` are not required but paging parameters are.
 
-Response sent from server returns Springs pageable with list of entity instances:
+Response sent from server returns Spring's pageable with list of entity instances:
 
 ```json
 

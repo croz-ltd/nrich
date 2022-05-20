@@ -25,7 +25,7 @@ public class ApplicationConfiguration {
 
 
 `LoggingService` is responsible for logging exceptions. Default implementation is `Slf4jLoggingService` that uses `Slf4J` logger for logging exceptions and resolves verbosity and logging levels from
-Springs `MessageSource`.
+Spring's `MessageSource`.
 
 ## Usage
 

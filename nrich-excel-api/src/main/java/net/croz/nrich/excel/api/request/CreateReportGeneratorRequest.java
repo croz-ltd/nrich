@@ -35,7 +35,7 @@ public class CreateReportGeneratorRequest {
     private final OutputStream outputStream;
 
     /**
-     * Path to template (template is resolved from this path using Springs ResourceLoader).
+     * Path to template (template is resolved from this path using Spring's ResourceLoader).
      */
     private final String templatePath;
 

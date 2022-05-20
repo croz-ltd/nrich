@@ -37,7 +37,7 @@ public interface RegistryDataService {
     Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request);
 
     /**
-     * Returns Springs {@link Page} instance holding found registry instances.
+     * Returns Spring's {@link Page} instance holding found registry instances.
      *
      * @param request {@link ListRegistryRequest} instance holding query information
      * @param <P>     registry query return value (if no override is specified this is registry type, but can be a projection instance)

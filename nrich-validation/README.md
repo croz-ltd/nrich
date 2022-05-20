@@ -143,7 +143,7 @@ will validate that either companyName is filled or firstName or lastName are fil
 
 #### ValidFile
 
-Validates that file (either Springs `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list and/or satisfies regex. All properties
+Validates that file (either Spring's `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list and/or satisfies regex. All properties
 are optional so defining a constraint without any will always pass validation.
 
 ```java
@@ -163,7 +163,7 @@ will validate that file has content type of `text/plain`, extension `txt` and ma
 
 #### ValidFileResolvable
 
-Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Springs `Environment` bean allowing those properties to be
+Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Spring's `Environment` bean allowing those properties to be
 defined in property files.
 
 ```java

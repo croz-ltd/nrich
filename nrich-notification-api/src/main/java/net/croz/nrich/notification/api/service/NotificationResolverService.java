@@ -33,7 +33,7 @@ public interface NotificationResolverService {
      * Returns {@link ValidationFailureNotification} instance. Default severity is <pre>WARNING</pre>. Resolved validation failure messages are added to notification messageList.
      * Title of notification is resolved from code <pre>notification.validation-failed.title</pre> and content of notification is resolved from code: <pre>notification.validation-failed.content</pre>.
      *
-     * @param errors                     Springs {@link Errors} that will be used to resolve validation notification messages.
+     * @param errors                     Spring's {@link Errors} that will be used to resolve validation notification messages.
      * @param validationFailedOwningType class on which validation errors were found
      * @param additionalNotificationData additional notification data to add to notification
      * @return {@link ValidationFailureNotification} instance

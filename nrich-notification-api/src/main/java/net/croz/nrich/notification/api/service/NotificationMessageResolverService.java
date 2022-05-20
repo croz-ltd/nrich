@@ -22,7 +22,7 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 
 /**
- * Resolves messages for notification from either message code list or from Springs {@link ObjectError} instances.
+ * Resolves messages for notification from either message code list or from Spring's {@link ObjectError} instances.
  */
 public interface NotificationMessageResolverService {
 
