@@ -37,6 +37,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseControllerTe
 
     private static final String NOTIFICATION_VALIDATION_ERROR_LIST_PATH = "$.notification.validationErrorList[0]";
 
+    private static final String NOTIFICATION_TIMESTAMP_PATH = "$.notification.timestamp";
+
     @Test
     void shouldResolveExceptionNotification() throws Exception {
         // given
@@ -49,7 +51,8 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseControllerTe
         result.andExpect(status().isBadGateway())
             .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).value("Error"))
             .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Error message"))
-            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value(startsWith("UUID")));
+            .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value(startsWith("UUID")))
+            .andExpect(jsonPath(NOTIFICATION_TIMESTAMP_PATH).isNotEmpty());
     }
 
     @Test
