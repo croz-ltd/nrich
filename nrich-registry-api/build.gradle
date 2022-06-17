@@ -2,10 +2,10 @@ description = "Nrich Registry API"
 
 dependencies {
   api project(":nrich-search-api")
+  api project(":nrich-javascript")
 
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  implementation "com.fasterxml.jackson.core:jackson-annotations"
   implementation "org.springframework.data:spring-data-commons"
 }
