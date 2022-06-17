@@ -19,6 +19,7 @@ package net.croz.nrich.formconfiguration.api.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.javascript.model.JavascriptType;
 
 import java.util.List;
 
@@ -33,6 +34,16 @@ public class ConstrainedPropertyConfiguration {
      * Path to the property relative to a parent class that is mapped to form id.
      */
     private final String path;
+
+    /**
+     * Type of constrained property.
+     */
+    private final Class<?> propertyType;
+
+    /**
+     * Javascript type of constrained property.
+     */
+    private final JavascriptType javascriptType;
 
     /**
      * List of {@link ConstrainedPropertyClientValidatorConfiguration} instances that hold client side validation configuration.

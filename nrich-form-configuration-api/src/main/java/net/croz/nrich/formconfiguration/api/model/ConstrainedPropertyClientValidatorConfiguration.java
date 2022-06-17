@@ -30,11 +30,6 @@ import java.util.Map;
 public class ConstrainedPropertyClientValidatorConfiguration {
 
     /**
-     * Type of constrained property.
-     */
-    private final Class<?> propertyType;
-
-    /**
      * Constraint name (i.e. NotNull).
      */
     private final String name;

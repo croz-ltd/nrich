@@ -1,6 +1,7 @@
 description = "Nrich Form Configuration API"
 
 dependencies {
+  api project(":nrich-javascript")
   api "jakarta.validation:jakarta.validation-api"
 
   annotationProcessor "org.projectlombok:lombok"

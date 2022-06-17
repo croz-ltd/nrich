@@ -120,9 +120,10 @@ Response sent from server is in following form:
         "constrainedPropertyConfigurationList": [
             {
                 "path": "firstName",
+                "propertyType": "java.lang.String",
+                "javascriptType": "string",
                 "validatorList": [
                     {
-                        "propertyType": "java.lang.String",
                         "name": "NotBlank",
                         "argumentMap": {},
                         "errorMessage": "Cannot be blank"
@@ -131,9 +132,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "email",
+                "propertyType": "java.lang.String",
+                "javascriptType": "string",
                 "validatorList": [
                     {
-                        "propertyType": "java.lang.String",
                         "name": "Email",
                         "argumentMap": {
                             "regexp": ".*",
@@ -142,7 +144,6 @@ Response sent from server is in following form:
                         "errorMessage": "Email is not in the correct format"
                     },
                     {
-                        "propertyType": "java.lang.String",
                         "name": "NotBlank",
                         "argumentMap": {},
                         "errorMessage": "Cannot be blank"
@@ -151,9 +152,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "hours",
+                "propertyType": "java.lang.Integer",
+                "javascriptType": "number",
                 "validatorList": [
                     {
-                        "propertyType": "java.lang.Integer",
                         "name": "Min",
                         "argumentMap": {
                             "value": 0
@@ -161,7 +163,6 @@ Response sent from server is in following form:
                         "errorMessage": "Minimum value is: 0"
                     },
                     {
-                        "propertyType": "java.lang.Integer",
                         "name": "Max",
                         "argumentMap": {
                             "value": 23
@@ -172,9 +173,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "income",
+                "propertyType": "java.math.BigDecimal",
+                "javascriptType": "number",
                 "validatorList": [
                     {
-                        "propertyType": "java.math.BigDecimal",
                         "name": "Digits",
                         "argumentMap": {
                             "integer": 10,
@@ -183,7 +185,6 @@ Response sent from server is in following form:
                         "errorMessage": "Maximum number of digits is: 10 and scale is: 2"
                     },
                     {
-                        "propertyType": "java.math.BigDecimal",
                         "name": "DecimalMin",
                         "argumentMap": {
                             "inclusive": true,
@@ -195,9 +196,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "endDate",
+                "propertyType": "java.util.Date",
+                "javascriptType": "date",
                 "validatorList": [
                     {
-                        "propertyType": "java.util.Date",
                         "name": "NotNull",
                         "argumentMap": {},
                         "errorMessage": "Cannot be null"
@@ -206,9 +208,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "phone1",
+                "propertyType": "java.lang.String",
+                "javascriptType": "string",
                 "validatorList": [
                     {
-                        "propertyType": "java.lang.String",
                         "name": "Size",
                         "argumentMap": {
                             "min": 3,
@@ -220,9 +223,10 @@ Response sent from server is in following form:
             },
             {
                 "path": "startDate",
+                "propertyType": "java.util.Date",
+                "javascriptType": "date",
                 "validatorList": [
                     {
-                        "propertyType": "java.util.Date",
                         "name": "NotNull",
                         "argumentMap": {},
                         "errorMessage": "Cannot be null"
