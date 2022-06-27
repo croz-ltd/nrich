@@ -33,27 +33,27 @@ import java.util.List;
 public class NrichCsrfProperties {
 
     /**
-     * If CSRF is active
+     * Whether CSRF is active.
      */
     private final boolean active;
 
     /**
-     * Duration of CSRF token
+     * Duration of CSRF token.
      */
     private final Duration tokenExpirationInterval;
 
     /**
-     * Duration of how long token can be in the future (can happen when server and client time is not in sync)
+     * Duration of how long token can be in the future (can happen when server and client time is not in sync).
      */
     private final Duration tokenFutureThreshold;
 
     /**
-     * Name of CSRF token
+     * Name of CSRF token.
      */
     private final String tokenKeyName;
 
     /**
-     * Length of crypto key (128, 256...)
+     * Length of crypto key (128, 256...).
      */
     private final Integer cryptoKeyLength;
 
@@ -63,12 +63,12 @@ public class NrichCsrfProperties {
     private final String initialTokenUrl;
 
     /**
-     * Url used for CSRF ping request.
+     * Uri used for CSRF ping request.
      */
     private final String csrfPingUri;
 
     /**
-     * A list of {@link CsrfExcludeConfig} instances that contain urls or regexps excluded from CSRF check
+     * A list of {@link CsrfExcludeConfig} instances that contain urls or regexps excluded from CSRF check.
      */
     private final List<CsrfExcludeConfig> csrfExcludeConfigList;
 

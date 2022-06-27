@@ -22,7 +22,7 @@ import org.springframework.validation.ObjectError;
 import java.util.List;
 
 /**
- * Resolves messages for notification from either message code list or from Springs {@link ObjectError} instances.
+ * Resolves messages for notification from either message code list or from Spring's {@link ObjectError} instances.
  */
 public interface NotificationMessageResolverService {
 
@@ -38,7 +38,7 @@ public interface NotificationMessageResolverService {
     String resolveMessage(List<String> messageCodeList, List<Object> argumentList, String defaultMessage);
 
     /**
-     * Resolves message for Springs {@link ObjectError}.
+     * Resolves message for Spring's {@link ObjectError}.
      *
      * @param validationFailedOwningType class on which {@link ObjectError} has been found
      * @param objectError                validation failure error

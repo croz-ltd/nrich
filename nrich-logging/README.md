@@ -4,22 +4,28 @@
 
 ## Overview
 
-nrich-logging is a library that adds logging service for logging errors in a standard format. Logging service can also resolve verbosity and logging levels for each exception from configuration.
+`nrich-logging` is a module that adds logging service for logging errors in a standard format. Logging service can also resolve verbosity and logging levels for each exception from configuration.
 
 ## Setting up Spring beans
 
-Setup is simple, one only has to define a single bean and then when common logging functionality (format, level resolving etc.) is required inject that bean.
+Setup is simple, one has to define logging service bean and inject it when common logging functionality (format, level resolving etc.) is required.
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
     @Bean
     public LoggingService loggingService(MessageSource messageSource) {
         return new Slf4jLoggingService(messageSource);
     }
+}
 
 ```
 
+
 `LoggingService` is responsible for logging exceptions. Default implementation is `Slf4jLoggingService` that uses `Slf4J` logger for logging exceptions and resolves verbosity and logging levels from
-Springs `MessageSource`.
+Spring's `MessageSource`.
 
 ## Usage
 
@@ -50,3 +56,26 @@ verbosity level is resolved from following key value:
 logging level is resolved from following key value:
 
 `net.croz.TextException.loggingLevel` supported values are DEBUG, WARN, INFO, ERROR
+
+When `verbosityLevel` is set to NONE the logging of the exception is skipped.
+
+When it is set to COMPACT the output is given bellow:
+
+```shell
+
+ERROR net.croz.nrich.logging.service.Slf4jLoggingService - Exception occurred: [className: net.croz.TestException], message: Something went wrong, additionalInfoData:
+
+```
+
+When it is set to FULL the output is given bellow (note that full stacktrace is included):
+
+```shell
+
+09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - Exception occurred
+net.croz.TestException: Something went wrong
+	at net.croz.nrich.logging.service.Slf4jLoggingServiceTest.shouldLogOnFullVerbosityLevel(Slf4jLoggingServiceTest.java:121)
+	.... (rest of stacktrace is omitted for brevity)
+09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - ---------------- Information about above exception Exception occurred: [className: net.croz.TestException], message: Something went wrong:  ----------------
+
+
+```

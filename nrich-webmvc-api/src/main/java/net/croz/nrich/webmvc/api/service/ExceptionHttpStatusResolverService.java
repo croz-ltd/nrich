@@ -17,7 +17,7 @@
 
 package net.croz.nrich.webmvc.api.service;
 
-// TODO for now returning Integer instead of Springs HttpStatus to avoid dependency on spring-web, not sure about that decision
+// TODO for now returning Integer instead of Spring's HttpStatus to avoid dependency on spring-web, not sure about that decision
 
 /**
  * Resolve http status for exception. If invalid status value is returned status 500 is used.

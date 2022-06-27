@@ -4,15 +4,19 @@
 
 ## Overview
 
-nrich-form-configuration is a library intended to provide a way of resolving server side defined constraint to client side. It resolves `jakarta-validation-api`
+`nrich-form-configuration` is a module intended to provide a way of resolving server side defined constraints to client side. It resolves `jakarta-validation-api`
 constraints defined on classes in a form that can be interpreted by the client side. On server side user registers form id (a string) with class holding constraints and then resolves defined
-constraint list from client side using REST API. Messages for constraints are resolved through Springs `MessageSource`.
+constraint list from client side using REST API. Messages for constraints are resolved through Spring's `MessageSource`.
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required:
+To be able to use this module following configuration is required:
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
     @Bean
     public FieldErrorMessageResolverService fieldErrorMessageResolverService(MessageSource messageSource) {
         return new MessageSourceFieldErrorMessageResolverService(messageSource);
@@ -30,18 +34,19 @@ To be able to use this library following configuration is required:
         formIdConstraintHolderMap.put("testRequest.formId", FormConfigurationServiceTestRequest.class);
 
         return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList);
-     }
+    }
 
     @Bean
     public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
         return new FormConfigurationController(formConfigurationService);
     }
+}
 
 ```
 
 `FieldErrorMessageResolverService` is responsible for resolving messages for constraints (i.e. 'Value cannot be null' for @NotNull constraint). Default implementation
 is `MessageSourceFieldErrorMessageResolverService` that resolves messages from `MessageSource`. For example for constraint holding class of
-type `net.croz.nrich.formconfiguration.stub.MessageSourceFieldErrorMessageResolverServiceTestRequest` and `@NotNull` constraint defined on property named `propertyName` following message codes will be
+type `net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest` and `@NotNull` constraint defined on property named `propertyName` following message codes will be
 searched:
 
 - `net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest.propertyName.client.NotNull.invalid`
@@ -65,12 +70,12 @@ property `formIdList` and it returns a list of `FormConfiguration` instances.
 
 ## Usage
 
-On server side users should register form id with class that is used to bind values submitted from that form. On client side REST API enpoint for fetching form configuration should be
+On server side users should register form id with class that is used to bind values submitted from that form. On client side REST API endpoint for fetching form configuration should be
 called (`nrich/form/configuration/fetch`) and received response should be converted to client side constraints and applied to field defined on the form.
 
 For following request:
 
-```
+```java
 
 @Setter
 @Getter
@@ -110,122 +115,122 @@ Response sent from server is in following form:
 
 ```json
 [
-  {
-    "formId": "demo.EmployeeForm",
-    "constrainedPropertyConfigurationList": [
-      {
-        "path": "firstName",
-        "validatorList": [
-          {
-            "propertyType": "java.lang.String",
-            "name": "NotBlank",
-            "argumentMap": {},
-            "errorMessage": "Cannot be blank"
-          }
-        ]
-      },
-      {
-        "path": "email",
-        "validatorList": [
-          {
-            "propertyType": "java.lang.String",
-            "name": "Email",
-            "argumentMap": {
-              "regexp": ".*",
-              "flags": []
+    {
+        "formId": "demo.EmployeeForm",
+        "constrainedPropertyConfigurationList": [
+            {
+                "path": "firstName",
+                "validatorList": [
+                    {
+                        "propertyType": "java.lang.String",
+                        "name": "NotBlank",
+                        "argumentMap": {},
+                        "errorMessage": "Cannot be blank"
+                    }
+                ]
             },
-            "errorMessage": "Email is not in the correct format"
-          },
-          {
-            "propertyType": "java.lang.String",
-            "name": "NotBlank",
-            "argumentMap": {},
-            "errorMessage": "Cannot be blank"
-          }
-        ]
-      },
-      {
-        "path": "hours",
-        "validatorList": [
-          {
-            "propertyType": "java.lang.Integer",
-            "name": "Min",
-            "argumentMap": {
-              "value": 0
+            {
+                "path": "email",
+                "validatorList": [
+                    {
+                        "propertyType": "java.lang.String",
+                        "name": "Email",
+                        "argumentMap": {
+                            "regexp": ".*",
+                            "flags": []
+                        },
+                        "errorMessage": "Email is not in the correct format"
+                    },
+                    {
+                        "propertyType": "java.lang.String",
+                        "name": "NotBlank",
+                        "argumentMap": {},
+                        "errorMessage": "Cannot be blank"
+                    }
+                ]
             },
-            "errorMessage": "Minimum value is: 0"
-          },
-          {
-            "propertyType": "java.lang.Integer",
-            "name": "Max",
-            "argumentMap": {
-              "value": 23
+            {
+                "path": "hours",
+                "validatorList": [
+                    {
+                        "propertyType": "java.lang.Integer",
+                        "name": "Min",
+                        "argumentMap": {
+                            "value": 0
+                        },
+                        "errorMessage": "Minimum value is: 0"
+                    },
+                    {
+                        "propertyType": "java.lang.Integer",
+                        "name": "Max",
+                        "argumentMap": {
+                            "value": 23
+                        },
+                        "errorMessage": "Maximum value is: 23"
+                    }
+                ]
             },
-            "errorMessage": "Maximum value is: 23"
-          }
-        ]
-      },
-      {
-        "path": "income",
-        "validatorList": [
-          {
-            "propertyType": "java.math.BigDecimal",
-            "name": "Digits",
-            "argumentMap": {
-              "integer": 10,
-              "fraction": 2
+            {
+                "path": "income",
+                "validatorList": [
+                    {
+                        "propertyType": "java.math.BigDecimal",
+                        "name": "Digits",
+                        "argumentMap": {
+                            "integer": 10,
+                            "fraction": 2
+                        },
+                        "errorMessage": "Maximum number of digits is: 10 and scale is: 2"
+                    },
+                    {
+                        "propertyType": "java.math.BigDecimal",
+                        "name": "DecimalMin",
+                        "argumentMap": {
+                            "inclusive": true,
+                            "value": "0.0"
+                        },
+                        "errorMessage": "Minimum value is: 0.0"
+                    }
+                ]
             },
-            "errorMessage": "Maximum number of digits is: 10 and scale is: 2"
-          },
-          {
-            "propertyType": "java.math.BigDecimal",
-            "name": "DecimalMin",
-            "argumentMap": {
-              "inclusive": true,
-              "value": "0.0"
+            {
+                "path": "endDate",
+                "validatorList": [
+                    {
+                        "propertyType": "java.util.Date",
+                        "name": "NotNull",
+                        "argumentMap": {},
+                        "errorMessage": "Cannot be null"
+                    }
+                ]
             },
-            "errorMessage": "Minimum value is: 0.0"
-          }
-        ]
-      },
-      {
-        "path": "endDate",
-        "validatorList": [
-          {
-            "propertyType": "java.util.Date",
-            "name": "NotNull",
-            "argumentMap": {},
-            "errorMessage": "Cannot be null"
-          }
-        ]
-      },
-      {
-        "path": "phone1",
-        "validatorList": [
-          {
-            "propertyType": "java.lang.String",
-            "name": "Size",
-            "argumentMap": {
-              "min": 3,
-              "max": 3
+            {
+                "path": "phone1",
+                "validatorList": [
+                    {
+                        "propertyType": "java.lang.String",
+                        "name": "Size",
+                        "argumentMap": {
+                            "min": 3,
+                            "max": 3
+                        },
+                        "errorMessage": "Size must be between: 3 and 3"
+                    }
+                ]
             },
-            "errorMessage": "Size must be between: 3 and 3"
-          }
+            {
+                "path": "startDate",
+                "validatorList": [
+                    {
+                        "propertyType": "java.util.Date",
+                        "name": "NotNull",
+                        "argumentMap": {},
+                        "errorMessage": "Cannot be null"
+                    }
+                ]
+            }
         ]
-      },
-      {
-        "path": "startDate",
-        "validatorList": [
-          {
-            "propertyType": "java.util.Date",
-            "name": "NotNull",
-            "argumentMap": {},
-            "errorMessage": "Cannot be null"
-          }
-        ]
-      }
-    ]
-  }
+    }
 ]
 
 

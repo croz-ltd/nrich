@@ -32,7 +32,7 @@ public class NrichFormConfigurationProperties {
     /**
      * Whether default converter service ({@link net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService})
      * for converting {@link net.croz.nrich.formconfiguration.api.model.ConstrainedProperty} instances
-     * to client {@link net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration} list is enabled
+     * to client {@link net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration} list is enabled.
      */
     private final boolean defaultConverterEnabled;
 

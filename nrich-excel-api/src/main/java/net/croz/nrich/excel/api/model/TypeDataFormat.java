@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class TypeDataFormat {
 
     /**
-     * Type for which formatting is required (i.e. {@link java.util.Date}, {@link Float} etc).
+     * Type for which formatting is required (i.e. {@link java.util.Date}, {@link Float} etc.).
      */
     private final Class<?> type;
 

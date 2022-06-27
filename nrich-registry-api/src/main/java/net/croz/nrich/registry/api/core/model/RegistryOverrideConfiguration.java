@@ -68,7 +68,7 @@ public class RegistryOverrideConfiguration {
     private List<String> propertyDisplayOrderList;
 
     /**
-     * List of non editable properties.
+     * List of non-editable properties.
      */
     private List<String> nonEditablePropertyList;
 
@@ -78,7 +78,7 @@ public class RegistryOverrideConfiguration {
     private List<String> nonSortablePropertyList;
 
     /**
-     * List of non searchable properties.
+     * List of non-searchable properties.
      */
     private List<String> nonSearchablePropertyList;
 

@@ -4,10 +4,10 @@
 
 ## Overview
 
-This library can help in situations when sensitive data needs to be encrypted before it is returned (to the client side of a webapp for example) and then decrypted before it is used again. It provides
-the possibilty of encrypting and decrypting whole objects of data or only parts of them.
+This module can help in situations when sensitive data needs to be encrypted before it is returned (to the client side of a webapp for example) and then decrypted before it is used again. It provides
+the possibility of encrypting and decrypting whole objects of data or only parts of them. Currently, only Strings are supported for encryption and decryption.
 
-Lets say you have a REST service in your webapp that returns user details data. This service call could look like this for example
+Let's say you have a REST service in your webapp that returns user details data. This service call could look like this for example
 
 **GET** _**http://exampleapp/user/23**_
 
@@ -24,14 +24,14 @@ If you use this service call to load user details data in a web form for example
 
 **POST** _**http://exampleapp/user/23**_
 
-then a client could easily change that ID manualy before form submit and overwrite some other users data in the database.
+then a client could easily change that ID manually before form submit and overwrite some other users' data in the database.
 **This kind of security issues can be solved by encrypting critical data, like ID above, before it is returned to the client and then by decrypting it when it is submitted to the server. Using that
 approach your service call could look like this**
 
 **POST** **_http://exampleapp/user/535fa30d7e25dd8a49f1536779734ec828610_**
 
 **Now if someone tries to tamper with that the server side will know it end return error.
-_nrich-encrypt_ module provides this functionality and it is very easy to use.**
+`nrich-encrypt` module provides this functionality and it is very easy to use.**
 
 Data encryption/decryption can be used in two ways. By using annotations (**_@EncryptResult_**, **_@DecryptArgument_**) or by specifying fully qualified method names (class name + method name) in
 configuration classes.
@@ -40,20 +40,21 @@ Default implementation uses **AesBytesEncryptor** from **Spring Security** libra
 
 ## Usage with Spring Boot
 
-If you are using Spring Boot in your project then the easiest way to configure _nrich-encrypt_ is by using `nrich-encrypt-spring-boot-starter`. All you need to do is add it to your Gradle dependencies
+If you are using Spring Boot in your project then the easiest way to configure `nrich-encrypt` is by using `nrich-encrypt-spring-boot-starter`. All you need to do is add it to your Gradle dependencies
 configuration.
 
-```
+```groovy
 dependencies {
     implementation 'net.croz.nrich:nrich-encrypt-spring-boot-starter:0.0.1'
 }
 ```
 
-This will configure all the necessary default beans needed for _nrich-encrypt_ to work automatically.
+This will configure all the necessary default beans needed for `nrich-encrypt` to work automatically.
 
 In our example we are going to use following `Account` class
 
-```
+```java
+
 public class Account {
 
     private String id;
@@ -65,22 +66,25 @@ public class Account {
     private BigDecimal balance;
 
 }
+
 ```
 
 As mentioned above data encryption/decryption can be used in two ways. By using annotations `@EncryptResult`, `@DecryptArgument` or by using configuration classes. In our example we are going to use
 annotations. Lets say that `id` field on our `Account` instances holds sensitive information and that we don't want to expose it to our clients. In that case we could have `AccountController` with two
 endpoints (one for retrieving and one for updating account data) that looks like this
 
-```
+```java
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("account")
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     @GetMapping()
     @EncryptResult(resultPathList = "id")
-    public List<Account> listAll () {
+    public List<Account> listAll() {
 
         return accountService.getAccounts();
     }
@@ -92,6 +96,7 @@ public class AccountController {
         return accountService.save(account);
     }
 }
+
 ```
 
 `@EncryptResult` annotation is used to encrypt result of method execution. Data that is encrypted is specified in property named: `resultPathList`, it contains a list of paths to properties that
@@ -105,20 +110,22 @@ for `@EncryptResult` annotation.
 
 ## Setting up Spring beans
 
-To use _nrich-encrypt_ module in your plain Spring project(see below for Spring Boot) first you need to add the following dependency to your Gradle configuration.
+To use `nrich-encrypt` module in your plain Spring project(see below for Spring Boot) first you need to add the following dependency to your Gradle configuration.
 
-```
+```groovy
+
 dependencies {
     implementation 'net.croz.nrich:nrich-encrypt:0.0.1'
 }
 ```
 
-After that to be able to use this library **AspectJ** should be enabled (i.e. by adding `@EnableAspectJAutoProxy` on `@Configuration` class) and following beans should be defined in context:
+After that to be able to use this module **AspectJ** should be enabled (i.e. by adding `@EnableAspectJAutoProxy` on `@Configuration` class) and following beans should be defined in context:
 
-```
+```java
+
 @Configuration
 @EnableAspectJAutoProxy
-public class DemoApplicationConfiguration implements WebMvcConfigurer {
+public class ApplicationConfiguration implements WebMvcConfigurer {
 
     @Bean
     public TextEncryptionService textEncryptionService() {
@@ -132,9 +139,10 @@ public class DemoApplicationConfiguration implements WebMvcConfigurer {
         return new DefaultDataEncryptService(textEncryptionService);
     }
 }
+
 ```
 
-Default implementation of `TextEncryptionService` is `BytesEncryptorTextEncryptService` and uses Springs BytesEncryptor that is passed in as argument for text encryption. `BytesEncryptor` can be
+Default implementation of `TextEncryptionService` is `BytesEncryptorTextEncryptService` and uses Spring's BytesEncryptor that is passed in as argument for text encryption. `BytesEncryptor` can be
 created with fixed password and salt or using random generated on each restart (in former case encrypted data should not be persisted). It also accepts charset used for converting byte array to string
 and vice versa.
 
@@ -144,20 +152,26 @@ also responsible for calling `TextEncryptionService` to perform actual encryptio
 If encryption or decryption fails `EncryptionOperationFailedException` exception is thrown and original exception can be found in the cause (in default encryption service
 implementation `BytesEncryptorTextEncryptService`).
 
-To be able to use _nrich-encrypt_ with annotations on methods `EncryptDataAspect` bean has to be defined in your Spring configuration.
+To be able to use `nrich-encrypt` with annotations on methods `EncryptDataAspect` bean has to be defined in your Spring configuration.
 
-```
-@Bean
-public EncryptDataAspect encryptDataAspect(DataEncryptionService dataEncryptionService) {
-    return new EncryptDataAspect(dataEncryptionService);
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
+    @Bean
+    public EncryptDataAspect encryptDataAspect(DataEncryptionService dataEncryptionService) {
+        return new EncryptDataAspect(dataEncryptionService);
+    }
 }
+
 ```
 
 After that you can use `@EncryptResult` and `@DecryptArgument` annotations on your methods same as in Spring Boot example above.
 
 ## Encrypt and Decrypt using Spring configuration
 
-Library can also be used by specifying fully qualified method names and additional arguments using `EncryptionConfiguration` list.
+Module can also be used by specifying fully qualified method names and additional arguments using `EncryptionConfiguration` list.
 
 `EncryptionConfiguration` consists of the following data:
 
@@ -169,14 +183,18 @@ Library can also be used by specifying fully qualified method names and addition
 
 So instead of using `@EncryptResult` and `@DecryptArgument` annotations and `encryptDataAspect` @Bean above we could be using following configuration for our `AccoutController`
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
     @Bean
     public Advisor encryptorAdvisor(DataEncryptionService dataEncryptionService) {
 
         List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
-                new EncryptionConfiguration("com.example.demo.controller.AccountController.listAll", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
-                new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.DECRYPT)
+            new EncryptionConfiguration("com.example.demo.controller.AccountController.listAll", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration("com.example.demo.controller.AccountController.save", Collections.singletonList("id"), EncryptionOperation.DECRYPT)
         );
 
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
@@ -185,6 +203,8 @@ So instead of using `@EncryptResult` and `@DecryptArgument` annotations and `enc
 
         return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptionConfigurationList, null));
     }
+}
+
 ```
 
 This configuration produces the same encryption and decryption results as in example with using annotations above.

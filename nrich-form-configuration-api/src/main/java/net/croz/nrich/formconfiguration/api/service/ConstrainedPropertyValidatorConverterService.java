@@ -29,7 +29,7 @@ public interface ConstrainedPropertyValidatorConverterService {
 
     /**
      * Returns a list of {@link ConstrainedPropertyClientValidatorConfiguration} instances for single property with constraint.
-     * A list is retuned because some constraint may produce multiple constraints on client side.
+     * A list is returned because some constraint may produce multiple constraints on client side.
      *
      * @param constrainedProperty constrained property to convert
      * @return list of client side validator configuration instances
@@ -37,7 +37,7 @@ public interface ConstrainedPropertyValidatorConverterService {
     List<ConstrainedPropertyClientValidatorConfiguration> convert(ConstrainedProperty constrainedProperty);
 
     /**
-     * Returns whether constrained property is supported for conversion
+     * Returns whether constrained property is supported for conversion.
      *
      * @param constrainedProperty constrained property to check
      * @return whether constrained property is supported

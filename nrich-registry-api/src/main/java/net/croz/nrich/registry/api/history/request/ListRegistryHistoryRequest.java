@@ -47,7 +47,7 @@ public class ListRegistryHistoryRequest {
     private Integer pageNumber;
 
     /**
-     * Number of entities to fetch,.
+     * Number of entities to fetch.
      */
     @Max(100)
     @NotNull

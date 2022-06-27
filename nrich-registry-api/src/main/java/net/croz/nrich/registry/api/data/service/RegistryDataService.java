@@ -31,13 +31,13 @@ public interface RegistryDataService {
     /**
      * Return a map holding multiple registry entities. Key is registry entity class name and value is {@link Page} of registry entities.
      *
-     * @param request {@link ListBulkRegistryRequest} instance holding query information.
+     * @param request {@link ListBulkRegistryRequest} instance holding query information
      * @return map holding multiple registry entities
      */
     Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request);
 
     /**
-     * Returns Springs {@link Page} instance holding found registry instances.
+     * Returns Spring's {@link Page} instance holding found registry instances.
      *
      * @param request {@link ListRegistryRequest} instance holding query information
      * @param <P>     registry query return value (if no override is specified this is registry type, but can be a projection instance)
@@ -48,7 +48,7 @@ public interface RegistryDataService {
     /**
      * Returns created registry entity.
      *
-     * @param classFullName Class name of registry entity.
+     * @param classFullName Class name of registry entity
      * @param entityData    entity creation data
      * @param <T>           registry entity type
      * @return created registry instance.
@@ -58,8 +58,8 @@ public interface RegistryDataService {
     /**
      * Returns update registry entity.
      *
-     * @param classFullName Class name of registry entity.
-     * @param id            registry entity id.
+     * @param classFullName Class name of registry entity
+     * @param id            registry entity id
      * @param entityData    entity creation data
      * @param <T>           registry entity type
      * @return updated registry instance.
@@ -69,10 +69,10 @@ public interface RegistryDataService {
     /**
      * Returns deleted registry entity.
      *
-     * @param classFullName Class name of registry entity.
-     * @param id            registry entity id.
+     * @param classFullName Class name of registry entity
+     * @param id            registry entity id
      * @param <T>           registry entity type
-     * @return deleted registry instance.
+     * @return deleted registry instance
      */
     <T> T delete(String classFullName, Object id);
 

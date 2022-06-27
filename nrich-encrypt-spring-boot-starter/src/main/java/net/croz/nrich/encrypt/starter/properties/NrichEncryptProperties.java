@@ -36,23 +36,23 @@ public class NrichEncryptProperties {
     private final List<EncryptionConfiguration> encryptionConfigurationList;
 
     /**
-     * Used in conjunction with encryptionConfigurationList. It allow to define method that will not be encrypted. Methods should be in format: fullyQualifiedClasName.methodName.
+     * Used in conjunction with encryptionConfigurationList. It allows defining methods that will not be encrypted. Methods should be in format: fullyQualifiedClasName.methodName.
      */
     private final List<String> ignoredMethodList;
 
     /**
-     * Charset to use for encryption
+     * Charset to use for encryption.
      */
     private final String textEncryptCharset;
 
     /**
      * Whether an aspect bean {@link net.croz.nrich.encrypt.aspect.EncryptDataAspect} that handles encryption for {@link net.croz.nrich.encrypt.api.annotation.EncryptResult}
-     * and {@link net.croz.nrich.encrypt.api.annotation.DecryptArgument} is active
+     * and {@link net.croz.nrich.encrypt.api.annotation.DecryptArgument} is active.
      */
     private final boolean encryptAspectEnabled;
 
     /**
-     * Whether an advisor bean {@link org.springframework.aop.Advisor} that handles encryption from is encryptionConfigurationList os active
+     * Whether an advisor bean {@link org.springframework.aop.Advisor} that handles encryption from is encryptionConfigurationList os active.
      */
     private final boolean encryptAdvisorEnabled;
 

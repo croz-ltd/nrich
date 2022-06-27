@@ -4,21 +4,22 @@
 
 ## Overview
 
-nrich-webmvc library provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
+`nrich-webmvc` module provides additional functionality built on top of Spring Web MVC framework. Its main purpose is exception handling through
 `NotificationErrorHandlingRestControllerAdvice` and providing notification response to client. It also contains additional utility classes that disable binding of transient properties, convert empty
 strings to null etc.
 
-nrich-webmvc
-
 ## Setting up Spring beans
 
-nrich-webmvc depends on nrich-logging and nrich-notification libraries but users can provide their own implementations of `NotificationResponseService` and `LoggingService`.
+`nrich-webmvc` module depends on `nrich-logging` and `nrich-notification` modules but users can provide their own implementations of `NotificationResponseService` and `LoggingService`.
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
 
     @Bean
     public TransientPropertyResolverService transientPropertyResolverService() {
-       return new DefaultTransientPropertyResolverService();
+        return new DefaultTransientPropertyResolverService();
     }
 
     @Bean
@@ -43,9 +44,9 @@ nrich-webmvc depends on nrich-logging and nrich-notification libraries but users
 
     @Bean
     public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver() {
-        return new ConstrainedSessionLocaleResolver("en", Arrays.asList("en", "hr));
+        return new ConstrainedSessionLocaleResolver("en", Arrays.asList("en", "hr"));
     }
-
+}
 
 ```
 
@@ -57,7 +58,7 @@ should be converted to null).
 `ExceptionAuxiliaryDataResolverService` resolves additional data for each exception that will be logged and (if configured) sent to client with notification (this can be current time, uuid etc).
 Default implementation returns uuid, current time, request uri and request method.
 
-`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using Springs `MessageSource`.
+`ExceptionHttpStatusResolverService` resolves http status for each exception. Default implementation `MessageSourceExceptionHttpStatusResolverService` resolves status by using Spring's `MessageSource`.
 Message code for resolving is `fullyQualifiedExceptionName.httpStatus`
 
 `NotificationErrorHandlingRestControllerAdvice` is responsible for logging errors, resolving addition data for notifications, creating notification and converting them to response for the client. It
@@ -68,7 +69,7 @@ used for logging, data resolving and notification creation.
 
 ## Usage
 
-For usage it is enough to add library as dependency and set up beans. `NotificationErrorHandlingRestControllerAdvice`
+For usage it is enough to add module as dependency and set up beans. `NotificationErrorHandlingRestControllerAdvice`
 handles all exceptions thrown by user code (including binding and validation exceptions) and it uses `LoggingService` to log errors and `NotificationResponseService`
 to create notifications that are sent to client in JSON format.
 
@@ -76,13 +77,13 @@ Example response on exception is:
 
 ```json
 
- {
-   "notification": {
-     "title": "Error",
-     "content": "Error occurred",
-     "messageList": [],
-     "severity": "ERROR"
-   }
- }
+{
+    "notification": {
+        "title": "Error",
+        "content": "Error occurred",
+        "messageList": [],
+        "severity": "ERROR"
+    }
+}
 
 ```

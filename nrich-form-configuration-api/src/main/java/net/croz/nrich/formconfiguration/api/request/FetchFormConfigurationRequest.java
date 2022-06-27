@@ -31,6 +31,9 @@ import java.util.List;
 @Getter
 public class FetchFormConfigurationRequest {
 
+    /**
+     * List of formIds to return the configuration for.
+     */
     @NotNull
     @Size(min = 1)
     private List<String> formIdList;

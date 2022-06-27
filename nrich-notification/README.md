@@ -4,13 +4,13 @@
 
 ## Overview
 
-nrich-notification is a library intended for creation of notifications on server side which are shown on the client side. It supports info (i.e. 'Entity has been saved'), warning (i.e. 'Validation
+`nrich-notification` is a module intended for creation of notifications on server side which are shown on the client side. It supports info (i.e. 'Entity has been saved'), warning (i.e. 'Validation
 failed') and error (i.e. 'Exception occurred') notification severity levels, and can also send a list of validation errors to client side along with original notification. Notification messages are
-resolved by message keys from Springs `MessageSource`. Keys can be either fixed strings or in case of exceptions their class names.
+resolved by message keys from Spring's `MessageSource`. Keys can be either fixed strings or in case of exceptions their class names.
 
 ## Setting up Spring beans
 
-To be able to use this library following configuration is required:
+To be able to use this module following configuration is required:
 
 ```
 
@@ -33,44 +33,48 @@ To be able to use this library following configuration is required:
     public NotificationResponseService notificationResponseService(NotificationResolverService notificationResolverService) {
         return new WebMvcNotificationResponseService(notificationResolverService);
     }
-
+}
 
 ```
 
 `ConstraintConversionService` is a service responsible for converting `javax.validation.ConstraintViolation` list to Spring `Errors`
-instances making implementation of `NotificationResolverService` less complex since it only needs to work with Springs `Errors` when processing validation errors.
+instances making implementation of `NotificationResolverService` less complex since it only needs to work with Spring's `Errors` when processing validation errors.
 
-`NotificationMessageResolverService` is service responsible for resolving messages from message codes and
-`ObjectErrors`. Default implementation is `MessageSourceNotificationMessageResolverService` that resolves messages from Springs `MessageSource`.
+`NotificationMessageResolverService` is a service responsible for resolving messages from message codes and
+`ObjectErrors`. Default implementation is `MessageSourceNotificationMessageResolverService` that resolves messages from Spring's `MessageSource`.
 
-`NotificationResolverService` is main service that is responsible for creating notifications. It can create notifications for validation errors accepting either Springs `Errors` or
-Jakarta `ConstraintViolationException` for exceptions accepting `Exception` instance and for actions accepting action name (a `String` value) that is then used to resolve message.
+`NotificationResolverService` is main service that is responsible for creating notifications. It can create notifications for validation errors, exceptions or action names.
+Consequently, it accepts either Spring's `Errors` or Jakarta `ConstraintViolationException` for creating validation notifications, `Throwable` for creating error notifications and
+`String` for action notification.
 
-When in using Springs Web MVC users can use `NotificationResponseService` implementation `WebMvcNotificationResponseService` that is a wrapper around `NotificationResolverService` providing a
+`NotificationResponseService` is a service that adds support for returning data with notifications by introducing additional methods that return `NotificationDataResponse`.
+
+When using Spring Web MVC users can use `NotificationResponseService` implementation `WebMvcNotificationResponseService` that is a wrapper around `NotificationResolverService` providing a
 convenient way of returning a notification with a response.
 
 ## Usage
 
-nrich-notification is used nrich as a dependency of nrich-webmvc module. It is used in a `RestConstrollerAdvice`
-and on exceptions returns notifications to the client, so a common usage would be to use it in a `ControllerAdvice` to have unified error notification handling, a simple implementation of former
-advice would look something like this:
+`nrich-notification` is used as a dependency of `nrich-webmvc` module. It is used in a `RestControllerAdvice` and on exceptions it creates notifications that are then sent to the client,
+so a common usage would be to use it in a `ControllerAdvice` to have unified error notification handling.
+A simple implementation of former advice would look something like this:
 
-```
+```java
 
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class NotificationErrorHandlingRestControllerAdvice {
 
-    private NotificationResponseService notificationResponseService;
+    private final NotificationResponseService notificationResponseService;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception exception, HttpServletRequest request) {
         Map<String, Object> exceptionAuxiliaryData = exceptionAuxiliaryData();
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListData(exceptionAuxiliaryData).build())
 
         log.error("Error occurred", exception);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(exception, AdditionalNotificationData.builder().messageListData(exceptionAuxiliaryData).build()));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(notificationResponseService.responseWithExceptionNotification(exception, notificationData);
     }
 
     private Map<String, Object> exceptionAuxiliaryData() {
@@ -87,15 +91,15 @@ public class NotificationErrorHandlingRestControllerAdvice {
 
 Users can also use `NotificationResponseService` to return notifications with result from controller actions (i.e. 'Entity has been saved' notification with actual entity):
 
-```
+```java
 
 @RestController("example")
 @RequiredArgsConstructor
 public class NotificationTestController {
 
-    private NotificationResponseService notificationResponseService;
+    private final NotificationResponseService notificationResponseService;
 
-    private ExampleService exampleService;
+    private final ExampleService exampleService;
 
     @PostMapping("save")
     public ResponseWithNotification<?> save(ExampleEntity exampleEntity) {
@@ -108,7 +112,7 @@ public class NotificationTestController {
 
 ```
 
-in this case a notification message code is resolved from current request and code fo resolving title and content is: `example.save`. Users can also provide notification code manually.
+in this case a notification message code is resolved from current request and code for resolving title and content is: `example.save`. Users can also provide notification code manually.
 
 In default implementation of `NotificationResolverService` (`DefaultNotificationResolverService`) notification data is resolved from following keys:
 

@@ -36,7 +36,7 @@ public class CreateExcelReportRequest {
     private final OutputStream outputStream;
 
     /**
-     * Path to template (template is resolved from this path using Springs ResourceLoader)
+     * Path to template (template is resolved from this path using Spring's ResourceLoader).
      */
     private final String templatePath;
 
@@ -51,7 +51,7 @@ public class CreateExcelReportRequest {
     private final List<ColumnDataFormat> columnDataFormatList;
 
     /**
-     * Row indexes from which data should be written to report (if for example template holds column headers in first couple of rows).
+     * Row indexes from which data should be written to report (if for example template holds column headers in first a couple of rows).
      */
     private final int firstRowIndex;
 

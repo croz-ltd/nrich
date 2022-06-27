@@ -27,11 +27,11 @@ import org.springframework.data.domain.Page;
 public interface RegistryHistoryService {
 
     /**
-     * Returns Springs {@link Page} instance holding found {@link EntityWithRevision} instances.
+     * Returns Spring's {@link Page} instance holding found {@link EntityWithRevision} instances.
      *
      * @param request {@link ListRegistryHistoryRequest} instance holding query information
      * @param <T>     type of registry entity
-     * @return {@link Page} instance holding found {@link EntityWithRevision} instances.
+     * @return {@link Page} instance holding found {@link EntityWithRevision} instances
      */
     <T> Page<EntityWithRevision<T>> historyList(ListRegistryHistoryRequest request);
 

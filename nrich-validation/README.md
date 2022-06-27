@@ -4,15 +4,21 @@
 
 ## Overview
 
-nrich-validation is a library intended to add additional `jakarta.validation-api` constraints that have proved to be useful on projects. It contains a list of constraints and corresponding validators.
-Registration of validators is tied to `hibernate-validator` implementation. It also contains a list of messages for standard and additional constraints in english and croatian (`validationMessages`).
+`nrich-validation` is a module intended to add additional `jakarta.validation-api` constraints that have proved to be useful on multiple occasions.
+It contains a list of constraints and corresponding validators. Registration of validators is tied to `hibernate-validator` implementation.
+It also contains a list of messages for standard and additional constraints in english and croatian (`nrich-validation-messages`).
 
 ## Setting up Spring beans
 
 If automatic registration of messages is required then following configuration is required
 (this can also be registered through application.properties by manually including `validationMessages` when using Spring Boot):
 
-```
+```java
+
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
+    private static final String VALIDATION_MESSAGES_NAME = "nrich-validation-messages";
 
     @Bean
     public ValidationMessageSourceRegistrar validationMessageSourceRegistrar(MessageSource messageSource) {
@@ -31,35 +37,47 @@ If automatic registration of messages is required then following configuration i
             }
         }
     }
+}
 
 ```
 
 ## Usage
 
-The library provides following constraints:
+The module provides following constraints:
 
 #### InList
 
 Validates that a property is in a list of String values i.e:
 
-```
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
 
     @InList(value = { "first", "second" })
     private String value;
 
+}
 
 ```
 
-will validate that values is either equal to `first` or equal to `second`.
+will validate that value is either equal to `first` or equal to `second`.
 
 #### MaxSizeInBytes
 
-Validates that values doesn't exceed specified number of bytes in specified encoding (default UTF-8) i.e:
+Validates that value doesn't exceed specified number of bytes in specified encoding (default UTF-8) i.e:
 
-```
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
 
     @MaxSizeInBytes(value = 5)
     private String value;
+
+}
 
 ```
 
@@ -69,8 +87,7 @@ will validate that value contains less than or equal to 5 bytes in `UTF-8` encod
 
 Validates that a property is not null when a condition is satisfied i.e:
 
-```
-
+```java
 
 @Setter
 @Getter
@@ -98,8 +115,7 @@ will validate that firstName is not null when lastName is not null (effectively 
 
 Validates that a property is null when a condition is satisfied i.e:
 
-```
-
+```java
 
 @Setter
 @Getter
@@ -127,14 +143,19 @@ will validate that either companyName is filled or firstName or lastName are fil
 
 #### ValidFile
 
-Validates that file (either Springs `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list and/or satisfies regex. All constraints properties
+Validates that file (either Spring's `MultipartFile` or `FilePart`) is in provided content type list, has extension that is in provided extension list and/or satisfies regex. All properties
 are optional so defining a constraint without any will always pass validation.
 
-```
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
 
     @ValidFile(allowedContentTypeList = "text/plain", allowedExtensionList = "txt", allowedFileNameRegex = "(?U)[\\w-.]+")
     private MultipartFile file;
 
+}
 
 ```
 
@@ -142,17 +163,23 @@ will validate that file has content type of `text/plain`, extension `txt` and ma
 
 #### ValidFileResolvable
 
-Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Springs `Environment` bean. Allowing those properties to be
+Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Spring's `Environment` bean allowing those properties to be
 defined in property files.
 
-```
+```java
 
- @ValidFileResolvable(
-            allowedContentTypeListPropertyName = "my.custom.validation.file.allowed-content-type-list",
-            allowedExtensionListPropertyName = "my.custom.validation.file.allowed-extension-list",
-            allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
+@Setter
+@Getter
+public class ExampleRequest {
+
+    @ValidFileResolvable(
+        allowedContentTypeListPropertyName = "my.custom.validation.file.allowed-content-type-list",
+        allowedExtensionListPropertyName = "my.custom.validation.file.allowed-extension-list",
+        allowedFileNameRegexPropertyName = "my.custom.validation.file.allowed-file-name-regex"
     )
     private MultipartFile file;
+
+}
 
 ```
 
@@ -161,22 +188,27 @@ and allowedFileNameRegex from `my.custom.validation.file.allowed-file-name-regex
 
 ### ValidOib
 
-Validates that a property is a valida OIB (personal identification number in Croatia).
+Validates that a property is a valid OIB (personal identification number in Croatia).
 
-```
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
 
     @ValidOib
-    String value;
+    private String value;
 
+}
 
 ```
 
 #### ValidRange
 
-Validates that from property (resolved from validated class through `fromPropertyName`) is less than (or equal to if `inclusive` flag has been set) than to property (resolved from validated class
-through `toPropertyName`) i.e:
+Validates that "from" property (resolved from validated class through fromPropertyName) is less than (or equal to if inclusive flag has been set) "to" property (resolved from validated class through
+toPropertyName) i.e:
 
-```
+```java
 
 @Setter
 @Getter
@@ -189,16 +221,15 @@ public class ValidRangeValidatorDifferentTypeTestRequest {
 
 }
 
-
 ```
 
 validates that dateFrom is less than dateTo.
 
 #### ValidSearchProperties
 
-Is useful when it is required that all properties from any one group of properties are not null
+Is useful when it is required that all properties from any group of properties are not null
 
-```
+```java
 
 @Setter
 @Getter
@@ -212,7 +243,6 @@ public class SearchPersonRequest {
     private Long id;
 
 }
-
 
 ```
 

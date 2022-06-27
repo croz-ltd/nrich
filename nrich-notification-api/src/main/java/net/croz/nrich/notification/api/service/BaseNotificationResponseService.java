@@ -34,7 +34,7 @@ public interface BaseNotificationResponseService<T> {
     /**
      * Returns response with {@link net.croz.nrich.notification.api.model.ValidationFailureNotification} instance.
      *
-     * @param errors                     Springs {@link Errors} that will be used to resolve validation notification messages.
+     * @param errors                     Spring's {@link Errors} that will be used to resolve validation notification messages.
      * @param validationFailedOwningType class on which validation errors were found
      * @param additionalNotificationData additional notification data to add to notification
      * @return response with validation failure notification
