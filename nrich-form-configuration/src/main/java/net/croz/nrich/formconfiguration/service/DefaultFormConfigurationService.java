@@ -51,6 +51,14 @@ public class DefaultFormConfigurationService implements FormConfigurationService
 
     private final List<ConstrainedPropertyValidatorConverterService> constraintConverterServiceList;
 
+    @Cacheable(value = "nrich.formConfiguration.cache", key = "'all-forms-' + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
+    @Override
+    public List<FormConfiguration> fetchFormConfigurationList() {
+        return formIdConstraintHolderMap.keySet().stream()
+            .map(this::resolveFormConfiguration)
+            .collect(Collectors.toList());
+    }
+
     @Cacheable(value = "nrich.formConfiguration.cache", key = "#formIdList.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
     public List<FormConfiguration> fetchFormConfigurationList(List<String> formIdList) {

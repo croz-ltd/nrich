@@ -27,6 +27,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -41,6 +43,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
 class FormConfigurationControllerTest {
 
@@ -52,7 +55,7 @@ class FormConfigurationControllerTest {
     @InjectMocks
     private FormConfigurationController formConfigurationController;
 
-    @CsvSource({ ",/nrich/form/configuration/fetch", "/api/form/configuration,/api/form/configuration/fetch" })
+    @CsvSource({ ",/nrich/form/configuration/fetch-all", "/api/form/configuration,/api/form/configuration/fetch-all",",/nrich/form/configuration/fetch", "/api/form/configuration,/api/form/configuration/fetch" })
     @ParameterizedTest
     void shouldReturnFormConfiguration(String endpointPath, String uri) throws Exception {
         // given
@@ -62,6 +65,7 @@ class FormConfigurationControllerTest {
         FormConfiguration formConfiguration = createFormConfiguration();
 
         doReturn(Collections.singletonList(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList(request.getFormIdList());
+        doReturn(Collections.singletonList(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList();
 
         // when
         ResultActions result = mockMvc.perform(post(uri)

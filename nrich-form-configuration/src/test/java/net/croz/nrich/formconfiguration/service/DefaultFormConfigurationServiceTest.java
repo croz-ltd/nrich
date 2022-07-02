@@ -40,6 +40,19 @@ class DefaultFormConfigurationServiceTest {
     private DefaultFormConfigurationService formConfigurationService;
 
     @Test
+    void shouldFetchFormConfigurationList() {
+        // when
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList();
+
+        // then
+        assertThat(resultList).hasSize(3);
+        assertThat(resultList).extracting("formId").containsExactlyInAnyOrder(
+            FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID
+        );
+    }
+
+    @Test
     void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId() {
         // given
         List<String> formIdList = Collections.singletonList("invalidFormId");
@@ -52,7 +65,7 @@ class DefaultFormConfigurationServiceTest {
     }
 
     @Test
-    void shouldResolveSimpleFormFieldConfiguration() {
+    void shouldFetchSimpleFormConfiguration() {
         // given
         List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
 
@@ -75,13 +88,19 @@ class DefaultFormConfigurationServiceTest {
             JavascriptType.STRING, JavascriptType.STRING, JavascriptType.DATE, JavascriptType.NUMBER
         );
 
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList().get(0).getValidatorList()).hasSize(1);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList().get(0).getPropertyType()).isEqualTo(String.class);
+        // and when
+        ConstrainedPropertyConfiguration lastNameConstrainedPropertyConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().stream()
+            .filter(constrainedPropertyConfiguration -> "lastName".equals(constrainedPropertyConfiguration.getPath()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Last name not found"));
+
+        assertThat(lastNameConstrainedPropertyConfiguration.getValidatorList()).hasSize(1);
+        assertThat(lastNameConstrainedPropertyConfiguration.getPropertyType()).isEqualTo(String.class);
 
         formConfiguration.getConstrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::getPath));
 
         // and when
-        ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(0).getValidatorList().get(0);
+        ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = lastNameConstrainedPropertyConfiguration.getValidatorList().get(0);
 
         // then
         assertThat(lastNameValidatorConfiguration).isNotNull();
@@ -92,7 +111,7 @@ class DefaultFormConfigurationServiceTest {
     }
 
     @Test
-    void shouldResolveNestedFormConfiguration() {
+    void shouldFetchNestedFormConfiguration() {
         // given
         List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
 

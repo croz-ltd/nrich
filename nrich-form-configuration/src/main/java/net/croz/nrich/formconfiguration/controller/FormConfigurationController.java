@@ -36,6 +36,12 @@ public class FormConfigurationController {
     private final FormConfigurationService formConfigurationService;
 
     @ResponseBody
+    @PostMapping("fetch-all")
+    public List<FormConfiguration> fetchAll() {
+        return formConfigurationService.fetchFormConfigurationList();
+    }
+
+    @ResponseBody
     @PostMapping("fetch")
     public List<FormConfiguration> fetch(@RequestBody @Valid FetchFormConfigurationRequest request) {
         return formConfigurationService.fetchFormConfigurationList(request.getFormIdList());
