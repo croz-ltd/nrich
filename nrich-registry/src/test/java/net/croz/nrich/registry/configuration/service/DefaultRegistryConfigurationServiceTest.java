@@ -20,7 +20,7 @@ package net.croz.nrich.registry.configuration.service;
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
-import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
+import net.croz.nrich.javascript.model.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;

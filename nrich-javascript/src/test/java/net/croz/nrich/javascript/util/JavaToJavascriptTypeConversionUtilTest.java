@@ -15,9 +15,9 @@
  *
  */
 
-package net.croz.nrich.registry.configuration.util;
+package net.croz.nrich.javascript.util;
 
-import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
+import net.croz.nrich.javascript.model.JavascriptType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

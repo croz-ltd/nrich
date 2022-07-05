@@ -15,7 +15,7 @@
  *
  */
 
-package net.croz.nrich.registry.api.configuration.model.property;
+package net.croz.nrich.javascript.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

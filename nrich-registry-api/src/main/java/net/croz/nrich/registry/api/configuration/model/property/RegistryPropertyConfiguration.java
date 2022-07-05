@@ -19,6 +19,7 @@ package net.croz.nrich.registry.api.configuration.model.property;
 
 import lombok.Builder;
 import lombok.Getter;
+import net.croz.nrich.javascript.model.JavascriptType;
 
 /**
  * Represents client property configuration that can be used when building form and grids on client side.

@@ -15,9 +15,9 @@
  *
  */
 
-package net.croz.nrich.registry.configuration.util;
+package net.croz.nrich.javascript.util;
 
-import net.croz.nrich.registry.api.configuration.model.property.JavascriptType;
+import net.croz.nrich.javascript.model.JavascriptType;
 
 import java.math.BigDecimal;
 import java.time.temporal.Temporal;
@@ -26,6 +26,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Converts Java class to Javascript representations.
+ */
 public final class JavaToJavascriptTypeConversionUtil {
 
     private static final Map<Class<?>, JavascriptType> CLASS_JAVASCRIPT_TYPE_MAP = new HashMap<>();
@@ -51,6 +54,11 @@ public final class JavaToJavascriptTypeConversionUtil {
             .orElse(JavascriptType.OBJECT);
     }
 
+    /**
+     * Whether the type is decimal.
+     * @param type Type to check.
+     * @return true if type is decimal
+     */
     public static boolean isDecimal(Class<?> type) {
         return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
     }
