@@ -12,6 +12,8 @@ dependencies {
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-webmvc"
 
+  runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 

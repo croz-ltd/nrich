@@ -13,6 +13,8 @@ dependencies {
   runtimeOnly project(":nrich-logging-spring-boot-starter")
   runtimeOnly project(":nrich-notification-spring-boot-starter")
 
+  runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testImplementation project(":nrich-logging-spring-boot-starter")

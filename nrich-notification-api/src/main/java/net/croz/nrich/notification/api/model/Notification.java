@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -57,4 +58,8 @@ public class Notification {
      */
     private final Map<String, ?> uxNotificationOptions;
 
+    /**
+     * Timestamp of the notification.
+     */
+    private final Instant timestamp = Instant.now();
 }
