@@ -17,6 +17,7 @@
 
 package net.croz.nrich.search.api.factory;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
@@ -32,14 +33,27 @@ import javax.persistence.EntityManager;
  */
 public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, I>, S, I> extends JpaRepositoryFactoryBean<T, S, I> {
 
-    private final RepositoryFactorySupportFactory repositoryFactorySupportFactory;
+    private RepositoryFactorySupportFactory repositoryFactorySupportFactory;
+
+    private BeanFactory beanFactory;
 
     private final Class<? extends T> repositoryInterface;
 
-    public SearchExecutorJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface, RepositoryFactorySupportFactory repositoryFactorySupportFactory) {
+    public SearchExecutorJpaRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
         super(repositoryInterface);
         this.repositoryInterface = repositoryInterface;
-        this.repositoryFactorySupportFactory = repositoryFactorySupportFactory;
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        this.repositoryFactorySupportFactory = beanFactory.getBean(RepositoryFactorySupportFactory.class);
+        super.afterPropertiesSet();
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+        super.setBeanFactory(beanFactory);
     }
 
     @Override
