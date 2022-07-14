@@ -17,19 +17,29 @@
 
 package net.croz.nrich.registry.data.constant;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public final class RegistryDataConstants {
 
-    public static final String CREATE_REQUEST_SUFFIX = "%sCreateRequest";
+    public static final String CREATE_REQUEST_CLASS_NAME_FORMAT = "%sCreateRequest";
 
-    public static final String UPDATE_REQUEST_SUFFIX = "%sUpdateRequest";
+    public static final String UPDATE_REQUEST_CLASS_NAME_FORMAT = "%sUpdateRequest";
 
-    public static final String REQUEST_SUFFIX = "%sRequest";
+    public static final String REQUEST_CLASS_NAME_FORMAT = "%sRequest";
 
     public static final String REGISTRY_FORM_ID_FORMAT = "%s:::%s";
 
     public static final String REGISTRY_FORM_ID_CREATE_SUFFIX = "create";
 
     public static final String REGISTRY_FORM_ID_UPDATE_SUFFIX = "update";
+
+    public static final String REQUEST_CLASS_PACKAGE_NAME = "request";
+
+    public static final String PACKAGE_SEPARATOR = "\\.";
+
+    public static final List<String> CLASS_NAME_SUFFIX_LIST_TO_REPLACE = Collections.unmodifiableList(Arrays.asList("model", "entity"));
 
     private RegistryDataConstants() {
     }
