@@ -4,5 +4,6 @@
 
 ## Overview
 
-Contains classes that represent the repository API (repository interfaces and factories) for `nrich-search` module. The interfaces have default implementations provided in `nrich-search` module but
-users can provide their own implementations. Unless some overriding is required only classes from this module should be used directly, other configuration should be provided through property files.
+This module contains classes that represent the repository API (repository interfaces and factories) for [`nrich-search`](../nrich-search/README.md) module.
+Default implementations are provided in [`nrich-search`](../nrich-search/README.md) module, but users can provide their own implementations.
+If no overriding is required, only classes from this module should be used.
