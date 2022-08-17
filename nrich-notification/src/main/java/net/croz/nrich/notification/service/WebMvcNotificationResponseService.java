@@ -32,6 +32,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import java.util.Locale;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -95,8 +96,9 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
 
     private String extractActionNameFromCurrentRequest() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+        String method = request.getMethod().toLowerCase(Locale.ROOT);
 
-        return extractActionNameFromRequest(request);
+        return String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, extractActionNameFromRequest(request), method);
     }
 
     private String extractActionNameFromRequest(HttpServletRequest request) {
