@@ -4,9 +4,9 @@
 
 ## Overview
 
-`nrich-form-configuration` is a module intended to provide a way of resolving server side defined constraints to client side. It resolves `jakarta-validation-api`
-constraints defined on classes in a form that can be interpreted by the client side. On server side user registers form id (a string) with class holding constraints and then resolves defined
-constraint list from client side using REST API. Messages for constraints are resolved through Spring's `MessageSource`.
+`nrich-form-configuration` is a module intended to provide a central place for constraint definitions.
+It resolves `jakarta-validation-api` constraints defined on classes in a form that can be interpreted by the client-side. On the server-side user registers a form id (a string) to a class that
+defines constraints and can then retrieve the resolved constraint list via REST API. Messages for constraints are resolved through Spring's `MessageSource`.
 
 ## Setting up Spring beans
 
@@ -40,14 +40,29 @@ public class ApplicationConfiguration {
     public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
         return new FormConfigurationController(formConfigurationService);
     }
-}
 
+}
 ```
 
-`FieldErrorMessageResolverService` is responsible for resolving messages for constraints (i.e. 'Value cannot be null' for @NotNull constraint). Default implementation
-is `MessageSourceFieldErrorMessageResolverService` that resolves messages from `MessageSource`. For example for constraint holding class of
-type `net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest` and `@NotNull` constraint defined on property named `propertyName` following message codes will be
-searched:
+## FieldErrorMessageResolverService
+
+[`FieldErrorMessageResolverService`][field-error-message-resolver-service-url] is responsible for resolving messages for constraints (i.e. 'Value cannot be null' for @NotNull constraint).
+Default implementation is [`MessageSourceFieldErrorMessageResolverService`][message-source-field-error-message-resolver-service-url] that resolves messages from `MessageSource`.
+
+For example, for class:
+
+```java
+package net.croz.nrich.formconfiguration.stub;
+
+public class FormConfigurationServiceNestedTestRequest {
+
+    @NotNull
+    private String propertyName;
+
+}
+```
+
+the following message codes will be searched:
 
 - `net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest.propertyName.client.NotNull.invalid`
 - `formConfigurationServiceNestedTestRequest.propertyName.client.NotNull.invalid`
@@ -56,26 +71,48 @@ searched:
 - `client.NotNull.invalid`
 - `NotNull.invalid`
 
-`ConstrainedPropertyValidatorConverterService` is service responsible for converting constraints in a format client can interpret. Default implementation
-is `DefaultConstrainedPropertyValidatorConverterService` but users can register their own by implementing `ConstrainedPropertyValidatorConverterService` interface.
+---
 
-`ConstrainedPropertyValidatorConverterService` returns a list of `ConstrainedPropertyClientValidatorConfiguration` for each constraint
-(a list since some constraints on server may translate to multiple constraints on the client).
+## ConstrainedPropertyValidatorConverterService
 
-`FormConfigurationService` is service that processes constraints defined on a class for form id list and returns a list of
-`FormConfiguration` instances holding client side constrained property configuration.
+[`ConstrainedPropertyValidatorConverterService`][constrained-property-validator-converter-service-url] is responsible for converting constraints in a format the client can interpret.
+Default implementation is [`DefaultConstrainedPropertyValidatorConverterService`][default-constrained-property-validator-converter-service-url] but users can register their own by implementing
+[`ConstrainedPropertyValidatorConverterService`][constrained-property-validator-converter-service-url] interface.
 
-`FormConfigurationController` is REST API exposed to client. It has a single POST method `fetch` mapped to `nrich/form/configuration/fetch` that accepts a request holding form id list in
-property `formIdList` and it returns a list of `FormConfiguration` instances.
+[`ConstrainedPropertyValidatorConverterService`][constrained-property-validator-converter-service-url] returns a list of
+[`ConstrainedPropertyClientValidatorConfiguration`][constrained-property-client-validator-configuration-url] for each constraint (a list since some constraints on server may translate to multiple
+constraints on the client).
+
+---
+
+## FormConfigurationService
+
+[`FormConfigurationService`][form-configuration-service-url] processes constraints defined on a class for form id list and returns a list of [`FormConfiguration`][form-configuration-url] instances
+holding client-side constrained property configuration.
+
+---
+
+## FormConfigurationController
+
+[`FormConfigurationController`][form-configuration-controller-url] is REST API exposed to the client.
+
+It has two POST methods:
+
+- `fetch` mapped to `nrich/form/configuration/fetch` that accepts a request whose body has a form id list in property `formIdList` and it returns a list of
+  [`FormConfiguration`][form-configuration-url] instances
+- `fetch-all` mapped to `nrich/form/configuration/fetch-all` that returns a list of [`FormConfiguration`][form-configuration-url] instances for every registered form.
+
+REST API base path of the URL can be changed by setting a custom `nrich.form-configuration.endpoint-path` property value.
 
 ## Usage
 
-On server side users should register form id with class that is used to bind values submitted from that form. On client side REST API endpoint for fetching form configuration should be
-called (`nrich/form/configuration/fetch`) and received response should be converted to client side constraints and applied to field defined on the form.
+On the server-side users should register form id with class that is used to bind values submitted from that form. On the client-side the REST API endpoint for fetching form configuration should be
+called (`nrich/form/configuration/fetch`) and received response should be converted to client-side constraints and applied to fields defined on the form.
 
-For following request:
+For the following request:
 
 ```java
+package example;
 
 @Setter
 @Getter
@@ -108,15 +145,33 @@ public class EmployeeRequest {
     private BigDecimal income;
 
 }
-
 ```
 
-Response sent from server is in following form:
+we have a mapping in `application.yml` that maps client-side form (with a form id equal to `example.form`) to the `EmployeeRequest`:
+
+```yaml
+nrich.form-configuration:
+  default-converter-enabled: true
+  form-configuration-mapping:
+    example.form: example.EmployeeRequest
+```
+
+For request:
+
+```json
+{
+    "formIdList": [
+        "example.form"
+    ]
+}
+```
+
+the response sent from server is in the following form:
 
 ```json
 [
     {
-        "formId": "demo.EmployeeForm",
+        "formId": "example.form",
         "constrainedPropertyConfigurationList": [
             {
                 "path": "firstName",
@@ -239,3 +294,29 @@ Response sent from server is in following form:
 
 
 ```
+
+If user needs to fetch constraint descriptions for all registered forms, `nrich/form/configuration/fetch-all` endpoint should be queried.
+
+[//]: # (Reference links for readability)
+
+[nrich-form-configuration-url]: ../nrich-form-configuration/README.md
+
+[nrich-bom-url]: ../nrich-bom/README.md
+
+[constrained-property-validator-converter-service-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/service/ConstrainedPropertyValidatorConverterService.java
+
+[default-constrained-property-validator-converter-service-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/service/DefaultConstrainedPropertyValidatorConverterService.java
+
+[constrained-property-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/model/ConstrainedProperty.java
+
+[constrained-property-client-validator-configuration-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/model/ConstrainedPropertyClientValidatorConfiguration.java
+
+[form-configuration-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/model/FormConfiguration.java
+
+[form-configuration-service-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/service/FormConfigurationService.java
+
+[form-configuration-controller-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/controller/FormConfigurationController.java
+
+[field-error-message-resolver-service-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/service/FieldErrorMessageResolverService.java
+
+[message-source-field-error-message-resolver-service-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/service/MessageSourceFieldErrorMessageResolverService.java
