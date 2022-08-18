@@ -7,13 +7,13 @@
 `nrich-form-configuration` is a module intended to provide a central place for constraint definitions.
 It resolves `jakarta-validation-api` constraints defined on classes in a form that can be interpreted by the client-side. On the server-side user registers a form id (a string) to a class that
 defines constraints and can then retrieve the resolved constraint list via REST API. Messages for constraints are resolved through Spring's `MessageSource`.
+Both manual form registration or automatic by using [`@FormValidationConfiguration`][form-configuration-annotation-url] annotation on classes are supported.
 
 ## Setting up Spring beans
 
-To be able to use this module following configuration is required:
+To be able to use this module with manual registration following configuration is required:
 
 ```java
-
 @Configuration(proxyBeanMethods = false)
 public class ApplicationConfiguration {
 
@@ -40,7 +40,43 @@ public class ApplicationConfiguration {
     public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
         return new FormConfigurationController(formConfigurationService);
     }
+}
+```
 
+To be able to use this module with automatic registration following configuration is required:
+
+```java
+@Configuration(proxyBeanMethods = false)
+public class ApplicationConfiguration {
+
+    @Bean
+    public FieldErrorMessageResolverService fieldErrorMessageResolverService(MessageSource messageSource) {
+        return new MessageSourceFieldErrorMessageResolverService(messageSource);
+    }
+
+    @Bean
+    public ConstrainedPropertyValidatorConverterService constrainedPropertyValidatorConverterService(FieldErrorMessageResolverService fieldErrorMessageResolverService) {
+        return new DefaultConstrainedPropertyValidatorConverterService(fieldErrorMessageResolverService);
+    }
+
+    @Bean
+    public FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService() {
+        return new DefaultFormConfigurationAnnotationResolvingService();
+    }
+
+
+    @Bean
+    public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService,
+                                                             List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
+        Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>(formConfigurationAnnotationResolvingService.resolveFormConfigurations(Collections.singletonList("net.croz")));
+
+        return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList);
+    }
+
+    @Bean
+    public FormConfigurationController formConfigurationController(FormConfigurationService formConfigurationService) {
+        return new FormConfigurationController(formConfigurationService);
+    }
 }
 ```
 
@@ -89,6 +125,14 @@ constraints on the client).
 
 [`FormConfigurationService`][form-configuration-service-url] processes constraints defined on a class for form id list and returns a list of [`FormConfiguration`][form-configuration-url] instances
 holding client-side constrained property configuration.
+
+---
+
+## FormConfigurationAnnotationResolvingService
+
+[`FormConfigurationAnnotationResolvingService`][form-configuration-annotation-resolving-service-url] scans provided packages for classes annotated with
+[`@FormValidationConfiguration`][form-configuration-annotation-url] and constructs a map where keys are form ids and values are annotated classes that contain constraints which can then be used by
+[`FormConfigurationService`][form-configuration-service-url].
 
 ---
 
@@ -147,13 +191,18 @@ public class EmployeeRequest {
 }
 ```
 
-we have a mapping in `application.yml` that maps client-side form (with a form id equal to `example.form`) to the `EmployeeRequest`:
+The above request can be registered manually by adding it to the map and passing it to [`FormConfigurationService`][form-configuration-service-url] where map key is for example "example.form" and value is request class.
+It can alternatively be annotated with  [`@FormValidationConfiguration`][form-configuration-annotation-url] annotation i.e.
 
-```yaml
-nrich.form-configuration:
-  default-converter-enabled: true
-  form-configuration-mapping:
-    example.form: example.EmployeeRequest
+```java
+@Setter
+@Getter
+@FormValidationConfiguration("example.form")
+public class EmployeeRequest {
+    // properties omitted for brevity
+}
+
+
 ```
 
 For request:
@@ -320,3 +369,7 @@ If user needs to fetch constraint descriptions for all registered forms, `nrich/
 [field-error-message-resolver-service-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/service/FieldErrorMessageResolverService.java
 
 [message-source-field-error-message-resolver-service-url]: ../nrich-form-configuration/src/main/java/net/croz/nrich/formconfiguration/service/MessageSourceFieldErrorMessageResolverService.java
+
+[form-configuration-annotation-resolving-service-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/service/FormConfigurationAnnotationResolvingService.java
+
+[form-configuration-annotation-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/annotation/FormValidationConfiguration.java
