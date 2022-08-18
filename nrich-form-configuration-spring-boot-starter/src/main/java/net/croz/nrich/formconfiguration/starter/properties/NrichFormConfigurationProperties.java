@@ -22,6 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -41,8 +42,15 @@ public class NrichFormConfigurationProperties {
      */
     private final Map<String, Class<?>> formConfigurationMapping;
 
-    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, Map<String, Class<?>> formConfigurationMapping) {
+    /**
+     * Optional package list to scan for {@link net.croz.nrich.formconfiguration.api.annotation.FormValidationConfiguration} annotated classes (if not set annotated classes won't be searched).
+     */
+    private final List<String> formValidationConfigurationClassesPackageList;
+
+    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, Map<String, Class<?>> formConfigurationMapping,
+                                            List<String> formValidationConfigurationClassesPackageList) {
         this.defaultConverterEnabled = defaultConverterEnabled;
         this.formConfigurationMapping = formConfigurationMapping;
+        this.formValidationConfigurationClassesPackageList = formValidationConfigurationClassesPackageList;
     }
 }
