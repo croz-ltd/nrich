@@ -18,8 +18,10 @@
 package net.croz.nrich.formconfiguration;
 
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.FormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
@@ -32,6 +34,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +68,14 @@ public class FormConfigurationTestConfiguration {
     }
 
     @Bean
-    public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList) {
-        Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>();
+    public FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService() {
+        return new DefaultFormConfigurationAnnotationResolvingService();
+    }
+
+    @Bean
+    public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList,
+                                                             FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService) {
+        Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>(formConfigurationAnnotationResolvingService.resolveFormConfigurations(Collections.singletonList("net.croz")));
 
         formIdConstraintHolderMap.put(SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedTestRequest.class);

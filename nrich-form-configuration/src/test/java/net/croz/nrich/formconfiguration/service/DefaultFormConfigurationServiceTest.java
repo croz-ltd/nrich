@@ -45,10 +45,11 @@ class DefaultFormConfigurationServiceTest {
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList();
 
         // then
-        assertThat(resultList).hasSize(3);
+        assertThat(resultList).hasSize(4);
         assertThat(resultList).extracting("formId").containsExactlyInAnyOrder(
             FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
-            FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID
+            FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID,
+            "annotatedForm.formId"
         );
     }
 
