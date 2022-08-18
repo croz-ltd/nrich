@@ -41,10 +41,11 @@ Note if using [`nrich-bom`][nrich-bom-url] dependency versions should be omitted
 The configuration is done through a property file. Available properties and descriptions are given bellow (all properties are prefixed with **nrich.form-configuration** which is omitted for
 readability):
 
-| property                   | description                                                                                                                                                                                                                                                                                                                                                   | default value |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| default-converter-enabled  | whether default converter service [`DefaultConstrainedPropertyValidatorConverterService`][default-constrained-property-validator-converter-service-url] for converting [`ConstrainedProperty`][constrained-property-url] instances to [`ConstrainedPropertyClientValidatorConfiguration`][constrained-property-client-validator-configuration-url] is enabled | true          |
-| form-configuration-mapping | mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side)                                                                                                                                                                                                         |               |
+| property                                            | description                                                                                                                                                                                                                                                                                                                                                   | default value |
+|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| default-converter-enabled                           | whether default converter service [`DefaultConstrainedPropertyValidatorConverterService`][default-constrained-property-validator-converter-service-url] for converting [`ConstrainedProperty`][constrained-property-url] instances to [`ConstrainedPropertyClientValidatorConfiguration`][constrained-property-client-validator-configuration-url] is enabled | true          |
+| form-configuration-mapping                          | mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side)                                                                                                                                                                                                         |               |
+| form-validation-configuration-classes-package-list  | optional packages to scan for [`@FormValidationConfiguration`][form-configuration-annotation-url] annotated classes it can be used instead of form-configuration-mapping                                                                                                                                                                                      |               |
 
 The default configuration values are given bellow in a yaml format for easier modification:
 
@@ -52,6 +53,7 @@ The default configuration values are given bellow in a yaml format for easier mo
 nrich.form-configuration:
   default-converter-enabled: true
   form-configuration-mapping:
+  form-validation-configuration-classes-package-list:
 ```
 
 The default converter should be enabled unless users want to provide a completely custom implementation. To override the resolving of specific constraint properties display configuration a custom
@@ -71,6 +73,15 @@ nrich.form-configuration:
     user.create-form: net.croz.nrich.example.CreateUserRequest
     user.update-form: net.croz.nrich.example.UpdateUserRequest
 ```
+
+As an alternative users can annotate `CreateUserRequest` and `UpdateUserRequest` classes with [`@FormValidationConfiguration`][form-configuration-annotation-url] annotation and use the following configuration:
+
+```yaml
+nrich.form-configuration:
+  default-converter-enabled: true
+  form-validation-configuration-classes-package-list: net.croz
+```
+
 
 This module exposes REST endpoint on `nrich/form/configuration/fetch` URL so that the client can retrieve constraint definitions. The endpoint expects a POST request with a list of form ids
 (keys inside `form-configuration-mapping` map) for which a list with [`FormConfiguration`][form-configuration-url] will be returned for each mapped form id.
@@ -96,3 +107,5 @@ apply them to their forms. If user needs to fetch constraint descriptions for al
 [constrained-property-validator-converter-service-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/service/ConstrainedPropertyValidatorConverterService.java
 
 [form-configuration-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/model/FormConfiguration.java
+
+[form-configuration-annotation-url]: ../nrich-form-configuration-api/src/main/java/net/croz/nrich/formconfiguration/api/annotation/FormValidationConfiguration.java
