@@ -70,13 +70,13 @@ class JpaQueryBuilderTest {
     @BeforeEach
     void setup() {
         jpaQueryBuilder = new JpaQueryBuilder<>(entityManager, TestEntity.class);
+
+        generateListForSearch(entityManager);
     }
 
     @Test
     void shouldSearchByRootEntityStringAttributes() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
@@ -89,8 +89,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByRootEntityNumberRangeIncluding() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFromIncluding(20).ageToIncluding(25).build();
 
         // when
@@ -103,8 +101,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByRootEntityNumberRange() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder().ageFrom(20).ageTo(25).build();
 
         // when
@@ -117,8 +113,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchBySimpleAssociationValues() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
             .nestedEntity(new TestEntitySearchRequest.TestNestedEntitySearchRequest("nested0"))
             .build();
@@ -133,8 +127,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByCollectionAssociationValuesUsingExistsSubquery() {
         // given
-        generateListForSearch(entityManager);
-
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .pluralAssociationRestrictionType(PluralAssociationRestrictionType.EXISTS)
             .build();
@@ -155,8 +147,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByCollectionAssociationValuesUsingJoin() {
         // given
-        generateListForSearch(entityManager);
-
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
             .build();
@@ -177,8 +167,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByCollectionAssociationValuesByUsingFieldMapping() {
         // given
-        generateListForSearch(entityManager);
-
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
             .propertyMappingList(Collections.singletonList(new SearchPropertyMapping("collectionName", "collectionEntityList.name")))
@@ -200,8 +188,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchCollectionAssociationPropertiesByUsingPropertyPrefix() {
         // given
-        generateListForSearch(entityManager);
-
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
             .resolvePropertyMappingUsingPrefix(true)
@@ -223,8 +209,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchEmbeddedPropertiesByUsingPropertyPrefix() {
         // given
-        generateListForSearch(entityManager);
-
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .resolvePropertyMappingUsingPrefix(true)
             .build();
@@ -244,8 +228,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchEntitiesWithoutAssociationByUsingSubquery() {
         // given
-        generateListForSearch(entityManager);
-
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
             .rootEntity(TestEntityCollectionWithReverseAssociation.class)
             .propertyPrefix("subqueryRestriction")
@@ -269,8 +251,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchEntitiesWithoutAssociationWithCriteriaDefinedInSeparateClassByUsingSubquery() {
         // given
-        generateListForSearch(entityManager);
-
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
             .rootEntity(TestEntityCollectionWithReverseAssociation.class)
             .restrictionPropertyHolder("subqueryRestrictionHolder")
@@ -294,8 +274,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByEnumValues() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
             .testEntityEnum(TestEntityEnum.SECOND)
             .build();
@@ -311,8 +289,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByEmbeddedValues() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
             .testEntityEmbedded(new TestEntitySearchRequest.TestEntityEmbeddedSearchRequest("embedded3"))
             .build();
@@ -328,8 +304,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldReturnEntityListWhenNoProjectionHasBeenDefined() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -344,8 +318,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldReturnTupleListWhenUsingProjection() {
         // given
-        generateListForSearch(entityManager);
-
         SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
@@ -369,8 +341,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldReturnDtoListWhenUsingProjection() {
         // given
-        generateListForSearch(entityManager);
-
         SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
@@ -392,8 +362,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSortEntities() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -407,8 +375,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSortByJoinedEntity() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -421,8 +387,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldResolveRootEntityFromRootEntityResolver() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -439,8 +403,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldApplyJoinsToQuery() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
         SearchJoin<TestEntitySearchRequest> nestedEntityJoin = createTestEntitySearchRequestJoin("nestedJoinAlias", "nestedEntity", value -> true);
         SearchJoin<TestEntitySearchRequest> nonAppliedJoin = createTestEntitySearchRequestJoin("nestedJoinAlias", "nonExistingPath", value -> false);
@@ -459,8 +421,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldApplyJoinsFetchToQuery() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -477,8 +437,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldRemoveFetchesWhenConvertingToCountQuery() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -498,8 +456,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldOverrideOperatorByTypeAndPath() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -527,8 +483,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldNotFailWhenOverridingWithMultipleSearchParameters() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
         request.setAgeFrom(-1);
 
@@ -547,8 +501,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportContainsSearch() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("Rst");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -565,8 +517,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldApplyAdditionalRestrictionsToQuery() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst1");
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
@@ -590,8 +540,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportSearchingByMap() {
         // given
-        generateListForSearch(entityManager);
-
         Map<String, Object> mapSearchRequest = new HashMap<>();
         mapSearchRequest.put("name", "FIRst0");
 
@@ -605,8 +553,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportSearchingByMapWithRange() {
         // given
-        generateListForSearch(entityManager);
-
         Map<String, Object> mapSearchRequest = new HashMap<>();
         mapSearchRequest.put("ageFrom", 20);
         mapSearchRequest.put("ageTo", 25);
@@ -621,8 +567,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportSearchingByPropertyList() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
         request.setNameSearchList(Arrays.asList("first1", "first2"));
 
@@ -636,8 +580,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldResolveProjectionsFromClass() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
         SearchConfiguration<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityProjectionDto, TestEntitySearchRequest>builder()
             .resultClass(TestEntityProjectionDto.class)
@@ -656,8 +598,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportSearchingByEmptyMapMatchingAny() {
         // given
-        generateListForSearch(entityManager);
-
         Map<String, Object> mapSearchRequest = new HashMap<>();
 
         // when
@@ -670,8 +610,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSearchByMultipleAssociationValues() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
             .nestedEntityNestedEntityName("nested0")
             .nestedEntityNestedEntityAliasName("nested alias0")
@@ -687,8 +625,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldThrowExceptionWhenUsingJoinFetchAndProjection() {
         // given
-        generateListForSearch(entityManager);
-
         SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
         SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
 
@@ -731,8 +667,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldSupportSearchingByAnyLevelOfNestedPath() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityDoubleNestedEntityName("double nested1").build();
 
         // when
@@ -745,8 +679,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldNotFailWhenAttributeByPrefixDoesntExist() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityNonExisting("non existing").build();
 
         // when
@@ -759,8 +691,6 @@ class JpaQueryBuilderTest {
     @Test
     void shouldNotFailWhenDoubleNestedAttributeByPrefixDoesntExist() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = TestEntitySearchRequest.builder().nestedEntityDoubleNestedEntityNonExisting("double nested1").build();
 
         // when

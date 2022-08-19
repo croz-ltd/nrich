@@ -27,6 +27,7 @@ import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAsso
 import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +56,11 @@ class JpaSearchExecutorTest {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @BeforeEach
+    void setup() {
+        generateListForSearch(entityManager, 2);
+    }
+
     @Test
     void shouldInjectRepository() {
         assertThat(testEntitySearchRepository).isNotNull();
@@ -63,8 +69,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldFindOne() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("first0");
 
         // when
@@ -77,8 +81,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldReturnEmptyOptionalWhenNoResultsHaveBeenFound() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
 
         // when
@@ -91,8 +93,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldFindAll() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
@@ -105,8 +105,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldFindAllWithSort() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -120,8 +118,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldFetchOnlySubsetOfResult() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -136,8 +132,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldReturnWholeResultListWhenRequestIsUnpaged() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         // when
@@ -152,8 +146,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldCount() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
 
         // when
@@ -180,8 +172,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldCountDistinctEntities() {
         // given
-        generateListForSearch(entityManager, 2);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
@@ -199,8 +189,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldCountDistinctEntitiesWithJoinFetch() {
         // given
-        generateListForSearch(entityManager, 2);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
@@ -217,8 +205,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldCountWhenUsingSearchingSubEntity() {
         // given
-        generateListForSearch(entityManager);
-
         SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
             .rootEntity(TestEntityCollectionWithReverseAssociation.class)
             .propertyPrefix("subqueryRestriction")
@@ -242,8 +228,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldNotFailWhenThereIsNoContent() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("non existing name");
 
         // when
@@ -258,8 +242,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldReturnTrueWhenEntityExists() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("first1");
 
         // when
@@ -272,8 +254,6 @@ class JpaSearchExecutorTest {
     @Test
     void shouldReturnFalseWhenEntityDoesntExist() {
         // given
-        generateListForSearch(entityManager);
-
         TestEntitySearchRequest request = new TestEntitySearchRequest("first non existing entity");
 
         // when
