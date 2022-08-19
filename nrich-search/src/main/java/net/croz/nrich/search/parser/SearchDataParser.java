@@ -31,6 +31,7 @@ import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import net.croz.nrich.search.util.PropertyNameUtil;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.metamodel.Attribute;
@@ -74,7 +75,7 @@ public class SearchDataParser {
             String fieldNameWithoutPrefixAndSuffix = fieldNameWithoutSuffixAndPrefix(originalFieldName, propertyPrefix);
             Object value = wrapper.getPropertyValue(originalFieldName);
 
-            if (value == null) {
+            if (shouldSkipValue(value)) {
                 return;
             }
 
@@ -134,6 +135,18 @@ public class SearchDataParser {
         }
 
         return fieldName;
+    }
+
+    private boolean shouldSkipValue(Object value) {
+        boolean skipValue;
+        if (value instanceof Collection) {
+            skipValue = CollectionUtils.isEmpty((Collection<?>) value);
+        }
+        else {
+            skipValue = value == null;
+        }
+
+        return skipValue;
     }
 
     private Restriction createAttributeRestriction(Class<?> attributeType, String attributeName, String path, Object value, boolean isPluralAttribute) {

@@ -578,6 +578,19 @@ class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldIgnoreEmptyCollectionWhenSearching() {
+        // given
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        request.setNameSearchList(Collections.emptyList());
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSizeGreaterThan(0);
+    }
+
+    @Test
     void shouldResolveProjectionsFromClass() {
         // given
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
