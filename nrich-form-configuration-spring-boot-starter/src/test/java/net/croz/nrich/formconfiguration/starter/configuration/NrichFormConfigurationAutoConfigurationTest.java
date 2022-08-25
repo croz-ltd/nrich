@@ -15,21 +15,22 @@
  *
  */
 
-package net.croz.nrich.excel.starter.configuration;
+package net.croz.nrich.formconfiguration.starter.configuration;
 
-import net.croz.nrich.excel.starter.configuration.stub.FormConfigurationTestRequest;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
+import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
-import net.croz.nrich.formconfiguration.starter.configuration.NrichFormConfigurationAutoConfiguration;
+import net.croz.nrich.formconfiguration.starter.configuration.stub.FormConfigurationTestRequest;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -100,6 +101,20 @@ class NrichFormConfigurationAutoConfigurationTest {
 
             // then
             assertThat(formConfigurationMapping).containsEntry(createKey, requestType);
+        });
+    }
+
+    @Test
+    void shouldRegisterFormConfigurationFromClasspathWhenBasePackageIsSet() {
+        contextRunner.withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.form-configuration.form-validation-configuration-classes-package-list=net.croz").run(context -> {
+            // when
+            FormConfigurationService formConfigurationService = context.getBean(FormConfigurationService.class);
+
+            // and when
+            List<FormConfiguration> result = formConfigurationService.fetchFormConfigurationList();
+
+            // then
+            assertThat(result).extracting("formId").containsExactly("annotatedForm.formId");
         });
     }
 }

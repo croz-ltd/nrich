@@ -66,10 +66,7 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
     }
 
     private String resolveMessageCode(String messageFormat, String... argumentList) {
-        @SuppressWarnings("RedundantCast")
-        String messageCode = String.format(messageFormat, (Object[]) argumentList);
-
-        return messageCode;
+        return String.format(messageFormat, (Object[]) argumentList);
     }
 
     private Object[] convertArraysInArgumentList(Object[] argumentList) {

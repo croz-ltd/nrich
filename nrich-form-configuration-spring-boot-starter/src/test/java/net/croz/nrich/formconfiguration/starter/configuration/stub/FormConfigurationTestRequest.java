@@ -15,7 +15,7 @@
  *
  */
 
-package net.croz.nrich.excel.starter.configuration.stub;
+package net.croz.nrich.formconfiguration.starter.configuration.stub;
 
 public class FormConfigurationTestRequest {
 

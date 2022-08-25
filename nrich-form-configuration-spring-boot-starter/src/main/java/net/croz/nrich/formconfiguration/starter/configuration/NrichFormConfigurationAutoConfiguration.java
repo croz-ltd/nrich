@@ -19,10 +19,12 @@ package net.croz.nrich.formconfiguration.starter.configuration;
 
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.FormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.api.util.FormConfigurationMappingCustomizerUtil;
 import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
@@ -38,6 +40,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
@@ -63,12 +66,27 @@ public class NrichFormConfigurationAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
+    public FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService() {
+        return new DefaultFormConfigurationAnnotationResolvingService();
+    }
+
+
+    @ConditionalOnMissingBean
+    @Bean
     public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, NrichFormConfigurationProperties configurationProperties,
                                                              List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList,
+                                                             FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService,
                                                              @Autowired(required = false) List<FormConfigurationMappingCustomizer> formConfigurationCustomizerList) {
         Map<String, Class<?>> formConfigurationMapping = FormConfigurationMappingCustomizerUtil.applyCustomizerList(
             configurationProperties.getFormConfigurationMapping(), formConfigurationCustomizerList
         );
+
+        List<String> packageList = configurationProperties.getFormValidationConfigurationClassesPackageList();
+        if (!CollectionUtils.isEmpty(packageList)) {
+            Map<String, Class<?>> classPathFormConfiguration = formConfigurationAnnotationResolvingService.resolveFormConfigurations(packageList);
+
+            classPathFormConfiguration.forEach(formConfigurationMapping::putIfAbsent);
+        }
 
         return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList);
     }
