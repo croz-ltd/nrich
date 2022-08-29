@@ -64,16 +64,16 @@ format. If users want to return all the responses in a standard way they should 
 An example is given bellow:
 
 ```java
-@RestController("user")
 @RequiredArgsConstructor
+@RestController("user")
 public class UserController {
 
-    private final NotificationResponseService<ResponseWithNotification<?>> notificationResponseService;
+    private final WebMvcNotificationResponseService notificationResponseService;
 
     private final UserService userService;
 
     @PostMapping
-    public ResponseWithNotification<?> save(CreateUserRequest request) {
+    public NotificationDataResponse<?> save(CreateUserRequest request) {
         User saved = userService.save(request);
 
         return notificationResponseService.responseWithNotificationActionResolvedFromRequest(saved);
