@@ -324,15 +324,17 @@ Manual providing of action code is recommended when automatic resolving from the
 Example of manual providing:
 
 ```java
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("notification-example")
 public class ExampleController {
+
+    private final NotificationResponseService notificationResponseService;
 
     @GetMapping("manual")
     public NotificationResponse manualExample() {
         return notificationResponseService.responseWithNotification("manual.example");
     }
-
 }
 ```
 
@@ -361,13 +363,30 @@ response is:
 #### Automatic resolving
 
 Automatic resolving of the notification action code was used in chapter describing the action notification. Method `responseWithNotificationActionResolvedFromRequest` will resolve the action code from
-current request and the key for resolving title and content is: `notification-example.save`.
+current request and HTTP method and the key for resolving title and content is: `notification-example.save.post`.
+
+Example of automatic resolving:
+
+```java
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("notification-example")
+public class ExampleController {
+
+    private final NotificationResponseService notificationResponseService;
+
+    @PostMapping("save")
+    public NotificationResponse automaticExample() {
+        return notificationResponseService.responseWithNotificationActionResolvedFromRequest();
+    }
+}
+```
 
 If we were to put these key-value pairs into the `messages.properties` file:
 
 ```properties
-notification-example.save.title=Automatic resolution title
-notification-example.save.content=Automatic resolution content
+notification-example.save.post.title=Automatic resolution title
+notification-example.save.post.content=Automatic resolution content
 ```
 
 then the response that we would receive would be different from the one already seen:
