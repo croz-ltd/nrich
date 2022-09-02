@@ -41,13 +41,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.Validator;
 import java.util.List;
 import java.util.Map;
 
 @AutoConfigureAfter(ValidationAutoConfiguration.class)
-@ConditionalOnBean(LocalValidatorFactoryBean.class)
+@ConditionalOnBean(Validator.class)
 @EnableConfigurationProperties(NrichFormConfigurationProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichFormConfigurationAutoConfiguration {
@@ -73,7 +73,7 @@ public class NrichFormConfigurationAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public FormConfigurationService formConfigurationService(@Lazy LocalValidatorFactoryBean validator, NrichFormConfigurationProperties configurationProperties,
+    public FormConfigurationService formConfigurationService(@Lazy Validator validator, NrichFormConfigurationProperties configurationProperties,
                                                              List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList,
                                                              FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService,
                                                              @Autowired(required = false) List<FormConfigurationMappingCustomizer> formConfigurationCustomizerList) {
