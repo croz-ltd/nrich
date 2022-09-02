@@ -91,7 +91,10 @@ public class SearchDataParser {
                     return;
                 }
 
-                restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isPluralAttribute));
+                // element collections have null managed type but should be treated as plural attributes
+                boolean isCurrentAttributePlural = attributeHolder.isElementCollection() || isPluralAttribute;
+
+                restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isCurrentAttributePlural));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
                 AttributeHolderWithPath attributeWithPath = resolveAttributeFromSearchConfigurationOrPrefix(attributeResolver, originalFieldName);
