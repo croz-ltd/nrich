@@ -71,6 +71,8 @@ public class TestEntitySearchRequest {
 
     private String nestedEntityNonExisting;
 
+    private String elementCollection;
+
     public TestEntitySearchRequest(String name) {
         this.name = name;
     }
