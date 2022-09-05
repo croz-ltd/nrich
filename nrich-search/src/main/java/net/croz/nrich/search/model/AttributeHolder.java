@@ -37,6 +37,10 @@ public class AttributeHolder {
         return attribute != null;
     }
 
+    public boolean isElementCollection() {
+        return isFound() && attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.ELEMENT_COLLECTION;
+    }
+
     public static AttributeHolder notFound() {
         return new AttributeHolder(null, null, false);
     }

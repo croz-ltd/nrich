@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -55,5 +56,8 @@ public class TestEntity {
 
     @Embedded
     private TestEntityEmbedded testEntityEmbedded;
+
+    @ElementCollection
+    private List<String> elementCollection;
 
 }

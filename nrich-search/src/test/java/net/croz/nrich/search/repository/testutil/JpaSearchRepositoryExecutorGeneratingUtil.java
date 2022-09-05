@@ -34,6 +34,7 @@ import javax.persistence.criteria.JoinType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -128,6 +129,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         entity.setCollectionEntityList(collectionEntityList);
         entity.setTestEntityEnum(TestEntityEnum.FIRST);
         entity.setTestEntityEmbedded(testEntityEmbedded);
+        entity.setElementCollection(Arrays.asList("Element collection 1" + value, "Element collection 2" + value));
 
         return entity;
     }

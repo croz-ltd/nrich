@@ -713,6 +713,20 @@ class JpaQueryBuilderTest {
         assertThat(thrown).isNull();
     }
 
+    @Test
+    void shouldFindByElementCollection() {
+        // given
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .elementCollection("Element collection 11")
+            .build();
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }
