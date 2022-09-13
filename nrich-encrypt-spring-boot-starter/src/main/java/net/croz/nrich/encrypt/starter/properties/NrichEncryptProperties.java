@@ -20,13 +20,11 @@ package net.croz.nrich.encrypt.starter.properties;
 import lombok.Getter;
 import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
 @Getter
-@ConstructorBinding
 @ConfigurationProperties("nrich.encrypt")
 public class NrichEncryptProperties {
 
