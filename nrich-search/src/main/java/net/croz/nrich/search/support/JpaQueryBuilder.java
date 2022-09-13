@@ -355,7 +355,9 @@ public class JpaQueryBuilder<T> {
             fullPredicateList.add(interceptorPredicate);
         }
 
-        query.where(fullPredicateList.toArray(new Predicate[0]));
+        if (!fullPredicateList.isEmpty()) {
+            query.where(fullPredicateList.toArray(new Predicate[0]));
+        }
     }
 
     private <R> boolean joinFetchExists(List<SearchJoin<R>> joinList) {
