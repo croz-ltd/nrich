@@ -13,7 +13,7 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
-  enversImplementation "org.hibernate:hibernate-envers"
+  enversImplementation "org.hibernate.orm:hibernate-envers"
 
   implementation project(":nrich-javascript")
 
@@ -33,7 +33,7 @@ dependencies {
 
   testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
-  testImplementation "org.hibernate:hibernate-core"
+  testImplementation "org.hibernate.orm:hibernate-core"
   testImplementation "org.hibernate.validator:hibernate-validator"
   testImplementation "org.hamcrest:hamcrest"
   testImplementation "com.jayway.jsonpath:json-path"

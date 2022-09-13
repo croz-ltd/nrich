@@ -24,7 +24,7 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
 
   testImplementation "jakarta.servlet:jakarta.servlet-api"
-  testImplementation "org.hibernate:hibernate-envers"
+  testImplementation "org.hibernate.orm:hibernate-envers"
   testImplementation "org.springframework:spring-webmvc"
   testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
