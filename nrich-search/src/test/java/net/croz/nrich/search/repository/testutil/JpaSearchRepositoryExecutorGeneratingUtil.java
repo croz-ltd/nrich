@@ -25,6 +25,7 @@ import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAsso
 import net.croz.nrich.search.repository.stub.TestEntityEmbedded;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
+import net.croz.nrich.search.repository.stub.TestEntityWithCustomId;
 import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
@@ -35,6 +36,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -112,6 +114,16 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
             .condition(condition)
             .joinType(JoinType.LEFT)
             .build();
+    }
+
+    public static void generateTestEntityWithCustomIdList(EntityManager entityManager) {
+        IntStream.range(0, 3).forEach(value -> {
+            TestEntityWithCustomId entity = new TestEntityWithCustomId();
+
+            entity.setEnumElementCollection(Collections.singletonList(value % 2 == 0 ? TestEntityEnum.FIRST : TestEntityEnum.SECOND));
+
+            entityManager.persist(entity);
+        });
     }
 
     private static TestEntity createTestEntity(Integer value, Integer numberOfCollectionEntities) {

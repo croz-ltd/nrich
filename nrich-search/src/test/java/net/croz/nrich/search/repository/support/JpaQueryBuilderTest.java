@@ -34,6 +34,7 @@ import net.croz.nrich.search.repository.stub.TestEntityDto;
 import net.croz.nrich.search.repository.stub.TestEntityEnum;
 import net.croz.nrich.search.repository.stub.TestEntityProjectionDto;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
+import net.croz.nrich.search.repository.stub.TestEntityWithCustomId;
 import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,7 @@ import java.util.Map;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntitySearchRequestJoin;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithCustomIdList;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -725,6 +727,26 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldSupportJoinsByDifferentIdProperty() {
+        // given
+        generateTestEntityWithCustomIdList(entityManager);
+
+        JpaQueryBuilder<TestEntityWithCustomId> testEntityWithCustomIdQueryBuilder = new JpaQueryBuilder<>(entityManager, TestEntityWithCustomId.class);
+
+        Map<String, Object> mapSearchRequest = new HashMap<>();
+        mapSearchRequest.put("enumElementCollection", TestEntityEnum.FIRST);
+
+        SearchConfiguration<TestEntityWithCustomId, TestEntityWithCustomId, Map<String, Object>> searchConfiguration = SearchConfiguration.<TestEntityWithCustomId, TestEntityWithCustomId, Map<String, Object>>builder()
+            .build();
+
+        // when
+        List<TestEntityWithCustomId> results = entityManager.createQuery(testEntityWithCustomIdQueryBuilder.buildQuery(mapSearchRequest, searchConfiguration, Sort.unsorted())).getResultList();
+
+        // then
+        assertThat(results).hasSize(2);
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
