@@ -27,6 +27,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.api.util.PageableUtil;
@@ -171,25 +172,30 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.getSortPropertyList());
 
-        Map<String, Object> searchRequestMap = Collections.emptyMap();
-        if (request.getSearchParameter() != null) {
-            searchRequestMap = stringToEntityPropertyMapConverter.convert(
-                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType(),
-                searchConfiguration.getSearchPropertyConfiguration()
-            );
-        }
-
+        Map<String, Object> searchRequestMap = resolveSearchRequestMap(managedTypeWrapper, request, searchConfiguration.getSearchPropertyConfiguration());
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, searchConfiguration, pageable.getSort());
 
         TypedQuery<P> typedQuery = entityManager.createQuery(query);
 
         typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
-        return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(queryBuilder, query));
+        return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(queryBuilder, searchRequestMap, searchConfiguration));
     }
 
-    private long executeCountQuery(JpaQueryBuilder<?> queryBuilder, CriteriaQuery<?> query) {
-        CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
+    private Map<String, Object> resolveSearchRequestMap(ManagedTypeWrapper managedTypeWrapper, ListRegistryRequest request, SearchPropertyConfiguration searchPropertyConfiguration) {
+        Map<String, Object> searchRequestMap = Collections.emptyMap();
+        if (request.getSearchParameter() != null) {
+            searchRequestMap = stringToEntityPropertyMapConverter.convert(
+                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType(),
+                searchPropertyConfiguration
+            );
+        }
+
+        return searchRequestMap;
+    }
+
+    private <T, P> long executeCountQuery(JpaQueryBuilder<T> queryBuilder, Map<String, Object> searchRequestMap, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+        CriteriaQuery<Long> countQuery = queryBuilder.buildCountQuery(searchRequestMap, searchConfiguration);
 
         List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 
