@@ -37,7 +37,4 @@ public class SearchPropertyJoin {
      */
     private final String childProperty;
 
-    public static SearchPropertyJoin defaultJoinById() {
-        return new SearchPropertyJoin("id", "id");
-    }
 }
