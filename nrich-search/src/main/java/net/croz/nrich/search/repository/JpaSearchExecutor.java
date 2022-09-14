@@ -83,7 +83,7 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         if (pageable.isPaged()) {
             typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
-            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(query));
+            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(request, searchConfiguration));
         }
 
         return new PageImpl<>(typedQuery.getResultList());
@@ -91,20 +91,18 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     @Override
     public <R, P> long count(R request, SearchConfiguration<T, P, R> searchConfiguration) {
-        return executeCountQuery(queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted()));
+        return executeCountQuery(request, searchConfiguration);
     }
 
     @Override
     public <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration) {
-        CriteriaQuery<?> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+        CriteriaQuery<Integer>  query = queryBuilder.buildExistsQuery(request, searchConfiguration);
 
-        CriteriaQuery<Integer> existsQuery = queryBuilder.convertToExistsQuery(query);
-
-        return entityManager.createQuery(existsQuery).setMaxResults(1).getResultList().size() == 1;
+        return entityManager.createQuery(query).setMaxResults(1).getResultList().size() == 1;
     }
 
-    private long executeCountQuery(CriteriaQuery<?> query) {
-        CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
+    private <R, P> long executeCountQuery(R request, SearchConfiguration<T, P, R> searchConfiguration) {
+        CriteriaQuery<Long> countQuery = queryBuilder.buildCountQuery(request, searchConfiguration);
 
         List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 

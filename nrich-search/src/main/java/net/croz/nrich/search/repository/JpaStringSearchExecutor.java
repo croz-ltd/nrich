@@ -99,7 +99,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         if (pageable.isPaged()) {
             typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
 
-            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(query));
+            return PageableExecutionUtils.getPage(typedQuery.getResultList(), pageable, () -> executeCountQuery(searchMap, searchConfiguration));
         }
 
         return new PageImpl<>(typedQuery.getResultList());
@@ -109,26 +109,24 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     public <P> long count(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
         Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
-        return executeCountQuery(queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted()));
+        return executeCountQuery(searchMap, searchConfiguration);
     }
 
     @Override
     public <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
         Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
 
-        CriteriaQuery<?> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
+        CriteriaQuery<Integer> query = queryBuilder.buildExistsQuery(searchMap, searchConfiguration);
 
-        CriteriaQuery<Integer> existsQuery = queryBuilder.convertToExistsQuery(query);
-
-        return entityManager.createQuery(existsQuery).setMaxResults(1).getResultList().size() == 1;
+        return entityManager.createQuery(query).setMaxResults(1).getResultList().size() == 1;
     }
 
     private Map<String, Object> convertToMap(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, ?, Map<String, Object>> searchConfiguration) {
         return stringToEntityPropertyMapConverter.convert(searchTerm, propertyToSearchList, managedType, searchConfiguration.getSearchPropertyConfiguration());
     }
 
-    private long executeCountQuery(CriteriaQuery<?> query) {
-        CriteriaQuery<Long> countQuery = queryBuilder.convertToCountQuery(query);
+    private <P> long executeCountQuery(Map<String, Object> searchMap, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration) {
+        CriteriaQuery<Long> countQuery = queryBuilder.buildCountQuery(searchMap, searchConfiguration);
 
         List<Long> totals = entityManager.createQuery(countQuery).getResultList();
 

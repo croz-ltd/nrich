@@ -446,13 +446,10 @@ class JpaQueryBuilderTest {
             .build();
 
         // when
-        CriteriaQuery<TestEntity> query = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
-
-        // and when
-        CriteriaQuery<Long> countQuery = jpaQueryBuilder.convertToCountQuery(query);
+        CriteriaQuery<Long> query = jpaQueryBuilder.buildCountQuery(request, searchConfiguration);
 
         // then
-        assertThat(entityManager.createQuery(countQuery).getSingleResult()).isEqualTo(1L);
+        assertThat(entityManager.createQuery(query).getSingleResult()).isEqualTo(1L);
     }
 
     @Test
@@ -747,6 +744,15 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(2);
+    }
+
+    @Test
+    void shouldNotFailOnNullSort() {
+        // when
+        Throwable thrown = catchThrowable(() -> executeQuery(Collections.emptyMap(), SearchConfiguration.emptyConfiguration(), null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
