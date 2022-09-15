@@ -15,26 +15,31 @@
  *
  */
 
-package net.croz.nrich.search.api.model.property;
+package net.croz.nrich.search.repository.stub;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-/**
- * Represents a join between two entities. If entities are to be joined by another property (different from id). Then it needs to be specified.
- */
-@RequiredArgsConstructor
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.List;
+
+@Setter
 @Getter
-public class SearchPropertyJoin {
+@Entity
+public class TestEntityWithCustomId {
 
-    /**
-     * Parent (root class) property name.
-     */
-    private final String parentProperty;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long customId;
 
-    /**
-     * Child property name.
-     */
-    private final String childProperty;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection
+    private List<TestEntityEnum> enumElementCollection;
 
 }

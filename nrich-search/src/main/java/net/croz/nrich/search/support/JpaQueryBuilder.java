@@ -221,7 +221,8 @@ public class JpaQueryBuilder<T> {
                 mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(pluralRestrictionList, root, criteriaBuilder));
             }
             else {
-                Subquery<Integer> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, SearchPropertyJoin.defaultJoinById());
+                SearchPropertyJoin searchPropertyJoin = resolveSearchPropertyJoin(root);
+                Subquery<Integer> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, searchPropertyJoin);
 
                 mainQueryPredicateList.add(criteriaBuilder.exists(subquery));
             }
@@ -273,6 +274,12 @@ public class JpaQueryBuilder<T> {
         });
 
         return predicateList;
+    }
+
+    private SearchPropertyJoin resolveSearchPropertyJoin(Root<?> root) {
+      String idName = root.getModel().getId(root.getModel().getIdType().getJavaType()).getName();
+
+      return new SearchPropertyJoin(idName, idName);
     }
 
     // TODO enable join usage or subquery?
