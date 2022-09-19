@@ -20,7 +20,7 @@ package net.croz.nrich.registry.data.request;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Setter
 @Getter

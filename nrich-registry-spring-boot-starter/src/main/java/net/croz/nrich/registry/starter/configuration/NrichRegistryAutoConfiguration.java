@@ -79,9 +79,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,7 +119,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
     public ModelMapper registryBaseModelMapper() {
-       return strictModelMapper();
+        return strictModelMapper();
     }
 
     @ConditionalOnMissingBean

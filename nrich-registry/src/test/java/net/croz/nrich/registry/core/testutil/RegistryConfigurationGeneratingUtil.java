@@ -24,10 +24,10 @@ import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolde
 import net.croz.nrich.registry.core.stub.RegistryConfigurationEnversTestEntity;
 import net.croz.nrich.registry.core.stub.RegistryConfigurationRegularTestEntity;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.IdentifiableType;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.Metamodel;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.IdentifiableType;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.Metamodel;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Arrays;

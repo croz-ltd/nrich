@@ -28,7 +28,7 @@ import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;

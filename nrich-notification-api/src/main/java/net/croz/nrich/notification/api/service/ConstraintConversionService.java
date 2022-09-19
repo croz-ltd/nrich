@@ -19,7 +19,7 @@ package net.croz.nrich.notification.api.service;
 
 import org.springframework.validation.Errors;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.util.Set;
 
 public interface ConstraintConversionService {

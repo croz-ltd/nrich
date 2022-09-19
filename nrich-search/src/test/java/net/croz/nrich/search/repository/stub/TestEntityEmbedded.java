@@ -20,7 +20,7 @@ package net.croz.nrich.search.repository.stub;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Setter
 @Getter

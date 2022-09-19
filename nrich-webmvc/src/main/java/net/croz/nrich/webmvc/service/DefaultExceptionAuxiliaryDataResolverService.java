@@ -19,7 +19,7 @@ package net.croz.nrich.webmvc.service;
 
 import net.croz.nrich.webmvc.api.service.ExceptionAuxiliaryDataResolverService;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;

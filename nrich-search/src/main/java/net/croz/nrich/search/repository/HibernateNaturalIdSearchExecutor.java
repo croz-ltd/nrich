@@ -22,7 +22,7 @@ import org.hibernate.NaturalIdLoadAccess;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;

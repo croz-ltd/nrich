@@ -30,8 +30,8 @@ import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.JoinType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.JoinType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;

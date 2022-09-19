@@ -17,8 +17,8 @@
 
 package net.croz.nrich.registry.core.stub;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Valid
 public class AnnotationUtilTestEntity {

@@ -21,8 +21,8 @@ import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;

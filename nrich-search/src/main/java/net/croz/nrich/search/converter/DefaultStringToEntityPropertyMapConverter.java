@@ -27,7 +27,7 @@ import net.croz.nrich.search.util.PropertyNameUtil;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.ManagedType;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

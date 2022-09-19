@@ -20,7 +20,7 @@ package net.croz.nrich.search.repository.testutil;
 import net.croz.nrich.search.repository.stub.TestEntityWithNaturalId;
 import net.croz.nrich.search.repository.stub.TestEntityWithSimpleNaturalId;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;

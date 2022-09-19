@@ -27,10 +27,10 @@ import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import org.springframework.cache.annotation.Cacheable;
 
-import javax.validation.Validator;
-import javax.validation.metadata.BeanDescriptor;
-import javax.validation.metadata.ConstraintDescriptor;
-import javax.validation.metadata.PropertyDescriptor;
+import jakarta.validation.Validator;
+import jakarta.validation.metadata.BeanDescriptor;
+import jakarta.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.metadata.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

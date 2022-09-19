@@ -19,8 +19,8 @@ package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.api.constraint.ValidFile;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidFileValidator extends BaseValidFileValidator implements ConstraintValidator<ValidFile, Object> {
 

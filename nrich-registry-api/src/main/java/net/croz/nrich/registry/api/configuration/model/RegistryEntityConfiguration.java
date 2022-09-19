@@ -76,12 +76,12 @@ public class RegistryEntityConfiguration {
     private final boolean isIdentifierAssigned;
 
     /**
-     * Whether this entity has {@link javax.persistence.IdClass} identifier.
+     * Whether this entity has {@link jakarta.persistence.IdClass} identifier.
      */
     private final boolean isIdClassIdentity;
 
     /**
-     * Whether this entity has {@link javax.persistence.EmbeddedId} identifier.
+     * Whether this entity has {@link jakarta.persistence.EmbeddedId} identifier.
      */
     private final boolean isEmbeddedIdentity;
 

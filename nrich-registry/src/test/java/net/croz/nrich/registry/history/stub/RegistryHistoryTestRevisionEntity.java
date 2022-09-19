@@ -23,7 +23,7 @@ import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionListener;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Setter
 @Getter

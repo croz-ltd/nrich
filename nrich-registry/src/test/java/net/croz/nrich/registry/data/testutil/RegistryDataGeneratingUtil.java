@@ -40,7 +40,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestGroupType;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.request.CreateEntityRequest;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

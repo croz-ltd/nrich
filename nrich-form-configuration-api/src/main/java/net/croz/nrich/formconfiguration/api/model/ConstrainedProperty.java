@@ -20,7 +20,7 @@ package net.croz.nrich.formconfiguration.api.model;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.metadata.ConstraintDescriptor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
