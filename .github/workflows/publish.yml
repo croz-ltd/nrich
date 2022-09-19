@@ -9,7 +9,7 @@ jobs:
   build-and-publish:
     strategy:
       matrix:
-        java: ["8"]
+        java: ["17"]
         os: [ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
