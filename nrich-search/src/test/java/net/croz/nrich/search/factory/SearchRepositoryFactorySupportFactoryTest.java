@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;

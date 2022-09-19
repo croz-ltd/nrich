@@ -17,8 +17,8 @@
 
 package net.croz.nrich.search.util;
 
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Path;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -45,9 +45,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Date;

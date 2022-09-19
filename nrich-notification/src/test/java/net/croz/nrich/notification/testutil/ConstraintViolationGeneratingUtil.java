@@ -19,9 +19,9 @@ package net.croz.nrich.notification.testutil;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.constraints.NotNull;
-import javax.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.metadata.ConstraintDescriptor;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

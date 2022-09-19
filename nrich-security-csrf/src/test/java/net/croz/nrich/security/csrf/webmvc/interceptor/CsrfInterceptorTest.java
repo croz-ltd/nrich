@@ -35,7 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;

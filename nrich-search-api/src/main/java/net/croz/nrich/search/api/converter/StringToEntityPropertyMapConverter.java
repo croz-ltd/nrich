@@ -19,7 +19,7 @@ package net.croz.nrich.search.api.converter;
 
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 
-import javax.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.ManagedType;
 import java.util.List;
 import java.util.Map;
 

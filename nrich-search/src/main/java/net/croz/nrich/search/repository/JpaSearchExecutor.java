@@ -29,10 +29,10 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 

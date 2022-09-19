@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.util.CollectionUtils;
 
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 import java.util.List;
 import java.util.Map;
 

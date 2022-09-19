@@ -21,7 +21,7 @@ import net.croz.nrich.notification.stub.DefaultConstraintConversionServiceTestRe
 import org.junit.jupiter.api.Test;
 import org.springframework.validation.Errors;
 
-import javax.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolation;
 import java.util.Collections;
 import java.util.Set;
 

@@ -38,8 +38,8 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

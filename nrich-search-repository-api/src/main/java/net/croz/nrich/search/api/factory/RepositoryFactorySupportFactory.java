@@ -19,7 +19,7 @@ package net.croz.nrich.search.api.factory;
 
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  * Enables creation of {@link RepositoryFactorySupport} instances for custom repository implementations.

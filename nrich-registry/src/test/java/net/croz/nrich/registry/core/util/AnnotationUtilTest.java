@@ -20,8 +20,8 @@ package net.croz.nrich.registry.core.util;
 import net.croz.nrich.registry.core.stub.AnnotationUtilTestEntity;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;

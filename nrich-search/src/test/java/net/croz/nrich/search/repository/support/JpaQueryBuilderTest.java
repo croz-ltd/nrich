@@ -43,10 +43,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;

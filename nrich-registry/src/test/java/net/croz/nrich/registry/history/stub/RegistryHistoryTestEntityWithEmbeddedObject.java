@@ -22,10 +22,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
 
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;

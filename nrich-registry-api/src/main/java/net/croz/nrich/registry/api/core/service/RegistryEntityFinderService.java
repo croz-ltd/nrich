@@ -32,8 +32,8 @@ public interface RegistryEntityFinderService {
      * @param id   id of entity, can be a map, embedded id or simple object (Long, String)
      * @param <T>  entity type
      * @return entity instance
-     * @throws javax.persistence.NoResultException        when no result has been found
-     * @throws javax.persistence.NonUniqueResultException when there is more than one result
+     * @throws jakarta.persistence.NoResultException        when no result has been found
+     * @throws jakarta.persistence.NonUniqueResultException when there is more than one result
      */
     <T> T findEntityInstance(Class<T> type, Object id);
 

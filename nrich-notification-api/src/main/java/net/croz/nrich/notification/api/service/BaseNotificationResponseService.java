@@ -21,7 +21,7 @@ import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.response.NotificationDataResponse;
 import org.springframework.validation.Errors;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 
 /**

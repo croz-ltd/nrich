@@ -30,8 +30,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
 

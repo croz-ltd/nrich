@@ -21,7 +21,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 

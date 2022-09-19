@@ -52,7 +52,7 @@ public class NrichNotificationConfiguration {
 
 ### ConstraintConversionService
 
-[`ConstraintConversionService`][constraint-conversion-service-url] is responsible for converting `javax.validation.ConstraintViolation` list to Spring `Errors` instance.
+[`ConstraintConversionService`][constraint-conversion-service-url] is responsible for converting `jakarta.validation.ConstraintViolation` list to Spring `Errors` instance.
 This conversion is done to make the implementation of [`NotificationResolverService`][notification-resolver-service-url] less complex since it only needs to work with Spring's `Errors` when processing
 validation errors.
 

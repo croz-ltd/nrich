@@ -19,8 +19,8 @@ package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.api.constraint.InList;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 
 public class InListValidator implements ConstraintValidator<InList, Object> {

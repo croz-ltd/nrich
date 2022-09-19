@@ -21,8 +21,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**

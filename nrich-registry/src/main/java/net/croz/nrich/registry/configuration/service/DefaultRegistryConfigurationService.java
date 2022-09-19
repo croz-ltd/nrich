@@ -40,9 +40,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;

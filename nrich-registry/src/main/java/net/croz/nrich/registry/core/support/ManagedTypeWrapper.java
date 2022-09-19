@@ -21,12 +21,12 @@ import lombok.Getter;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import org.springframework.util.Assert;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.EmbeddableType;
-import javax.persistence.metamodel.IdentifiableType;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.EmbeddableType;
+import jakarta.persistence.metamodel.IdentifiableType;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;

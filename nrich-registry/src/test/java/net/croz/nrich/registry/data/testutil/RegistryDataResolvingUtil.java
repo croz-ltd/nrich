@@ -21,8 +21,8 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 
 public final class RegistryDataResolvingUtil {
 
