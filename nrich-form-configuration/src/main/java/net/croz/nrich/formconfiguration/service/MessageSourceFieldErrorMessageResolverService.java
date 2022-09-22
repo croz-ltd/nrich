@@ -58,8 +58,10 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassName, constraintPropertyName, constraintName));
         codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, constraintOwningClassShortName, constraintPropertyName, constraintName));
 
-        codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
+        codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_MEDIUM_CLIENT_MESSAGE_FORMAT, constraintPropertyName, constraintName));
+        codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_MEDIUM_MESSAGE_FORMAT, constraintPropertyName, constraintName));
 
+        codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT, constraintName));
         codeList.add(resolveMessageCode(FormConfigurationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, constraintName));
 
         return codeList;

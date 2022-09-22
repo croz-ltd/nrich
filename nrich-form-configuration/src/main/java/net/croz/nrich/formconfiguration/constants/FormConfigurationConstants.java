@@ -23,6 +23,10 @@ public final class FormConfigurationConstants {
 
     public static final String CONSTRAINT_FULL_MESSAGE_FORMAT = "%s.%s.%s.invalid";
 
+    public static final String CONSTRAINT_MEDIUM_CLIENT_MESSAGE_FORMAT = "client.%s.%s.invalid";
+
+    public static final String CONSTRAINT_MEDIUM_MESSAGE_FORMAT = "%s.%s.invalid";
+
     public static final String CONSTRAINT_SHORT_CLIENT_MESSAGE_FORMAT = "client.%s.invalid";
 
     public static final String CONSTRAINT_SHORT_MESSAGE_FORMAT = "%s.invalid";
