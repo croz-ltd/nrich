@@ -104,6 +104,8 @@ the following message codes will be searched:
 - `formConfigurationServiceNestedTestRequest.propertyName.client.NotNull.invalid`
 - `net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest.propertyName.NotNull.invalid`
 - `formConfigurationServiceNestedTestRequest.propertyName.NotNull.invalid`
+- `client.propertyName.NotNull.invalid`
+- `propertyName.NotNull.invalid`
 - `client.NotNull.invalid`
 - `NotNull.invalid`
 

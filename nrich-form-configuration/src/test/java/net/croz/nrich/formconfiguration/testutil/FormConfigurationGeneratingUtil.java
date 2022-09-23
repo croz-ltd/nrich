@@ -38,10 +38,14 @@ public final class FormConfigurationGeneratingUtil {
     }
 
     public static ConstrainedProperty createConstrainedProperty(Class<?> parentType) {
-        return createConstrainedProperty(parentType, Collections.emptyMap());
+        return createConstrainedProperty(parentType, Collections.emptyMap(), "propertyName");
     }
 
     public static ConstrainedProperty createConstrainedProperty(Class<?> parentType, Map<String, Object> attributeMap) {
+        return createConstrainedProperty(parentType, attributeMap, "propertyName");
+    }
+
+    public static ConstrainedProperty createConstrainedProperty(Class<?> parentType, Map<String, Object> attributeMap, String propertyName) {
         @SuppressWarnings("unchecked")
         ConstraintDescriptor<Annotation> constraintDescriptor = mock(ConstraintDescriptor.class);
         Annotation annotation = mock(Annotation.class);
@@ -53,7 +57,7 @@ public final class FormConfigurationGeneratingUtil {
 
         return ConstrainedProperty.builder()
             .constraintDescriptor(constraintDescriptor)
-            .name("propertyName")
+            .name(propertyName)
             .path("propertyPath")
             .type(String.class)
             .parentType(parentType).build();

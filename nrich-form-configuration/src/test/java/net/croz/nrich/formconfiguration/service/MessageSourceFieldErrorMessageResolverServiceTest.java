@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -51,6 +52,18 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
 
         // then
         assertThat(message).isEqualTo("Invalid value");
+    }
+
+    @Test
+    void shouldResolveValidationMessageInMediumFormatForConstrainedProperty() {
+        // given
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(FormConfigurationServiceNestedTestRequest.class, Collections.emptyMap(), "mediumFormatPropertyName");
+
+        // when
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
+
+        // then
+        assertThat(message).isEqualTo("Invalid value for medium format");
     }
 
     @Test
