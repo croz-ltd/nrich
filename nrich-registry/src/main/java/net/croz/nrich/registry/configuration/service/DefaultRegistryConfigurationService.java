@@ -18,16 +18,15 @@
 package net.croz.nrich.registry.configuration.service;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
-import net.croz.nrich.javascript.model.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.configuration.comparator.RegistryGroupConfigurationComparator;
 import net.croz.nrich.registry.configuration.comparator.RegistryPropertyComparator;
 import net.croz.nrich.registry.configuration.constants.RegistryConfigurationConstants;
-import net.croz.nrich.javascript.util.JavaToJavascriptTypeConversionUtil;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import net.croz.nrich.registry.core.constants.RegistryEnversConstants;
 import net.croz.nrich.registry.core.model.PropertyWithType;
@@ -44,6 +43,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
 import javax.persistence.metamodel.SingularAttribute;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,6 +67,8 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     private final RegistryHistoryConfigurationHolder registryHistoryConfiguration;
 
     private final Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap;
+
+    private final JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService;
 
     @Cacheable("nrich.registryConfiguration.cache")
     @Override
@@ -204,8 +206,8 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
     private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(String entityTypePrefix, Class<?> attributeType, String attributeName, boolean isIdAttribute,
                                                                                boolean isSingularAssociation, Class<?> singularAssociationReferencedClass, boolean isReadOnly,
                                                                                boolean isSortable, boolean isSearchable) {
-        JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(attributeType);
-        boolean isDecimal = JavaToJavascriptTypeConversionUtil.isDecimal(attributeType);
+        String javascriptType = javaToJavascriptTypeConversionService.convert(attributeType);
+        boolean isDecimal = isDecimal(attributeType);
 
         String attributeDisplayName = convertToDisplayValue(attributeName);
         String formLabel = formLabel(entityTypePrefix, attributeType, attributeName, attributeDisplayName);
@@ -295,4 +297,9 @@ public class DefaultRegistryConfigurationService implements RegistryConfiguratio
 
         return StringUtils.capitalize(String.join(RegistryCoreConstants.SPACE, attributeWordList));
     }
+
+    private boolean isDecimal(Class<?> type) {
+        return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
+    }
+
 }

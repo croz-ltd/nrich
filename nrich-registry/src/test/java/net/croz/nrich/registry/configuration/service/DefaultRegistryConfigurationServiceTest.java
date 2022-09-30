@@ -20,7 +20,6 @@ package net.croz.nrich.registry.configuration.service;
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
-import net.croz.nrich.javascript.model.JavascriptType;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
@@ -91,7 +90,7 @@ class DefaultRegistryConfigurationServiceTest {
         RegistryPropertyConfiguration nameConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(0);
 
         // then
-        assertThat(nameConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
+        assertThat(nameConfiguration.getJavascriptType()).isEqualTo("string");
         assertThat(nameConfiguration.getOriginalType()).isEqualTo(String.class.getName());
         assertThat(nameConfiguration.isId()).isFalse();
         assertThat(nameConfiguration.isDecimal()).isFalse();
@@ -111,7 +110,7 @@ class DefaultRegistryConfigurationServiceTest {
         RegistryPropertyConfiguration nonEditablePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);
 
         // then
-        assertThat(nonEditablePropertyConfiguration.getJavascriptType()).isEqualTo(JavascriptType.STRING);
+        assertThat(nonEditablePropertyConfiguration.getJavascriptType()).isEqualTo("string");
         assertThat(nonEditablePropertyConfiguration.getOriginalType()).isEqualTo(String.class.getName());
         assertThat(nonEditablePropertyConfiguration.isId()).isFalse();
         assertThat(nameConfiguration.isDecimal()).isFalse();
@@ -162,7 +161,7 @@ class DefaultRegistryConfigurationServiceTest {
 
         // then
         assertThat(numberRegistryConfiguration.isDecimal()).isTrue();
-        assertThat(numberRegistryConfiguration.getJavascriptType()).isEqualTo(JavascriptType.NUMBER);
+        assertThat(numberRegistryConfiguration.getJavascriptType()).isEqualTo("number");
 
         // and when
         RegistryPropertyConfiguration manyToOnePropertyConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(2);

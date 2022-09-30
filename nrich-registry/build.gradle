@@ -15,6 +15,8 @@ dependencies {
 
   enversImplementation "org.hibernate:hibernate-envers"
 
+  implementation project(":nrich-javascript")
+
   implementation "org.apache.commons:commons-lang3"
 
   runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"

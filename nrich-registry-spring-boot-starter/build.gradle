@@ -7,6 +7,7 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
+  implementation project(":nrich-javascript")
   implementation project(":nrich-registry")
   implementation project(":nrich-spring-boot")
 

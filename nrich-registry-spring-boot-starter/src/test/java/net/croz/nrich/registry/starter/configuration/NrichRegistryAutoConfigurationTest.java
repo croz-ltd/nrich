@@ -19,6 +19,8 @@ package net.croz.nrich.registry.starter.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
+import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
@@ -142,6 +144,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryDataRequestConversionService.class);
             assertThat(context).hasSingleBean(RegistryHistoryService.class);
             assertThat(context).hasSingleBean(FormConfigurationMappingCustomizer.class);
+            assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
 
             assertThat(context).doesNotHaveBean(RegistryConfigurationController.class);
             assertThat(context).doesNotHaveBean(RegistryDataController.class);
@@ -164,6 +167,15 @@ class NrichRegistryAutoConfigurationTest {
         contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.registry.default-converter-enabled=false").run(context ->
             assertThat(context).doesNotHaveBean(StringToTypeConverter.class)
         );
+    }
+
+    @Test
+    void shouldNotCreateDefaultJavaToJavascriptConverterWhenCreationIsDisabled() {
+        // expect
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class)
+            .withPropertyValues("nrich.registry.default-java-to-javascript-converter-enabled=false").run(context ->
+                assertThat(context).doesNotHaveBean(JavaToJavascriptTypeConverter.class)
+            );
     }
 
     @Test
