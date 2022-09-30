@@ -15,21 +15,21 @@
  *
  */
 
-package net.croz.nrich.javascript.util;
+package net.croz.nrich.javascript.converter;
 
-import net.croz.nrich.javascript.model.JavascriptType;
+import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.api.model.JavascriptType;
+import org.springframework.core.annotation.Order;
 
-import java.math.BigDecimal;
 import java.time.temporal.Temporal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-/**
- * Converts Java class to Javascript representations.
- */
-public final class JavaToJavascriptTypeConversionUtil {
+@Order
+public class DefaultJavaToJavascriptTypeConverter implements JavaToJavascriptTypeConverter {
 
     private static final Map<Class<?>, JavascriptType> CLASS_JAVASCRIPT_TYPE_MAP = new HashMap<>();
 
@@ -43,23 +43,18 @@ public final class JavaToJavascriptTypeConversionUtil {
         CLASS_JAVASCRIPT_TYPE_MAP.put(Number.class, JavascriptType.NUMBER);
     }
 
-    private JavaToJavascriptTypeConversionUtil() {
+    @Override
+    public boolean supports(Class<?> type) {
+        return true;
     }
 
-    public static JavascriptType fromJavaType(Class<?> type) {
+    @Override
+    public String convert(Class<?> type) {
         return CLASS_JAVASCRIPT_TYPE_MAP.entrySet().stream()
             .filter(entry -> entry.getKey().isAssignableFrom(type))
             .findFirst()
             .map(Map.Entry::getValue)
-            .orElse(JavascriptType.OBJECT);
-    }
-
-    /**
-     * Whether the type is decimal.
-     * @param type Type to check.
-     * @return true if type is decimal
-     */
-    public static boolean isDecimal(Class<?> type) {
-        return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
+            .orElse(JavascriptType.OBJECT)
+            .name().toLowerCase(Locale.ROOT);
     }
 }
