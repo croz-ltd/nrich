@@ -8,6 +8,7 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation project(":nrich-form-configuration")
+  implementation project(":nrich-javascript")
 
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 

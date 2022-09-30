@@ -22,6 +22,9 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
@@ -211,13 +214,21 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService() {
+        return new DefaultJavaToJavascriptTypeConversionService(Collections.singletonList(new DefaultJavaToJavascriptTypeConverter()));
+    }
+
+    @Bean
+    public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                                     JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService) {
         List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
         RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
         Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
 
-        return new DefaultRegistryConfigurationService(messageSource, defaultReadOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap);
+        return new DefaultRegistryConfigurationService(
+            messageSource, defaultReadOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap, javaToJavascriptTypeConversionService
+        );
     }
 
     @Bean

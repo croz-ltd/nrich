@@ -15,21 +15,15 @@
  *
  */
 
-package net.croz.nrich.javascript.model;
-
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.Locale;
+package net.croz.nrich.javascript.api.converter;
 
 /**
- * Enum representing Javascript type, even though date is not a type it is added for easier handling on client.
+ * Converts Java class to Javascript representations. String is used to allow for customizations.
  */
-public enum JavascriptType {
+public interface JavaToJavascriptTypeConverter {
 
-    STRING, BOOLEAN, NUMBER, DATE, OBJECT;
+    boolean supports(Class<?> type);
 
-    @JsonValue
-    public String getName() {
-        return name().toLowerCase(Locale.ROOT);
-    }
+    String convert(Class<?> type);
+
 }

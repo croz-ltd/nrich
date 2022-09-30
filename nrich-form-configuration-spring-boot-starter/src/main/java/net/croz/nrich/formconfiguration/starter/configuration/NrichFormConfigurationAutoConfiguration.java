@@ -29,6 +29,10 @@ import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -70,13 +74,26 @@ public class NrichFormConfigurationAutoConfiguration {
         return new DefaultFormConfigurationAnnotationResolvingService();
     }
 
+    @ConditionalOnProperty(name = "nrich.form-configuration.default-java-to-javascript-converter-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnMissingBean(name = "formJavaToJavascriptTypeConverter")
+    @Bean
+    public JavaToJavascriptTypeConverter formJavaToJavascriptTypeConverter() {
+        return new DefaultJavaToJavascriptTypeConverter();
+    }
+
+    @ConditionalOnMissingBean(name = "formJavaToJavascriptTypeConversionService")
+    @Bean
+    public JavaToJavascriptTypeConversionService formJavaToJavascriptTypeConversionService(@Autowired(required = false) List<JavaToJavascriptTypeConverter> converters) {
+        return new DefaultJavaToJavascriptTypeConversionService(converters);
+    }
 
     @ConditionalOnMissingBean
     @Bean
     public FormConfigurationService formConfigurationService(@Lazy Validator validator, NrichFormConfigurationProperties configurationProperties,
                                                              List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList,
                                                              FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService,
-                                                             @Autowired(required = false) List<FormConfigurationMappingCustomizer> formConfigurationCustomizerList) {
+                                                             @Autowired(required = false) List<FormConfigurationMappingCustomizer> formConfigurationCustomizerList,
+                                                             JavaToJavascriptTypeConversionService formJavaToJavascriptTypeConversionService) {
         Map<String, Class<?>> formConfigurationMapping = FormConfigurationMappingCustomizerUtil.applyCustomizerList(
             configurationProperties.getFormConfigurationMapping(), formConfigurationCustomizerList
         );
@@ -88,7 +105,7 @@ public class NrichFormConfigurationAutoConfiguration {
             classPathFormConfiguration.forEach(formConfigurationMapping::putIfAbsent);
         }
 
-        return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList);
+        return new DefaultFormConfigurationService(validator, formConfigurationMapping, constrainedPropertyValidatorConverterServiceList, formJavaToJavascriptTypeConversionService);
     }
 
     @ConditionalOnMissingBean

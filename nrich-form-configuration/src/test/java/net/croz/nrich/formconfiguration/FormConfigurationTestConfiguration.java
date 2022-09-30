@@ -28,6 +28,9 @@ import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageRe
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedIgnoredTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceTestRequest;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,15 +76,21 @@ public class FormConfigurationTestConfiguration {
     }
 
     @Bean
+    public JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService() {
+        return new DefaultJavaToJavascriptTypeConversionService(Collections.singletonList(new DefaultJavaToJavascriptTypeConverter()));
+    }
+
+    @Bean
     public FormConfigurationService formConfigurationService(LocalValidatorFactoryBean validator, List<ConstrainedPropertyValidatorConverterService> constrainedPropertyValidatorConverterServiceList,
-                                                             FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService) {
+                                                             FormConfigurationAnnotationResolvingService formConfigurationAnnotationResolvingService,
+                                                             JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService) {
         Map<String, Class<?>> formIdConstraintHolderMap = new LinkedHashMap<>(formConfigurationAnnotationResolvingService.resolveFormConfigurations(Collections.singletonList("net.croz")));
 
         formIdConstraintHolderMap.put(SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedIgnoredTestRequest.class);
 
-        return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList);
+        return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList, javaToJavascriptTypeConversionService);
     }
 
     @Bean

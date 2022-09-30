@@ -46,15 +46,22 @@ public class NrichRegistryProperties {
     private final boolean defaultConverterEnabled;
 
     /**
+     * Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+     */
+    private final boolean defaultJavaToJavascriptConverterEnabled;
+
+    /**
      * Registry configuration used for defining entities and groups which will be managed.
      */
     private final RegistryConfiguration registryConfiguration;
 
     public NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue RegistrySearchProperties registrySearch, @DefaultValue("true") boolean defaultConverterEnabled,
+                                   @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
                                    RegistryConfiguration registryConfiguration) {
         this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
         this.registrySearch = registrySearch;
         this.defaultConverterEnabled = defaultConverterEnabled;
+        this.defaultJavaToJavascriptConverterEnabled = defaultJavaToJavascriptConverterEnabled;
         this.registryConfiguration = registryConfiguration;
     }
 

@@ -15,9 +15,10 @@
  *
  */
 
-package net.croz.nrich.javascript.util;
+package net.croz.nrich.javascript.converter;
 
-import net.croz.nrich.javascript.model.JavascriptType;
+import net.croz.nrich.javascript.api.model.JavascriptType;
+import net.croz.nrich.javascript.stub.TestEnum;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,18 +31,21 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class JavaToJavascriptTypeConversionUtilTest {
+class DefaultJavaToJavascriptTypeConverterTest {
+
+    private final DefaultJavaToJavascriptTypeConverter converter = new DefaultJavaToJavascriptTypeConverter();
 
     @MethodSource("shouldConvertJavaToJavascriptTypeMethodSource")
     @ParameterizedTest
     void shouldConvertJavaToJavascriptType(Class<?> javaType, JavascriptType javascriptType) {
         // when
-        JavascriptType result = JavaToJavascriptTypeConversionUtil.fromJavaType(javaType);
+        JavascriptType result = JavascriptType.valueOf(converter.convert(javaType).toUpperCase(Locale.ROOT));
 
         // then
         assertThat(result).isEqualTo(javascriptType);
@@ -66,28 +70,8 @@ class JavaToJavascriptTypeConversionUtilTest {
             arguments(Date.class, JavascriptType.DATE),
             arguments(java.sql.Date.class, JavascriptType.DATE),
             arguments(Boolean.class, JavascriptType.BOOLEAN),
-            arguments(Object.class, JavascriptType.OBJECT)
-        );
-    }
-
-    @MethodSource("shouldReturnTrueIfNumberIsDecimalMethodSource")
-    @ParameterizedTest
-    void shouldReturnTrueIfNumberIsDecimal(Class<?> type, boolean isDecimal) {
-        // when
-        boolean result = JavaToJavascriptTypeConversionUtil.isDecimal(type);
-
-        // then
-        assertThat(result).isEqualTo(isDecimal);
-    }
-
-    private static Stream<Arguments> shouldReturnTrueIfNumberIsDecimalMethodSource() {
-        return Stream.of(
-            arguments(Integer.class, false),
-            arguments(Short.class, false),
-            arguments(Long.class, false),
-            arguments(Float.class, true),
-            arguments(Double.class, true),
-            arguments(BigDecimal.class, true)
+            arguments(Object.class, JavascriptType.OBJECT),
+            arguments(TestEnum.class, JavascriptType.STRING)
         );
     }
 }

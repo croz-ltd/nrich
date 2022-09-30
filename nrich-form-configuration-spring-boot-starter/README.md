@@ -44,6 +44,7 @@ readability):
 | property                                            | description                                                                                                                                                                                                                                                                                                                                                   | default value |
 |-----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
 | default-converter-enabled                           | whether default converter service [`DefaultConstrainedPropertyValidatorConverterService`][default-constrained-property-validator-converter-service-url] for converting [`ConstrainedProperty`][constrained-property-url] instances to [`ConstrainedPropertyClientValidatorConfiguration`][constrained-property-client-validator-configuration-url] is enabled | true          |
+| default-java-to-javascript-converter-enabled        | whether default Java to Javascript type converter is enabled                                                                                                                                                                                                                                                                                                  | true          |
 | form-configuration-mapping                          | mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side)                                                                                                                                                                                                         |               |
 | form-validation-configuration-classes-package-list  | optional packages to scan for [`@FormValidationConfiguration`][form-configuration-annotation-url] annotated classes it can be used instead of form-configuration-mapping                                                                                                                                                                                      |               |
 
@@ -52,6 +53,7 @@ The default configuration values are given bellow in a yaml format for easier mo
 ```yaml
 nrich.form-configuration:
   default-converter-enabled: true
+  default-java-to-javascript-converter-enabled: true
   form-configuration-mapping:
   form-validation-configuration-classes-package-list:
 ```

@@ -38,6 +38,11 @@ public class NrichFormConfigurationProperties {
     private final boolean defaultConverterEnabled;
 
     /**
+     * Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+     */
+    private final boolean defaultJavaToJavascriptConverterEnabled;
+
+    /**
      * Mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side).
      */
     private final Map<String, Class<?>> formConfigurationMapping;
@@ -47,9 +52,10 @@ public class NrichFormConfigurationProperties {
      */
     private final List<String> formValidationConfigurationClassesPackageList;
 
-    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, Map<String, Class<?>> formConfigurationMapping,
-                                            List<String> formValidationConfigurationClassesPackageList) {
+    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
+                                            Map<String, Class<?>> formConfigurationMapping, List<String> formValidationConfigurationClassesPackageList) {
         this.defaultConverterEnabled = defaultConverterEnabled;
+        this.defaultJavaToJavascriptConverterEnabled = defaultJavaToJavascriptConverterEnabled;
         this.formConfigurationMapping = formConfigurationMapping;
         this.formValidationConfigurationClassesPackageList = formValidationConfigurationClassesPackageList;
     }

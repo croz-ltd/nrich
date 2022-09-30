@@ -23,6 +23,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
@@ -177,16 +181,31 @@ public class NrichRegistryAutoConfiguration {
         return new RegistryConfigurationUpdateInterceptor(registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap());
     }
 
+    @ConditionalOnProperty(name = "nrich.registry.default-java-to-javascript-converter-enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnMissingBean(name = "registryJavaToJavascriptTypeConverter")
+    @Bean
+    public JavaToJavascriptTypeConverter registryJavaToJavascriptTypeConverter() {
+        return new DefaultJavaToJavascriptTypeConverter();
+    }
+
+    @ConditionalOnMissingBean(name = "registryJavaToJavascriptTypeConversionService")
+    @Bean
+    public JavaToJavascriptTypeConversionService registryJavaToJavascriptTypeConversionService(@Autowired(required = false) List<JavaToJavascriptTypeConverter> converters) {
+        return new DefaultJavaToJavascriptTypeConversionService(converters);
+    }
+
     @ConditionalOnMissingBean
     @Bean
     public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService,
-                                                                     NrichRegistryProperties registryProperties) {
+                                                                     NrichRegistryProperties registryProperties, JavaToJavascriptTypeConversionService registryJavaToJavascriptTypeConversionService) {
         List<String> readOnlyPropertyList = Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList());
         RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
         Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
 
-        return new DefaultRegistryConfigurationService(messageSource, readOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap);
+        return new DefaultRegistryConfigurationService(
+            messageSource, readOnlyPropertyList, registryGroupDefinitionHolder, registryHistoryConfigurationHolder, registryOverrideConfigurationMap, registryJavaToJavascriptTypeConversionService
+        );
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
