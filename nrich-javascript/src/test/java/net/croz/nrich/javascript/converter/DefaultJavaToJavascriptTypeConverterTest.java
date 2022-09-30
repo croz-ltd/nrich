@@ -18,6 +18,7 @@
 package net.croz.nrich.javascript.converter;
 
 import net.croz.nrich.javascript.api.model.JavascriptType;
+import net.croz.nrich.javascript.stub.TestEnum;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -69,7 +70,8 @@ class DefaultJavaToJavascriptTypeConverterTest {
             arguments(Date.class, JavascriptType.DATE),
             arguments(java.sql.Date.class, JavascriptType.DATE),
             arguments(Boolean.class, JavascriptType.BOOLEAN),
-            arguments(Object.class, JavascriptType.OBJECT)
+            arguments(Object.class, JavascriptType.OBJECT),
+            arguments(TestEnum.class, JavascriptType.STRING)
         );
     }
 }

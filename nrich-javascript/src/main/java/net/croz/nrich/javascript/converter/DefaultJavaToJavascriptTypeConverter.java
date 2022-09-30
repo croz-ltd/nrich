@@ -41,6 +41,7 @@ public class DefaultJavaToJavascriptTypeConverter implements JavaToJavascriptTyp
         CLASS_JAVASCRIPT_TYPE_MAP.put(Date.class, JavascriptType.DATE);
         CLASS_JAVASCRIPT_TYPE_MAP.put(Temporal.class, JavascriptType.DATE);
         CLASS_JAVASCRIPT_TYPE_MAP.put(Number.class, JavascriptType.NUMBER);
+        CLASS_JAVASCRIPT_TYPE_MAP.put(Enum.class, JavascriptType.STRING);
     }
 
     @Override
