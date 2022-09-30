@@ -21,7 +21,6 @@ import net.croz.nrich.formconfiguration.FormConfigurationTestConfiguration;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration;
 import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfiguration;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
-import net.croz.nrich.javascript.model.JavascriptType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -86,7 +85,7 @@ class DefaultFormConfigurationServiceTest {
             "name", "lastName", "timestamp", "value"
         );
         assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getJavascriptType).containsExactlyInAnyOrder(
-            JavascriptType.STRING, JavascriptType.STRING, JavascriptType.DATE, JavascriptType.NUMBER
+            "string", "string", "date", "number"
         );
 
         // and when

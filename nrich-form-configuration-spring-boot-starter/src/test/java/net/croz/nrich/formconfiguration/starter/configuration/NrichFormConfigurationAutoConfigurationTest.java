@@ -25,6 +25,8 @@ import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.configuration.stub.FormConfigurationTestRequest;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
+import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -49,6 +51,7 @@ class NrichFormConfigurationAutoConfigurationTest {
             assertThat(context).hasSingleBean(FieldErrorMessageResolverService.class);
             assertThat(context).hasSingleBean(FormConfigurationService.class);
             assertThat(context).hasSingleBean(FormConfigurationController.class);
+            assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
         });
     }
 
@@ -67,6 +70,14 @@ class NrichFormConfigurationAutoConfigurationTest {
         // expect
         contextRunner.withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.form-configuration.default-converter-enabled=false").run(context ->
             assertThat(context).doesNotHaveBean(ConstrainedPropertyValidatorConverterService.class)
+        );
+    }
+
+    @Test
+    void shouldNotCreateDefaultJavaToJavascriptConverterWhenCreationIsDisabled() {
+        // expect
+        contextRunner.withBean(LocalValidatorFactoryBean.class).withPropertyValues("nrich.form-configuration.default-java-to-javascript-converter-enabled=false").run(context ->
+            assertThat(context).doesNotHaveBean(JavaToJavascriptTypeConverter.class)
         );
     }
 

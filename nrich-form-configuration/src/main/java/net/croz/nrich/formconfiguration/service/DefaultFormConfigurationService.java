@@ -24,8 +24,7 @@ import net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyConfigurati
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
-import net.croz.nrich.javascript.model.JavascriptType;
-import net.croz.nrich.javascript.util.JavaToJavascriptTypeConversionUtil;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import org.springframework.cache.annotation.Cacheable;
 
 import javax.validation.Validator;
@@ -50,6 +49,8 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     private final Map<String, Class<?>> formIdConstraintHolderMap;
 
     private final List<ConstrainedPropertyValidatorConverterService> constraintConverterServiceList;
+
+    private final JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService;
 
     @Cacheable(value = "nrich.formConfiguration.cache", key = "'all-forms-' + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
@@ -87,7 +88,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
 
             if (!constrainedPropertyClientValidatorConfigurationList.isEmpty()) {
                 Class<?> propertyType = propertyDescriptor.getElementClass();
-                JavascriptType javascriptType = JavaToJavascriptTypeConversionUtil.fromJavaType(propertyType);
+                String javascriptType = javaToJavascriptTypeConversionService.convert(propertyType);
                 constrainedPropertyConfigurationList.add(
                     new ConstrainedPropertyConfiguration(propertyPath, propertyType, javascriptType, constrainedPropertyClientValidatorConfigurationList)
                 );
