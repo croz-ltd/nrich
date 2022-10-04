@@ -57,6 +57,7 @@ class WebMvcNotificationResponseServiceTest {
         );
 
         when(notificationResolverService.createNotificationForAction(eq("actionPrefix.actionSuffix"), any(AdditionalNotificationData.class))).thenReturn(firstNotification);
+        when(notificationResolverService.createNotificationForAction(eq("actionPrefix.actionSuffix.post"), any(AdditionalNotificationData.class))).thenReturn(firstNotification);
         when(notificationResolverService.createNotificationForValidationFailure(any(Errors.class), any(), any(AdditionalNotificationData.class))).thenReturn(firstValidationNotification);
         when(notificationResolverService.createNotificationForValidationFailure(any(ConstraintViolationException.class), any(AdditionalNotificationData.class))).thenReturn(secondValidationNotification);
         when(notificationResolverService.createNotificationForException(any(Throwable.class), any(AdditionalNotificationData.class))).thenReturn(secondNotification);
