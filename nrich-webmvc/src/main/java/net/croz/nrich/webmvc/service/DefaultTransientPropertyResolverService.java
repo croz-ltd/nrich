@@ -36,7 +36,7 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
 
         while (currentType != Object.class) {
             List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
-                .filter(field -> Modifier.isTransient(field.getModifiers()) && !field.isSynthetic())
+                .filter(this::includeField)
                 .map(Field::getName)
                 .collect(Collectors.toList());
 
@@ -46,5 +46,13 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
         }
 
         return transientPropertyList;
+    }
+
+    private boolean includeField(Field field) {
+        if (field.isSynthetic()) {
+            return false;
+        }
+
+        return Modifier.isTransient(field.getModifiers());
     }
 }
