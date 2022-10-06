@@ -325,8 +325,8 @@ Example of manual providing:
 
 ```java
 @RequiredArgsConstructor
-@RestController
 @RequestMapping("notification-example")
+@RestController
 public class ExampleController {
 
     private final NotificationResponseService notificationResponseService;
@@ -369,8 +369,8 @@ Example of automatic resolving:
 
 ```java
 @RequiredArgsConstructor
-@RestController
 @RequestMapping("notification-example")
+@RestController
 public class ExampleController {
 
     private final NotificationResponseService notificationResponseService;
