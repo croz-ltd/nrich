@@ -56,14 +56,12 @@ public class DefaultNotificationResolverService implements NotificationResolverS
 
         String title;
         if (typeName == null) {
-            title = notificationMessageResolverService.resolveMessage(toList(NotificationConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE), NotificationConstants.VALIDATION_FAILED_DEFAULT_TITLE);
+            title = notificationMessageResolverService.resolveMessage(toList(NotificationConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
         }
         else {
             String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
 
-            title = notificationMessageResolverService.resolveMessage(
-                toList(titleCode, NotificationConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE), NotificationConstants.VALIDATION_FAILED_DEFAULT_TITLE
-            );
+            title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.VALIDATION_FAILED_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
         }
 
         String content = notificationMessageResolverService.resolveMessage(toList(NotificationConstants.VALIDATION_FAILED_CONTENT_CODE));
@@ -93,9 +91,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         String typeName = throwable.getClass().getName();
         String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
 
-        String title = notificationMessageResolverService.resolveMessage(
-            toList(titleCode, NotificationConstants.ERROR_OCCURRED_MESSAGE_TITLE_CODE), NotificationConstants.ERROR_OCCURRED_DEFAULT_TITLE
-        );
+        String title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.ERROR_OCCURRED_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
         String contentCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_CONTENT_SUFFIX);
         String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
 
@@ -111,7 +107,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, actionName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
         String contentCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, actionName, NotificationConstants.MESSAGE_CONTENT_SUFFIX);
 
-        String title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.SUCCESS_MESSAGE_TITLE_CODE), NotificationConstants.SUCCESS_DEFAULT_TITLE);
+        String title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.SUCCESS_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
         String content = notificationMessageResolverService.resolveMessage(toList(contentCode, NotificationConstants.SUCCESS_DEFAULT_CODE));
         NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.INFO);
         List<String> messageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
