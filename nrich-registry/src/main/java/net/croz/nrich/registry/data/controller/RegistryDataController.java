@@ -61,8 +61,8 @@ public class RegistryDataController {
     }
 
     @PostMapping("delete")
-    public <T> T delete(@RequestBody @Valid DeleteRegistryRequest request) {
-        return registryDataService.delete(request.getClassFullName(), request.getId());
+    public void delete(@RequestBody @Valid DeleteRegistryRequest request) {
+        registryDataService.delete(request.getClassFullName(), request.getId());
     }
 
     @PostMapping("create")

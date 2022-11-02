@@ -179,8 +179,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         ResultActions result = performPostRequest(requestUrl, request);
 
         // then
-        result.andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(registryTestEntity.getId()));
+        result.andExpect(status().isOk());
     }
 
     @Test
