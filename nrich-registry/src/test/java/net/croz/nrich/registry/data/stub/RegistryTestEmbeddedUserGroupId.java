@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,24 +31,24 @@ import java.util.Objects;
 @Embeddable
 public class RegistryTestEmbeddedUserGroupId implements Serializable {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private RegistryTestEmbeddedUser user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private RegistryTestEmbeddedGroup group;
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(object instanceof RegistryTestEmbeddedUserGroupId)) {
             return false;
         }
 
-        RegistryTestEmbeddedUserGroupId that = (RegistryTestEmbeddedUserGroupId) o;
+        RegistryTestEmbeddedUserGroupId that = (RegistryTestEmbeddedUserGroupId) object;
 
-        return user.getId().equals(that.user.getId()) && group.getId().equals(that.group.getId());
+        return Objects.equals(user.getId(), that.user.getId()) && Objects.equals(group.getId(), that.group.getId());
     }
 
     @Override

@@ -15,18 +15,17 @@
  *
  */
 
-package net.croz.nrich.registry.core.constants;
+package net.croz.nrich.registry.core.support;
 
-public final class RegistryCoreConstants {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-    public static final String BLANK = "";
+@Getter
+@RequiredArgsConstructor
+public class SingularAssociation {
 
-    public static final String DOT = ".";
+    private final String path;
 
-    public static final String SPACE = " ";
+    private final boolean optional;
 
-    public static final String PREFIX_FORMAT = "%s.%s";
-
-    private RegistryCoreConstants() {
-    }
 }

@@ -36,6 +36,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithEmbeddedId;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithIdClass;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
+import net.croz.nrich.registry.data.stub.RegistryTestGroupType;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 
 import javax.persistence.EntityManager;
@@ -260,6 +261,23 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
+    public static UpdateRegistryRequest createUpdateEmbeddedUserGroupRequest(ObjectMapper objectMapper, RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup) throws Exception {
+        UpdateRegistryRequest request = new UpdateRegistryRequest();
+
+        Map<String, Object> idMap = new HashMap<>();
+
+        idMap.put("user", registryTestEmbeddedUserGroup.getUserGroupId().getUser());
+        idMap.put("group", registryTestEmbeddedUserGroup.getUserGroupId().getGroup());
+
+        registryTestEmbeddedUserGroup.setJoinedPropertyValue("updated");
+
+        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
+        request.setId(idMap);
+        request.setJsonEntityData(objectMapper.writeValueAsString(registryTestEmbeddedUserGroup));
+
+        return request;
+    }
+
     public static Map<String, Object> registryTestEntityWithIdClassId(RegistryTestEntityWithIdClass entity) {
 
         Map<String, Object> idMap = new HashMap<>();
@@ -329,6 +347,17 @@ public final class RegistryDataGeneratingUtil {
         RegistryTestEmbeddedGroup entity = new RegistryTestEmbeddedGroup();
 
         entity.setName("user group");
+        entity.setGroupType(createRegistryTestGroupType(entityManager));
+
+        entityManager.persist(entity);
+
+        return entity;
+    }
+
+    private static RegistryTestGroupType createRegistryTestGroupType(EntityManager entityManager) {
+        RegistryTestGroupType entity = new RegistryTestGroupType();
+
+        entity.setName("group type");
 
         entityManager.persist(entity);
 

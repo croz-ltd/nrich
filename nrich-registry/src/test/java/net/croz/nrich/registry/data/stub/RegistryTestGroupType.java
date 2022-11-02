@@ -15,18 +15,27 @@
  *
  */
 
-package net.croz.nrich.registry.core.constants;
+package net.croz.nrich.registry.data.stub;
 
-public final class RegistryCoreConstants {
+import lombok.Getter;
+import lombok.Setter;
 
-    public static final String BLANK = "";
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
-    public static final String DOT = ".";
+@Setter
+@Getter
+@Entity
+public class RegistryTestGroupType {
 
-    public static final String SPACE = " ";
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-    public static final String PREFIX_FORMAT = "%s.%s";
+    @NotNull
+    private String name;
 
-    private RegistryCoreConstants() {
-    }
 }

@@ -50,7 +50,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
-            .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.getName()))
+            .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.getPath()))
             .collect(Collectors.joining(RegistryCoreConstants.SPACE));
 
         String entityWithAlias = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryQueryConstants.ENTITY_ALIAS);

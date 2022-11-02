@@ -30,6 +30,7 @@ import net.croz.nrich.registry.core.model.RegistryGroupDefinition;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
+import net.croz.nrich.registry.core.support.SingularAssociation;
 import net.croz.nrich.registry.core.util.AnnotationUtil;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
@@ -39,7 +40,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.IdentifiableType;
 import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.SingularAttribute;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -202,8 +202,8 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         return searchConfiguration;
     }
 
-    private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(List<SingularAttribute<?, ?>> associationList, String prefix) {
+    private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(List<SingularAssociation> associationList, String prefix) {
         return associationList.stream()
-            .map(attribute -> attribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + attribute.getName()) : SearchJoin.innerJoinFetch(prefix + attribute.getName()));
+            .map(attribute -> attribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + attribute.getPath()) : SearchJoin.innerJoinFetch(prefix + attribute.getPath()));
     }
 }
