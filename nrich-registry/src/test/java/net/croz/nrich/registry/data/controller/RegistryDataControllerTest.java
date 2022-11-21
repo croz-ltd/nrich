@@ -43,6 +43,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithParent;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryRequest;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -179,8 +180,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         ResultActions result = performPostRequest(requestUrl, request);
 
         // then
-        result.andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(registryTestEntity.getId()));
+        result.andExpect(status().isOk());
     }
 
     @Test
@@ -190,6 +190,36 @@ class RegistryDataControllerTest extends BaseControllerTest {
 
         String requestUrl = fullUrl("delete");
         DeleteRegistryRequest request = createDeleteEmbeddedUserGroupRequest(registryTestEmbeddedUserGroup.getUserGroupId());
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotFailListingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
+        // given
+        executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+
+        String requestUrl = fullUrl("list");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), "%");
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotFailUpdatingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
+        // given
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+
+        String requestUrl = fullUrl("update");
+        UpdateRegistryRequest request = createUpdateEmbeddedUserGroupRequest(objectMapper, registryTestEmbeddedUserGroup);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);

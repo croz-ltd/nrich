@@ -18,6 +18,7 @@
 package net.croz.nrich.registry.core.support;
 
 import lombok.Getter;
+import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
 import org.springframework.util.Assert;
 
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,9 +53,9 @@ public class ManagedTypeWrapper {
 
     private final boolean isIdentifierAssigned;
 
-    private final List<SingularAttribute<?, ?>> singularAssociationList;
+    private final List<SingularAssociation> singularAssociationList;
 
-    private final List<SingularAttribute<?, ?>> singularEmbeddedTypeAssociationList;
+    private final List<SingularAssociation> singularEmbeddedTypeAssociationList;
 
     private final EmbeddableType<?> embeddableIdType;
 
@@ -98,8 +100,31 @@ public class ManagedTypeWrapper {
             .noneMatch(annotationList -> Arrays.stream(annotationList).anyMatch(annotation -> GeneratedValue.class.equals(annotation.annotationType())));
     }
 
-    private List<SingularAttribute<?, ?>> resolveSingularAssociationList(ManagedType<?> managedType) {
-        return managedType.getSingularAttributes().stream()
-            .filter(Attribute::isAssociation).collect(Collectors.toList());
+    private List<SingularAssociation> resolveSingularAssociationList(ManagedType<?> managedType) {
+        Map<String, SingularAssociation> associationMap = new HashMap<>();
+
+        resolveSingularAssociationList(managedType, null, null, associationMap);
+
+        return new ArrayList<>(associationMap.values());
+    }
+
+    private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap) {
+        List<SingularAttribute<?, ?>> currentAssociations = managedType.getSingularAttributes().stream()
+            .filter(Attribute::isAssociation)
+            .collect(Collectors.toList());
+
+        for (SingularAttribute<?, ?> association : currentAssociations) {
+            String associationName = currentPrefix == null ? association.getName() : String.format(RegistryCoreConstants.PREFIX_FORMAT, currentPrefix, association.getName());
+            boolean isCurrentPathOptional = isCurrentAssociationPathOptional == null ? association.isOptional() : isCurrentAssociationPathOptional || association.isOptional();
+
+            singularAssociationMap.put(associationName, new SingularAssociation(associationName, isCurrentPathOptional));
+            if (currentPrefix != null) {
+                singularAssociationMap.remove(currentPrefix);
+            }
+
+            if (!association.getJavaType().equals(managedType.getJavaType())) {
+                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), association.getName(), singularAssociationMap);
+            }
+        }
     }
 }
