@@ -6,6 +6,8 @@ dependencies {
   annotationProcessor "org.projectlombok:lombok"
   compileOnly "org.projectlombok:lombok"
 
+  implementation "jakarta.websocket:jakarta.websocket-api"
+  implementation "jakarta.websocket:jakarta.websocket-client-api"
   implementation "org.slf4j:slf4j-api"
   implementation "org.springframework:spring-web"
 
