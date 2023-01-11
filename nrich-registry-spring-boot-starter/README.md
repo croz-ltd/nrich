@@ -72,6 +72,9 @@ nrich.registry:
 
 ```
 
+Overriding of default registry behaviour (i.e. in search configuration which operators are used for searching) is possible by defining a bean of
+type [RegistryOverrideConfigurationHolder](../nrich-registry-api/src/main/java/net/croz/nrich/registry/api/core/model/RegistryOverrideConfigurationHolder.java)
+
 ### Using the module
 
 This module is meant to be used through REST API and as such exposes multiple endpoints. For a detailed description of each endpoint see `nrich-registry` [README.MD](../nrich-registry/README.md).
