@@ -23,12 +23,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
-import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
-import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
@@ -80,6 +81,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -171,7 +173,20 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryConfigurationResolverService registryConfigurationResolverService(NrichRegistryProperties registryProperties) {
+    public RegistryConfigurationResolverService registryConfigurationResolverService(NrichRegistryProperties registryProperties,
+                                                                                     @Autowired(required = false) List<RegistryOverrideConfigurationHolder> registryOverrideConfigurationHolderList) {
+
+        List<RegistryOverrideConfigurationHolder> overrideConfigurationHolderList = registryProperties.getRegistryConfiguration().getOverrideConfigurationHolderList();
+
+        if (overrideConfigurationHolderList == null) {
+            overrideConfigurationHolderList = new ArrayList<>();
+        }
+        if (registryOverrideConfigurationHolderList != null) {
+            overrideConfigurationHolderList.addAll(registryOverrideConfigurationHolderList);
+        }
+
+        registryProperties.getRegistryConfiguration().setOverrideConfigurationHolderList(overrideConfigurationHolderList);
+
         return new DefaultRegistryConfigurationResolverService(entityManager, registryProperties.getRegistryConfiguration());
     }
 

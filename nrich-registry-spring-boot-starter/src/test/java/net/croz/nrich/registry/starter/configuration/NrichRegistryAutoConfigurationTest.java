@@ -24,6 +24,7 @@ import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionServi
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
+import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
@@ -195,6 +196,19 @@ class NrichRegistryAutoConfigurationTest {
             // then
             assertThat(result.getId()).isEqualTo("initial");
             assertThat(result.getName()).isEqualTo("name");
+        });
+    }
+
+    @Test
+    void shouldRegisterRegistryOverrideConfiguration() {
+        RegistryOverrideConfigurationHolder holder = RegistryOverrideConfigurationHolder.builder().build();
+
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(RegistryOverrideConfigurationHolder.class, () -> holder).run(context -> {
+            // when
+            NrichRegistryProperties registryProperties = context.getBean(NrichRegistryProperties.class);
+
+            // then
+            assertThat(registryProperties.getRegistryConfiguration().getOverrideConfigurationHolderList()).containsExactly(holder);
         });
     }
 }
