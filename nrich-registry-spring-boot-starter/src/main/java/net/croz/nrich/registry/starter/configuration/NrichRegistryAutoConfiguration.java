@@ -30,6 +30,7 @@ import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionSe
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
@@ -40,6 +41,7 @@ import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
+import net.croz.nrich.registry.core.service.DefaultRegistryClassResolvingService;
 import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
@@ -243,10 +245,17 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
+    public RegistryClassResolvingService registryClassResolvingService(RegistryConfigurationResolverService registryConfigurationResolverService, NrichRegistryProperties registryProperties) {
+        Map<String, Class<?>> createRegistryClassMapping = registryProperties.getRegistryConfiguration().getCreateRegistryClassMapping();
+        Map<String, Class<?>> updateRegistryClassMapping = registryProperties.getRegistryConfiguration().getUpdateRegistryClassMapping();
 
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryDataConfigurationHolder);
+        return new DefaultRegistryClassResolvingService(registryConfigurationResolverService.resolveRegistryDataConfiguration(), createRegistryClassMapping, updateRegistryClassMapping);
+    }
+
+    @ConditionalOnMissingBean
+    @Bean
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
@@ -277,12 +286,13 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean(name = "registryDataFormConfigurationMappingCustomizer")
     @Bean
-    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                                                             RegistryClassResolvingService registryClassResolvingService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
             .map(RegistryDataConfiguration::getRegistryType)
             .collect(Collectors.toList());
 
-        return new RegistryDataFormConfigurationMappingCustomizer(registryClassList);
+        return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);
     }
 
     private ModelMapper strictModelMapper() {

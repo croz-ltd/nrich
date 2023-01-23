@@ -20,42 +20,29 @@ package net.croz.nrich.registry.data.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
-import net.croz.nrich.registry.data.util.ClassLoadingUtil;
-
-import java.util.Arrays;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class DefaultRegistryDataRequestConversionService implements RegistryDataRequestConversionService {
 
     private final ObjectMapper objectMapper;
 
-    private final RegistryDataConfigurationHolder registryDataConfigurationHolder;
+    private final RegistryClassResolvingService registryClassResolvingService;
 
     @Override
     public Object convertEntityDataToTyped(CreateRegistryRequest request) {
-        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.CREATE_REQUEST_CLASS_NAME_FORMAT);
+        Class<?> type = registryClassResolvingService.resolveCreateClass(request.getClassFullName());
 
         return convertStringToInstance(request.getJsonEntityData(), type);
     }
 
     @Override
     public Object convertEntityDataToTyped(UpdateRegistryRequest request) {
-        Class<?> type = resolveClassWithConfigurationVerification(request.getClassFullName(), RegistryDataConstants.UPDATE_REQUEST_CLASS_NAME_FORMAT);
+        Class<?> type = registryClassResolvingService.resolveUpdateClass(request.getClassFullName());
 
         return convertStringToInstance(request.getJsonEntityData(), type);
-    }
-
-    private Class<?> resolveClassWithConfigurationVerification(String classFullName, String classLoadingInitialPrefix) {
-        registryDataConfigurationHolder.verifyConfigurationExists(classFullName);
-
-        List<String> classNameList = Arrays.asList(String.format(classLoadingInitialPrefix, classFullName), String.format(RegistryDataConstants.REQUEST_CLASS_NAME_FORMAT, classFullName), classFullName);
-
-        return ClassLoadingUtil.loadClassFromList(classNameList);
     }
 
     @SneakyThrows

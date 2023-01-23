@@ -19,17 +19,16 @@ package net.croz.nrich.registry.data.customizer;
 
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
-import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
-import net.croz.nrich.registry.data.util.ClassLoadingUtil;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
+import net.croz.nrich.registry.core.constants.RegistryClassResolvingConstants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
 public class RegistryDataFormConfigurationMappingCustomizer implements FormConfigurationMappingCustomizer {
+
+    private final RegistryClassResolvingService registryClassResolvingService;
 
     private final List<Class<?>> registryClassList;
 
@@ -41,38 +40,11 @@ public class RegistryDataFormConfigurationMappingCustomizer implements FormConfi
     private void registerRegistryFormConfiguration(Map<String, Class<?>> formConfigurationMap) {
         registryClassList.forEach(registryClass -> {
             String registryClassName = registryClass.getName();
-            String registryCreateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
-            String registryUpdateFormId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
+            String registryCreateFormId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
+            String registryUpdateFormId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, registryClassName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
 
-            formConfigurationMap.computeIfAbsent(registryCreateFormId, key -> resolveClassByPackage(registryClassName, RegistryDataConstants.CREATE_REQUEST_CLASS_NAME_FORMAT));
-            formConfigurationMap.computeIfAbsent(registryUpdateFormId, key -> resolveClassByPackage(registryClassName, RegistryDataConstants.UPDATE_REQUEST_CLASS_NAME_FORMAT));
+            formConfigurationMap.computeIfAbsent(registryCreateFormId, key -> registryClassResolvingService.resolveCreateClass(registryClassName));
+            formConfigurationMap.computeIfAbsent(registryUpdateFormId, key -> registryClassResolvingService.resolveUpdateClass(registryClassName));
         });
-    }
-
-    private Class<?> resolveClassByPackage(String registryFullClassName, String requestClassNameFormat) {
-        List<String> registryClassNameList = new ArrayList<>(Arrays.asList(registryFullClassName.split(RegistryDataConstants.PACKAGE_SEPARATOR)));
-
-        int indexOfLastPackage = registryClassNameList.size() - 2;
-        if (RegistryDataConstants.CLASS_NAME_SUFFIX_LIST_TO_REPLACE.contains(registryClassNameList.get(indexOfLastPackage))) {
-            registryClassNameList.remove(registryClassNameList.get(indexOfLastPackage));
-        }
-
-        registryClassNameList.add(registryClassNameList.size() - 1, RegistryDataConstants.REQUEST_CLASS_PACKAGE_NAME);
-
-        String fullClassNameWithRequestPackage = String.join(RegistryCoreConstants.DOT, registryClassNameList);
-
-        return resolveClass(registryFullClassName, fullClassNameWithRequestPackage, requestClassNameFormat);
-    }
-
-    private Class<?> resolveClass(String fullClassName, String fullClassNameWithRequestPackage, String requestClassNameFormat) {
-        List<String> classNameList = Arrays.asList(
-            String.format(requestClassNameFormat, fullClassNameWithRequestPackage),
-            String.format(RegistryDataConstants.REQUEST_CLASS_NAME_FORMAT, fullClassNameWithRequestPackage),
-            String.format(requestClassNameFormat, fullClassName),
-            String.format(RegistryDataConstants.REQUEST_CLASS_NAME_FORMAT, fullClassName),
-            fullClassName
-        );
-
-        return ClassLoadingUtil.loadClassFromList(classNameList);
     }
 }

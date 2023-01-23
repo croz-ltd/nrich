@@ -17,13 +17,17 @@
 
 package net.croz.nrich.registry.data.customizer;
 
-import net.croz.nrich.registry.data.constant.RegistryDataConstants;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
+import net.croz.nrich.registry.core.constants.RegistryClassResolvingConstants;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityUpdateRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.model.RegistryCustomizerTestEntity;
-import net.croz.nrich.registry.data.stub.request.RegistryCustomizerTestEntityCreateRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,21 +36,32 @@ import java.util.Map;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataMapGeneratingUtil.createFormConfigurationMap;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
+@ExtendWith(MockitoExtension.class)
 class RegistryDataFormConfigurationMappingCustomizerTest {
 
     private static final List<Class<?>> REGISTRY_CLASS_LIST = Arrays.asList(
         RegistryTestEntity.class, RegistryTestEntityWithOverriddenFormConfiguration.class, RegistryCustomizerTestEntity.class
     );
 
-    private final RegistryDataFormConfigurationMappingCustomizer formConfigurationMappingCustomizer = new RegistryDataFormConfigurationMappingCustomizer(REGISTRY_CLASS_LIST);
+    @Mock
+    private RegistryClassResolvingService registryClassResolvingService;
+
+    private RegistryDataFormConfigurationMappingCustomizer formConfigurationMappingCustomizer;
+
+    @BeforeEach
+    void setup() {
+        formConfigurationMappingCustomizer = new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, REGISTRY_CLASS_LIST);
+    }
 
     @Test
     void shouldResolveRegistryFormConfigurationForEntityWithoutCreateRequest() {
         // given
-        Class<?> entity = RegistryTestEntity.class;
-        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entity.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
+        String classFullName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, classFullName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
         Map<String, Class<?>> formConfiguration = new HashMap<>();
+        doReturn(RegistryTestEntity.class).when(registryClassResolvingService).resolveCreateClass(classFullName);
 
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
@@ -58,22 +73,23 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
     @Test
     void shouldResolveRegistryFormConfigurationForEntityWithoutUpdateRequest() {
         // given
-        Class<?> entity = RegistryTestEntity.class;
-        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entity.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
+        String classFullName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, classFullName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
         Map<String, Class<?>> formConfiguration = new HashMap<>();
+        doReturn(RegistryTestEntity.class).when(registryClassResolvingService).resolveUpdateClass(classFullName);
 
         // when
         formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
 
         // then
-        assertThat(formConfiguration).containsEntry(formId, RegistryTestEntityUpdateRequest.class);
+        assertThat(formConfiguration).containsEntry(formId, RegistryTestEntity.class);
     }
 
     @Test
     void shouldNotAddFormConfigurationForExistingCreateRequest() {
         // given
-        Class<?> entity = RegistryTestEntity.class;
-        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entity.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
+        String classFullName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, classFullName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
         Map<String, Class<?>> formConfiguration = createFormConfigurationMap(formId, Object.class);
 
         // when
@@ -86,8 +102,8 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
     @Test
     void shouldNotAddFormConfigurationForExistingUpdateRequest() {
         // given
-        Class<?> entity = RegistryTestEntity.class;
-        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entity.getName(), RegistryDataConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
+        String classFullName = RegistryTestEntity.class.getName();
+        String formId = String.format(RegistryClassResolvingConstants.REGISTRY_FORM_ID_FORMAT, classFullName, RegistryClassResolvingConstants.REGISTRY_FORM_ID_UPDATE_SUFFIX);
         Map<String, Class<?>> formConfiguration = createFormConfigurationMap(formId, Object.class);
 
         // when
@@ -95,18 +111,5 @@ class RegistryDataFormConfigurationMappingCustomizerTest {
 
         // then
         assertThat(formConfiguration).containsEntry(formId, Object.class);
-    }
-
-    @Test
-    void shouldLoadClassFromRequestPackage() {
-        Class<?> entity = RegistryCustomizerTestEntity.class;
-        String formId = String.format(RegistryDataConstants.REGISTRY_FORM_ID_FORMAT, entity.getName(), RegistryDataConstants.REGISTRY_FORM_ID_CREATE_SUFFIX);
-        Map<String, Class<?>> formConfiguration = new HashMap<>();
-
-        // when
-        formConfigurationMappingCustomizer.customizeConfigurationMapping(formConfiguration);
-
-        // then
-        assertThat(formConfiguration).containsEntry(formId, RegistryCustomizerTestEntityCreateRequest.class);
     }
 }
