@@ -38,6 +38,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchC
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import net.croz.nrich.registry.data.stub.RegistryTestGroupType;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
+import net.croz.nrich.registry.data.stub.request.CreateEntityRequest;
 
 import javax.persistence.EntityManager;
 import java.util.Arrays;
@@ -288,6 +289,18 @@ public final class RegistryDataGeneratingUtil {
         return idMap;
     }
 
+    public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name, Long parentId) {
+        CreateEntityRequest parent = new CreateEntityRequest();
+
+        parent.setId(parentId);
+
+        CreateRegistryTestEntityRequest request = createRegistryTestEntityRequest(name);
+
+        request.setParent(parent);
+
+        return request;
+    }
+
     public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name) {
         CreateRegistryTestEntityRequest request = new CreateRegistryTestEntityRequest();
 
@@ -297,10 +310,10 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
-    public static UpdateRegistryTestEntityRequest createUpdateRegistryTestEntityRequest() {
+    public static UpdateRegistryTestEntityRequest createUpdateRegistryTestEntityRequest(Long id) {
         UpdateRegistryTestEntityRequest request = new UpdateRegistryTestEntityRequest();
 
-        request.setId(100L);
+        request.setId(id);
         request.setName("name 2");
         request.setAge(51);
 

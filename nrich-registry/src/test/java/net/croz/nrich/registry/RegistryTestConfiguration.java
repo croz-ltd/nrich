@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
-import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
@@ -61,7 +61,6 @@ import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
-import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,22 +126,12 @@ public class RegistryTestConfiguration {
 
     @Bean
     public ModelMapper registryDataModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
-
-        modelMapper.getConfiguration().setPropertyCondition(skipIds);
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return modelMapper;
+        return strictModelMapper();
     }
 
     @Bean
     public ModelMapper registryBaseModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return modelMapper;
+        return strictModelMapper();
     }
 
     @Bean
@@ -332,5 +321,13 @@ public class RegistryTestConfiguration {
             .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
         return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
+    }
+
+    private ModelMapper strictModelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return modelMapper;
     }
 }

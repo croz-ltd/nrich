@@ -15,20 +15,15 @@
  *
  */
 
-package net.croz.nrich.registry.data.stub;
+package net.croz.nrich.registry.data.stub.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.croz.nrich.registry.data.stub.request.CreateEntityRequest;
 
 @Setter
 @Getter
-public class CreateRegistryTestEntityRequest {
+public class CreateEntityRequest {
 
-    private String name;
-
-    private Integer age;
-
-    private CreateEntityRequest parent;
+    private Long id;
 
 }

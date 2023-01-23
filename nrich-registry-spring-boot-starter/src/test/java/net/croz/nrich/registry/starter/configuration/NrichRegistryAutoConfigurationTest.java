@@ -33,12 +33,10 @@ import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
-import net.croz.nrich.registry.starter.configuration.stub.ModelMapperTestEntity;
 import net.croz.nrich.registry.starter.properties.NrichRegistryProperties;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
@@ -177,26 +175,6 @@ class NrichRegistryAutoConfigurationTest {
             .withPropertyValues("nrich.registry.default-java-to-javascript-converter-enabled=false").run(context ->
                 assertThat(context).doesNotHaveBean(JavaToJavascriptTypeConverter.class)
             );
-    }
-
-    @Test
-    void shouldSkipIdCopyInRegisteredModelMapperInstance() {
-        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class).run(context -> {
-            // given
-            ModelMapper modelMapper = context.getBean("registryDataModelMapper", ModelMapper.class);
-            ModelMapperTestEntity modelMapperTestEntity = new ModelMapperTestEntity();
-
-            modelMapperTestEntity.setName("name");
-            modelMapperTestEntity.setId("id");
-
-            // when
-            ModelMapperTestEntity result = new ModelMapperTestEntity();
-            modelMapper.map(modelMapperTestEntity, result);
-
-            // then
-            assertThat(result.getId()).isEqualTo("initial");
-            assertThat(result.getName()).isEqualTo("name");
-        });
     }
 
     @Test
