@@ -26,8 +26,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.GroupSequence;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+@GroupSequence({ RegistryTestEntity.class, ValidationGroupOne.class })
 @Setter
 @Getter
 @Entity
@@ -40,6 +43,7 @@ public class RegistryTestEntity {
     @NotNull
     private String name;
 
+    @Min(groups = ValidationGroupOne.class, value = 20)
     @NotNull
     private Integer age;
 
