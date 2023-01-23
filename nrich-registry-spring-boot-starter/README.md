@@ -42,15 +42,17 @@ Note if using `nrich-bom` dependency versions should be omitted.
 
 Configuration is done through a property file, available properties and descriptions are given bellow (all properties are prefixed with nrich.registry which is omitted for readability):
 
-| property                                          | description                                                                                                                | default value                                             |
-|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------|
-| default-read-only-property-list                   | List of property names that should always be marked as readonly                                                            |                                                           |
-| default-converter-enabled                         | Whether default string to type converter used for converting strings to property values when searching registry is enabled | true                                                      |
-| default-java-to-javascript-converter-enabled      | Whether default Java to Javascript type converter is enabled                                                               | true                                                      |
-| registry-search.date-format-list                  | List of date formats used to convert string to date value                                                                  | dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z'  |
-| registry-search.decimal-number-format-list        | List of decimal formats used to convert string to decimal value                                                            | #0.00, #0,00                                              |
-| registry-search.boolean-true-regex-pattern        | Regexp pattern that is used to match boolean true values                                                                   | ^(?i)\s*(true&#124;yes&#124;da)\s*$                       |
-| registry-search.boolean-false-regex-pattern       | Regexp pattern that is used to match boolean false values                                                                  | ^(?i)\s*(false&#124;no&#124;ne)\s*$                       |
+| property                                               | description                                                                                                                | default value                                            |
+|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| default-read-only-property-list                        | List of property names that should always be marked as readonly                                                            |                                                          |
+| default-converter-enabled                              | Whether default string to type converter used for converting strings to property values when searching registry is enabled | true                                                     |
+| default-java-to-javascript-converter-enabled           | Whether default Java to Javascript type converter is enabled                                                               | true                                                     |
+| registry-search.date-format-list                       | List of date formats used to convert string to date value                                                                  | dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z' |
+| registry-search.decimal-number-format-list             | List of decimal formats used to convert string to decimal value                                                            | #0.00, #0,00                                             |
+| registry-search.boolean-true-regex-pattern             | Regexp pattern that is used to match boolean true values                                                                   | ^(?i)\s*(true&#124;yes&#124;da)\s*$                      |
+| registry-search.boolean-false-regex-pattern            | Regexp pattern that is used to match boolean false values                                                                  | ^(?i)\s*(false&#124;no&#124;ne)\s*$                      |
+| registry-configuration.create-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry create method                   |                                                          |
+| registry-configuration.update-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry update method                   |                                                          |
 
 The properties under registry-search are used when converting string received from client to property values that will be used to search registry. For example if a string is sent
 and the property searched by is of type Date, nrich will try to parse string to Date and if parsing succeeds restriction will be added to query and if parsing fails the property will be skipped
@@ -74,6 +76,9 @@ nrich.registry:
 
 Overriding of default registry behaviour (i.e. in search configuration which operators are used for searching) is possible by defining a bean of
 type [RegistryOverrideConfigurationHolder](../nrich-registry-api/src/main/java/net/croz/nrich/registry/api/core/model/RegistryOverrideConfigurationHolder.java)
+Overriding of default resolving of registry classes to bind raw json data to is possible by defining a bean
+of type [RegistryClassResolvingService](../nrich-registry-api/src/main/java/net/croz/nrich/registry/api/core/service/RegistryClassResolvingService.java) or by defining keys under
+`nrich.registry.registry-configuration.create-registry-class-mapping` and `nrich.registry.registry-configuration.update-registry-class-mapping`.
 
 ### Using the module
 

@@ -104,8 +104,13 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+    public RegistryClassResolvingService registryClassResolvingService(RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new DefaultRegistryClassResolvingService(registryConfigurationResolverService.resolveRegistryDataConfiguration(), Collections.emptyMap(), Collections.emptyMap());
+    }
+
+    @Bean
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
     }
 
     @Bean
@@ -138,12 +143,13 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService) {
+    public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                                                             RegistryClassResolvingService registryClassResolvingService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
             .map(RegistryDataConfiguration::getRegistryType)
             .collect(Collectors.toList());
 
-        return new RegistryDataFormConfigurationMappingCustomizer(registryClassList);
+        return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);
     }
 }
 
@@ -178,9 +184,12 @@ to client.
 
 `RegistryDataService` is used for searching, creating, updating and deleting entity instances.
 
-`RegistryDataRequestConversionService` is used to convert raw json data received from client to typed instances. It binds either to registry entity or (when defined) it can bind to other class
-instances (for example when wanting to update only part of properties), it searches for classes in same package as registry entity with same name and following suffixes `CreateRequest`
-, `UpdateRequest`  and `Request`.
+`RegistryDataRequestConversionService` is used to convert raw json data received from client to typed instances. It delegates resolving of classes to bind to `RegistryClassResolvingService`.
+
+`RegistryClassResolvingService` resolves class instances used for conversion of json data to typed instances. It binds either to registry entity or (when defined) it can bind to other class
+instances (for example when wanting to update only part of properties). If maps with mapping are not empty it resolves from those maps otherwise it searches for classes in same package as
+registry entity with same name and following suffixes `CreateRequest` , `UpdateRequest`  and `Request` it also searches in `request` package.
+Users can provide their own implementation of `RegistryClassResolvingService` interface if additional customization is needed.
 
 `RegistryDataController` is REST API for `RegistryDataService` it has five POST methods:
 
