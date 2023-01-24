@@ -58,7 +58,6 @@ import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.converter.DefaultStringToEntityPropertyMapConverter;
 import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import net.croz.nrich.springboot.condition.ConditionalOnPropertyNotEmpty;
-import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,23 +111,13 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryDataModelMapper")
     @Bean
     public ModelMapper registryDataModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        Condition<Object, Object> skipIds = context -> !context.getMapping().getLastDestinationProperty().getName().equals("id");
-
-        modelMapper.getConfiguration().setPropertyCondition(skipIds);
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return modelMapper;
+        return strictModelMapper();
     }
 
     @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
     public ModelMapper registryBaseModelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return modelMapper;
+       return strictModelMapper();
     }
 
     @ConditionalOnMissingBean
@@ -294,5 +283,13 @@ public class NrichRegistryAutoConfiguration {
             .collect(Collectors.toList());
 
         return new RegistryDataFormConfigurationMappingCustomizer(registryClassList);
+    }
+
+    private ModelMapper strictModelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return modelMapper;
     }
 }

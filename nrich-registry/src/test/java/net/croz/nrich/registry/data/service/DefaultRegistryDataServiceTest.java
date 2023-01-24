@@ -164,7 +164,28 @@ class DefaultRegistryDataServiceTest {
     void shouldUpdateRegistryEntity() {
         // given
         RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
-        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest();
+        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest(null);
+
+        // when
+        RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), request);
+
+        // then
+        assertThat(updatedEntity).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, registryTestEntity.getId());
+
+        // then
+        assertThat(loaded.getAge()).isEqualTo(51);
+        assertThat(loaded.getName()).isEqualTo("name 2");
+    }
+
+    @Test
+    void shouldUpdateEntityAndSkipSettingIdToOriginalValue() {
+        // given
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest(111L);
 
         // when
         RegistryTestEntity updatedEntity = registryDataService.update(RegistryTestEntity.class.getName(), registryTestEntity.getId(), request);
@@ -185,7 +206,7 @@ class DefaultRegistryDataServiceTest {
     void shouldUpdateRegistryEntityWithoutAssociations() {
         // given
         RegistryTestEntityWithoutAssociation registryTestEntity = createRegistryTestEntityWithoutAssociation(entityManager);
-        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest();
+        UpdateRegistryTestEntityRequest request = createUpdateRegistryTestEntityRequest(registryTestEntity.getId());
 
         // when
         RegistryTestEntityWithoutAssociation updatedEntity = registryDataService.update(RegistryTestEntityWithoutAssociation.class.getName(), registryTestEntity.getId(), request);
@@ -338,5 +359,26 @@ class DefaultRegistryDataServiceTest {
 
         // then
         assertThat(loaded).isNull();
+    }
+
+    @Test
+    void shouldCreateRegistryEntityWithAssociationFromRequestClass() {
+        // given
+        RegistryTestEntity registryTestEntity = createRegistryTestEntity(entityManager);
+
+        // when
+        RegistryTestEntity createdTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), createRegistryTestEntityRequest("name 1", registryTestEntity.getId()));
+
+        // then
+        assertThat(createdTestEntity).isNotNull();
+
+        // and when
+        flushEntityManager(entityManager);
+        RegistryTestEntity loaded = entityManager.find(RegistryTestEntity.class, createdTestEntity.getId());
+
+        // then
+        assertThat(loaded.getAge()).isEqualTo(50);
+        assertThat(loaded.getName()).isEqualTo("name 1");
+        assertThat(loaded.getParent()).isNotNull();
     }
 }
