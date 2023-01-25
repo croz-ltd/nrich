@@ -15,13 +15,13 @@
  *
  */
 
-package net.croz.nrich.registry.data.constant;
+package net.croz.nrich.registry.core.constants;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class RegistryDataConstants {
+public final class RegistryClassResolvingConstants {
 
     public static final String CREATE_REQUEST_CLASS_NAME_FORMAT = "%sCreateRequest";
 
@@ -41,6 +41,6 @@ public final class RegistryDataConstants {
 
     public static final List<String> CLASS_NAME_SUFFIX_LIST_TO_REPLACE = Collections.unmodifiableList(Arrays.asList("model", "entity"));
 
-    private RegistryDataConstants() {
+    private RegistryClassResolvingConstants() {
     }
 }

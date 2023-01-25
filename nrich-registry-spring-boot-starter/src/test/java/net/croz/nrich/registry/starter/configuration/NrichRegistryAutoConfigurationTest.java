@@ -92,7 +92,9 @@ class NrichRegistryAutoConfigurationTest {
             "nrich.registry.registry-configuration.history-display-order-list=id,name",
             "nrich.registry.registry-configuration.group-definition-configuration-list[0].group-id=DATA",
             "nrich.registry.registry-configuration.group-definition-configuration-list[0].include-entity-pattern-list=^net.croz.nrich.registry.data.stub.*$",
-            "nrich.registry.registry-configuration.group-definition-configuration-list[0].exclude-entity-pattern-list=^net.croz.nrich.registry.data.stub.exclude.*$"
+            "nrich.registry.registry-configuration.group-definition-configuration-list[0].exclude-entity-pattern-list=^net.croz.nrich.registry.data.stub.exclude.*$",
+            "nrich.registry.registry-configuration.create-registry-class-mapping.test=java.lang.String",
+            "nrich.registry.registry-configuration.update-registry-class-mapping.test=java.lang.String"
         };
 
         contextRunner.withPropertyValues(properties).withBean(LocalValidatorFactoryBean.class).run(context -> {
@@ -123,6 +125,9 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(registryGroupDefinitionList).extracting("groupId").containsExactly("DATA");
             assertThat(registryGroupDefinitionList).flatExtracting("includeEntityPatternList").containsExactly("^net.croz.nrich.registry.data.stub.*$");
             assertThat(registryGroupDefinitionList).flatExtracting("excludeEntityPatternList").containsExactly("^net.croz.nrich.registry.data.stub.exclude.*$");
+
+            assertThat(registryConfiguration.getCreateRegistryClassMapping()).containsEntry("test", String.class);
+            assertThat(registryConfiguration.getUpdateRegistryClassMapping()).containsEntry("test", String.class);
         });
     }
 

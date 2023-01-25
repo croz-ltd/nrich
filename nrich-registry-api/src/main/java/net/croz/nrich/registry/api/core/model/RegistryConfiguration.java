@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User defined configuration for registry entities.
@@ -48,5 +49,15 @@ public class RegistryConfiguration {
      * Order of history properties.
      */
     private List<String> historyDisplayOrderList;
+
+    /**
+     * Optional mapping between registry classname and the class holding validations for registry create method.
+     */
+    private Map<String, Class<?>> createRegistryClassMapping;
+
+    /**
+     * Optional mapping between registry classname and the class holding validations for registry update method.
+     */
+    private Map<String, Class<?>> updateRegistryClassMapping;
 
 }

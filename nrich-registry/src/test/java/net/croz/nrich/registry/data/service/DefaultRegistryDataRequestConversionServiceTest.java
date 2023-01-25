@@ -18,7 +18,7 @@
 package net.croz.nrich.registry.data.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.stub.DefaultRegistryDataRequestConversionServiceTestEntity;
@@ -32,7 +32,6 @@ import static net.croz.nrich.registry.data.testutil.RegistryRequestGeneratingUti
 import static net.croz.nrich.registry.data.testutil.RegistryRequestGeneratingUtil.createUpdateRegistryRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultRegistryDataRequestConversionServiceTest {
@@ -41,25 +40,26 @@ class DefaultRegistryDataRequestConversionServiceTest {
     private ObjectMapper objectMapper;
 
     @Mock
-    private RegistryDataConfigurationHolder registryDataConfigurationHolder;
+    private RegistryClassResolvingService registryClassResolvingService;
 
     @InjectMocks
     private DefaultRegistryDataRequestConversionService defaultRegistryDataRequestConversionService;
 
     @Test
-    void shouldConvertCreateRequestDataToTypedInstance() throws Exception {
+    void shouldConvertRequestDataToTypedInstance() throws Exception {
         // given
         DefaultRegistryDataRequestConversionServiceTestEntity entity = new DefaultRegistryDataRequestConversionServiceTestEntity();
         CreateRegistryRequest request = createCreateRegistryRequest(entity.getClass());
+        String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
         doReturn(entity).when(objectMapper).readValue(request.getJsonEntityData(), entity.getClass());
+        doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveCreateClass(className);
 
         // when
         Object result = defaultRegistryDataRequestConversionService.convertEntityDataToTyped(request);
 
         // then
         assertThat(result).isEqualTo(entity);
-        verify(registryDataConfigurationHolder).verifyConfigurationExists(request.getClassFullName());
     }
 
     @Test
@@ -67,14 +67,15 @@ class DefaultRegistryDataRequestConversionServiceTest {
         // given
         DefaultRegistryDataRequestConversionServiceTestEntity entity = new DefaultRegistryDataRequestConversionServiceTestEntity();
         UpdateRegistryRequest request = createUpdateRegistryRequest(entity.getClass());
+        String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
         doReturn(entity).when(objectMapper).readValue(request.getJsonEntityData(), entity.getClass());
+        doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveUpdateClass(className);
 
         // when
         Object result = defaultRegistryDataRequestConversionService.convertEntityDataToTyped(request);
 
         // then
         assertThat(result).isEqualTo(entity);
-        verify(registryDataConfigurationHolder).verifyConfigurationExists(request.getClassFullName());
     }
 }

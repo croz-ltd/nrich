@@ -30,6 +30,7 @@ import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
+import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
@@ -40,6 +41,7 @@ import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntit
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
+import net.croz.nrich.registry.core.service.DefaultRegistryClassResolvingService;
 import net.croz.nrich.registry.core.service.DefaultRegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderService;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
@@ -234,6 +236,11 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
+    public RegistryClassResolvingService registryClassResolvingService(RegistryConfigurationResolverService registryConfigurationResolverService) {
+        return new DefaultRegistryClassResolvingService(registryConfigurationResolverService.resolveRegistryDataConfiguration(), Collections.emptyMap(), Collections.emptyMap());
+    }
+
+    @Bean
     public RegistryDataService registryDataService(EntityManager entityManager, ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter,
                                                    RegistryConfigurationResolverService registryConfigurationResolverService,
                                                    @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
@@ -244,8 +251,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryConfigurationResolverService.resolveRegistryDataConfiguration());
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
     }
 
     @Bean
