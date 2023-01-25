@@ -177,10 +177,15 @@ public final class RegistryDataGeneratingUtil {
 
     @SneakyThrows
     public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name) {
+        return createRegistryRequest(objectMapper, classFullName, name, 50);
+    }
+
+    @SneakyThrows
+    public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name, Integer age) {
         CreateRegistryRequest request = new CreateRegistryRequest();
 
         request.setClassFullName(classFullName);
-        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, age)));
 
         return request;
     }
@@ -191,7 +196,7 @@ public final class RegistryDataGeneratingUtil {
 
         request.setClassFullName(classFullName);
         request.setId(id);
-        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name)));
+        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, 50)));
 
         return request;
     }
@@ -294,18 +299,18 @@ public final class RegistryDataGeneratingUtil {
 
         parent.setId(parentId);
 
-        CreateRegistryTestEntityRequest request = createRegistryTestEntityRequest(name);
+        CreateRegistryTestEntityRequest request = createRegistryTestEntityRequest(name, 50);
 
         request.setParent(parent);
 
         return request;
     }
 
-    public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name) {
+    public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name, Integer age) {
         CreateRegistryTestEntityRequest request = new CreateRegistryTestEntityRequest();
 
         request.setName(name);
-        request.setAge(50);
+        request.setAge(age);
 
         return request;
     }

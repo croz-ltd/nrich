@@ -120,6 +120,19 @@ class RegistryDataControllerTest extends BaseControllerTest {
     }
 
     @Test
+    void shouldReturnErrorWhenCreateInputDataIsNotValidWithValidationGroups() throws Exception {
+        // given
+        String requestUrl = fullUrl("create");
+        CreateRegistryRequest request = createRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, "name", 10);
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldUpdateRegistryEntity() throws Exception {
         // given
         RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));

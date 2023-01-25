@@ -146,7 +146,7 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldCreateRegistryEntity() {
         // when
-        RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), createRegistryTestEntityRequest("name 1"));
+        RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), createRegistryTestEntityRequest("name 1", 50));
 
         // then
         assertThat(registryTestEntity).isNotNull();
