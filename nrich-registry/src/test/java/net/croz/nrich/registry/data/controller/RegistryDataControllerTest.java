@@ -45,6 +45,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithParent;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createUpdateEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.updateRegistryRequestWithId;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -147,6 +148,21 @@ class RegistryDataControllerTest extends BaseControllerTest {
         // then
         result.andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(entityName));
+    }
+
+    @Test
+    void shouldUpdateRegistryEntityWithIdSentInEntityData() throws Exception {
+        // given
+        RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+
+        String requestUrl = fullUrl("update");
+        UpdateRegistryRequest request = updateRegistryRequestWithId(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId());
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isOk());
     }
 
     @Test

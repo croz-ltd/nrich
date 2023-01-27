@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.data.service;
 
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
@@ -38,12 +37,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ReflectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
-import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -210,21 +207,10 @@ public class DefaultRegistryDataService implements RegistryDataService {
         return BeanUtils.instantiateClass(type);
     }
 
-    // in case users submit a null id value inside entity data it should be reset
-    @SneakyThrows
-    private void setIdFieldToOriginalValue(ManagedTypeWrapper managedTypeWrapper, Object instance, Object id) {
-        Field field = ReflectionUtils.findField(instance.getClass(), managedTypeWrapper.getIdAttributeName());
+    // in case users submit a null id value inside entity data it should be reset, this seems to be the simplest way of doing that
+    private void setIdFieldToOriginalValue(ManagedTypeWrapper managedTypeWrapper, Object entityData, Object id) {
+        Map<String, Object> idValueMap = Collections.singletonMap(managedTypeWrapper.getIdAttributeName(), id);
 
-        if (field == null) {
-            return;
-        }
-
-        field.setAccessible(true); // NOSONAR
-
-        if (id.equals(field.get(instance))) {
-            return;
-        }
-
-        field.set(instance, id); // NOSONAR
+        modelMapper.map(idValueMap, entityData);
     }
 }

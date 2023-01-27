@@ -201,6 +201,17 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
+    @SneakyThrows
+    public static UpdateRegistryRequest updateRegistryRequestWithId(ObjectMapper objectMapper, String classFullName, Long id) {
+        UpdateRegistryRequest request = new UpdateRegistryRequest();
+
+        request.setClassFullName(classFullName);
+        request.setId(id);
+        request.setJsonEntityData(objectMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id)));
+
+        return request;
+    }
+
     public static RegistryTestEmbeddedUserGroup createRegistryTestEmbeddedUserGroup(EntityManager entityManager) {
         RegistryTestEmbeddedUser user = createRegistryTestEmbeddedUser(entityManager);
         RegistryTestEmbeddedGroup group = createRegistryTestEmbeddedGroup(entityManager);
