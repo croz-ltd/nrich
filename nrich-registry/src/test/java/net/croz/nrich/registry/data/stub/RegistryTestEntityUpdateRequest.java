@@ -26,6 +26,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class RegistryTestEntityUpdateRequest {
 
+    private Long id;
+
     @NotNull
     private String name;
 
