@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.croz.nrich.validation.starter.configuration.NrichValidationAutoConfiguration
