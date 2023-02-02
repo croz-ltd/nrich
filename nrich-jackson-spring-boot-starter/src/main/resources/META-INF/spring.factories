@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=net.croz.nrich.jackson.starter.configuration.NrichJacksonAutoConfiguration
