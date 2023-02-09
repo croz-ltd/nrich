@@ -1,0 +1,1 @@
+org.springframework.aot.hint.RuntimeHintsRegistrar=net.croz.nrich.encrypt.aot.EncryptRuntimeHintsRegistrar
