@@ -229,9 +229,9 @@ public class NrichRegistryAutoConfiguration {
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(RegistryDataService.class)
     @Bean
-    public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
+    public DefaultRegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
                                                    RegistryConfigurationResolverService registryConfigurationResolverService,
                                                    @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
@@ -266,9 +266,9 @@ public class NrichRegistryAutoConfiguration {
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(RegistryHistoryService.class)
     @Bean
-    public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
+    public DefaultRegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
                                                          RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
