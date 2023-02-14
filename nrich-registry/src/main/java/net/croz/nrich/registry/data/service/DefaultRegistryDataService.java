@@ -121,14 +121,12 @@ public class DefaultRegistryDataService implements RegistryDataService {
         if (wrapper.isIdClassIdentifier() || wrapper.isEmbeddedIdentifier()) {
             entityManager.remove(instance);
             instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
-
-            modelMapper.map(entityData, instance);
         }
         else {
             setIdFieldToOriginalValue(wrapper, entityData, id);
-
-            modelMapper.map(entityData, instance);
         }
+
+        modelMapper.map(entityData, instance);
 
         return entityManager.merge(instance);
     }
