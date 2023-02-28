@@ -8,11 +8,13 @@ on:
       - master
       - feature_*
       - bugfix_*
+      - 2.x.x
   pull_request:
     branches:
       - master
       - feature_*
       - bugfix_*
+      - 2.x.x
 
 jobs:
   build:
