@@ -43,4 +43,7 @@ public class TestNestedEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private TestDoubleNestedEntity doubleNestedEntity;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private TestDoubleNestedEntity secondDoubleNestedEntity;
+
 }

@@ -749,6 +749,24 @@ class JpaQueryBuilderTest {
         assertThat(results).hasSize(2);
     }
 
+    @Test
+    void shouldUseSameJoinsForAllSubPaths() {
+        // given
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .build();
+
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .joinList(Arrays.asList(SearchJoin.innerJoin("nestedEntity.doubleNestedEntity"), SearchJoin.innerJoin("nestedEntity.secondDoubleNestedEntity")))
+            .resolvePropertyMappingUsingPrefix(true)
+            .build();
+
+        // when
+        CriteriaQuery<TestEntity> result = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+
+        // then
+        assertThat(result.getRoots().iterator().next().getJoins()).hasSize(1);
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }

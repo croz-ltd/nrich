@@ -42,6 +42,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Fetch;
+import javax.persistence.criteria.FetchParent;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Path;
@@ -54,11 +55,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -161,9 +164,12 @@ public class JpaQueryBuilder<T> {
             return;
         }
 
+        Map<String, Fetch<?, ?>> existingFetches = new HashMap<>();
+        Map<String, Join<?, ?>> existingJoins = new HashMap<>();
+
         joinList.stream()
             .filter(join -> shouldApplyJoinOrFetch(join, request))
-            .forEach(searchJoin -> applyJoinOrJoinFetch(root, searchJoin));
+            .forEach(searchJoin -> applyJoinOrJoinFetch(existingFetches, existingJoins, root, searchJoin));
     }
 
     private <R> List<Selection<?>> resolveQueryProjectionList(Root<?> root, List<SearchProjection<R>> projectionList, R request) {
@@ -181,24 +187,29 @@ public class JpaQueryBuilder<T> {
         return join.getCondition() == null || join.getCondition().test(request);
     }
 
-    private void applyJoinOrJoinFetch(Root<?> root, SearchJoin<?> searchJoin) {
+    private void applyJoinOrJoinFetch(Map<String, Fetch<?, ?>> existingFetches, Map<String, Join<?, ?>> existingJoins, Root<?> root, SearchJoin<?> searchJoin) {
         JoinType joinType = searchJoin.getJoinType() == null ? JoinType.INNER : searchJoin.getJoinType();
 
         String[] pathList = PathResolvingUtil.convertToPathList(searchJoin.getPath());
         if (searchJoin.isFetch()) {
-            Fetch<?, ?> fetch = null;
-            for (String path : pathList) {
-                fetch = fetch == null ? root.fetch(path, joinType) : fetch.fetch(path, joinType);
-            }
+            applyJoinOrFetch(existingFetches, pathList, (path, fetch) -> fetch == null ? root.fetch(path, joinType) : fetch.fetch(path, joinType));
         }
         else {
-            Join<?, ?> join = null;
-            for (String path : pathList) {
-                join = join == null ? root.join(path, joinType) : join.join(path, joinType);
-            }
+            applyJoinOrFetch(existingJoins, pathList, (path, join) -> join == null ? root.join(path, joinType) : ((Join<?, ?>) join).join(path, joinType));
+        }
+    }
 
-            if (searchJoin.getAlias().indexOf('.') == -1) {
-                Objects.requireNonNull(join).alias(searchJoin.getAlias());
+    private <E> void applyJoinOrFetch(Map<String, E> existingJoinsOrFetches, String[] pathList, BiFunction<String, FetchParent<?, ?>, E> pathFunction) {
+        E joinOrFetch = null;
+        String currentPath = null;
+        for (String path : pathList) {
+            currentPath = currentPath == null ? path : PathResolvingUtil.joinPath(currentPath, path);
+            if (existingJoinsOrFetches.containsKey(currentPath)) {
+                joinOrFetch = existingJoinsOrFetches.get(currentPath);
+            }
+            else {
+                joinOrFetch = pathFunction.apply(path, (FetchParent<?, ?>) joinOrFetch);
+                existingJoinsOrFetches.put(currentPath, joinOrFetch);
             }
         }
     }
@@ -277,9 +288,9 @@ public class JpaQueryBuilder<T> {
     }
 
     private SearchPropertyJoin resolveSearchPropertyJoin(Root<?> root) {
-      String idName = root.getModel().getId(root.getModel().getIdType().getJavaType()).getName();
+        String idName = root.getModel().getId(root.getModel().getIdType().getJavaType()).getName();
 
-      return new SearchPropertyJoin(idName, idName);
+        return new SearchPropertyJoin(idName, idName);
     }
 
     // TODO enable join usage or subquery?
