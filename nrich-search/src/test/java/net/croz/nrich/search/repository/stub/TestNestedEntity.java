@@ -25,7 +25,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import java.util.Collection;
 
 @Setter
 @Getter
@@ -45,5 +47,8 @@ public class TestNestedEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     private TestDoubleNestedEntity secondDoubleNestedEntity;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Collection<TestDoubleNestedEntity> related;
 
 }
