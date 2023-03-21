@@ -17,6 +17,7 @@
 
 package net.croz.nrich.search.util;
 
+import javax.persistence.criteria.From;
 import javax.persistence.criteria.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,9 +53,16 @@ public final class PathResolvingUtil {
     }
 
     public static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList) {
+        int lastElementIndex = pathList.length - 1;
         Path<?> calculatedPath = rootPath;
-        for (String currentPath : pathList) {
-            calculatedPath = calculatedPath.get(currentPath);
+
+        for (int i = 0; i < pathList.length; i++) {
+            if (i == lastElementIndex) {
+                calculatedPath = calculatedPath.get(pathList[i]);
+            }
+            else {
+                calculatedPath = ((From<?, ?>) calculatedPath).join(pathList[i]);
+            }
         }
 
         return calculatedPath;

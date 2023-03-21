@@ -167,7 +167,7 @@ class JpaQueryBuilderTest {
     }
 
     @Test
-    void shouldSearchByCollectionAssociationValuesByUsingFieldMapping() {
+    void shouldSearchByCollectionAssociationValuesByUsingPropertyMapping() {
         // given
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
             .pluralAssociationRestrictionType(PluralAssociationRestrictionType.JOIN)
@@ -765,6 +765,20 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(result.getRoots().iterator().next().getJoins()).hasSize(1);
+    }
+
+    @Test
+    void shouldSearchByNestedCollectionProperties() {
+        // given
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .nestedEntityRelatedName("double nested0")
+            .build();
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {

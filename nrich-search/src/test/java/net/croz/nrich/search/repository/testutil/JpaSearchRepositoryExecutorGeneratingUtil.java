@@ -152,6 +152,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         entity.setNestedEntityName("nested" + value);
         entity.setNestedEntityAliasName("nested alias" + value);
         entity.setDoubleNestedEntity(createTestDoubleNestedEntity(value));
+        entity.setRelated(Collections.singletonList(createTestDoubleNestedEntity(value)));
 
         return entity;
     }

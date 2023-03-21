@@ -73,6 +73,8 @@ public class TestEntitySearchRequest {
 
     private String elementCollection;
 
+    private String nestedEntityRelatedName;
+
     public TestEntitySearchRequest(String name) {
         this.name = name;
     }
