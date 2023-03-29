@@ -52,12 +52,21 @@ public final class PathResolvingUtil {
         return String.join(PATH_SEPARATOR, Arrays.copyOfRange(path, 1, path.length));
     }
 
-    public static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList) {
+
+    public static Path<?> calculateFullRestrictionPath(Path<?> rootPath, String[] pathList) {
+        return calculateFullPath(rootPath, pathList, false);
+    }
+
+    public static Path<?> calculateFullSelectionPath(Path<?> rootPath, String[] pathList) {
+        return calculateFullPath(rootPath, pathList, true);
+    }
+
+    private static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList, boolean isSelection) {
         int lastElementIndex = pathList.length - 1;
         Path<?> calculatedPath = rootPath;
 
         for (int i = 0; i < pathList.length; i++) {
-            if (i == lastElementIndex) {
+            if (isSelection || i == lastElementIndex) {
                 calculatedPath = calculatedPath.get(pathList[i]);
             }
             else {
