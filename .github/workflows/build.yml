@@ -7,10 +7,12 @@ on:
     branches:
       - master
       - feature_*
+      - bugfix_*
   pull_request:
     branches:
       - master
       - feature_*
+      - bugfix_*
 
 jobs:
   build:
