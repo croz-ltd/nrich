@@ -257,8 +257,8 @@ public class JpaQueryBuilder<T> {
 
         List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder);
 
-        Path<?> parentPath = PathResolvingUtil.calculateFullPath(parent, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
-        Path<?> subqueryPath = PathResolvingUtil.calculateFullPath(subqueryRoot, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
+        Path<?> parentPath = PathResolvingUtil.calculateFullRestrictionPath(parent, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
+        Path<?> subqueryPath = PathResolvingUtil.calculateFullRestrictionPath(subqueryRoot, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
 
         subQueryPredicateList.add(criteriaBuilder.equal(parentPath, subqueryPath));
 
@@ -273,12 +273,12 @@ public class JpaQueryBuilder<T> {
 
             if (restriction.isPluralAttribute()) {
                 String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
-                Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath.join(pathList[0]), pluralAttributePathList);
+                Path<?> fullPath = PathResolvingUtil.calculateFullRestrictionPath(rootPath.join(pathList[0]), pluralAttributePathList);
 
                 predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
             }
             else {
-                Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, pathList);
+                Path<?> fullPath = PathResolvingUtil.calculateFullRestrictionPath(rootPath, pathList);
 
                 predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
             }
@@ -335,7 +335,7 @@ public class JpaQueryBuilder<T> {
     private <R> Selection<?> convertToSelectionExpression(Path<?> root, SearchProjection<R> projection) {
         String[] pathList = PathResolvingUtil.convertToPathList(projection.getPath());
 
-        Path<?> path = PathResolvingUtil.calculateFullPath(root, pathList);
+        Path<?> path = PathResolvingUtil.calculateFullSelectionPath(root, pathList);
 
         String alias = projection.getAlias() == null ? pathList[pathList.length - 1] : projection.getAlias();
 

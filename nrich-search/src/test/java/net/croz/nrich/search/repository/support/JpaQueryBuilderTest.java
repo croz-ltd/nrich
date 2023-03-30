@@ -781,6 +781,27 @@ class JpaQueryBuilderTest {
         assertThat(results).hasSize(1);
     }
 
+    @Test
+    void shouldNotAddAdditionalJoinsForSelection() {
+        // given
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .build();
+
+        SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
+        SearchProjection<TestEntitySearchRequest> nestedNameProjection = SearchProjection.<TestEntitySearchRequest>builder().path("nestedEntity.nestedEntityName").alias("nestedName").build();
+
+        SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
+            .resultClass(TestEntityDto.class)
+            .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
+            .build();
+
+        // when
+        CriteriaQuery<TestEntityDto> result = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+
+        // then
+        assertThat(result.getRoots().iterator().next().getJoins()).isEmpty();
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }

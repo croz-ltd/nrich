@@ -19,6 +19,8 @@ package net.croz.nrich.search.util;
 
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.criteria.From;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -79,18 +81,40 @@ class PathResolvingUtilTest {
     }
 
     @Test
-    void shouldCalculateFullPath() {
+    void shouldCalculateFullRestrictionPath() {
         // given
-        String path = "first";
-        Path<?> first = mock(Path.class);
-        Path<?> second = mock(Path.class);
+        String firstPath = "restriction";
+        String secondPath = "attribute";
+        From<?, ?> first = mock(From.class);
+        Join<?, ?> second = mock(Join.class);
+        Path<?> third = mock(Path.class);
 
-        doReturn(second).when(first).get(path);
+        doReturn(second).when(first).join(firstPath);
+        doReturn(third).when(second).get(secondPath);
 
         // when
-        Path<?> result = PathResolvingUtil.calculateFullPath(first, new String[] { path });
+        Path<?> result = PathResolvingUtil.calculateFullRestrictionPath(first, new String[] { firstPath, secondPath });
 
         // then
-        assertThat(result).isEqualTo(second);
+        assertThat(result).isEqualTo(third);
+    }
+
+    @Test
+    void shouldCalculateFullSelectionPath() {
+        // given
+        String firstPath = "selection";
+        String secondPath = "attribute";
+        Path<?> first = mock(From.class);
+        Path<?> second = mock(Path.class);
+        Path<?> third = mock(Path.class);
+
+        doReturn(second).when(first).get(firstPath);
+        doReturn(third).when(second).get(secondPath);
+
+        // when
+        Path<?> result = PathResolvingUtil.calculateFullSelectionPath(first, new String[] { firstPath, secondPath });
+
+        // then
+        assertThat(result).isEqualTo(third);
     }
 }
