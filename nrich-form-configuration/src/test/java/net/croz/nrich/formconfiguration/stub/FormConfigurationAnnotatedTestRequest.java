@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.croz.nrich.formconfiguration.api.annotation.FormValidationConfiguration;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 @Setter
 @Getter

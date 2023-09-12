@@ -26,13 +26,14 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.test.BaseControllerTest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteEmbeddedUserGroupRequest;
@@ -227,6 +228,8 @@ class RegistryDataControllerTest extends BaseControllerTest {
         result.andExpect(status().isOk());
     }
 
+    // TODO enable when https://hibernate.atlassian.net/browse/HHH-15875 is solved.
+    @Disabled
     @Test
     void shouldNotFailListingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
         // given

@@ -36,7 +36,7 @@ class DefaultTransientPropertyResolverServiceTest {
     @Test
     void shouldResolveTransientPropertyList() {
         // given
-        Class<?> type = TransientPropertyResolverServiceImplTestRequest.class;
+        Class<?> type = TransientPropertyResolverServiceImplTestRequest.TransientPropertyResolverServiceImplTestInnerRequest.class;
 
         // when
         List<String> resultList = transientPropertyResolverService.resolveTransientPropertyList(type);

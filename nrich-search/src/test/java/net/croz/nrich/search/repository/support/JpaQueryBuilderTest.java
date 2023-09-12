@@ -43,10 +43,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Tuple;
-import javax.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.criteria.CriteriaQuery;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -446,13 +446,10 @@ class JpaQueryBuilderTest {
             .build();
 
         // when
-        CriteriaQuery<TestEntity> query = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
-
-        // and when
-        CriteriaQuery<Long> countQuery = jpaQueryBuilder.convertToCountQuery(query);
+        CriteriaQuery<Long> query = jpaQueryBuilder.buildCountQuery(request, searchConfiguration);
 
         // then
-        assertThat(entityManager.createQuery(countQuery).getSingleResult()).isEqualTo(1L);
+        assertThat(entityManager.createQuery(query).getSingleResult()).isEqualTo(1L);
     }
 
     @Test
@@ -800,6 +797,15 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(result.getRoots().iterator().next().getJoins()).isEmpty();
+    }
+
+    @Test
+    void shouldNotFailOnNullSort() {
+        // when
+        Throwable thrown = catchThrowable(() -> executeQuery(Collections.emptyMap(), SearchConfiguration.emptyConfiguration(), null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {

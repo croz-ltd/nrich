@@ -20,8 +20,8 @@ package net.croz.nrich.validation.constraint.validator;
 import net.croz.nrich.validation.api.constraint.NotNullWhen;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.function.Predicate;
 
 public class NotNullWhenValidator extends BaseNullableCheckValidator implements ConstraintValidator<NotNullWhen, Object> {

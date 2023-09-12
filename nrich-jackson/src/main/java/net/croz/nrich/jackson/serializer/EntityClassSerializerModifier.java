@@ -38,7 +38,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EntityClassSerializerModifier extends BeanSerializerModifier {
 
-    private static final String ENTITY_ANNOTATION = "javax.persistence.Entity";
+    private static final String ENTITY_ANNOTATION = "jakarta.persistence.Entity";
 
     private final boolean serializeEntityAnnotatedClasses;
 

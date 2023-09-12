@@ -20,8 +20,8 @@ package net.croz.nrich.security.csrf.webmvc.holder;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.security.csrf.api.holder.CsrfTokenKeyHolder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Key;
 
 @RequiredArgsConstructor

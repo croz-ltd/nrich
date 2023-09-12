@@ -21,14 +21,12 @@ import lombok.Getter;
 import net.croz.nrich.security.csrf.core.constants.CsrfConstants;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.time.Duration;
 import java.util.List;
 
 @Getter
-@ConstructorBinding
 @ConfigurationProperties("nrich.security.csrf")
 public class NrichCsrfProperties {
 

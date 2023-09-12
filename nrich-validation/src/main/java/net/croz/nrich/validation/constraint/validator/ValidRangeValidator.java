@@ -20,8 +20,8 @@ package net.croz.nrich.validation.constraint.validator;
 import net.croz.nrich.validation.api.constraint.ValidRange;
 import net.croz.nrich.validation.constraint.util.ValidationReflectionUtil;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.lang.reflect.Method;
 
 public class ValidRangeValidator implements ConstraintValidator<ValidRange, Object> {

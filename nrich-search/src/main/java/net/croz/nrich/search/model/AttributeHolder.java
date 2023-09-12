@@ -20,8 +20,8 @@ package net.croz.nrich.search.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
 
 @RequiredArgsConstructor
 @Getter

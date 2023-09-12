@@ -20,13 +20,11 @@ package net.croz.nrich.excel.starter.properties;
 import lombok.Getter;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
 @Getter
-@ConstructorBinding
 @ConfigurationProperties("nrich.excel")
 public class NrichExcelProperties {
 

@@ -23,10 +23,10 @@ import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.util.Assert;
 
-import javax.persistence.metamodel.Attribute;
-import javax.persistence.metamodel.ManagedType;
-import javax.persistence.metamodel.PluralAttribute;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.PluralAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Arrays;
 
 @Getter

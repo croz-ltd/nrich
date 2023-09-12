@@ -19,13 +19,12 @@ package net.croz.nrich.search.starter.properties;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
 @Getter
-@ConstructorBinding
 @ConfigurationProperties("nrich.search")
 public class NrichSearchProperties {
 
@@ -33,6 +32,7 @@ public class NrichSearchProperties {
      * String search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}
      * that is used for string search by {@link net.croz.nrich.search.api.repository.StringSearchExecutor}.
      */
+    @NestedConfigurationProperty
     private final StringSearchProperties stringSearch;
 
     /**

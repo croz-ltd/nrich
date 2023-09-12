@@ -76,8 +76,8 @@ endpoints (one for retrieving and one for updating account data) that looks like
 ```java
 
 @RequiredArgsConstructor
-@RestController
 @RequestMapping("account")
+@RestController
 public class AccountController {
 
     private final AccountService accountService;

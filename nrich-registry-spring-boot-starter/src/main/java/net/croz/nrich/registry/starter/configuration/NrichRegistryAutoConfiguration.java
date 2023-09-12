@@ -79,9 +79,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,7 +119,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
     public ModelMapper registryBaseModelMapper() {
-       return strictModelMapper();
+        return strictModelMapper();
     }
 
     @ConditionalOnMissingBean
@@ -229,9 +229,9 @@ public class NrichRegistryAutoConfiguration {
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(RegistryDataService.class)
     @Bean
-    public RegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
+    public DefaultRegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
                                                    RegistryConfigurationResolverService registryConfigurationResolverService,
                                                    @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
@@ -266,9 +266,9 @@ public class NrichRegistryAutoConfiguration {
     }
 
     @ConditionalOnClass(name = ENVERS_AUDIT_READER_FACTORY)
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(RegistryHistoryService.class)
     @Bean
-    public RegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
+    public DefaultRegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
                                                          RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();

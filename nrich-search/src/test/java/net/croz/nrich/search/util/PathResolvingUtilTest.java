@@ -19,9 +19,9 @@ package net.croz.nrich.search.util;
 
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Path;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Path;
 import java.util.Arrays;
 import java.util.List;
 

@@ -22,7 +22,7 @@ import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.factory.RepositoryFactorySupportFactory;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 @RequiredArgsConstructor
 public class SearchRepositoryFactorySupportFactory implements RepositoryFactorySupportFactory {

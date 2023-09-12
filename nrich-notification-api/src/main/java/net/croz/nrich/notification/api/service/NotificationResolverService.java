@@ -22,7 +22,7 @@ import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import org.springframework.validation.Errors;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 /**
  * Creates notifications for exceptions, validation failures and actions.

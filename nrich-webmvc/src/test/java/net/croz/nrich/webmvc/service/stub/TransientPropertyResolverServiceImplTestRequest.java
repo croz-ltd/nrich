@@ -18,10 +18,12 @@
 package net.croz.nrich.webmvc.service.stub;
 
 @SuppressWarnings("unused")
-public class TransientPropertyResolverServiceImplTestRequest extends TransientPropertyResolverServiceImplTestParentRequest {
+public class TransientPropertyResolverServiceImplTestRequest {
 
-    private transient int anotherValue;
+    public class TransientPropertyResolverServiceImplTestInnerRequest extends TransientPropertyResolverServiceImplTestParentRequest {
 
-    private int nonTransientValue;
+        private transient int anotherValue;
 
+        private int nonTransientValue;
+    }
 }

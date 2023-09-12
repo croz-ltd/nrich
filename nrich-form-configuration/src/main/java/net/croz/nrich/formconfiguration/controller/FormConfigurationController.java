@@ -24,24 +24,23 @@ import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("${nrich.form-configuration.endpoint-path:nrich/form/configuration}")
+@RestController
 public class FormConfigurationController {
 
     private final FormConfigurationService formConfigurationService;
 
-    @ResponseBody
     @PostMapping("fetch-all")
     public List<FormConfiguration> fetchAll() {
         return formConfigurationService.fetchFormConfigurationList();
     }
 
-    @ResponseBody
     @PostMapping("fetch")
     public List<FormConfiguration> fetch(@RequestBody @Valid FetchFormConfigurationRequest request) {
         return formConfigurationService.fetchFormConfigurationList(request.getFormIdList());

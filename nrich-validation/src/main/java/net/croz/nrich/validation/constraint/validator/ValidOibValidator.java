@@ -20,8 +20,8 @@ package net.croz.nrich.validation.constraint.validator;
 import net.croz.nrich.validation.api.constraint.ValidOib;
 import net.croz.nrich.validation.constraint.util.OibValidatorUtil;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidOibValidator implements ConstraintValidator<ValidOib, String> {
 

@@ -32,7 +32,7 @@ public class ApplicationConfiguration {
 
 `JacksonModuleUtil.convertEmptyStringToNullModule` is module responsible for converting empty strings to null values
 `JacksonModuleUtil.classNameSerializerModule` is module responsible for serializing class property. It accepts two arguments. First argument decides if class property should be serialized for classes
-annotated with `javax.persistence.Entity` annotation or not. Second is (optional) additional package list whose class property should also be serialized.
+annotated with `jakarta.persistence.Entity` annotation or not. Second is (optional) additional package list whose class property should also be serialized.
 
 ## Usage
 
