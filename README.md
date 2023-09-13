@@ -24,13 +24,13 @@ The following table contains nrich versions with a corresponding minimum Java an
 
 | Nrich version | Java version | Spring Boot Version |
 |---------------|--------------|---------------------|
-| 1.x.x         | 1.8          | 2.3.3.RELEASE       |
+| 1.0.x - 1.1.x | 1.8          | 2.3.3.RELEASE       |
 | 1.2.x         | 1.8          | 2.6.4               |
 | 1.3.x         | 1.8          | 2.6.6               |
 | 1.4.x         | 1.8          | 2.6.6               |
 | 1.5.x - 1.7.x | 1.8          | 2.7.4               |
 | 1.8.x         | 1.8          | 2.7.7               |
-| 2.0.0-RC1     | 17           | 3.0.3               |
+| 2.0.0         | 17           | 3.1.3               |
 
 ## Modules
 
