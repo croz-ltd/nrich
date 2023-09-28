@@ -17,6 +17,7 @@
 
 package net.croz.nrich.validation.constraint.mapping;
 
+import net.croz.nrich.validation.api.constraint.SpelExpression;
 import net.croz.nrich.validation.api.constraint.InList;
 import net.croz.nrich.validation.api.constraint.MaxSizeInBytes;
 import net.croz.nrich.validation.api.constraint.NotNullWhen;
@@ -26,6 +27,7 @@ import net.croz.nrich.validation.api.constraint.ValidFileResolvable;
 import net.croz.nrich.validation.api.constraint.ValidOib;
 import net.croz.nrich.validation.api.constraint.ValidRange;
 import net.croz.nrich.validation.api.constraint.ValidSearchProperties;
+import net.croz.nrich.validation.constraint.validator.SpelExpressionValidator;
 import net.croz.nrich.validation.constraint.validator.InListValidator;
 import net.croz.nrich.validation.constraint.validator.MaxSizeInBytesValidator;
 import net.croz.nrich.validation.constraint.validator.NotNullWhenValidator;
@@ -50,5 +52,6 @@ public class DefaultConstraintMappingContributor implements ConstraintMappingCon
         builder.addConstraintMapping().constraintDefinition(ValidFile.class).validatedBy(ValidFileValidator.class);
         builder.addConstraintMapping().constraintDefinition(ValidFileResolvable.class).validatedBy(ValidFileResolvableValidator.class);
         builder.addConstraintMapping().constraintDefinition(InList.class).validatedBy(InListValidator.class);
+        builder.addConstraintMapping().constraintDefinition(SpelExpression.class).validatedBy(SpelExpressionValidator.class);
     }
 }

@@ -18,6 +18,7 @@
 package net.croz.nrich.validation;
 
 import net.croz.nrich.validation.constraint.stub.NullWhenTestService;
+import net.croz.nrich.validation.constraint.stub.SpelValidationTestService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
@@ -34,5 +35,10 @@ public class ValidationTestConfiguration {
     @Bean
     public NullWhenTestService nullWhenTestService() {
         return new NullWhenTestService();
+    }
+
+    @Bean
+    public SpelValidationTestService spelValidationTestService() {
+        return new SpelValidationTestService();
     }
 }

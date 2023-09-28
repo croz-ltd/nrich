@@ -247,3 +247,31 @@ public class SearchPersonRequest {
 ```
 
 Above request will require that either both firstName and lastName are not null or that id is not null.
+
+#### SpelExpression
+
+Validates property against a provided SpEL Expression
+
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
+
+    @SpelExpression("@spelValidationTestService.validateUuid(#this)")
+    private String uuid;
+
+}
+
+@Setter
+@Getter
+@SpelExpression("@spelValidationTestService.validateUuid(uuid)")
+public class ExampleTypeRequest {
+
+    private String uuid;
+
+}
+
+```
+
+In an example above the property uuid is required to be a valid UUID format. The format check is achieved by calling `validateUuid` method of `spelValidationTestService` bean.
