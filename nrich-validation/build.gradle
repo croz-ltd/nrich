@@ -10,6 +10,9 @@ dependencies {
 
   runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 
+  spelImplementation "org.springframework:spring-expression"
+  spelImplementation "org.springframework:spring-context"
+
   webImplementation "org.springframework:spring-web"
 
   testAnnotationProcessor "org.projectlombok:lombok"

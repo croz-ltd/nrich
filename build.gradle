@@ -56,7 +56,7 @@ subprojects { Project subproject ->
     sourceCompatibility = "17"
 
     java {
-      ["envers", "reactor", "web", "webMvc", "webFlux", "hibernate"].forEach {
+      ["envers", "reactor", "web", "webMvc", "webFlux", "hibernate", "spel"].forEach {
         registerFeature(it) {
           usingSourceSet(sourceSets.main)
         }
