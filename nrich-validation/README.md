@@ -367,3 +367,65 @@ public class ExampleRequest {
 ```
 
 Above request will require that the date property is before the end of the day
+
+Module also adds support for disabling inherited constraints with the following annotation:
+
+#### DisableConstraints
+
+Assuming the following parent class:
+
+```java
+
+@Setter
+@Getter
+public class ExampleParentRequest {
+
+    @Size(max = 200)
+    @NotBlank
+    private String name;
+
+    @NotNull
+    private Integer age;
+
+}
+
+
+```
+
+Constraints on name and age can be disabled by either using type annotation (if property name or constraint is not found it will just be ignored):
+
+```java
+
+@DisableConstraints(value = { NotBlank.class, Size.class }, propertyName = "name")
+@DisableConstraints(value = NotNull.class, propertyName = "age")
+@Setter
+@Getter
+public class ExampleTypeRequest extends ExampleParentRequest {
+
+
+}
+
+
+```
+
+or by using method/property annotation:
+
+```java
+
+public class ExampleMethodRequest extends ExampleParentRequest {
+
+    @DisableConstraints({ NotBlank.class, Size.class })
+    @Override
+    public String getName() {
+        return super.getName();
+    }
+
+    @DisableConstraints(NotNull.class)
+    @Override
+    public Integer getAge() {
+        return super.getAge();
+    }
+}
+
+
+```
