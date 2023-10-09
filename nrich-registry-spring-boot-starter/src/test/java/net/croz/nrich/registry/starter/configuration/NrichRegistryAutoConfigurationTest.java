@@ -26,11 +26,13 @@ import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.enumdata.service.RegistryEnumService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
+import net.croz.nrich.registry.enumdata.controller.RegistryEnumController;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
 import net.croz.nrich.registry.starter.properties.NrichRegistryProperties;
@@ -75,6 +77,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).doesNotHaveBean(RegistryDataService.class);
             assertThat(context).doesNotHaveBean(RegistryDataRequestConversionService.class);
             assertThat(context).doesNotHaveBean(RegistryHistoryService.class);
+            assertThat(context).doesNotHaveBean(RegistryEnumService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationMappingCustomizer.class);
         });
     }
@@ -149,10 +152,12 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryHistoryService.class);
             assertThat(context).hasSingleBean(FormConfigurationMappingCustomizer.class);
             assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
+            assertThat(context).hasSingleBean(RegistryEnumService.class);
 
             assertThat(context).doesNotHaveBean(RegistryConfigurationController.class);
             assertThat(context).doesNotHaveBean(RegistryDataController.class);
             assertThat(context).doesNotHaveBean(RegistryHistoryController.class);
+            assertThat(context).doesNotHaveBean(RegistryEnumController.class);
         });
     }
 
@@ -163,6 +168,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(RegistryConfigurationController.class);
             assertThat(context).hasSingleBean(RegistryDataController.class);
             assertThat(context).hasSingleBean(RegistryHistoryController.class);
+            assertThat(context).hasSingleBean(RegistryEnumController.class);
         });
     }
 

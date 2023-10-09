@@ -34,6 +34,7 @@ import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.enumdata.service.RegistryEnumService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
@@ -51,6 +52,8 @@ import net.croz.nrich.registry.data.customizer.RegistryDataFormConfigurationMapp
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
+import net.croz.nrich.registry.enumdata.controller.RegistryEnumController;
+import net.croz.nrich.registry.enumdata.service.DefaultRegistryEnumService;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
@@ -232,8 +235,8 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(RegistryDataService.class)
     @Bean
     public DefaultRegistryDataService registryDataService(ModelMapper registryDataModelMapper, StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter,
-                                                   RegistryConfigurationResolverService registryConfigurationResolverService,
-                                                   @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
+                                                          RegistryConfigurationResolverService registryConfigurationResolverService,
+                                                          @Autowired(required = false) List<RegistryDataInterceptor> interceptorList, RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         List<RegistryDataInterceptor> resolvedInterceptorList = Optional.ofNullable(interceptorList).orElse(Collections.emptyList());
 
@@ -269,7 +272,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean(RegistryHistoryService.class)
     @Bean
     public DefaultRegistryHistoryService registryHistoryService(RegistryConfigurationResolverService registryConfigurationResolverService, ModelMapper registryBaseModelMapper,
-                                                         RegistryEntityFinderService registryEntityFinderService) {
+                                                                RegistryEntityFinderService registryEntityFinderService) {
         RegistryDataConfigurationHolder registryDataConfigurationHolder = registryConfigurationResolverService.resolveRegistryDataConfiguration();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
 
@@ -293,6 +296,19 @@ public class NrichRegistryAutoConfiguration {
             .collect(Collectors.toList());
 
         return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);
+    }
+
+    @ConditionalOnMissingBean(RegistryEnumService.class)
+    @Bean
+    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource) {
+        return new DefaultRegistryEnumService(messageSource);
+    }
+
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnMissingBean
+    @Bean
+    public RegistryEnumController registryEnumController(RegistryEnumService registryEnumService) {
+        return new RegistryEnumController(registryEnumService);
     }
 
     private ModelMapper strictModelMapper() {
