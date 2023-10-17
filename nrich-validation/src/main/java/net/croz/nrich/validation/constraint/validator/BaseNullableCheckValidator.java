@@ -18,9 +18,12 @@
 package net.croz.nrich.validation.constraint.validator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.croz.nrich.validation.constraint.util.GroovyUtil;
 import net.croz.nrich.validation.constraint.util.ValidationReflectionUtil;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
@@ -36,10 +39,17 @@ abstract class BaseNullableCheckValidator {
             return true;
         }
 
-        @SuppressWarnings("unchecked")
-        Predicate<Object> condition = (Predicate<Object>) beanFactory.autowire(conditionClass, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
+        boolean conditionEvaluationResult;
 
-        boolean conditionEvaluationResult = condition.test(value);
+        if (GroovyUtil.isGroovyPresent() && GroovyUtil.isGroovyClosure(conditionClass)) {
+            conditionEvaluationResult = invokeConditionClosure(conditionClass, value);
+        }
+        else {
+            @SuppressWarnings("unchecked")
+            Predicate<Object> condition = (Predicate<Object>) beanFactory.autowire(conditionClass, AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR, false);
+
+            conditionEvaluationResult = condition.test(value);
+        }
 
         if (!conditionEvaluationResult) {
             return true;
@@ -48,6 +58,13 @@ abstract class BaseNullableCheckValidator {
         Object propertyValue = resolvePropertyValue(value, propertyName);
 
         return isPropertyValueValid(propertyValue);
+    }
+
+    @SneakyThrows
+    private boolean invokeConditionClosure(Class<? extends Predicate<?>> conditionClass, Object value) {
+        Constructor<? extends Predicate<?>> closureConstructor = conditionClass.getDeclaredConstructor(Object.class, Object.class);
+
+        return (boolean) conditionClass.getMethod("call", Object.class).invoke(closureConstructor.newInstance(value, value), value);
     }
 
     private Object resolvePropertyValue(Object parent, String propertyName) {

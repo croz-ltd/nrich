@@ -111,6 +111,18 @@ public class CreatePersonRequest {
 
 will validate that firstName is not null when lastName is not null (effectively requiring both properties to be null or both properties to be empty).
 
+If Groovy is used, condition can be written as closure.
+
+```groovy
+@NotNullWhen(property = "firstName", condition = { request -> request.lastName != null })
+class CreatePersonRequest {
+
+    String firstName
+
+    String lastName
+}
+```
+
 #### NullWhen
 
 Validates that a property is null when a condition is satisfied i.e:
@@ -140,6 +152,20 @@ public class CreateBusinessEntityRequest {
 ```
 
 will validate that either companyName is filled or firstName or lastName are filled.
+
+If Groovy is used, condition can be written as closure.
+
+```groovy
+@NullWHen(property = "companyName", condition = { request -> request.fistName != null || request.lastName != null })
+class CreateBusinessEntityRequest {
+
+    String companyName
+
+    String fistName
+
+    String lastName
+}
+```
 
 #### ValidFile
 

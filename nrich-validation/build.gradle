@@ -1,5 +1,7 @@
 description = "Provides additional Bean Validation constraints"
 
+apply plugin: "groovy"
+
 dependencies {
   api project(":nrich-validation-api")
 
@@ -22,6 +24,7 @@ dependencies {
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
   testImplementation "io.projectreactor:reactor-core"
+  testImplementation "org.apache.groovy:groovy"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
   testImplementation "org.junit.jupiter:junit-jupiter-params"
