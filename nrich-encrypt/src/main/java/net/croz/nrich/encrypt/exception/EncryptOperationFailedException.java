@@ -22,6 +22,10 @@ package net.croz.nrich.encrypt.exception;
  */
 public class EncryptOperationFailedException extends RuntimeException {
 
+    public EncryptOperationFailedException(String message) {
+        super(message);
+    }
+
     public EncryptOperationFailedException(String message, Throwable cause) {
         super(message, cause);
     }
