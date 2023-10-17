@@ -106,6 +106,22 @@ public class Slf4jLoggingService implements LoggingService {
         return LoggingVerbosityLevel.FULL;
     }
 
+    protected String fetchClassNameForException(Exception exception) {
+        if (exception == null) {
+            return "";
+        }
+
+        return exception.getClass().getName();
+    }
+
+    protected String fetchMessageForException(Exception exception) {
+        if (exception == null) {
+            return "";
+        }
+
+        return exception.getMessage();
+    }
+
     private LoggingLevel fetchConfiguredLoggingLevelForException(String exceptionClassName) {
         MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
 
@@ -120,22 +136,6 @@ public class Slf4jLoggingService implements LoggingService {
         }
 
         return LoggingLevel.ERROR;
-    }
-
-    private String fetchClassNameForException(Exception exception) {
-        if (exception == null) {
-            return "";
-        }
-
-        return exception.getClass().getName();
-    }
-
-    private String fetchMessageForException(Exception exception) {
-        if (exception == null) {
-            return "";
-        }
-
-        return exception.getMessage();
     }
 
     private String prepareExceptionAuxiliaryDataMessage(Map<String, ?> exceptionAuxiliaryData, String separator) {
