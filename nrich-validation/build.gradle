@@ -9,6 +9,8 @@ dependencies {
   compileOnly "org.projectlombok:lombok"
 
   implementation "org.hibernate.validator:hibernate-validator"
+  implementation "org.slf4j:slf4j-api"
+  implementation "org.reflections:reflections"
 
   runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 

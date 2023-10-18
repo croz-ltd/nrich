@@ -10,7 +10,7 @@ It also contains a list of messages for standard and additional constraints in e
 
 ## Setting up Spring beans
 
-If automatic registration of messages is required then following configuration is required
+If automatic registration of messages and validators (supported only for hibernate-validator) is required then following configuration is required
 (this can also be registered through application.properties by manually including `validationMessages` when using Spring Boot):
 
 ```java
@@ -37,9 +37,31 @@ public class ApplicationConfiguration {
             }
         }
     }
+
+    @Bean
+    Validator validator(ConstraintMappingRegistrar constraintValidatorRegistrar) {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+
+        registerConstraintMappingContributors(localValidatorFactoryBean, constraintValidatorRegistrar);
+
+        return localValidatorFactoryBean;
+    }
+
+    @Bean
+    ConstraintMappingRegistrar constraintValidatorRegistrar() {
+        return new DefaultConstraintMappingRegistrar(List.of("net.croz.nrich.validation.constraint.validator"));
+    }
+
+    private void registerConstraintMappingContributors(LocalValidatorFactoryBean validator, ConstraintMappingRegistrar constraintValidatorRegistrar) {
+        validator.setConfigurationInitializer(constraintValidatorRegistrar::registerConstraints);
+    }
 }
 
 ```
+
+If validators don't need to be registered automatically then standard `validation.xml` file in `META-INF` directory should be provided. And inside `ConstraintMappingContributor`
+implementation `net.croz.nrich.validation.constraint.mapping.DefaultConstraintMappingContributor` should be registered. In that case `ConstraintMappingRegistrar` bean
+and `registerConstraintMappingContributors` method are not needed.
 
 ## Usage
 

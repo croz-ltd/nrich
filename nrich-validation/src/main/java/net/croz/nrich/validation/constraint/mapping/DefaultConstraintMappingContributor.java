@@ -17,25 +17,25 @@
 
 package net.croz.nrich.validation.constraint.mapping;
 
-import net.croz.nrich.validation.api.constraint.LastTimestampInDay;
-import net.croz.nrich.validation.api.constraint.MinDate;
-import net.croz.nrich.validation.api.constraint.SpelExpression;
 import net.croz.nrich.validation.api.constraint.InList;
+import net.croz.nrich.validation.api.constraint.LastTimestampInDay;
 import net.croz.nrich.validation.api.constraint.MaxSizeInBytes;
+import net.croz.nrich.validation.api.constraint.MinDate;
 import net.croz.nrich.validation.api.constraint.NotNullWhen;
 import net.croz.nrich.validation.api.constraint.NullWhen;
+import net.croz.nrich.validation.api.constraint.SpelExpression;
 import net.croz.nrich.validation.api.constraint.ValidFile;
 import net.croz.nrich.validation.api.constraint.ValidFileResolvable;
 import net.croz.nrich.validation.api.constraint.ValidOib;
 import net.croz.nrich.validation.api.constraint.ValidRange;
 import net.croz.nrich.validation.api.constraint.ValidSearchProperties;
-import net.croz.nrich.validation.constraint.validator.MinDateValidator;
-import net.croz.nrich.validation.constraint.validator.LastTimestampInDayValidator;
-import net.croz.nrich.validation.constraint.validator.SpelExpressionValidator;
 import net.croz.nrich.validation.constraint.validator.InListValidator;
+import net.croz.nrich.validation.constraint.validator.LastTimestampInDayValidator;
 import net.croz.nrich.validation.constraint.validator.MaxSizeInBytesValidator;
+import net.croz.nrich.validation.constraint.validator.MinDateValidator;
 import net.croz.nrich.validation.constraint.validator.NotNullWhenValidator;
 import net.croz.nrich.validation.constraint.validator.NullWhenValidator;
+import net.croz.nrich.validation.constraint.validator.SpelExpressionValidator;
 import net.croz.nrich.validation.constraint.validator.ValidFileResolvableValidator;
 import net.croz.nrich.validation.constraint.validator.ValidFileValidator;
 import net.croz.nrich.validation.constraint.validator.ValidOibValidator;

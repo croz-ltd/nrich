@@ -17,8 +17,10 @@
 
 package net.croz.nrich.validation.starter.configuration;
 
+import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
@@ -34,8 +36,11 @@ class NrichValidationAutoConfigurationTest {
     @Test
     void shouldConfigureDefaultConfiguration() {
         // expect
-        contextRunner.run(context ->
-            assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class)
+        contextRunner.run(context -> {
+                assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class);
+            assertThat(context).hasSingleBean(ConstraintValidatorRegistrar.class);
+                assertThat(context).hasSingleBean(ValidationConfigurationCustomizer.class);
+            }
         );
     }
 
@@ -45,6 +50,15 @@ class NrichValidationAutoConfigurationTest {
         contextRunner.withPropertyValues("nrich.validation.register-messages=false").run(context ->
             assertThat(context).doesNotHaveBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class)
         );
+    }
+
+    @Test
+    void shouldNotRegisterValidatorsWhenDisabledViaProperty() {
+        // expect
+        contextRunner.withPropertyValues("nrich.validation.register-constraint-validators=false").run(context -> {
+            assertThat(context).doesNotHaveBean(ConstraintValidatorRegistrar.class);
+            assertThat(context).doesNotHaveBean(ValidationConfigurationCustomizer.class);
+        });
     }
 
     @Test
