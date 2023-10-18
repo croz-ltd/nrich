@@ -34,6 +34,7 @@ import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.api.data.interceptor.RegistryDataInterceptor;
 import net.croz.nrich.registry.api.data.service.RegistryDataService;
+import net.croz.nrich.registry.api.enumdata.service.RegistryEnumService;
 import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
@@ -51,6 +52,8 @@ import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversion
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenSearchConfiguration;
+import net.croz.nrich.registry.enumdata.controller.RegistryEnumController;
+import net.croz.nrich.registry.enumdata.service.DefaultRegistryEnumService;
 import net.croz.nrich.registry.history.controller.RegistryHistoryController;
 import net.croz.nrich.registry.history.service.DefaultRegistryHistoryService;
 import net.croz.nrich.registry.security.interceptor.RegistryConfigurationUpdateInterceptor;
@@ -272,6 +275,16 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryHistoryController registryHistoryController(RegistryHistoryService registryHistoryService) {
         return new RegistryHistoryController(registryHistoryService);
+    }
+
+    @Bean
+    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource) {
+        return new DefaultRegistryEnumService(messageSource);
+    }
+
+    @Bean
+    public RegistryEnumController registryEnumController(RegistryEnumService registryEnumService) {
+        return new RegistryEnumController(registryEnumService);
     }
 
     private List<RegistryGroupDefinitionConfiguration> createRegistryGroupDefinitionConfigurationList() {

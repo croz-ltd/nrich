@@ -151,6 +151,16 @@ public class ApplicationConfiguration {
 
         return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);
     }
+
+    @Bean
+    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource) {
+        return new DefaultRegistryEnumService(messageSource);
+    }
+
+    @Bean
+    public RegistryEnumController registryEnumController(RegistryEnumService registryEnumService) {
+        return new RegistryEnumController(registryEnumService);
+    }
 }
 
 ```
@@ -208,6 +218,17 @@ Users can provide their own implementation of `RegistryClassResolvingService` in
 `RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity  (a list of `EntityWithRevision`) to client.
 
 `RegistryDataFormConfigurationMappingCustomizer` is used to register registry entities with `nrich-form-configuration` module so clients can fetch validations for specific entities.
+
+`RegistryEnumService` is used for fetching and searching enums by description (user provided message). It provides an easy way of keeping all enum description in a single place.
+In cases where each enum entry implements some methods and information about that is needed in response that can be achieved by defining a static property with
+name `ADDITIONAL_METHODS_FOR_SERIALIZATION`. That property should return a list of method names whose results will be added to `EnumResult.additionalData` map where key will be method name and
+value will be method result.
+
+`RegistryEnumController` is REST API for `RegistryEnumService` it has two POST methods:
+
+- `nrich/registry/enum/list-bulk` - loads multiple enums
+
+- `nrich/registry/enum/list`  - loads/searches single enum
 
 ## Usage
 
