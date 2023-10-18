@@ -14,14 +14,18 @@
  *  limitations under the License.
  *
  */
-
 package net.croz.nrich.validation.constraint.validator;
 
 import net.croz.nrich.validation.api.constraint.SpelExpression;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.context.expression.EnvironmentAccessor;
+import org.springframework.context.expression.MapAccessor;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.SpelCompilerMode;
+import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -30,24 +34,24 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class SpelExpressionValidator implements ConstraintValidator<SpelExpression, Object> {
 
+    private static final String ENVIRONMENT_VARIABLE_NAME = "environment";
+
+    private static final String SYSTEM_PROPERTIES_VARIABLE_NAME = "systemProperties";
+
     private String spelExpression;
 
-    private ExpressionParser expressionParser;
+    private final ExpressionParser expressionParser;
 
-    private StandardEvaluationContext evaluationContext;
-
-    private ApplicationContext applicationContext;
+    private final EvaluationContext evaluationContext;
 
     public SpelExpressionValidator(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+        expressionParser = new SpelExpressionParser();
+        evaluationContext = createEvaluationContext(applicationContext);
     }
 
     @Override
     public void initialize(SpelExpression constraintAnnotation) {
         spelExpression = constraintAnnotation.value();
-        expressionParser = new SpelExpressionParser();
-        evaluationContext = new StandardEvaluationContext();
-        evaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
     }
 
     @Override
@@ -59,6 +63,20 @@ public class SpelExpressionValidator implements ConstraintValidator<SpelExpressi
 
         Expression expression = expressionParser.parseExpression(spelExpression);
 
-        return expression.getValue(evaluationContext, value, Boolean.class);
+        return Boolean.TRUE.equals(expression.getValue(evaluationContext, value, Boolean.class));
+    }
+
+    private EvaluationContext createEvaluationContext(ApplicationContext applicationContext) {
+        SpelParserConfiguration config = new SpelParserConfiguration(SpelCompilerMode.MIXED, this.getClass().getClassLoader());
+        StandardEvaluationContext standardEvaluationContext = new StandardEvaluationContext(config);
+
+        standardEvaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));
+        standardEvaluationContext.addPropertyAccessor(new MapAccessor());
+        standardEvaluationContext.addPropertyAccessor(new EnvironmentAccessor());
+
+        standardEvaluationContext.setVariable(ENVIRONMENT_VARIABLE_NAME, applicationContext.getEnvironment());
+        standardEvaluationContext.setVariable(SYSTEM_PROPERTIES_VARIABLE_NAME, System.getProperties());
+
+        return standardEvaluationContext;
     }
 }
