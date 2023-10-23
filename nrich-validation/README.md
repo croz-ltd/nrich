@@ -301,3 +301,36 @@ public class ExampleTypeRequest {
 ```
 
 In an example above the property uuid is required to be a valid UUID format. The format check is achieved by calling `validateUuid` method of `spelValidationTestService` bean.
+
+#### MinDate
+
+Validates that the annotated element is after specified minimum date
+
+Supported types are:
+- java.util.Date
+- java.util.Calendar
+- java.time.Instant
+- java.time.LocalDate
+- java.time.LocalDateTime
+- java.time.LocalTime
+- java.time.MonthDay
+- java.time.OffsetDateTime
+- java.time.OffsetTime
+- java.time.Year
+- java.time.YearMonth
+- java.time.ZonedDateTime
+
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
+
+    @MinDate("2023-01-01")
+    private LocalDate date;
+
+}
+
+```
+
+Above request will require that the date property is after 01.01.2023
