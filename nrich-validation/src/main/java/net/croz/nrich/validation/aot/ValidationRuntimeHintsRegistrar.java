@@ -18,6 +18,7 @@
 package net.croz.nrich.validation.aot;
 
 import net.croz.nrich.validation.constraint.mapping.DefaultConstraintMappingContributor;
+import net.croz.nrich.validation.constraint.validator.LastTimestampInDayValidator;
 import net.croz.nrich.validation.constraint.validator.MinDateValidator;
 import net.croz.nrich.validation.constraint.validator.SpelExpressionValidator;
 import net.croz.nrich.validation.constraint.validator.InListValidator;
@@ -45,7 +46,8 @@ public class ValidationRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
     public static final List<TypeReference> TYPE_REFERENCE_LIST = Collections.unmodifiableList(TypeReference.listOf(
         DefaultConstraintMappingContributor.class, ValidOibValidator.class, ValidSearchPropertiesValidator.class, ValidRangeValidator.class, MaxSizeInBytesValidator.class,
-        NotNullWhenValidator.class, NullWhenValidator.class, ValidFileValidator.class, ValidFileResolvableValidator.class, InListValidator.class, SpelExpressionValidator.class, MinDateValidator.class
+        NotNullWhenValidator.class, NullWhenValidator.class, ValidFileValidator.class, ValidFileResolvableValidator.class, InListValidator.class, SpelExpressionValidator.class,
+        MinDateValidator.class, LastTimestampInDayValidator.class
     ));
 
     @Override

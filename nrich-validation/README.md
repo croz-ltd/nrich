@@ -334,3 +334,36 @@ public class ExampleRequest {
 ```
 
 Above request will require that the date property is after 01.01.2023
+
+#### LastTimestampInDay
+
+Validates that the annotated element is before end of the day
+
+Supported types are:
+- java.util.Date
+- java.util.Calendar
+- java.time.Instant
+- java.time.LocalDate
+- java.time.LocalDateTime
+- java.time.LocalTime
+- java.time.MonthDay
+- java.time.OffsetDateTime
+- java.time.OffsetTime
+- java.time.Year
+- java.time.YearMonth
+- java.time.ZonedDateTime
+
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
+
+    @LastTimestampInDay
+    private LocalDate date;
+
+}
+
+```
+
+Above request will require that the date property is before the end of the day
