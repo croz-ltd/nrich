@@ -17,6 +17,8 @@
 
 package net.croz.nrich.validation;
 
+import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
+import net.croz.nrich.validation.constraint.mapping.DefaultConstraintValidatorRegistrar;
 import net.croz.nrich.validation.constraint.stub.NullWhenTestService;
 import net.croz.nrich.validation.constraint.stub.SpelValidationTestService;
 import org.springframework.context.annotation.Bean;
@@ -24,21 +26,36 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.util.List;
+
 @Configuration(proxyBeanMethods = false)
 public class ValidationTestConfiguration {
 
     @Bean
-    public Validator validator() {
-        return new LocalValidatorFactoryBean();
+    Validator validator(ConstraintValidatorRegistrar constraintValidatorRegistrar) {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+
+        registerConstraintMappingContributors(localValidatorFactoryBean, constraintValidatorRegistrar);
+
+        return localValidatorFactoryBean;
     }
 
     @Bean
-    public NullWhenTestService nullWhenTestService() {
+    NullWhenTestService nullWhenTestService() {
         return new NullWhenTestService();
     }
 
     @Bean
-    public SpelValidationTestService spelValidationTestService() {
+    SpelValidationTestService spelValidationTestService() {
         return new SpelValidationTestService();
+    }
+
+    @Bean
+    ConstraintValidatorRegistrar constraintMappingRegistrar() {
+        return new DefaultConstraintValidatorRegistrar(List.of("net.croz.nrich.validation.constraint.validator"));
+    }
+
+    private void registerConstraintMappingContributors(LocalValidatorFactoryBean validator, ConstraintValidatorRegistrar constraintValidatorRegistrar) {
+        validator.setConfigurationInitializer(constraintValidatorRegistrar::registerConstraintValidators);
     }
 }

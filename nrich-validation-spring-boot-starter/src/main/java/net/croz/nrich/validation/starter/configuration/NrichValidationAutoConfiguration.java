@@ -18,12 +18,18 @@
 package net.croz.nrich.validation.starter.configuration;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
+import net.croz.nrich.validation.constraint.mapping.DefaultConstraintValidatorRegistrar;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
+
+import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
 public class NrichValidationAutoConfiguration {
@@ -43,9 +49,21 @@ public class NrichValidationAutoConfiguration {
 
         @Override
         public void afterPropertiesSet() {
-            if (messageSource instanceof AbstractResourceBasedMessageSource) {
-                ((AbstractResourceBasedMessageSource) messageSource).addBasenames(VALIDATION_MESSAGES_NAME);
+            if (messageSource instanceof AbstractResourceBasedMessageSource abstractResourceBasedMessageSource) {
+                abstractResourceBasedMessageSource.addBasenames(VALIDATION_MESSAGES_NAME);
             }
         }
+    }
+
+    @ConditionalOnProperty(name = "nrich.validation.register-constraint-validators", havingValue = "true", matchIfMissing = true)
+    @Bean
+    ConstraintValidatorRegistrar constraintMappingRegistrar(@Value("${nrich.validation.validator-package-list:net.croz.nrich.validation.constraint.validator}") List<String> validatorPackageList) {
+        return new DefaultConstraintValidatorRegistrar(validatorPackageList);
+    }
+
+    @ConditionalOnProperty(name = "nrich.validation.register-constraint-validators", havingValue = "true", matchIfMissing = true)
+    @Bean
+    ValidationConfigurationCustomizer validationConfigurationCustomizer(ConstraintValidatorRegistrar constraintValidatorRegistrar) {
+        return constraintValidatorRegistrar::registerConstraintValidators;
     }
 }

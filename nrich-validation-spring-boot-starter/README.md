@@ -41,9 +41,11 @@ Note if using `nrich-bom` dependency versions should be omitted.
 
 Configuration is done through a property file, available properties and descriptions are given bellow (all properties are prefixed with nrich.validation which is omitted for readability):
 
-| property           | description                                                      | default value |
-|--------------------|------------------------------------------------------------------|---------------|
-| register-messages  | Whether default validation failure messages should be registered | true          |
+| property                       | description                                                      | default value                                  |
+|--------------------------------|------------------------------------------------------------------|------------------------------------------------|
+| register-messages              | Whether default validation failure messages should be registered | true                                           |
+| register-constraint-validators | Whether default validators should be registered                  | true                                           |
+| validator-package-list         | List of packages from which to register validators               | net.croz.nrich.validation.constraint.validator |
 
 The default configuration values in yaml format for easier modification are given bellow:
 
@@ -51,13 +53,33 @@ The default configuration values in yaml format for easier modification are give
 
 nrich.validation:
   register-messages: true
+  register-constraint-validators: true
+  validator-package-list: net.croz.nrich.validation.constraint.validator
 
 ```
 
 ### Using the module
 
 Users should just add the dependency on classpath and then use the provided constraints. If custom messages are required they should be defined in `messages.properties` file
-and default ones disabled then through `nrich.validation.register-messages` property set to false. A list of available constraints and descriptions is given bellow:
+and default ones disabled then through `nrich.validation.register-messages` property set to false. There are two options for registering the modules validators.
+First one is by automatic registration which is enabled by default through property `nrich.validation.register-constraint-validators`, the other option is by defining a standard `validation.xml`
+file in `META-INF` directory and registering `ConstraintMappingContributor` implementation `net.croz.nrich.validation.constraint.mapping.DefaultConstraintMappingContributor`.
+
+i.e
+
+```xml
+
+<validation-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://jboss.org/xml/ns/javax/validation/configuration"
+                   xsi:schemaLocation="http://jboss.org/xml/ns/javax/validation/configuration"
+                   version="1.1">
+    <property name="hibernate.validator.constraint_mapping_contributors">net.croz.nrich.validation.constraint.mapping.DefaultConstraintMappingContributor</property>
+</validation-config>
+
+
+```
+
+A list of available constraints and descriptions is given bellow:
 
 | constraint                | description                                                                                                                                                                                       |
 |---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -73,7 +95,6 @@ and default ones disabled then through `nrich.validation.register-messages` prop
 | `@ValidOib`               | Validates that the annotated element is valid OIB (Personal Identification number)                                                                                                                |
 | `@ValidRange`             | Validates that the annotated element from property must be less than (or equal to if inclusive is true) to property                                                                               |
 | `@ValidSearchProperties ` | Validates that at least one group of annotated element must contain all properties that are not null (i.e. when searching users that either name is not null or first and last name are not null) |
-
 
 #### File related constraints
 

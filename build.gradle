@@ -73,6 +73,7 @@ subprojects { Project subproject ->
         implementation "org.apache.poi:poi:$apachePoiVersion"
         implementation "org.apache.poi:poi-ooxml:$apachePoiVersion"
         implementation "org.modelmapper:modelmapper:$modelMapperVersion"
+        implementation "org.reflections:reflections:$reflectionsVersion"
       }
     }
 
