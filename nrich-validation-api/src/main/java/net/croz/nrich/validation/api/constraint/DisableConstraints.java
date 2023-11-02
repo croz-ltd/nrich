@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -34,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Adds support for disabling constraints. Constraints can be disabled either on property, method or type level.
  */
 @SuppressWarnings("unused")
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, TYPE_USE })
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, TYPE_USE, TYPE })
 @Retention(RUNTIME)
 @Repeatable(DisableConstraints.List.class)
 @Documented
