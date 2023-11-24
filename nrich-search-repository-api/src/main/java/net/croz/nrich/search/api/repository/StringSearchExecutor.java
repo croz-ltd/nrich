@@ -97,4 +97,10 @@ public interface StringSearchExecutor<T> {
      */
     <P> boolean exists(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration);
 
+    /**
+     * Returns repository domain class.
+     *
+     * @return repository domain class
+     */
+    Class<T> getDomainClass();
 }

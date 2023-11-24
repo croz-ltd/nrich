@@ -172,4 +172,13 @@ class JpaStringSearchExecutorTest {
         // then
         assertThat(result).isEqualTo(3);
     }
+
+    @Test
+    void shouldReturnDomainClass() {
+        // when
+        Class<?> result = testEntityStringSearchRepository.getDomainClass();
+
+        // then
+        assertThat(result).isEqualTo(TestStringSearchEntity.class);
+    }
 }

@@ -262,4 +262,13 @@ class JpaSearchExecutorTest {
         // then
         assertThat(result).isFalse();
     }
+
+    @Test
+    void shouldReturnDomainClass() {
+        // when
+        Class<?> result = testEntitySearchRepository.getDomainClass();
+
+        // then
+        assertThat(result).isEqualTo(TestEntity.class);
+    }
 }
