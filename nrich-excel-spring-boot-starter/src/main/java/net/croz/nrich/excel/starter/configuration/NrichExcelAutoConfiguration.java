@@ -29,6 +29,7 @@ import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
@@ -41,8 +42,8 @@ public class NrichExcelAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.excel.default-converter-enabled", havingValue = "true", matchIfMissing = true)
     @Bean
-    public CellValueConverter defaultCellValueConverter() {
-        return new DefaultCellValueConverter();
+    public CellValueConverter defaultCellValueConverter(MessageSource messageSource) {
+        return new DefaultCellValueConverter(messageSource);
     }
 
     @ConditionalOnMissingBean

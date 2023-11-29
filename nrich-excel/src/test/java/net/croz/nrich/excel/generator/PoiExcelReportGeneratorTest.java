@@ -22,10 +22,12 @@ import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.converter.DefaultCellValueConverter;
+import net.croz.nrich.excel.stub.TestEnum;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -63,7 +65,10 @@ class PoiExcelReportGeneratorTest {
 
     @BeforeEach
     void setup() {
-        List<CellValueConverter> cellValueConverterList = Collections.singletonList(new DefaultCellValueConverter());
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+
+        List<CellValueConverter> cellValueConverterList = Collections.singletonList(new DefaultCellValueConverter(messageSource));
         InputStream template = this.getClass().getResourceAsStream("/excel/template.xlsx");
         List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
         List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
@@ -85,10 +90,10 @@ class PoiExcelReportGeneratorTest {
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         Object[] rowData = new Object[] {
             1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1,
-            LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, null
+            LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, TestEnum.FIRST, TestEnum.SECOND, null
         };
         // when resolving data from cells all dates are converted to instant, all decimal numbers are converted to double and all whole numbers are converted to integer
-        Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, null };
+        Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, "First", "SECOND", null };
 
         // when
         excelReportGenerator.writeRowData(rowData);

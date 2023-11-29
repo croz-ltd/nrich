@@ -17,8 +17,8 @@ To be able to use this module following configuration is required:
 public class ApplicationConfiguration {
 
     @Bean
-    public CellValueConverter defaultCellValueConverter() {
-        return new DefaultCellValueConverter();
+    public CellValueConverter defaultCellValueConverter(MessageSource messageSource) {
+        return new DefaultCellValueConverter(messageSource);
     }
 
     @Bean
@@ -37,7 +37,9 @@ public class ApplicationConfiguration {
 ```
 
 `CellValueConverter` is responsible for converting objects to values to be written in excel. Users can provided their own implementations and/or use
-`DefaultCellValueConverter`.
+`DefaultCellValueConverter`. `DefaultCellValueConverter` supports writing of dates, numbers and enums to excel (for other types toString() method is called before writing to excel).
+Enum value to be written to excel can be provided through messages.properties file in the form `fullyQualifiedClassName.enumValue.description` and if present will be written to
+excel instead of value.
 
 `TypeDataFormatUtil` is responsible for resolving a list of `TypeDataFormat` instances that decide with what format a specific class will be written to excel. It accepts a list of formats for value
 conversion (`dateFormat`, `dateTimeFormat`, `integerNumberFormat`, `decimalNumberFormat`), option should dates be written with time component or not

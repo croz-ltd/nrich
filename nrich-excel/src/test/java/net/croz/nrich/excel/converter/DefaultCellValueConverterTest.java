@@ -18,9 +18,11 @@
 package net.croz.nrich.excel.converter;
 
 import net.croz.nrich.excel.api.model.CellHolder;
+import net.croz.nrich.excel.stub.TestEnum;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -41,7 +43,7 @@ import static org.mockito.Mockito.verify;
 
 class DefaultCellValueConverterTest {
 
-    private final DefaultCellValueConverter defaultCellValueConverter = new DefaultCellValueConverter();
+    private final DefaultCellValueConverter defaultCellValueConverter = new DefaultCellValueConverter(new ResourceBundleMessageSource());
 
     @MethodSource("shouldReturnTrueIfConversionIsSupportedMethodSource")
     @ParameterizedTest
@@ -73,7 +75,8 @@ class DefaultCellValueConverterTest {
             arguments(1L, true),
             arguments(2.2F, true),
             arguments(2.2D, true),
-            arguments(BigDecimal.ONE, true)
+            arguments(BigDecimal.ONE, true),
+            arguments(TestEnum.FIRST, true)
         );
     }
 
@@ -105,7 +108,8 @@ class DefaultCellValueConverterTest {
             arguments(1L, Number.class),
             arguments(2.2F, Number.class),
             arguments(2.2D, Number.class),
-            arguments(BigDecimal.ONE, Number.class)
+            arguments(BigDecimal.ONE, Number.class),
+            arguments(TestEnum.FIRST, String.class)
         );
     }
 }

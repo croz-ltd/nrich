@@ -25,8 +25,10 @@ import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.generator.PoiExcelReportGeneratorFactory;
 import net.croz.nrich.excel.service.DefaultExcelReportService;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.List;
@@ -35,8 +37,17 @@ import java.util.List;
 public class ExcelTestConfiguration {
 
     @Bean
-    public CellValueConverter defaultCellValueConverter() {
-        return new DefaultCellValueConverter();
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+
+        messageSource.setBasename("messages");
+
+        return messageSource;
+    }
+
+    @Bean
+    public CellValueConverter defaultCellValueConverter(MessageSource messageSource) {
+        return new DefaultCellValueConverter(messageSource);
     }
 
     @Bean
