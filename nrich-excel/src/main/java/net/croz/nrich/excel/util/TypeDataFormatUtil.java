@@ -21,6 +21,7 @@ import net.croz.nrich.excel.api.model.TypeDataFormat;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,8 +40,9 @@ public final class TypeDataFormatUtil {
     private TypeDataFormatUtil() {
     }
 
-    public static List<TypeDataFormat> resolveTypeDataFormatList(String dateFormat, String dateTimeFormat, String integerNumberFormat, String decimalNumberFormat, boolean writeDateWithTime,
-                                                                 List<TypeDataFormat> additionalTypeDataFormatList) {
+    public static List<TypeDataFormat> resolveTypeDataFormatList(
+        String dateFormat, String dateTimeFormat, String integerNumberFormat, String decimalNumberFormat, boolean writeDateWithTime, List<TypeDataFormat> additionalTypeDataFormatList
+    ) {
         String resolvedDateTimeFormat = writeDateWithTime ? dateTimeFormat : dateFormat;
 
         List<TypeDataFormat> nonNullAdditionalDataFormatList = Optional.ofNullable(additionalTypeDataFormatList).orElse(Collections.emptyList());
@@ -49,9 +51,11 @@ public final class TypeDataFormatUtil {
             new TypeDataFormat(Date.class, dateFormat),
             new TypeDataFormat(Instant.class, dateFormat),
             new TypeDataFormat(LocalDate.class, dateFormat),
+            new TypeDataFormat(java.sql.Date.class, dateFormat),
             new TypeDataFormat(LocalDateTime.class, resolvedDateTimeFormat),
             new TypeDataFormat(ZonedDateTime.class, resolvedDateTimeFormat),
             new TypeDataFormat(OffsetDateTime.class, resolvedDateTimeFormat),
+            new TypeDataFormat(Timestamp.class, resolvedDateTimeFormat),
             new TypeDataFormat(Short.class, integerNumberFormat),
             new TypeDataFormat(Integer.class, integerNumberFormat),
             new TypeDataFormat(Long.class, integerNumberFormat),

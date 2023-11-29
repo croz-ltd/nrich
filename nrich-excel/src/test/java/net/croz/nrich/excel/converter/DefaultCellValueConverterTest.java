@@ -25,6 +25,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,6 +71,7 @@ class DefaultCellValueConverterTest {
             arguments(LocalDateTime.now(), true),
             arguments(OffsetDateTime.now(), true),
             arguments(ZonedDateTime.now(), true),
+            arguments(new Timestamp(System.currentTimeMillis()), true),
             arguments((short) 1, true),
             arguments(1, true),
             arguments(1L, true),

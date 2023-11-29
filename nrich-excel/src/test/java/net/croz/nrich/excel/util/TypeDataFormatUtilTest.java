@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,11 +49,11 @@ class TypeDataFormatUtilTest {
 
         // then
         assertThat(formatList).extracting("type").containsExactly(
-            Date.class, Instant.class, LocalDate.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class,
+            Date.class, Instant.class, LocalDate.class, java.sql.Date.class, LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, Timestamp.class,
             Short.class, Integer.class, Long.class, BigInteger.class, Float.class, Double.class, BigDecimal.class
         );
         assertThat(formatList).extracting("dataFormat").containsExactly(
-            dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat,
+            dateFormat, dateFormat, dateFormat, dateFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat, dateTimeFormat,
             integerFormat, integerFormat, integerFormat, integerFormat, decimalFormat, decimalFormat, decimalFormat
         );
     }
@@ -78,15 +79,16 @@ class TypeDataFormatUtilTest {
     @Test
     void shouldAllowForAdditionalFormatsToBeSpecified() {
         // given
-        String dateFormat = "dd/MM/yyyy";
-        List<TypeDataFormat> overriddenFormatList = Collections.singletonList(new TypeDataFormat(java.sql.Date.class, dateFormat));
+        Class<?> additionalClass = Object.class;
+        String dataFormat = "dd/MM/yyyy";
+        List<TypeDataFormat> overriddenFormatList = Collections.singletonList(new TypeDataFormat(additionalClass, dataFormat));
 
         // when
         List<TypeDataFormat> formatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, overriddenFormatList);
-        TypeDataFormat dateTypeDataFormat = formatList.stream().filter(typeDataFormat -> java.sql.Date.class.equals(typeDataFormat.getType())).findFirst().orElse(null);
+        TypeDataFormat dateTypeDataFormat = formatList.stream().filter(typeDataFormat -> additionalClass.equals(typeDataFormat.getType())).findFirst().orElse(null);
 
         // then
         assertThat(dateTypeDataFormat).isNotNull();
-        assertThat(dateTypeDataFormat.getDataFormat()).isEqualTo(dateFormat);
+        assertThat(dateTypeDataFormat.getDataFormat()).isEqualTo(dataFormat);
     }
 }
