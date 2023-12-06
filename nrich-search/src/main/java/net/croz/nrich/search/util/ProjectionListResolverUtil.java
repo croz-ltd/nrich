@@ -38,7 +38,7 @@ public final class ProjectionListResolverUtil {
     public static <R> List<SearchProjection<R>> resolveSearchProjectionList(Class<?> projectionType) {
         Predicate<Field> shouldIncludeField = field -> !(field.isSynthetic() || Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers()));
 
-        return Arrays.stream(projectionType.getDeclaredFields())
+        return FieldExtractionUtil.getAllFields(projectionType).stream()
             .filter(shouldIncludeField)
             .map(ProjectionListResolverUtil::<R>convertToProjection)
             .collect(Collectors.toList());

@@ -27,6 +27,7 @@ import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
+import net.croz.nrich.search.repository.stub.ExtendedTestEntityResult;
 import net.croz.nrich.search.repository.stub.ExtendedTestEntitySearchRequest;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionResolver;
@@ -618,6 +619,22 @@ class JpaQueryBuilderTest {
         assertThat(results.get(0).getName()).isEqualTo("first0");
         assertThat(results.get(0).getNestedName()).isEqualTo("nested0");
         assertThat(results.get(0).getNestedId()).isNotNull();
+    }
+
+    @Test
+    void shouldSetPropertiesOfSuperclassInProjection() {
+        // given
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        SearchConfiguration<TestEntity, ExtendedTestEntityResult, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, ExtendedTestEntityResult, TestEntitySearchRequest>builder()
+            .resultClass(ExtendedTestEntityResult.class)
+            .build();
+
+        // when
+        List<ExtendedTestEntityResult> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results.get(0).getName()).isEqualTo("first0");
     }
 
     @Test
