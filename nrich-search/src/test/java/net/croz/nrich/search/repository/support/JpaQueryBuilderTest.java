@@ -27,6 +27,7 @@ import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
+import net.croz.nrich.search.repository.stub.ExtendedTestEntitySearchRequest;
 import net.croz.nrich.search.repository.stub.TestEntity;
 import net.croz.nrich.search.repository.stub.TestEntityAdditionalRestrictionResolver;
 import net.croz.nrich.search.repository.stub.TestEntityCollectionWithReverseAssociation;
@@ -80,6 +81,18 @@ class JpaQueryBuilderTest {
     void shouldSearchByRootEntityStringAttributes() {
         // given
         TestEntitySearchRequest request = new TestEntitySearchRequest("FIRst0");
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldSearchBySuperclassEntityStringAttributes() {
+        // given
+        ExtendedTestEntitySearchRequest request = new ExtendedTestEntitySearchRequest("FIRst0");
 
         // when
         List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());

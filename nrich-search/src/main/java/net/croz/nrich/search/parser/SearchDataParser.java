@@ -29,6 +29,7 @@ import net.croz.nrich.search.model.AttributeHolderWithPath;
 import net.croz.nrich.search.model.Restriction;
 import net.croz.nrich.search.model.SearchDataParserConfiguration;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
+import net.croz.nrich.search.util.FieldExtractionUtil;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import net.croz.nrich.search.util.PropertyNameUtil;
 import org.springframework.util.CollectionUtils;
@@ -39,7 +40,6 @@ import jakarta.persistence.metamodel.ManagedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -119,7 +119,7 @@ public class SearchDataParser {
                 .collect(Collectors.toList());
         }
 
-        return Arrays.stream(wrapper.getRootClass().getDeclaredFields())
+        return FieldExtractionUtil.getAllFields(wrapper.getRootClass()).stream()
             .filter(field -> shouldIncludeField(ignoredFieldList, field))
             .map(Field::getName)
             .collect(Collectors.toList());
