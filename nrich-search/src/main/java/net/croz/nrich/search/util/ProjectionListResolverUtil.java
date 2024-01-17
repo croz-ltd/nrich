@@ -17,12 +17,14 @@
 
 package net.croz.nrich.search.util;
 
+import lombok.SneakyThrows;
 import net.croz.nrich.search.api.annotation.Projection;
 import net.croz.nrich.search.api.model.SearchProjection;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -56,9 +58,14 @@ public final class ProjectionListResolverUtil {
             if (projectionAnnotation != null) {
                 path = projectionAnnotation.path();
 
-                if (!Projection.DEFAULT.class.equals(projectionAnnotation.condition())) {
+                Class<? extends Predicate<?>> conditionClass = projectionAnnotation.condition();
+
+                if (GroovyUtil.isGroovyPresent() && GroovyUtil.isGroovyClosure(conditionClass)) {
+                    condition = createPredicateFromClosure(conditionClass);
+                }
+                else if (!Projection.DEFAULT.class.equals(conditionClass)) {
                     @SuppressWarnings("unchecked")
-                    Predicate<R> predicate = (Predicate<R>) BeanUtils.instantiateClass(projectionAnnotation.condition());
+                    Predicate<R> predicate = (Predicate<R>) BeanUtils.instantiateClass(conditionClass);
                     condition = predicate;
                 }
             }
@@ -72,6 +79,20 @@ public final class ProjectionListResolverUtil {
         }
 
         return new SearchProjection<>(path, alias, condition);
+    }
+
+    @SneakyThrows
+    private static <R> Predicate<R> createPredicateFromClosure(Class<?> conditionClass) {
+        Constructor<?> closureConstructor = conditionClass.getDeclaredConstructor(Object.class, Object.class);
+
+        return (value) -> {
+            try {
+                return Boolean.TRUE.equals(conditionClass.getMethod("call", Object.class).invoke(closureConstructor.newInstance(value, value), value));
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Error invoking closure", e);
+            }
+        };
     }
 
     private static Value findValueAnnotation(Annotation[] annotationList) {

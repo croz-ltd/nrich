@@ -1,5 +1,7 @@
 description = "Provides an easy way of querying of JPA entities through automatic query creation from passed in data (either strings or classes that hold restriction values)"
 
+apply plugin: "groovy"
+
 dependencies {
   api project(":nrich-search-api")
   api project(":nrich-search-repository-api")
@@ -17,6 +19,7 @@ dependencies {
   testRuntimeOnly "com.h2database:h2"
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 
+  testImplementation "org.apache.groovy:groovy"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.hibernate.orm:hibernate-core"
   testImplementation "org.junit.jupiter:junit-jupiter-api"
