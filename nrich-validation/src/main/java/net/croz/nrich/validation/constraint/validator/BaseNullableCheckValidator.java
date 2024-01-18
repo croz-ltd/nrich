@@ -64,7 +64,7 @@ abstract class BaseNullableCheckValidator {
     private boolean invokeConditionClosure(Class<? extends Predicate<?>> conditionClass, Object value) {
         Constructor<? extends Predicate<?>> closureConstructor = conditionClass.getDeclaredConstructor(Object.class, Object.class);
 
-        return (boolean) conditionClass.getMethod("call", Object.class).invoke(closureConstructor.newInstance(value, value), value);
+        return Boolean.TRUE.equals(conditionClass.getMethod("call", Object.class).invoke(closureConstructor.newInstance(value, value), value));
     }
 
     private Object resolvePropertyValue(Object parent, String propertyName) {

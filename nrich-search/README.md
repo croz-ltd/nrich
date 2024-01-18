@@ -240,6 +240,36 @@ private final String carTypeMake;
 private final String carTypeModel;
 ```
 
+Condition class can be used that will decide if projection should be applied.
+
+```java
+@RequiredArgsConstructor
+@Getter
+public class CarSearchResult {
+
+    @Projection(path = "carType.make", condition = CarTypeCondition)
+    private final String carTypeMake;
+
+    static class CarTypeCondition implements Predicate<CarSearchRequest> {
+
+        @Override
+        boolean test(CarSearchRequest request) {
+            request.registrationNumber != null
+        }
+    }
+}
+```
+
+If Groovy is used, condition can be written as closure.
+
+```groovy
+class CarSearchResult {
+
+    @Projection(path = "carType.make", condition = { CarSearchRequest request -> request.registrationNumber != null })
+    String carTypeMake
+}
+```
+
 ### Using StringSearchExecutor (quick search)
 
 [`StringSearchExecutor`][string-search-executor-url] accepts a query string, list of properties for search and [`SearchConfiguration`][search-configuration-url].
