@@ -48,6 +48,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -795,6 +796,7 @@ class JpaQueryBuilderTest {
     void shouldNotAddAdditionalJoinsForSelection() {
         // given
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .nestedEntityNestedEntityName("name")
             .build();
 
         SearchProjection<TestEntitySearchRequest> nameProjection = new SearchProjection<>("name");
@@ -802,6 +804,7 @@ class JpaQueryBuilderTest {
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
             .resultClass(TestEntityDto.class)
+            .resolvePropertyMappingUsingPrefix(true)
             .projectionList(Arrays.asList(nameProjection, nestedNameProjection))
             .build();
 
@@ -809,7 +812,27 @@ class JpaQueryBuilderTest {
         CriteriaQuery<TestEntityDto> result = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         // then
-        assertThat(result.getRoots().iterator().next().getJoins()).isEmpty();
+        assertThat(result.getRoots().iterator().next().getJoins()).hasSize(1);
+    }
+
+    @Test
+    void shouldJoinBySpecifiedDefaultJoinType() {
+        // given
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .nestedEntityNestedEntityName("name")
+            .build();
+
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .defaultJoinType(JoinType.LEFT)
+            .resolvePropertyMappingUsingPrefix(true)
+            .build();
+
+        // when
+        CriteriaQuery<TestEntity> result = jpaQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
+
+        // then
+        assertThat(result.getRoots().iterator().next().getJoins()).hasSize(1);
+        assertThat(result.getRoots().iterator().next().getJoins()).extracting("joinType").containsOnly(JoinType.LEFT);
     }
 
     @Test

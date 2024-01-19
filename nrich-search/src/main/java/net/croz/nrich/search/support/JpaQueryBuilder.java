@@ -52,7 +52,6 @@ import jakarta.persistence.criteria.Selection;
 import jakarta.persistence.criteria.Subquery;
 import jakarta.persistence.metamodel.ManagedType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -91,15 +90,15 @@ public class JpaQueryBuilder<T> {
             searchProjectionList = ProjectionListResolverUtil.resolveSearchProjectionList(resultClass);
         }
 
-        List<Selection<?>> projectionList = resolveQueryProjectionList(root, searchProjectionList, request);
+        resolveAndApplyPredicateList(request, searchConfiguration, criteriaBuilder, root, query);
+
+        List<Selection<?>> projectionList = resolveQueryProjectionList(root, searchConfiguration.getDefaultJoinType(), searchProjectionList, request);
 
         if (!CollectionUtils.isEmpty(projectionList)) {
             query.multiselect(projectionList);
         }
 
         query.distinct(searchConfiguration.isDistinct());
-
-        resolveAndApplyPredicateList(request, searchConfiguration, criteriaBuilder, root, query);
 
         if (sort != null && sort.isSorted()) {
             query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
@@ -193,14 +192,14 @@ public class JpaQueryBuilder<T> {
             .forEach(searchJoin -> applyJoinOrJoinFetch(existingFetches, existingJoins, root, searchJoin, applyFetch));
     }
 
-    private <R> List<Selection<?>> resolveQueryProjectionList(Root<?> root, List<SearchProjection<R>> projectionList, R request) {
+    private <R> List<Selection<?>> resolveQueryProjectionList(Root<?> root, JoinType defaultJoinType, List<SearchProjection<R>> projectionList, R request) {
         if (CollectionUtils.isEmpty(projectionList)) {
             return Collections.emptyList();
         }
 
         return projectionList.stream()
             .filter(projection -> shouldApplyProjection(projection, request))
-            .map(projection -> convertToSelectionExpression(root, projection))
+            .map(projection -> convertToSelectionExpression(defaultJoinType, root, projection))
             .collect(Collectors.toList());
     }
 
@@ -247,21 +246,21 @@ public class JpaQueryBuilder<T> {
     }
 
     private <P, R> List<Predicate> resolveQueryPredicateList(R request, SearchConfiguration<T, P, R> searchConfiguration, CriteriaBuilder criteriaBuilder, Root<?> root, CriteriaQuery<?> query) {
+        JoinType defaultJoinType = searchConfiguration.getDefaultJoinType();
         Set<Restriction> restrictionList = new SearchDataParser(root.getModel(), request, SearchDataParserConfiguration.fromSearchConfiguration(searchConfiguration)).resolveRestrictionList();
-
         Map<Boolean, List<Restriction>> restrictionsByType = restrictionList.stream().collect(Collectors.partitioningBy(Restriction::isPluralAttribute));
 
-        List<Predicate> mainQueryPredicateList = convertRestrictionListToPredicateList(restrictionsByType.get(false), root, criteriaBuilder);
+        List<Predicate> mainQueryPredicateList = convertRestrictionListToPredicateList(restrictionsByType.get(false), root, criteriaBuilder, defaultJoinType);
 
         List<Restriction> pluralRestrictionList = restrictionsByType.get(true);
         if (!CollectionUtils.isEmpty(pluralRestrictionList)) {
 
             if (searchConfiguration.getPluralAssociationRestrictionType() == PluralAssociationRestrictionType.JOIN) {
-                mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(pluralRestrictionList, root, criteriaBuilder));
+                mainQueryPredicateList.addAll(convertRestrictionListToPredicateList(pluralRestrictionList, root, criteriaBuilder, defaultJoinType));
             }
             else {
                 SearchPropertyJoin searchPropertyJoin = resolveSearchPropertyJoin(root);
-                Subquery<Integer> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, searchPropertyJoin);
+                Subquery<Integer> subquery = createSubqueryRestriction(root.getJavaType(), root, query, criteriaBuilder, pluralRestrictionList, searchPropertyJoin, defaultJoinType);
 
                 mainQueryPredicateList.add(criteriaBuilder.exists(subquery));
             }
@@ -274,39 +273,34 @@ public class JpaQueryBuilder<T> {
         return mainQueryPredicateList;
     }
 
-    private Subquery<Integer> createSubqueryRestriction(Class<?> subqueryEntityType, Root<?> parent, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, Collection<Restriction> restrictionList, SearchPropertyJoin searchPropertyJoin) {
+    private Subquery<Integer> createSubqueryRestriction(
+        Class<?> subqueryEntityType, Root<?> parent, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
+        Collection<Restriction> restrictionList, SearchPropertyJoin searchPropertyJoin, JoinType defaultJoinType
+    ) {
         Subquery<Integer> subquery = query.subquery(Integer.class);
         Root<?> subqueryRoot = subquery.from(subqueryEntityType);
 
         subquery.select(criteriaBuilder.literal(1));
 
-        List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder);
+        List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder, defaultJoinType);
 
-        Path<?> parentPath = PathResolvingUtil.calculateFullRestrictionPath(parent, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
-        Path<?> subqueryPath = PathResolvingUtil.calculateFullRestrictionPath(subqueryRoot, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
+        Path<?> parentPath = PathResolvingUtil.calculateFullPath(parent, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
+        Path<?> subqueryPath = PathResolvingUtil.calculateFullPath(subqueryRoot, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
 
         subQueryPredicateList.add(criteriaBuilder.equal(parentPath, subqueryPath));
 
         return subquery.where(subQueryPredicateList.toArray(new Predicate[0]));
     }
 
-    private List<Predicate> convertRestrictionListToPredicateList(Collection<Restriction> restrictionList, Root<?> rootPath, CriteriaBuilder criteriaBuilder) {
+    private List<Predicate> convertRestrictionListToPredicateList(Collection<Restriction> restrictionList, Root<?> rootPath, CriteriaBuilder criteriaBuilder, JoinType joinType) {
         List<Predicate> predicateList = new ArrayList<>();
 
         restrictionList.stream().filter(Objects::nonNull).forEach(restriction -> {
             String[] pathList = PathResolvingUtil.convertToPathList(restriction.getPath());
 
-            if (restriction.isPluralAttribute()) {
-                String[] pluralAttributePathList = Arrays.copyOfRange(pathList, 1, pathList.length);
-                Path<?> fullPath = PathResolvingUtil.calculateFullRestrictionPath(rootPath.join(pathList[0]), pluralAttributePathList);
+            Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, joinType, pathList);
 
-                predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
-            }
-            else {
-                Path<?> fullPath = PathResolvingUtil.calculateFullRestrictionPath(rootPath, pathList);
-
-                predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
-            }
+            predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
         });
 
         return predicateList;
@@ -324,10 +318,15 @@ public class JpaQueryBuilder<T> {
             return Collections.emptyList();
         }
 
-        return subqueryConfigurationList.stream().map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration)).filter(Objects::nonNull).collect(Collectors.toList());
+        return subqueryConfigurationList.stream()
+            .map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
-    private <R> Subquery<Integer> buildSubquery(R request, SearchPropertyConfiguration searchPropertyConfiguration, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, SubqueryConfiguration subqueryConfiguration) {
+    private <R> Subquery<Integer> buildSubquery(
+        R request, SearchPropertyConfiguration searchPropertyConfiguration, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder, SubqueryConfiguration subqueryConfiguration
+    ) {
         ManagedType<?> subqueryRoot = entityManager.getMetamodel().managedType(subqueryConfiguration.getRootEntity());
 
         Set<Restriction> subqueryRestrictionList;
@@ -346,16 +345,18 @@ public class JpaQueryBuilder<T> {
 
         Subquery<Integer> subquery = null;
         if (!CollectionUtils.isEmpty(subqueryRestrictionList)) {
-            subquery = createSubqueryRestriction(subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy());
+            subquery = createSubqueryRestriction(
+                subqueryConfiguration.getRootEntity(), root, query, criteriaBuilder, subqueryRestrictionList, subqueryConfiguration.getJoinBy(), subqueryConfiguration.getDefaultJoinType()
+            );
         }
 
         return subquery;
     }
 
-    private <R> Selection<?> convertToSelectionExpression(Path<?> root, SearchProjection<R> projection) {
+    private <R> Selection<?> convertToSelectionExpression(JoinType defaultJoinType, Root<?> root, SearchProjection<R> projection) {
         String[] pathList = PathResolvingUtil.convertToPathList(projection.getPath());
 
-        Path<?> path = PathResolvingUtil.calculateFullSelectionPath(root, pathList);
+        Path<?> path = PathResolvingUtil.calculateFullPath(root, defaultJoinType, pathList);
 
         String alias = projection.getAlias() == null ? pathList[pathList.length - 1] : projection.getAlias();
 

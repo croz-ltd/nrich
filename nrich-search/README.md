@@ -402,6 +402,11 @@ association to `Role`. It is possible to map that connection by using `UserRole`
 
 This configuration will search `UserRole` entity by all properties in `UserSearchRequest` that have a prefix `userRole`.
 
+#### Default join type
+
+[`SearchConfiguration`][search-configuration-url] supports specifying default join type for conditions and projections. If none is specified then inner join is used.
+This can be also customized for individual associations by specifying a `SearchJoin` with `joinType`. Specified `joinType` will then be used when building projections and conditions.
+
 [//]: # (Reference links for readability)
 
 [search-configuration-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/model/SearchConfiguration.java

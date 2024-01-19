@@ -18,13 +18,18 @@
 package net.croz.nrich.search.util;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.NullSource;
 
-import jakarta.persistence.criteria.From;
-import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Root;
 import java.util.Arrays;
 import java.util.List;
 
+import static net.croz.nrich.search.util.testutil.PathResolvingUtilGeneratingUtil.createRootWithAssociationAttribute;
+import static net.croz.nrich.search.util.testutil.PathResolvingUtilGeneratingUtil.createRootWithCollectionAttribute;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -80,41 +85,52 @@ class PathResolvingUtilTest {
         assertThat(result).isEqualTo("second");
     }
 
-    @Test
-    void shouldCalculateFullRestrictionPath() {
+    @EnumSource(JoinType.class)
+    @NullSource
+    @ParameterizedTest
+    void shouldCalculateFullPath(JoinType joinType) {
         // given
         String firstPath = "restriction";
         String secondPath = "attribute";
-        From<?, ?> first = mock(From.class);
-        Join<?, ?> second = mock(Join.class);
-        Path<?> third = mock(Path.class);
-
-        doReturn(second).when(first).join(firstPath);
-        doReturn(third).when(second).get(secondPath);
+        Path<?> expectedResult = mock(Path.class);
+        Root<?> first = createRootWithCollectionAttribute(firstPath, secondPath, expectedResult, joinType);
 
         // when
-        Path<?> result = PathResolvingUtil.calculateFullRestrictionPath(first, new String[] { firstPath, secondPath });
+        Path<?> result = PathResolvingUtil.calculateFullPath(first, joinType, new String[] { firstPath, secondPath });
 
         // then
-        assertThat(result).isEqualTo(third);
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
-    void shouldCalculateFullSelectionPath() {
+    void shouldReuseExistingJoinWhenCalculatingPath() {
         // given
-        String firstPath = "selection";
+        String firstPath = "restriction";
         String secondPath = "attribute";
-        Path<?> first = mock(From.class);
-        Path<?> second = mock(Path.class);
-        Path<?> third = mock(Path.class);
+        Path<?> expectedResult = mock(Path.class);
 
-        doReturn(second).when(first).get(firstPath);
-        doReturn(third).when(second).get(secondPath);
+        Root<?> first = createRootWithAssociationAttribute(firstPath, secondPath, expectedResult);
 
         // when
-        Path<?> result = PathResolvingUtil.calculateFullSelectionPath(first, new String[] { firstPath, secondPath });
+        Path<?> result = PathResolvingUtil.calculateFullPath(first, null, new String[] { firstPath, secondPath });
 
         // then
-        assertThat(result).isEqualTo(third);
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void shouldNotJoinClassAttribute() {
+        // given
+        String firstPath = "class";
+        Root<?> first = mock(Root.class);
+        Path<?> second = mock(Path.class);
+
+        doReturn(second).when(first).get(firstPath);
+
+        // when
+        Path<?> result = PathResolvingUtil.calculateFullPath(first, null, new String[] { firstPath });
+
+        // then
+        assertThat(result).isEqualTo(second);
     }
 }
