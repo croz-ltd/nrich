@@ -20,7 +20,7 @@ package net.croz.nrich.javascript.service;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -49,7 +49,7 @@ class DefaultJavaToJavascriptTypeConversionServiceTest {
         doReturn(true).when(converter).supports(type);
         doReturn("number").when(converter).convert(type);
 
-        DefaultJavaToJavascriptTypeConversionService service = new DefaultJavaToJavascriptTypeConversionService(Collections.singletonList(converter));
+        DefaultJavaToJavascriptTypeConversionService service = new DefaultJavaToJavascriptTypeConversionService(List.of(converter));
 
         // when
         String result = service.convert(type);

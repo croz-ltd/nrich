@@ -17,8 +17,6 @@
 
 package net.croz.nrich.search.converter;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.springframework.core.annotation.Order;
@@ -35,7 +33,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalQuery;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -71,11 +68,11 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         }
 
         Optional<ConverterHolder> converterHolder = converterHolderList.stream()
-            .filter(holder -> holder.getType().isAssignableFrom(requiredType))
+            .filter(holder -> holder.type().isAssignableFrom(requiredType))
             .findFirst();
 
         return converterHolder
-            .map(holder -> convertWithExceptionIgnored(() -> holder.getConversionFunction().apply(value, requiredType)))
+            .map(holder -> convertWithExceptionIgnored(() -> holder.conversionFunction().apply(value, requiredType)))
             .orElse(null);
     }
 
@@ -94,7 +91,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
     }
 
     private List<ConverterHolder> initializeConverterList() {
-        return Arrays.asList(
+        return List.of(
             new ConverterHolder(Boolean.class, (value, type) -> booleanConverter(value)),
             new ConverterHolder(Long.class, (value, type) -> Long.valueOf(value)),
             new ConverterHolder(Integer.class, (value, type) -> Integer.valueOf(value)),
@@ -176,13 +173,7 @@ public class DefaultStringToTypeConverter implements StringToTypeConverter<Objec
         return format.parse(value);
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    public static class ConverterHolder {
-
-        private final Class<?> type;
-
-        private final BiFunction<String, Class<?>, Object> conversionFunction;
+    public record ConverterHolder(Class<?> type, BiFunction<String, Class<?>, Object> conversionFunction) {
 
     }
 }

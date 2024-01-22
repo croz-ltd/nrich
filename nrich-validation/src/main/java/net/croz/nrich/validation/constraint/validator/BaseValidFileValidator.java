@@ -21,6 +21,7 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,13 +46,13 @@ abstract class BaseValidFileValidator {
 
         String fileName;
         String fileContentType;
-        if (value instanceof MultipartFile) {
-            fileName = extractFileName(((MultipartFile) value).getOriginalFilename());
-            fileContentType = ((MultipartFile) value).getContentType();
+        if (value instanceof MultipartFile multipartFile) {
+            fileName = extractFileName(multipartFile.getOriginalFilename());
+            fileContentType = multipartFile.getContentType();
         }
-        else if (value instanceof FilePart) {
-            fileName = extractFileName(((FilePart) value).filename());
-            fileContentType = Optional.ofNullable(((FilePart) value).headers().getContentType())
+        else if (value instanceof FilePart filePart) {
+            fileName = extractFileName(filePart.filename());
+            fileContentType = Optional.ofNullable(filePart.headers().getContentType())
                 .map(Objects::toString)
                 .orElse(null);
         }
@@ -61,7 +62,7 @@ abstract class BaseValidFileValidator {
 
         boolean valid = true;
         if (fileContentType != null && allowedContentTypeList.length > 0) {
-            valid = Arrays.asList(allowedContentTypeList).contains(fileContentType);
+            valid = List.of(allowedContentTypeList).contains(fileContentType);
         }
         if (!allowedFileNameRegex.isEmpty()) {
             valid &= fileName.matches(allowedFileNameRegex);

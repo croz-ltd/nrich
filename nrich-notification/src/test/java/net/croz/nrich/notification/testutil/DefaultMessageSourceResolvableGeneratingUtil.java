@@ -29,7 +29,7 @@ public final class DefaultMessageSourceResolvableGeneratingUtil {
     }
 
     public static DefaultMessageSourceResolvable createMessageSourceNotificationMessageResolverServiceTestRequestObjectErrorMessageSourceResolvable(Object[] arguments) {
-        String[] codeList = new String[] {
+        String[] codeList = {
             "net.croz.nrich.notification.stub.MessageSourceNotificationMessageResolverServiceTestRequest.code.invalid",
             "messageSourceNotificationMessageResolverServiceTestRequest.code.invalid", "code.invalid"
         };
@@ -38,7 +38,7 @@ public final class DefaultMessageSourceResolvableGeneratingUtil {
     }
 
     public static DefaultMessageSourceResolvable createMessageSourceNotificationMessageResolverServiceTestRequestFieldErrorMessageSourceResolvable() {
-        String[] fieldCodeList = new String[] {
+        String[] fieldCodeList = {
             "net.croz.nrich.notification.stub.MessageSourceNotificationMessageResolverServiceTestRequest.field.code.invalid",
             "messageSourceNotificationMessageResolverServiceTestRequest.field.code.invalid", "field.code.invalid", "code.invalid"
         };
@@ -47,7 +47,7 @@ public final class DefaultMessageSourceResolvableGeneratingUtil {
     }
 
     public static DefaultMessageSourceResolvable createMessageSourceNotificationMessageResolverServiceTestRequestFieldErrorLabelMessageSourceResolvable() {
-        String[] fieldLabelCodeList = new String[] {
+        String[] fieldLabelCodeList = {
             "net.croz.nrich.notification.stub.MessageSourceNotificationMessageResolverServiceTestRequest.field.label",
             "messageSourceNotificationMessageResolverServiceTestRequest.field.label", "field.code.label"
         };

@@ -20,7 +20,6 @@ package net.croz.nrich.search.repository.stub;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -79,27 +78,15 @@ public class TestEntitySearchRequest {
         this.name = name;
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    public static class TestNestedEntitySearchRequest {
-
-        private final String nestedEntityName;
+    public record TestNestedEntitySearchRequest(String nestedEntityName) {
 
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    public static class TestCollectionEntitySearchRequest {
-
-        private final String name;
+    public record TestCollectionEntitySearchRequest(String name) {
 
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    public static class TestEntityEmbeddedSearchRequest {
-
-        private final String embeddedName;
+    public record TestEntityEmbeddedSearchRequest(String embeddedName) {
 
     }
 }

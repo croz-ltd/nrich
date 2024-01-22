@@ -87,7 +87,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -172,8 +171,8 @@ public class RegistryTestConfiguration {
 
     @Bean
     public StringToTypeConverter<Object> defaultStringToTypeConverter() {
-        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'");
-        List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
+        List<String> dateFormatList = List.of("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'");
+        List<String> decimalFormatList = List.of("#0.00", "#0,00");
         String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
         String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
 
@@ -190,7 +189,7 @@ public class RegistryTestConfiguration {
         RegistryConfiguration registryConfiguration = new RegistryConfiguration();
 
         registryConfiguration.setGroupDefinitionConfigurationList(createRegistryGroupDefinitionConfigurationList());
-        registryConfiguration.setGroupDisplayOrderList(Arrays.asList("CONFIGURATION", "DATA", "HISTORY"));
+        registryConfiguration.setGroupDisplayOrderList(List.of("CONFIGURATION", "DATA", "HISTORY"));
 
         registryConfiguration.setOverrideConfigurationHolderList(createRegistryOverrideConfigurationList());
 
@@ -209,13 +208,13 @@ public class RegistryTestConfiguration {
 
     @Bean
     public JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService() {
-        return new DefaultJavaToJavascriptTypeConversionService(Collections.singletonList(new DefaultJavaToJavascriptTypeConverter()));
+        return new DefaultJavaToJavascriptTypeConversionService(List.of(new DefaultJavaToJavascriptTypeConverter()));
     }
 
     @Bean
     public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService,
                                                                      JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService) {
-        List<String> defaultReadOnlyPropertyList = Arrays.asList("id", "version");
+        List<String> defaultReadOnlyPropertyList = List.of("id", "version");
         RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
         Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
@@ -233,7 +232,7 @@ public class RegistryTestConfiguration {
     @Bean
     public RegistryEntityFinderService registryEntityFinderService(EntityManager entityManager, ModelMapper registryBaseModelMapper,
                                                                    RegistryConfigurationResolverService registryConfigurationResolverService) {
-        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap();
+        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().classNameManagedTypeWrapperMap();
 
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
@@ -291,29 +290,29 @@ public class RegistryTestConfiguration {
         RegistryGroupDefinitionConfiguration registryDataConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryDataConfigurationGroup.setGroupId("DATA");
-        registryDataConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.*$"));
-        registryDataConfigurationGroup.setExcludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
+        registryDataConfigurationGroup.setIncludeEntityPatternList(List.of("^net.croz.nrich.registry.data.stub.*$"));
+        registryDataConfigurationGroup.setExcludeEntityPatternList(List.of("^net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroupId"));
 
         RegistryGroupDefinitionConfiguration registryConfigurationConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryConfigurationConfigurationGroup.setGroupId("CONFIGURATION");
-        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.configuration.stub.*$"));
+        registryConfigurationConfigurationGroup.setIncludeEntityPatternList(List.of("^net.croz.nrich.registry.configuration.stub.*$"));
 
         RegistryGroupDefinitionConfiguration registryHistoryConfigurationGroup = new RegistryGroupDefinitionConfiguration();
 
         registryHistoryConfigurationGroup.setGroupId("HISTORY");
-        registryHistoryConfigurationGroup.setIncludeEntityPatternList(Collections.singletonList("^net.croz.nrich.registry.history.stub.*$"));
+        registryHistoryConfigurationGroup.setIncludeEntityPatternList(List.of("^net.croz.nrich.registry.history.stub.*$"));
 
-        return Arrays.asList(registryDataConfigurationGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup);
+        return List.of(registryDataConfigurationGroup, registryConfigurationConfigurationGroup, registryHistoryConfigurationGroup);
     }
 
     private List<RegistryOverrideConfigurationHolder> createRegistryOverrideConfigurationList() {
         RegistryOverrideConfiguration configurationEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
 
-        configurationEntityConfiguration.setPropertyDisplayOrderList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
-        configurationEntityConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
-        configurationEntityConfiguration.setNonEditablePropertyList(Collections.singletonList("nonEditableProperty"));
-        configurationEntityConfiguration.setNonSortablePropertyList(Collections.singletonList("nonEditableProperty"));
+        configurationEntityConfiguration.setPropertyDisplayOrderList(List.of("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
+        configurationEntityConfiguration.setIgnoredPropertyList(List.of("skippedProperty"));
+        configurationEntityConfiguration.setNonEditablePropertyList(List.of("nonEditableProperty"));
+        configurationEntityConfiguration.setNonSortablePropertyList(List.of("nonEditableProperty"));
         configurationEntityConfiguration.setDeletable(false);
 
         RegistryOverrideConfigurationHolder configurationEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
@@ -335,12 +334,12 @@ public class RegistryTestConfiguration {
             .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
 
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
-        searchConfiguration.setSearchOperatorOverrideList(Collections.singletonList(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
+        searchConfiguration.setSearchOperatorOverrideList(List.of(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
 
         RegistryOverrideConfigurationHolder searchConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
-        return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
+        return List.of(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
     }
 
     private ModelMapper strictModelMapper() {

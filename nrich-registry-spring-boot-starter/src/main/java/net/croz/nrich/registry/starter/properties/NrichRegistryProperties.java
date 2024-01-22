@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.starter.properties;
 
-import lombok.Getter;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -25,76 +24,27 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 
-@Getter
+/**
+ * @param defaultReadOnlyPropertyList             List of property names that should always be marked as readonly.
+ * @param registrySearch                          Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}.
+ * @param defaultConverterEnabled                 Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when searching registry is enabled.
+ * @param defaultJavaToJavascriptConverterEnabled Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+ * @param registryConfiguration                   Registry configuration used for defining entities and groups which will be managed.
+ */
 @ConfigurationProperties("nrich.registry")
-public class NrichRegistryProperties {
+public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue @NestedConfigurationProperty RegistrySearchProperties registrySearch,
+                                      @DefaultValue("true") boolean defaultConverterEnabled,
+                                      @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
+                                      RegistryConfiguration registryConfiguration) {
 
     /**
-     * List of property names that should always be marked as readonly.
+     * @param dateFormatList           List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
+     * @param decimalNumberFormatList  List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value.
+     * @param booleanTrueRegexPattern  Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values.
+     * @param booleanFalseRegexPattern Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values.
      */
-    private final List<String> defaultReadOnlyPropertyList;
-
-    /**
-     * Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}.
-     */
-    @NestedConfigurationProperty
-    private final RegistrySearchProperties registrySearch;
-
-    /**
-     * Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when searching registry is enabled.
-     */
-    private final boolean defaultConverterEnabled;
-
-    /**
-     * Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
-     */
-    private final boolean defaultJavaToJavascriptConverterEnabled;
-
-    /**
-     * Registry configuration used for defining entities and groups which will be managed.
-     */
-    @NestedConfigurationProperty
-    private final RegistryConfiguration registryConfiguration;
-
-    public NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue RegistrySearchProperties registrySearch, @DefaultValue("true") boolean defaultConverterEnabled,
-                                   @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
-                                   RegistryConfiguration registryConfiguration) {
-        this.defaultReadOnlyPropertyList = defaultReadOnlyPropertyList;
-        this.registrySearch = registrySearch;
-        this.defaultConverterEnabled = defaultConverterEnabled;
-        this.defaultJavaToJavascriptConverterEnabled = defaultJavaToJavascriptConverterEnabled;
-        this.registryConfiguration = registryConfiguration;
-    }
-
-    @Getter
-    public static class RegistrySearchProperties {
-
-        /**
-         * List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
-         */
-        private final List<String> dateFormatList;
-
-        /**
-         * List of decimal formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to decimal value.
-         */
-        private final List<String> decimalNumberFormatList;
-
-        /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean true values.
-         */
-        private final String booleanTrueRegexPattern;
-
-        /**
-         * Regexp pattern that is used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to match boolean false values.
-         */
-        private final String booleanFalseRegexPattern;
-
-        public RegistrySearchProperties(@DefaultValue({ "dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'" }) List<String> dateFormatList, @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList,
-                                        @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
-            this.dateFormatList = dateFormatList;
-            this.decimalNumberFormatList = decimalNumberFormatList;
-            this.booleanTrueRegexPattern = booleanTrueRegexPattern;
-            this.booleanFalseRegexPattern = booleanFalseRegexPattern;
-        }
+    public record RegistrySearchProperties(@DefaultValue({ "dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'" }) List<String> dateFormatList,
+                                           @DefaultValue({ "#0.00", "#0,00" }) List<String> decimalNumberFormatList,
+                                           @DefaultValue("^(?i)\\s*(true|yes|da)\\s*$") String booleanTrueRegexPattern, @DefaultValue("^(?i)\\s*(false|no|ne)\\s*$") String booleanFalseRegexPattern) {
     }
 }

@@ -44,7 +44,6 @@ import reactor.test.StepVerifier;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,7 +72,7 @@ class CsrfWebFilterTest {
     @BeforeEach
     void setup() {
         CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
-        List<CsrfExcludeConfig> csrfExcludeConfigList = Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null));
+        List<CsrfExcludeConfig> csrfExcludeConfigList = List.of(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null));
 
         csrfFilter = new CsrfWebFilter(csrfTokenManagerService, CSRF_TOKEN_KEY_NAME, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, csrfExcludeConfigList);
 

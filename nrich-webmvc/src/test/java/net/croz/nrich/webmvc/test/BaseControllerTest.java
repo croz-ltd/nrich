@@ -31,6 +31,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -76,7 +77,7 @@ public abstract class BaseControllerTest {
     private MultiValueMap<String, String> createFromMap(Map<String, String> requestData) {
         MultiValueMap<String, String> resultMap = new LinkedMultiValueMap<>();
 
-        requestData.forEach((key, value) -> resultMap.put(key, Collections.singletonList(value)));
+        requestData.forEach((key, value) -> resultMap.put(key, List.of(value)));
 
         return resultMap;
     }

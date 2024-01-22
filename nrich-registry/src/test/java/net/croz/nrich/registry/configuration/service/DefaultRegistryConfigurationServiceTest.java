@@ -54,7 +54,7 @@ class DefaultRegistryConfigurationServiceTest {
         // when
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.entityConfigurationList().stream()
             .filter(entityConfig -> RegistryConfigurationTestEntity.class.getName().equals(entityConfig.getClassFullName()))
             .findFirst()
             .orElse(null);
@@ -137,7 +137,7 @@ class DefaultRegistryConfigurationServiceTest {
         // when
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.entityConfigurationList().stream()
             .filter(entityConfig -> RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class.getName().equals(entityConfig.getClassFullName()))
             .findFirst()
             .orElse(null);
@@ -183,7 +183,7 @@ class DefaultRegistryConfigurationServiceTest {
         // when
         List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
         RegistryGroupConfiguration registryTestEntityConfiguration = result.get(0);
-        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.getEntityConfigurationList().stream()
+        RegistryEntityConfiguration registryEntityConfiguration = registryTestEntityConfiguration.entityConfigurationList().stream()
             .filter(entityConfig -> RegistryConfigurationTestEntityWithIdClass.class.getName().equals(entityConfig.getClassFullName()))
             .findFirst()
             .orElse(null);

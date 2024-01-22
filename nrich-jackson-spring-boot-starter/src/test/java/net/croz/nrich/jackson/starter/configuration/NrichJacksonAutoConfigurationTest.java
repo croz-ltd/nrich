@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import net.croz.nrich.jackson.starter.properties.NrichJacksonProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -37,9 +38,10 @@ class NrichJacksonAutoConfigurationTest {
     @Test
     void shouldConfigureDefaultConfiguration() {
         // expect
-        contextRunner.run(context ->
-            assertThat(context).hasBean("convertEmptyStringsToNullModule")
-        );
+        contextRunner.run(context -> {
+            assertThat(context).hasBean("convertEmptyStringsToNullModule");
+            assertThat(context).hasSingleBean(NrichJacksonProperties.class);
+        });
     }
 
     @Test
