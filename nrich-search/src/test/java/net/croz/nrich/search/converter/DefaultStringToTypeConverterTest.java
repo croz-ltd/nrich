@@ -29,8 +29,8 @@ import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
@@ -44,8 +44,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class DefaultStringToTypeConverterTest {
 
     private final DefaultStringToTypeConverter defaultStringToTypeConverter = new DefaultStringToTypeConverter(
-        Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'", "dd.MM.yyyy.'T'HH:mmXXX", "HH:mmXXX"),
-        Arrays.asList("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$"
+            List.of("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm", "dd.MM.yyyy.'T'HH:mm'Z'", "dd.MM.yyyy.'T'HH:mmXXX", "HH:mmXXX"),
+            List.of("#0.00", "#0,00"), "^(?i)\\s*(true|yes)\\s*$", "^(?i)\\s*(false|no)\\s*$"
     );
 
     static {

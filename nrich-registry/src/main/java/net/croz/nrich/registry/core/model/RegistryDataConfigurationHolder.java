@@ -17,20 +17,12 @@
 
 package net.croz.nrich.registry.core.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Getter
-public class RegistryDataConfigurationHolder {
-
-    private final Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap;
-
-    private final List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList;
+public record RegistryDataConfigurationHolder(Map<String, ManagedTypeWrapper> classNameManagedTypeWrapperMap, List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList) {
 
     public void verifyConfigurationExists(String classFullName) {
         findRegistryConfigurationForClass(classFullName);
@@ -38,7 +30,7 @@ public class RegistryDataConfigurationHolder {
 
     public RegistryDataConfiguration<Object, Object> findRegistryConfigurationForClass(String classFullName) {
         return registryDataConfigurationList.stream()
-            .filter(configuration -> configuration.getRegistryType().getName().equals(classFullName))
+            .filter(configuration -> configuration.registryType().getName().equals(classFullName))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(String.format("Configuration for registry entity %s is not defined!", classFullName)));
     }

@@ -50,8 +50,8 @@ public class NrichExcelAutoConfiguration {
     @Bean
     public ExcelReportGeneratorFactory excelReportGeneratorFactory(ResourceLoader resourceLoader, List<CellValueConverter> cellValueConverterList, NrichExcelProperties excelProperties) {
         List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList(
-            excelProperties.getDateFormat(), excelProperties.getDateTimeFormat(), excelProperties.getIntegerNumberFormat(),
-            excelProperties.getDecimalNumberFormat(), excelProperties.isWriteDateWithTime(), excelProperties.getTypeDataFormatList()
+            excelProperties.dateFormat(), excelProperties.dateTimeFormat(), excelProperties.integerNumberFormat(),
+            excelProperties.decimalNumberFormat(), excelProperties.writeDateWithTime(), excelProperties.typeDataFormatList()
         );
 
         return new PoiExcelReportGeneratorFactory(resourceLoader, cellValueConverterList, typeDataFormatList);

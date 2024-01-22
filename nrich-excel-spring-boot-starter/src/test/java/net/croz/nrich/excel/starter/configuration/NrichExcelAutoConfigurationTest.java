@@ -20,6 +20,7 @@ package net.croz.nrich.excel.starter.configuration;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.generator.ExcelReportGeneratorFactory;
 import net.croz.nrich.excel.api.service.ExcelReportService;
+import net.croz.nrich.excel.starter.properties.NrichExcelProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -37,6 +38,7 @@ class NrichExcelAutoConfigurationTest {
             assertThat(context).hasSingleBean(CellValueConverter.class);
             assertThat(context).hasSingleBean(ExcelReportGeneratorFactory.class);
             assertThat(context).hasSingleBean(ExcelReportService.class);
+            assertThat(context).hasSingleBean(NrichExcelProperties.class);
         });
     }
 

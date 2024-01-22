@@ -17,19 +17,16 @@
 
 package net.croz.nrich.search.util
 
-import net.croz.nrich.search.SearchTestConfiguration
 import net.croz.nrich.search.api.model.SearchProjection
 import net.croz.nrich.search.util.stub.ProjectionListResolverUtilWithGroovyClosureTestEntity
 import net.croz.nrich.search.util.stub.ProjectionListResolverUtilWithGroovyClosureWithExceptionTestEntity
 import org.junit.jupiter.api.Test
 import org.mockito.MockedStatic
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 
 import static org.assertj.core.api.Assertions.assertThat
 import static org.assertj.core.api.Assertions.catchThrowable
 import static org.mockito.Mockito.mockStatic
 
-@SpringJUnitConfig(SearchTestConfiguration)
 class ProjectionListResolverUtilWithGroovyClosureTest {
 
   @Test
@@ -53,10 +50,10 @@ class ProjectionListResolverUtilWithGroovyClosureTest {
     assertThat(result).extracting("alias").containsExactly("name", "nestedName", "nestedId", "conditionalName")
 
     // and when
-    SearchProjection<ProjectionListResolverUtilWithGroovyClosureTestEntity> conditionalProjection = result.stream()
-                                                                                                          .filter(projection -> "conditionalName".equals(projection.getAlias()))
-                                                                                                          .findFirst()
-                                                                                                          .orElse(null)
+    SearchProjection<?> conditionalProjection = result.stream()
+        .filter(projection -> "conditionalName" == projection.getAlias())
+        .findFirst()
+        .orElse(null)
 
     // then
     assertThat(conditionalProjection).isNotNull()
@@ -86,10 +83,10 @@ class ProjectionListResolverUtilWithGroovyClosureTest {
     List<SearchProjection<ProjectionListResolverUtilWithGroovyClosureWithExceptionTestEntity>> result = ProjectionListResolverUtil
         .resolveSearchProjectionList(ProjectionListResolverUtilWithGroovyClosureWithExceptionTestEntity.class)
 
-    SearchProjection<ProjectionListResolverUtilWithGroovyClosureWithExceptionTestEntity> conditionalProjection = result.stream()
-                                                                                                          .filter(projection -> "conditionalName".equals(projection.getAlias()))
-                                                                                                          .findFirst()
-                                                                                                          .orElse(null)
+    SearchProjection<?> conditionalProjection = result.stream()
+        .filter(projection -> "conditionalName" == projection.getAlias())
+        .findFirst()
+        .orElse(null)
 
     // when
     Throwable thrown = catchThrowable(() -> conditionalProjection.getCondition().test(new ProjectionListResolverUtilWithGroovyClosureWithExceptionTestEntity()))

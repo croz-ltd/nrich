@@ -52,6 +52,7 @@ class NrichFormConfigurationAutoConfigurationTest {
             assertThat(context).hasSingleBean(FormConfigurationService.class);
             assertThat(context).hasSingleBean(FormConfigurationController.class);
             assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
+            assertThat(context).hasSingleBean(NrichFormConfigurationProperties.class);
         });
     }
 
@@ -87,11 +88,11 @@ class NrichFormConfigurationAutoConfigurationTest {
         String createKey = "create-form";
         String updateKey = "update-form";
         Class<?> requestType = FormConfigurationTestRequest.class;
-        String[] propertyValues = new String[] { String.format(ENTRY_FORMAT, createKey, requestType.getName()), String.format(ENTRY_FORMAT, updateKey, requestType.getName()) };
+        String[] propertyValues = { String.format(ENTRY_FORMAT, createKey, requestType.getName()), String.format(ENTRY_FORMAT, updateKey, requestType.getName()) };
 
         contextRunner.withBean(LocalValidatorFactoryBean.class).withPropertyValues(propertyValues).run(context -> {
             // when
-            Map<String, Class<?>> formConfigurationMapping = context.getBean(NrichFormConfigurationProperties.class).getFormConfigurationMapping();
+            Map<String, Class<?>> formConfigurationMapping = context.getBean(NrichFormConfigurationProperties.class).formConfigurationMapping();
 
             // then
             assertThat(formConfigurationMapping).containsEntry(createKey, requestType).containsEntry(updateKey, requestType);
@@ -103,12 +104,12 @@ class NrichFormConfigurationAutoConfigurationTest {
         // given
         String createKey = "create-form-customized";
         Class<?> requestType = FormConfigurationTestRequest.class;
-        String[] propertyValues = new String[] { String.format(ENTRY_FORMAT, createKey, requestType.getName()) };
+        String[] propertyValues = { String.format(ENTRY_FORMAT, createKey, requestType.getName()) };
         Supplier<FormConfigurationMappingCustomizer> supplier = () -> formConfigurationMapping -> formConfigurationMapping.put(createKey, requestType);
 
         contextRunner.withBean(LocalValidatorFactoryBean.class).withBean(FormConfigurationMappingCustomizer.class, supplier).withPropertyValues(propertyValues).run(context -> {
             // when
-            Map<String, Class<?>> formConfigurationMapping = context.getBean(NrichFormConfigurationProperties.class).getFormConfigurationMapping();
+            Map<String, Class<?>> formConfigurationMapping = context.getBean(NrichFormConfigurationProperties.class).formConfigurationMapping();
 
             // then
             assertThat(formConfigurationMapping).containsEntry(createKey, requestType);

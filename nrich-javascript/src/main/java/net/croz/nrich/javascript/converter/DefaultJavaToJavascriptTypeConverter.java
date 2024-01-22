@@ -25,26 +25,23 @@ import java.time.temporal.Temporal;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @Order
 public class DefaultJavaToJavascriptTypeConverter implements JavaToJavascriptTypeConverter {
 
-    private static final Map<Class<?>, JavascriptType> CLASS_JAVASCRIPT_TYPE_MAP = new HashMap<>();
-
-    static {
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Boolean.class, JavascriptType.BOOLEAN);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(String.class, JavascriptType.STRING);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Character.class, JavascriptType.STRING);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Calendar.class, JavascriptType.DATE);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Date.class, JavascriptType.DATE);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Temporal.class, JavascriptType.DATE);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Number.class, JavascriptType.NUMBER);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Enum.class, JavascriptType.STRING);
-        CLASS_JAVASCRIPT_TYPE_MAP.put(Collection.class, JavascriptType.ARRAY);
-    }
+    private static final Map<Class<?>, JavascriptType> CLASS_JAVASCRIPT_TYPE_MAP = Map.of(
+        Boolean.class, JavascriptType.BOOLEAN,
+        String.class, JavascriptType.STRING,
+        Character.class, JavascriptType.STRING,
+        Calendar.class, JavascriptType.DATE,
+        Date.class, JavascriptType.DATE,
+        Temporal.class, JavascriptType.DATE,
+        Number.class, JavascriptType.NUMBER,
+        Enum.class, JavascriptType.STRING,
+        Collection.class, JavascriptType.ARRAY
+    );
 
     @Override
     public boolean supports(Class<?> type) {

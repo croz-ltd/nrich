@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.core.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.core.constants.RegistryCoreConstants;
@@ -50,7 +49,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
         QueryCondition queryCondition = queryWherePartWithParameterMap(type, id, true);
 
         String joinFetchQueryPart = classNameManagedTypeWrapperMap.get(type.getName()).getSingularAssociationList().stream()
-            .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.getPath()))
+            .map(attribute -> String.format(RegistryQueryConstants.FIND_QUERY_JOIN_FETCH, attribute.path()))
             .collect(Collectors.joining(RegistryCoreConstants.SPACE));
 
         String entityWithAlias = String.format(RegistryQueryConstants.PROPERTY_SPACE_FORMAT, type.getName(), RegistryQueryConstants.ENTITY_ALIAS);
@@ -132,13 +131,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             .collect(Collectors.joining());
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    private static class QueryCondition {
-
-        private final String wherePart;
-
-        private final Map<String, Object> parameterMap;
+    private record QueryCondition(String wherePart, Map<String, Object> parameterMap) {
 
     }
 }
