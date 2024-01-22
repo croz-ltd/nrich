@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static net.croz.nrich.search.support.testutil.MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUtil.entityWithPropertyValue;
-import static net.croz.nrich.search.support.testutil.MapSupportingDirectFieldAccessFallbackBeanWrapperGeneratingUtil.mapOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
@@ -32,7 +31,7 @@ class MapSupportingDirectFieldAccessFallbackBeanWrapperTest {
     @Test
     void shouldGetPropertyValueFromMap() {
         // given
-        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(mapOf("key", "value"));
+        MapSupportingDirectFieldAccessFallbackBeanWrapper wrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(Map.of("key", "value"));
 
         // when
         Object value = wrapper.getPropertyValue("key");

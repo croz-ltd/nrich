@@ -17,21 +17,11 @@
 
 package net.croz.nrich.search.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.ManagedType;
 
-@RequiredArgsConstructor
-@Getter
-public class AttributeHolder {
 
-    private final Attribute<?, ?> attribute;
-
-    private final ManagedType<?> managedType;
-
-    private final boolean isPlural;
+public record AttributeHolder(Attribute<?, ?> attribute, ManagedType<?> managedType, boolean isPlural) {
 
     public boolean isFound() {
         return attribute != null;

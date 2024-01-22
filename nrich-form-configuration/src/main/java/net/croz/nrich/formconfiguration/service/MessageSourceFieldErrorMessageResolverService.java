@@ -77,7 +77,7 @@ public class MessageSourceFieldErrorMessageResolverService implements FieldError
         }
 
         return Arrays.stream(argumentList)
-            .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
+            .map(value -> value instanceof Object[] objectArray ? convertToString(objectArray) : value)
             .toArray();
     }
 

@@ -46,11 +46,11 @@ public class NrichEncryptAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
-        String password = ObjectUtils.isEmpty(encryptProperties.getEncryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptPassword();
-        String salt = ObjectUtils.isEmpty(encryptProperties.getEncryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.getEncryptSalt();
+        String password = ObjectUtils.isEmpty(encryptProperties.encryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.encryptPassword();
+        String salt = ObjectUtils.isEmpty(encryptProperties.encryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.encryptSalt();
         BytesEncryptor encryptor = Encryptors.standard(password, salt);
 
-        return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.getTextEncryptCharset());
+        return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.textEncryptCharset());
     }
 
     @ConditionalOnMissingBean
@@ -71,8 +71,8 @@ public class NrichEncryptAutoConfiguration {
     public Advisor encryptAdvisor(DataEncryptionService dataEncryptionService, NrichEncryptProperties encryptProperties) {
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
-        pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptProperties.getEncryptionConfigurationList()));
+        pointcut.setExpression(PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptProperties.encryptionConfigurationList()));
 
-        return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptProperties.getEncryptionConfigurationList(), encryptProperties.getIgnoredMethodList()));
+        return new DefaultPointcutAdvisor(pointcut, new EncryptMethodInterceptor(dataEncryptionService, encryptProperties.encryptionConfigurationList(), encryptProperties.ignoredMethodList()));
     }
 }

@@ -49,7 +49,7 @@ public class ValidSearchPropertiesValidator implements ConstraintValidator<Valid
         return propertyGroupMap.entrySet().stream().anyMatch(fieldGroup -> {
             List<Method> methodList = Arrays.stream(fieldGroup.getValue())
                 .map(fieldName -> ValidationReflectionUtil.findGetterMethod(type, fieldName))
-                .collect(Collectors.toList());
+                .toList();
 
             return methodList.stream().allMatch(method -> ValidationReflectionUtil.invokeMethod(method, value) != null);
         });

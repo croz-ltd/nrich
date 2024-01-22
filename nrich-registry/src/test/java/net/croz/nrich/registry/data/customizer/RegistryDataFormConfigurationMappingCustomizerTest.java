@@ -20,7 +20,6 @@ package net.croz.nrich.registry.data.customizer;
 import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.core.constants.RegistryClassResolvingConstants;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
-import net.croz.nrich.registry.data.stub.RegistryTestEntityUpdateRequest;
 import net.croz.nrich.registry.data.stub.RegistryTestEntityWithOverriddenFormConfiguration;
 import net.croz.nrich.registry.data.stub.model.RegistryCustomizerTestEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +39,7 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class RegistryDataFormConfigurationMappingCustomizerTest {
 
-    private static final List<Class<?>> REGISTRY_CLASS_LIST = Arrays.asList(
+    private static final List<Class<?>> REGISTRY_CLASS_LIST = List.of(
         RegistryTestEntity.class, RegistryTestEntityWithOverriddenFormConfiguration.class, RegistryCustomizerTestEntity.class
     );
 

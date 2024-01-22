@@ -27,7 +27,6 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.metamodel.ManagedType;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +50,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
         String value = "01.01.1970.";
 
         // when
-        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, List.of("name", "date", "nestedEntity.nestedName"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
 
         // then
         assertThat(result).containsEntry("name", value).containsEntry("date", dateOf(value)).containsEntry("nestedEntity.nestedName", value);
@@ -63,7 +62,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
         String value = "name";
 
         // when
-        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, List.of("name", "nonExisting"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
 
         // then
         assertThat(result).containsEntry("name", value);
@@ -76,7 +75,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
         String value = null;
 
         // when
-        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, Arrays.asList("name", "nonExisting"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, List.of("name", "nonExisting"), managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
 
         // then
         assertThat(result).isEmpty();
@@ -98,7 +97,7 @@ class DefaultStringToEntityPropertyMapConverterTest {
     void shouldConvertPropertyWithSuffix() {
         // given
         String value = "01.01.1970.";
-        List<String> propertyToSearchList = Arrays.asList("dateFrom", "dateFromIncluding", "dateTo", "dateToIncluding");
+        List<String> propertyToSearchList = List.of("dateFrom", "dateFromIncluding", "dateTo", "dateToIncluding");
 
         // when
         Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, propertyToSearchList, managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);

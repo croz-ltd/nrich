@@ -28,7 +28,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -38,7 +37,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class EntityClassSerializerModifierTest {
 
-    private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, String>>() {
+    private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<>() {
     };
 
     @Test
@@ -71,7 +70,7 @@ class EntityClassSerializerModifierTest {
     private static Stream<Arguments> shouldNotSerializeWhenSerializationIsNotEnabledMethodSource() {
         return Stream.of(
             arguments(false, null, new EntityClassSerializerModifierTestEntity()),
-            arguments(false, Collections.singletonList("java.lang"), new EntityClassSerializerModifierTestEntity()),
+            arguments(false, List.of("java.lang"), new EntityClassSerializerModifierTestEntity()),
             arguments(true, null, new EntityClassSerializerModifierTestEntityWithoutAnnotation())
         );
     }
@@ -80,7 +79,7 @@ class EntityClassSerializerModifierTest {
     void shouldSerializeClassNameForPackage() throws Exception {
         // given
         ObjectMapper objectMapper = new ObjectMapper();
-        Module module = JacksonModuleUtil.classNameSerializerModule(false, Collections.singletonList(EntityClassSerializerModifierTestEntity.class.getPackage().getName()));
+        Module module = JacksonModuleUtil.classNameSerializerModule(false, List.of(EntityClassSerializerModifierTestEntity.class.getPackage().getName()));
 
         objectMapper.registerModule(module);
 

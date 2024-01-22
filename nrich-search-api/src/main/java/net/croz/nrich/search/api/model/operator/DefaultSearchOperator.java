@@ -49,7 +49,7 @@ public enum DefaultSearchOperator implements SearchOperator {
     LIKE {
         @Override
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
-            return criteriaBuilder.like((Expression<String>) path, Objects.requireNonNull(value).toString() + "%");
+            return criteriaBuilder.like((Expression<String>) path, Objects.requireNonNull(value) + "%");
         }
     },
 
