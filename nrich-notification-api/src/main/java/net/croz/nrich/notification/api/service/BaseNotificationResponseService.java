@@ -55,10 +55,9 @@ public interface BaseNotificationResponseService<T> {
      *
      * @param throwable                    exception for which to resolve notification
      * @param additionalNotificationData   additional notification data to add to notification
-     * @param exceptionMessageArgumentList optional exception argument list, will be used when resolving exception message
      * @return response with notification
      */
-    T responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList);
+    T responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData);
 
     /**
      * Returns response with {@link net.croz.nrich.notification.api.model.Notification} instance.
@@ -87,8 +86,8 @@ public interface BaseNotificationResponseService<T> {
         return responseWithValidationFailureNotification(exception, AdditionalNotificationData.empty());
     }
 
-    default T responseWithExceptionNotification(Throwable throwable, Object... additionalMessageArgumentList) {
-        return responseWithExceptionNotification(throwable, AdditionalNotificationData.empty(), additionalMessageArgumentList);
+    default T responseWithExceptionNotification(Throwable throwable) {
+        return responseWithExceptionNotification(throwable, AdditionalNotificationData.empty());
     }
 
     default T responseWithNotificationActionResolvedFromRequest() {

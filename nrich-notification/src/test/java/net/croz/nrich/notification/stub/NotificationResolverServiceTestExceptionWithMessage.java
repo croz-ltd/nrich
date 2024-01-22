@@ -17,16 +17,11 @@
 
 package net.croz.nrich.notification.stub;
 
-import lombok.Getter;
-import net.croz.nrich.core.api.exception.ExceptionWithArguments;
+import net.croz.nrich.core.api.exception.ExceptionWithMessage;
 
-@Getter
-public class NotificationResolverServiceTestExceptionWithArguments extends RuntimeException implements ExceptionWithArguments {
+public class NotificationResolverServiceTestExceptionWithMessage extends RuntimeException implements ExceptionWithMessage {
 
-    private final transient Object[] argumentList;
-
-    public NotificationResolverServiceTestExceptionWithArguments(String message, Object... argumentList) {
+    public NotificationResolverServiceTestExceptionWithMessage(String message) {
         super(message);
-        this.argumentList = argumentList;
     }
 }

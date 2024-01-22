@@ -56,10 +56,9 @@ public interface NotificationResolverService {
      *
      * @param throwable                    exception for which to resolve notification
      * @param additionalNotificationData   additional notification data to add to notification
-     * @param exceptionMessageArgumentList optional exception argument list, will be used when resolving exception message
      * @return {@link Notification} instance
      */
-    Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList);
+    Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData);
 
     /**
      * Returns {@link Notification} instance for action. Default severity is <pre>INFO</pre>. Resolved action message is added as notification content.
@@ -79,8 +78,8 @@ public interface NotificationResolverService {
         return createNotificationForValidationFailure(exception, AdditionalNotificationData.empty());
     }
 
-    default Notification createNotificationForException(Throwable throwable, Object... exceptionMessageArgumentList) {
-        return createNotificationForException(throwable, AdditionalNotificationData.empty(), exceptionMessageArgumentList);
+    default Notification createNotificationForException(Throwable throwable) {
+        return createNotificationForException(throwable, AdditionalNotificationData.empty());
     }
 
     default Notification createNotificationForAction(String actionName) {

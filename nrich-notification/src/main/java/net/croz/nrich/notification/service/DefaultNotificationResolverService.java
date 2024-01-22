@@ -18,6 +18,9 @@
 package net.croz.nrich.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.core.api.exception.ExceptionWithArguments;
+import net.croz.nrich.core.api.exception.ExceptionWithMessage;
+import net.croz.nrich.core.api.exception.ExceptionWithMessageCode;
 import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
@@ -87,15 +90,15 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     }
 
     @Override
-    public Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
+    public Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData) {
         String typeName = throwable.getClass().getName();
         String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
 
         String title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.ERROR_OCCURRED_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
-        String contentCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_CONTENT_SUFFIX);
-        String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
 
-        String content = notificationMessageResolverService.resolveMessage(toList(contentCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE), toList(exceptionMessageArgumentList), null);
+        String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
+        String content = resolveExceptionContent(throwable);
+
         NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(resolveExceptionSeverity(severityCode));
         List<String> messageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
 
@@ -159,8 +162,30 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         return NotificationSeverity.valueOf(severityValue);
     }
 
+    private String resolveExceptionContent(Throwable throwable) {
+        if (throwable instanceof ExceptionWithMessage) {
+            return throwable.getMessage();
+        }
+
+        String contentCode;
+        if (throwable instanceof ExceptionWithMessageCode exceptionWithMessageCode) {
+            contentCode = exceptionWithMessageCode.getMessageCode();
+        }
+        else {
+            String typeName = throwable.getClass().getName();
+            contentCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_CONTENT_SUFFIX);
+        }
+
+        List<Object> argumentList = new ArrayList<>();
+        if (throwable instanceof ExceptionWithArguments exceptionWithArguments) {
+            argumentList.addAll(toList(exceptionWithArguments.getArgumentList()));
+        }
+
+        return notificationMessageResolverService.resolveMessage(toList(contentCode, NotificationConstants.ERROR_OCCURRED_DEFAULT_CODE), argumentList, null);
+    }
+
     @SafeVarargs
-    private final <T> List<T> toList(T... codeList) {
+    private <T> List<T> toList(T... codeList) {
         if (codeList == null) {
             return Collections.emptyList();
         }

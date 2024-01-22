@@ -1,6 +1,7 @@
 description = "Provides a unified response format for data returned to clients"
 
 dependencies {
+  api project(":nrich-core-api")
   api project(":nrich-notification-api")
 
   annotationProcessor "org.projectlombok:lombok"

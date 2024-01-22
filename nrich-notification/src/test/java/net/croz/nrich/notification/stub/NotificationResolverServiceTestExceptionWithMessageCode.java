@@ -17,16 +17,12 @@
 
 package net.croz.nrich.notification.stub;
 
-import lombok.Getter;
-import net.croz.nrich.core.api.exception.ExceptionWithArguments;
+import net.croz.nrich.core.api.exception.ExceptionWithMessageCode;
 
-@Getter
-public class NotificationResolverServiceTestExceptionWithArguments extends RuntimeException implements ExceptionWithArguments {
+public class NotificationResolverServiceTestExceptionWithMessageCode extends RuntimeException implements ExceptionWithMessageCode {
 
-    private final transient Object[] argumentList;
-
-    public NotificationResolverServiceTestExceptionWithArguments(String message, Object... argumentList) {
-        super(message);
-        this.argumentList = argumentList;
+    @Override
+    public String getMessageCode() {
+        return "notification-with-custom-message-code.content";
     }
 }
