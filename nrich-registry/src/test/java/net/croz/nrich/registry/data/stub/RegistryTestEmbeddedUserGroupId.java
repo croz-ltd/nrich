@@ -42,13 +42,11 @@ public class RegistryTestEmbeddedUserGroupId implements Serializable {
         if (this == object) {
             return true;
         }
-        if (!(object instanceof RegistryTestEmbeddedUserGroupId)) {
+        if (!(object instanceof RegistryTestEmbeddedUserGroupId registryTestEmbeddedUserGroupId)) {
             return false;
         }
 
-        RegistryTestEmbeddedUserGroupId that = (RegistryTestEmbeddedUserGroupId) object;
-
-        return Objects.equals(user.getId(), that.user.getId()) && Objects.equals(group.getId(), that.group.getId());
+        return Objects.equals(user.getId(), registryTestEmbeddedUserGroupId.user.getId()) && Objects.equals(group.getId(), registryTestEmbeddedUserGroupId.group.getId());
     }
 
     @Override

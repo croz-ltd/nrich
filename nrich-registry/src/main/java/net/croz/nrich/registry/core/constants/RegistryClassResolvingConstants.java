@@ -17,8 +17,6 @@
 
 package net.croz.nrich.registry.core.constants;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public final class RegistryClassResolvingConstants {
@@ -39,7 +37,7 @@ public final class RegistryClassResolvingConstants {
 
     public static final String PACKAGE_SEPARATOR = "\\.";
 
-    public static final List<String> CLASS_NAME_SUFFIX_LIST_TO_REPLACE = Collections.unmodifiableList(Arrays.asList("model", "entity"));
+    public static final List<String> CLASS_NAME_SUFFIX_LIST_TO_REPLACE = List.of("model", "entity");
 
     private RegistryClassResolvingConstants() {
     }

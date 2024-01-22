@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -69,8 +68,7 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
     @Test
     void shouldConvertArraysToStringWhenResolvingMessage() {
         // given
-        Map<String, Object> argumentMap = new HashMap<>();
-        argumentMap.put("value", new String[] { "one", "two " });
+        Map<String, Object> argumentMap = Map.of("value", new String[] { "one", "two " });
 
         ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, argumentMap);
 

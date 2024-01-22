@@ -70,7 +70,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
             List<ManagedTypeWrapper> includedManagedTypeList = managedTypeList.stream()
                 .filter(managedType -> includeManagedType(managedType, registryGroupDefinition.getIncludeEntityPatternList(), registryGroupDefinition.getExcludeEntityPatternList()))
                 .map(ManagedTypeWrapper::new)
-                .collect(Collectors.toList());
+                .toList();
 
             if (CollectionUtils.isEmpty(includedManagedTypeList)) {
                 return;
@@ -94,10 +94,10 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
     public RegistryDataConfigurationHolder resolveRegistryDataConfiguration() {
         RegistryGroupDefinitionHolder groupDefinitionHolder = resolveRegistryGroupDefinition();
 
-        List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.getGroupDefinitionList().stream()
-            .map(RegistryGroupDefinition::getRegistryEntityList)
+        List<ManagedTypeWrapper> managedTypeWrapperList = groupDefinitionHolder.groupDefinitionList().stream()
+            .map(RegistryGroupDefinition::registryEntityList)
             .flatMap(List::stream)
-            .collect(Collectors.toList());
+            .toList();
 
         List<RegistryDataConfiguration<Object, Object>> registryDataConfigurationList = new ArrayList<>();
 
@@ -135,11 +135,9 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
             String attributeName = attribute.getName();
             Class<?> attributeType = attribute.getJavaType();
 
-            if (!(attribute.getJavaMember() instanceof Field)) {
+            if (!(attribute.getJavaMember() instanceof Field attributeField)) {
                 continue;
             }
-
-            Field attributeField = (Field) attribute.getJavaMember();
 
             if (AnnotationUtil.isAnnotationPresent(attributeField, RegistryEnversConstants.ENVERS_REVISION_NUMBER_ANNOTATION)) {
                 revisionNumberPropertyName = attributeName;
@@ -195,7 +193,7 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
         List<SearchJoin<Map<String, Object>>> searchJoinList = Stream.concat(
                 createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularAssociationList(), RegistryCoreConstants.BLANK),
                 createSearchJoinStreamFromAssociationList(managedTypeWrapper.getSingularEmbeddedTypeAssociationList(), managedTypeWrapper.getIdAttributeName() + RegistryCoreConstants.DOT))
-            .collect(Collectors.toList());
+            .toList();
 
         searchConfiguration.setJoinList(searchJoinList);
 
@@ -204,6 +202,6 @@ public class DefaultRegistryConfigurationResolverService implements RegistryConf
 
     private Stream<SearchJoin<Map<String, Object>>> createSearchJoinStreamFromAssociationList(List<SingularAssociation> associationList, String prefix) {
         return associationList.stream()
-            .map(attribute -> attribute.isOptional() ? SearchJoin.leftJoinFetch(prefix + attribute.getPath()) : SearchJoin.innerJoinFetch(prefix + attribute.getPath()));
+            .map(attribute -> attribute.optional() ? SearchJoin.leftJoinFetch(prefix + attribute.path()) : SearchJoin.innerJoinFetch(prefix + attribute.path()));
     }
 }

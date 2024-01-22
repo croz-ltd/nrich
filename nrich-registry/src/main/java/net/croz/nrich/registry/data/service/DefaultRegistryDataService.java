@@ -81,8 +81,8 @@ public class DefaultRegistryDataService implements RegistryDataService {
     @Transactional(readOnly = true)
     @Override
     public Map<String, Page<Object>> listBulk(ListBulkRegistryRequest request) {
-        return request.getRegistryRequestList().stream()
-            .collect(Collectors.toMap(ListRegistryRequest::getClassFullName, this::list));
+        return request.registryRequestList().stream()
+            .collect(Collectors.toMap(ListRegistryRequest::classFullName, this::list));
     }
 
     @Transactional(readOnly = true)
@@ -101,7 +101,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         @SuppressWarnings("unchecked")
         RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        T instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
+        T instance = resolveEntityInstance(registryDataConfiguration.registryType(), entityData);
 
         modelMapper.map(entityData, instance);
 
@@ -118,11 +118,11 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         ManagedTypeWrapper wrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(classFullName);
 
-        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
+        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.registryType(), id);
 
         if (wrapper.isIdClassIdentifier() || wrapper.isEmbeddedIdentifier()) {
             entityManager.remove(instance);
-            instance = resolveEntityInstance(registryDataConfiguration.getRegistryType(), entityData);
+            instance = resolveEntityInstance(registryDataConfiguration.registryType(), entityData);
         }
         else {
             setIdFieldToOriginalValue(wrapper, entityData, id);
@@ -141,7 +141,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
         @SuppressWarnings("unchecked")
         RegistryDataConfiguration<T, ?> registryDataConfiguration = (RegistryDataConfiguration<T, ?>) registryDataConfigurationHolder.findRegistryConfigurationForClass(classFullName);
 
-        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.getRegistryType(), id);
+        T instance = registryEntityFinderService.findEntityInstance(registryDataConfiguration.registryType(), id);
 
         entityManager.remove(instance);
 
@@ -149,9 +149,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
     }
 
     private Map<String, JpaQueryBuilder<?>> initializeQueryBuilderMap(RegistryDataConfigurationHolder registryDataConfigurationHolder) {
-        return registryDataConfigurationHolder.getRegistryDataConfigurationList().stream()
-            .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.getRegistryType().getName(),
-                registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.getRegistryType()))
+        return registryDataConfigurationHolder.registryDataConfigurationList().stream()
+            .collect(Collectors.toMap(registryDataConfiguration -> registryDataConfiguration.registryType().getName(),
+                registryDataConfiguration -> new JpaQueryBuilder<>(entityManager, registryDataConfiguration.registryType()))
             );
     }
 
@@ -161,17 +161,17 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private <T, P> Page<P> registryListInternal(ListRegistryRequest request) {
         @SuppressWarnings("unchecked")
-        RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.getClassFullName());
-        SearchConfiguration<T, P, Map<String, Object>> searchConfiguration = registryDataConfiguration.getSearchConfiguration();
+        RegistryDataConfiguration<T, P> registryDataConfiguration = (RegistryDataConfiguration<T, P>) registryDataConfigurationHolder.findRegistryConfigurationForClass(request.classFullName());
+        SearchConfiguration<T, P, Map<String, Object>> searchConfiguration = registryDataConfiguration.searchConfiguration();
 
         @SuppressWarnings("unchecked")
-        JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.getClassFullName());
+        JpaQueryBuilder<T> queryBuilder = (JpaQueryBuilder<T>) classNameQueryBuilderMap.get(request.classFullName());
 
-        ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.getClassFullName());
+        ManagedTypeWrapper managedTypeWrapper = registryDataConfigurationHolder.resolveManagedTypeWrapper(request.classFullName());
 
         String idAttributeName = Optional.ofNullable(managedTypeWrapper.getIdAttributeName()).orElseGet(() -> managedTypeWrapper.getIdClassPropertyNameList().get(0));
 
-        Pageable pageable = PageableUtil.convertToPageable(request.getPageNumber(), request.getPageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.getSortPropertyList());
+        Pageable pageable = PageableUtil.convertToPageable(request.pageNumber(), request.pageSize(), new SortProperty(idAttributeName, SortDirection.ASC), request.sortPropertyList());
 
         Map<String, Object> searchRequestMap = resolveSearchRequestMap(managedTypeWrapper, request, searchConfiguration.getSearchPropertyConfiguration());
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchRequestMap, searchConfiguration, pageable.getSort());
@@ -185,9 +185,9 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
     private Map<String, Object> resolveSearchRequestMap(ManagedTypeWrapper managedTypeWrapper, ListRegistryRequest request, SearchPropertyConfiguration searchPropertyConfiguration) {
         Map<String, Object> searchRequestMap = Collections.emptyMap();
-        if (request.getSearchParameter() != null) {
+        if (request.searchParameter() != null) {
             searchRequestMap = stringToEntityPropertyMapConverter.convert(
-                request.getSearchParameter().getQuery(), request.getSearchParameter().getPropertyNameList(), managedTypeWrapper.getIdentifiableType(),
+                request.searchParameter().query(), request.searchParameter().propertyNameList(), managedTypeWrapper.getIdentifiableType(),
                 searchPropertyConfiguration
             );
         }

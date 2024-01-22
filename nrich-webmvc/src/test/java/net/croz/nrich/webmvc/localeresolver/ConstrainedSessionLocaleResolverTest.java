@@ -23,7 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ class ConstrainedSessionLocaleResolverTest {
     @Test
     void shouldOnlyAllowSettingOfAllowedLocale() {
         // given
-        ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver("hr", Arrays.asList("hr", "en"));
+        ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver("hr", List.of("hr", "en"));
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         request.setSession(new MockHttpSession());
@@ -55,7 +55,7 @@ class ConstrainedSessionLocaleResolverTest {
     @Test
     void shouldSetDefaultLocaleWhenSettingNullLocale() {
         // given
-        ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver(null, Arrays.asList("hr", "zh_CN", "en"));
+        ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver = new ConstrainedSessionLocaleResolver(null, List.of("hr", "zh_CN", "en"));
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         request.setSession(new MockHttpSession());

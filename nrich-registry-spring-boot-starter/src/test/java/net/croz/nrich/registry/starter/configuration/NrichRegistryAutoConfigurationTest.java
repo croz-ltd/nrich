@@ -52,7 +52,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NrichRegistryAutoConfigurationTest {
 
-    private static final String[] REGISTRY_CONFIGURATION = new String[] {
+    private static final String[] REGISTRY_CONFIGURATION = {
         "nrich.registry.registry-configuration.group-definition-configuration-list[0].group-id=DATA",
         "nrich.registry.registry-configuration.group-definition-configuration-list[0].include-entity-pattern-list=^net.croz.nrich.registry.data.stub.*$"
     };
@@ -85,7 +85,7 @@ class NrichRegistryAutoConfigurationTest {
     @Test
     void shouldMapConfigurationProperties() {
         // given
-        String[] properties = new String[] {
+        String[] properties = {
             "nrich.registry.default-read-only-property-list=id,version",
             "nrich.registry.registry-search.date-format-list=dd.mm.YYYY",
             "nrich.registry.registry-search.decimal-number-format-list=#0.00",
@@ -105,25 +105,25 @@ class NrichRegistryAutoConfigurationTest {
             NrichRegistryProperties registryProperties = context.getBean(NrichRegistryProperties.class);
 
             // then
-            assertThat(registryProperties.getDefaultReadOnlyPropertyList()).containsExactly("id", "version");
+            assertThat(registryProperties.defaultReadOnlyPropertyList()).containsExactly("id", "version");
 
-            assertThat(registryProperties.getRegistrySearch()).isNotNull();
+            assertThat(registryProperties.registrySearch()).isNotNull();
 
-            NrichRegistryProperties.RegistrySearchProperties registrySearchProperties = registryProperties.getRegistrySearch();
+            NrichRegistryProperties.RegistrySearchProperties registrySearchProperties = registryProperties.registrySearch();
 
-            assertThat(registrySearchProperties.getDateFormatList()).containsExactly("dd.mm.YYYY");
-            assertThat(registrySearchProperties.getDecimalNumberFormatList()).containsExactly("#0.00");
-            assertThat(registrySearchProperties.getBooleanTrueRegexPattern()).isEqualTo("^(?i)\\s*(true|yes)\\s*$");
-            assertThat(registrySearchProperties.getBooleanFalseRegexPattern()).isEqualTo("^(?i)\\s*(false|no)\\s*$");
+            assertThat(registrySearchProperties.dateFormatList()).containsExactly("dd.mm.YYYY");
+            assertThat(registrySearchProperties.decimalNumberFormatList()).containsExactly("#0.00");
+            assertThat(registrySearchProperties.booleanTrueRegexPattern()).isEqualTo("^(?i)\\s*(true|yes)\\s*$");
+            assertThat(registrySearchProperties.booleanFalseRegexPattern()).isEqualTo("^(?i)\\s*(false|no)\\s*$");
 
-            assertThat(registryProperties.getRegistryConfiguration()).isNotNull();
+            assertThat(registryProperties.registryConfiguration()).isNotNull();
 
-            RegistryConfiguration registryConfiguration = registryProperties.getRegistryConfiguration();
+            RegistryConfiguration registryConfiguration = registryProperties.registryConfiguration();
 
             assertThat(registryConfiguration.getGroupDisplayOrderList()).containsExactly("DATA");
             assertThat(registryConfiguration.getHistoryDisplayOrderList()).containsExactly("id", "name");
 
-            List<RegistryGroupDefinitionConfiguration> registryGroupDefinitionList = registryProperties.getRegistryConfiguration().getGroupDefinitionConfigurationList();
+            List<RegistryGroupDefinitionConfiguration> registryGroupDefinitionList = registryProperties.registryConfiguration().getGroupDefinitionConfigurationList();
 
             assertThat(registryGroupDefinitionList).extracting("groupId").containsExactly("DATA");
             assertThat(registryGroupDefinitionList).flatExtracting("includeEntityPatternList").containsExactly("^net.croz.nrich.registry.data.stub.*$");
@@ -153,6 +153,8 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(FormConfigurationMappingCustomizer.class);
             assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
             assertThat(context).hasSingleBean(RegistryEnumService.class);
+            assertThat(context).hasSingleBean(NrichRegistryProperties.class);
+            assertThat(context.getBean(NrichRegistryProperties.class).registrySearch()).isNotNull();
 
             assertThat(context).doesNotHaveBean(RegistryConfigurationController.class);
             assertThat(context).doesNotHaveBean(RegistryDataController.class);
@@ -197,7 +199,7 @@ class NrichRegistryAutoConfigurationTest {
             NrichRegistryProperties registryProperties = context.getBean(NrichRegistryProperties.class);
 
             // then
-            assertThat(registryProperties.getRegistryConfiguration().getOverrideConfigurationHolderList()).containsExactly(holder);
+            assertThat(registryProperties.registryConfiguration().getOverrideConfigurationHolderList()).containsExactly(holder);
         });
     }
 }

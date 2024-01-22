@@ -17,7 +17,6 @@
 
 package net.croz.nrich.excel.converter;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.CellHolder;
@@ -31,7 +30,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +57,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
     }
 
     private List<ConverterHolder> initializeConverterList() {
-        return Arrays.asList(
+        return List.of(
             new ConverterHolder(Date.class, CellHolder::setCellValue),
             new ConverterHolder(Calendar.class, CellHolder::setCellValue),
             new ConverterHolder(Instant.class, (cell, value) -> cell.setCellValue(new Date(((Instant) value).toEpochMilli()))),
@@ -83,7 +81,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
         }
 
         return converterHolderList.stream()
-            .filter(converterHolder -> converterHolder.getType().isAssignableFrom(value.getClass()))
+            .filter(converterHolder -> converterHolder.type().isAssignableFrom(value.getClass()))
             .findFirst()
             .orElse(null);
     }
@@ -94,13 +92,7 @@ public class DefaultCellValueConverter implements CellValueConverter {
         return messageSource.getMessage(messageCode, null, value.toString(), LocaleContextHolder.getLocale());
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    public static class ConverterHolder {
-
-        private final Class<?> type;
-
-        private final BiConsumer<CellHolder, Object> setCellValueFunction;
+    public record ConverterHolder(Class<?> type, BiConsumer<CellHolder, Object> setCellValueFunction) {
 
     }
 }

@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public final class ValidationReflectionUtil {
 
@@ -32,10 +33,7 @@ public final class ValidationReflectionUtil {
     }
 
     public static Method findGetterMethod(Class<?> type, String fieldName) {
-        String capitalizedFieldName = StringUtils.capitalize(fieldName);
-
-        return Arrays.stream(METHOD_PATTERN_LIST)
-            .map(value -> String.format(value, capitalizedFieldName))
+        return getterMethodNames(fieldName)
             .map(methodName -> ReflectionUtils.findMethod(type, methodName))
             .filter(Objects::nonNull)
             .findFirst()
@@ -44,5 +42,11 @@ public final class ValidationReflectionUtil {
 
     public static Object invokeMethod(Method method, Object target) {
         return ReflectionUtils.invokeMethod(method, target);
+    }
+
+    private static Stream<String> getterMethodNames(String fieldName) {
+        String capitalizedFieldName = StringUtils.capitalize(fieldName);
+
+        return Stream.concat(Arrays.stream(METHOD_PATTERN_LIST).map(value -> String.format(value, capitalizedFieldName)), Stream.of(fieldName));
     }
 }

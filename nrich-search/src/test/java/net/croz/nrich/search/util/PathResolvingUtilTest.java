@@ -25,7 +25,6 @@ import org.junit.jupiter.params.provider.NullSource;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Root;
-import java.util.Arrays;
 import java.util.List;
 
 import static net.croz.nrich.search.util.testutil.PathResolvingUtilGeneratingUtil.createRootWithAssociationAttribute;
@@ -63,7 +62,7 @@ class PathResolvingUtilTest {
     @Test
     void shouldJoinPathList() {
         // given
-        List<String> path = Arrays.asList("first", "second");
+        List<String> path = List.of("first", "second");
         String currentPath = "third";
 
         // when

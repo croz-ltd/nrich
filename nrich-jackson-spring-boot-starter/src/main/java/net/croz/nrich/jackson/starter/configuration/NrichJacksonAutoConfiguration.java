@@ -45,7 +45,7 @@ public class NrichJacksonAutoConfiguration {
     @Bean
     public Module classNameSerializerModule(NrichJacksonProperties nrichJacksonProperties) {
         return JacksonModuleUtil.classNameSerializerModule(
-            nrichJacksonProperties.isSerializeClassNameForEntityAnnotatedClasses(), nrichJacksonProperties.getAdditionalPackageListForClassNameSerialization()
+            nrichJacksonProperties.serializeClassNameForEntityAnnotatedClasses(), nrichJacksonProperties.additionalPackageListForClassNameSerialization()
         );
     }
 }

@@ -20,8 +20,8 @@ package net.croz.nrich.registry.configuration.comparator;
 import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +46,7 @@ class RegistryGroupConfigurationComparatorTest {
         // given
         RegistryGroupConfiguration firstGroup = new RegistryGroupConfiguration("first", "2.display", Collections.emptyList());
         RegistryGroupConfiguration secondGroup = new RegistryGroupConfiguration("second", "1.display", Collections.emptyList());
-        RegistryGroupConfigurationComparator comparator = new RegistryGroupConfigurationComparator(Arrays.asList("1.display", "2.display"));
+        RegistryGroupConfigurationComparator comparator = new RegistryGroupConfigurationComparator(List.of("1.display", "2.display"));
 
         // when
         Integer result = comparator.compare(firstGroup, secondGroup);

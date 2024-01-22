@@ -41,12 +41,9 @@ import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.request.CreateEntityRequest;
 
 import jakarta.persistence.EntityManager;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class RegistryDataGeneratingUtil {
@@ -88,7 +85,7 @@ public final class RegistryDataGeneratingUtil {
     public static List<RegistryTestEntity> createRegistryTestEntityList(EntityManager entityManager) {
         List<RegistryTestEntity> testEntityList = IntStream.range(0, 5)
             .mapToObj(value -> createRegistryTestEntity("name " + value, 50 + value, null))
-            .collect(Collectors.toList());
+            .toList();
 
         testEntityList.forEach(entityManager::persist);
 
@@ -98,7 +95,7 @@ public final class RegistryDataGeneratingUtil {
     public static List<RegistryTestEntityWithDifferentIdName> createRegistryTestEntityWithDifferentIdNameList(EntityManager entityManager) {
         List<RegistryTestEntityWithDifferentIdName> testEntityList = IntStream.range(0, 5)
             .mapToObj(value -> createRegistryTestEntityWithDifferentIdName("name " + value))
-            .collect(Collectors.toList());
+            .toList();
 
         testEntityList.forEach(entityManager::persist);
 
@@ -122,57 +119,34 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static ListBulkRegistryRequest createBulkListRegistryRequest(String classFullName, String query) {
-        ListBulkRegistryRequest listBulkRegistryRequest = new ListBulkRegistryRequest();
-
-        listBulkRegistryRequest.setRegistryRequestList(Collections.singletonList(createListRegistryRequest(classFullName, query)));
-
-        return listBulkRegistryRequest;
+        return new ListBulkRegistryRequest(List.of(createListRegistryRequest(classFullName, query)));
     }
 
-    public static ListRegistryRequest createListRegistryRequest(String classFullName, String query, int pageNumber, int pageSize) {
-        ListRegistryRequest request = createListRegistryRequest(classFullName, query);
-
-        request.setPageNumber(pageNumber);
-        request.setPageSize(pageSize);
-
-        return request;
+    public static ListRegistryRequest createListRegistryRequest(String classFullName, String query) {
+        return createListRegistryRequest(classFullName, query, 0, 10);
     }
 
     public static List<RegistryTestEntityWithOverriddenSearchConfiguration> createRegistryTestEntityWithOverriddenSearchConfigurationList(EntityManager entityManager) {
         List<RegistryTestEntityWithOverriddenSearchConfiguration> testEntityList = IntStream.range(0, 5)
             .mapToObj(value -> createRegistryTestEntityWithOverriddenSearchConfiguration("name " + value))
-            .collect(Collectors.toList());
+            .toList();
 
         testEntityList.forEach(entityManager::persist);
 
         return testEntityList;
     }
 
-    public static ListRegistryRequest createListRegistryRequest(String classFullName, String query) {
+    public static ListRegistryRequest createListRegistryRequest(String classFullName, String query, int pageNumber, int pageSize) {
         SearchParameter searchParameter = null;
         if (query != null) {
-            searchParameter = new SearchParameter();
-            searchParameter.setPropertyNameList(Arrays.asList("age", "name"));
-            searchParameter.setQuery(query);
+            searchParameter = new SearchParameter(List.of("age", "name"), query);
         }
 
-        ListRegistryRequest request = new ListRegistryRequest();
-
-        request.setClassFullName(classFullName);
-        request.setPageNumber(0);
-        request.setPageSize(10);
-        request.setSearchParameter(searchParameter);
-
-        return request;
+        return new ListRegistryRequest(classFullName, pageNumber, pageSize, searchParameter, Collections.emptyList());
     }
 
     public static DeleteRegistryRequest createDeleteRegistryRequest(String classFullName, Object id) {
-        DeleteRegistryRequest request = new DeleteRegistryRequest();
-
-        request.setClassFullName(classFullName);
-        request.setId(id);
-
-        return request;
+        return new DeleteRegistryRequest(classFullName, id);
     }
 
     @SneakyThrows
@@ -182,44 +156,30 @@ public final class RegistryDataGeneratingUtil {
 
     @SneakyThrows
     public static CreateRegistryRequest createRegistryRequestWithAssociation(ObjectMapper objectMapper, String classFullName, RegistryTestEntity parent) {
-        CreateRegistryRequest request = new CreateRegistryRequest();
+        String jsonEntityData = objectMapper.writeValueAsString(Map.of("name", "name", "age", 40, "parent", parent));
 
-        request.setClassFullName(classFullName);
-        request.setJsonEntityData(objectMapper.writeValueAsString(Map.of("name", "name", "age", 40, "parent", parent)));
-
-        return request;
+        return new CreateRegistryRequest(classFullName, jsonEntityData);
     }
 
     @SneakyThrows
     public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name, Integer age) {
-        CreateRegistryRequest request = new CreateRegistryRequest();
+        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, age));
 
-        request.setClassFullName(classFullName);
-        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, age)));
-
-        return request;
+        return new CreateRegistryRequest(classFullName, jsonData);
     }
 
     @SneakyThrows
     public static UpdateRegistryRequest updateRegistryRequest(ObjectMapper objectMapper, String classFullName, Long id, String name) {
-        UpdateRegistryRequest request = new UpdateRegistryRequest();
+        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, 50));
 
-        request.setClassFullName(classFullName);
-        request.setId(id);
-        request.setJsonEntityData(objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, 50)));
-
-        return request;
+        return new UpdateRegistryRequest(classFullName, id, jsonData);
     }
 
     @SneakyThrows
     public static UpdateRegistryRequest updateRegistryRequestWithId(ObjectMapper objectMapper, String classFullName, Long id) {
-        UpdateRegistryRequest request = new UpdateRegistryRequest();
+        String jsonData = objectMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id));
 
-        request.setClassFullName(classFullName);
-        request.setId(id);
-        request.setJsonEntityData(objectMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id)));
-
-        return request;
+        return new UpdateRegistryRequest(classFullName, id, jsonData);
     }
 
     public static RegistryTestEmbeddedUserGroup createAndSaveRegistryTestEmbeddedUserGroup(EntityManager entityManager) {
@@ -275,44 +235,26 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static DeleteRegistryRequest createDeleteEmbeddedUserGroupRequest(RegistryTestEmbeddedUserGroupId id) {
-        DeleteRegistryRequest request = new DeleteRegistryRequest();
+        Map<String, Object> idMap = Map.of("user", id.getUser(), "group", id.getGroup());
 
-        Map<String, Object> idMap = new HashMap<>();
-
-        idMap.put("user", id.getUser());
-        idMap.put("group", id.getGroup());
-
-        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
-        request.setId(idMap);
-
-        return request;
+        return new DeleteRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), idMap);
     }
 
     public static UpdateRegistryRequest createUpdateEmbeddedUserGroupRequest(ObjectMapper objectMapper, RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup) throws Exception {
-        UpdateRegistryRequest request = new UpdateRegistryRequest();
-
-        Map<String, Object> idMap = new HashMap<>();
-
-        idMap.put("user", registryTestEmbeddedUserGroup.getUserGroupId().getUser());
-        idMap.put("group", registryTestEmbeddedUserGroup.getUserGroupId().getGroup());
+        Map<String, Object> idMap = Map.of(
+            "user", registryTestEmbeddedUserGroup.getUserGroupId().getUser(),
+            "group", registryTestEmbeddedUserGroup.getUserGroupId().getGroup()
+        );
 
         registryTestEmbeddedUserGroup.setJoinedPropertyValue("updated");
 
-        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
-        request.setId(idMap);
-        request.setJsonEntityData(objectMapper.writeValueAsString(registryTestEmbeddedUserGroup));
+        String jsonData = objectMapper.writeValueAsString(registryTestEmbeddedUserGroup);
 
-        return request;
+        return new UpdateRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), idMap, jsonData);
     }
 
     public static Map<String, Object> registryTestEntityWithIdClassId(RegistryTestEntityWithIdClass entity) {
-
-        Map<String, Object> idMap = new HashMap<>();
-
-        idMap.put("firstId", entity.getFirstId());
-        idMap.put("secondId", entity.getSecondId());
-
-        return idMap;
+        return Map.of("firstId", entity.getFirstId(), "secondId", entity.getSecondId());
     }
 
     public static CreateRegistryTestEntityRequest createRegistryTestEntityRequest(String name, Long parentId) {
@@ -347,19 +289,9 @@ public final class RegistryDataGeneratingUtil {
     }
 
     public static ListRegistryRequest createEmbeddedIdSearchRequest(RegistryTestEmbeddedUserGroup entity) {
-        SearchParameter searchParameter = new SearchParameter();
+        SearchParameter searchParameter = new SearchParameter(List.of("userGroupId.user"), entity.getUserGroupId().getGroup().getId().toString());
 
-        searchParameter.setPropertyNameList(List.of("userGroupId.user"));
-        searchParameter.setQuery(entity.getUserGroupId().getGroup().getId().toString());
-
-        ListRegistryRequest request = new ListRegistryRequest();
-
-        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
-        request.setPageNumber(0);
-        request.setPageSize(10);
-        request.setSearchParameter(searchParameter);
-
-        return request;
+        return new ListRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), 0, 10, searchParameter, Collections.emptyList());
     }
 
     private static RegistryTestEntity createRegistryTestEntity(String name, Integer age, RegistryTestEntity parent) {

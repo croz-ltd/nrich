@@ -33,8 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,7 +60,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindOne() {
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", List.of("localDate"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isNotEmpty();
@@ -71,7 +69,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldReturnEmptyOptionalWhenNoResultsHaveBeenFound() {
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000.", Collections.singletonList("localDate"), EMPTY_CONFIGURATION);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.2000.", List.of("localDate"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isEmpty();
@@ -83,7 +81,7 @@ class JpaStringSearchExecutorTest {
         SearchConfiguration<TestStringSearchEntity, TestStringSearchEntity, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfigurationMatchingAny();
 
         // when
-        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", Arrays.asList("age", "localDate", "name"), searchConfiguration);
+        Optional<TestStringSearchEntity> result = testEntityStringSearchRepository.findOne("01.01.1970.", List.of("age", "localDate", "name"), searchConfiguration);
 
         // then
         assertThat(result).isNotEmpty();
@@ -92,7 +90,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindAll() {
         // when
-        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name 1", Collections.singletonList("name"), EMPTY_CONFIGURATION);
+        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name 1", List.of("name"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).hasSize(1);
@@ -101,7 +99,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindAllWithSort() {
         // when
-        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name", Collections.singletonList("name"), EMPTY_CONFIGURATION, Sort.by(Sort.Order.desc("name")));
+        List<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("name", List.of("name"), EMPTY_CONFIGURATION, Sort.by(Sort.Order.desc("name")));
 
         // then
         assertThat(result).hasSize(5);
@@ -111,7 +109,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindAllWithPaging() {
         // when
-        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("51", Collections.singletonList("age"), EMPTY_CONFIGURATION, PageRequest.of(0, 1));
+        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("51", List.of("age"), EMPTY_CONFIGURATION, PageRequest.of(0, 1));
 
         // then
         assertThat(result).hasSize(1);
@@ -120,7 +118,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldReturnWholeResultListWhenRequestIsUnpaged() {
         // when
-        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", Collections.singletonList("ageFrom"), EMPTY_CONFIGURATION, Pageable.unpaged());
+        Page<TestStringSearchEntity> result = testEntityStringSearchRepository.findAll("10", List.of("ageFrom"), EMPTY_CONFIGURATION, Pageable.unpaged());
 
         // then
         assertThat(result).isNotEmpty();
@@ -131,7 +129,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldCount() {
         // when
-        long result = testEntityStringSearchRepository.count("51", Collections.singletonList("age"), EMPTY_CONFIGURATION);
+        long result = testEntityStringSearchRepository.count("51", List.of("age"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isEqualTo(1);
@@ -140,7 +138,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldReturnZeroWhenThereAreNoResults() {
         // when
-        long result = testEntityStringSearchRepository.count("5555", Collections.singletonList("age"), EMPTY_CONFIGURATION);
+        long result = testEntityStringSearchRepository.count("5555", List.of("age"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isZero();
@@ -149,7 +147,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldReturnTrueWhenEntityExists() {
         // when
-        boolean result = testEntityStringSearchRepository.exists("51", Collections.singletonList("age"), EMPTY_CONFIGURATION);
+        boolean result = testEntityStringSearchRepository.exists("51", List.of("age"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isTrue();
@@ -158,7 +156,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldReturnFalseWhenEntityDoesntExist() {
         // when
-        boolean result = testEntityStringSearchRepository.exists("51111", Collections.singletonList("age"), EMPTY_CONFIGURATION);
+        boolean result = testEntityStringSearchRepository.exists("51111", List.of("age"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isFalse();
@@ -167,7 +165,7 @@ class JpaStringSearchExecutorTest {
     @Test
     void shouldFindByRangeQuery() {
         // when
-        long result = testEntityStringSearchRepository.count("02.01.1970.", Collections.singletonList("localDateFrom"), EMPTY_CONFIGURATION);
+        long result = testEntityStringSearchRepository.count("02.01.1970.", List.of("localDateFrom"), EMPTY_CONFIGURATION);
 
         // then
         assertThat(result).isEqualTo(3);

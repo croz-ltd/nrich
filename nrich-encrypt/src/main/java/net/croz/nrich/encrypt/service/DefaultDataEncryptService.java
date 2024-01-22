@@ -83,8 +83,8 @@ public class DefaultDataEncryptService implements DataEncryptionService {
 
     protected void encryptDecryptNestedValue(EncryptionContext encryptionContext, Object objectContainingFieldsToEncryptOrDecrypt, String propertyName, EncryptionOperation operation) {
         if (objectContainingFieldsToEncryptOrDecrypt != null && propertyName != null) {
-            if (objectContainingFieldsToEncryptOrDecrypt instanceof Collection) {
-                ((Collection<?>) objectContainingFieldsToEncryptOrDecrypt).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
+            if (objectContainingFieldsToEncryptOrDecrypt instanceof Collection<?> collection) {
+                collection.forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
             }
             else if (objectContainingFieldsToEncryptOrDecrypt instanceof Object[] objectArray) {
                 Arrays.stream(objectArray).forEach(value -> encryptDecryptValue(encryptionContext, value, propertyName, operation));
@@ -134,10 +134,9 @@ public class DefaultDataEncryptService implements DataEncryptionService {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     protected Object getPropertyValueByPath(Object holder, String path) {
-        if (holder instanceof Map) {
-            return ((Map<String, Object>) holder).get(path);
+        if (holder instanceof Map<?, ?> map) {
+            return map.get(path);
         }
 
         try {

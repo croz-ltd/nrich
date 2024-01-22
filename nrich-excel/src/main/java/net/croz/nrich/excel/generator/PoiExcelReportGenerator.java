@@ -122,8 +122,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             if (matcher.find()) {
                 String matchedExpression = matcher.group(1);
                 String variableValue = templateVariableList.stream()
-                    .filter(variable -> matchedExpression.equals(variable.getName()))
-                    .map(TemplateVariable::getValue)
+                    .filter(variable -> matchedExpression.equals(variable.name()))
+                    .map(TemplateVariable::value)
                     .findFirst()
                     .orElse("");
 
@@ -168,7 +168,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         }
 
         return columnDataFormatList.stream()
-            .collect(Collectors.toMap(ColumnDataFormat::getColumnIndex, entry -> createCellStyle(entry.getDataFormat())));
+            .collect(Collectors.toMap(ColumnDataFormat::columnIndex, entry -> createCellStyle(entry.dataFormat())));
     }
 
     private CellStyle createCellStyle(String dataFormat) {
@@ -192,8 +192,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private Map<Class<?>, CellStyle> createDefaultStyleMap(List<TypeDataFormat> typeDataFormatList) {
         return typeDataFormatList.stream()
-            .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
-            .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
+            .filter(typeDataFormat -> typeDataFormat.dataFormat() != null)
+            .collect(Collectors.toMap(TypeDataFormat::type, value -> createCellStyle(value.dataFormat())));
     }
 
     private void autoSizeColumnsIfRequired() {

@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.core.service;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.registry.api.core.service.RegistryEntityFinderService;
 import net.croz.nrich.registry.core.constants.RegistryQueryConstants;
@@ -126,13 +125,7 @@ public class EntityManagerRegistryEntityFinderService implements RegistryEntityF
             .collect(Collectors.joining());
     }
 
-    @RequiredArgsConstructor
-    @Getter
-    private static class QueryCondition {
-
-        private final String wherePart;
-
-        private final Map<String, Object> parameterMap;
+    private record QueryCondition(String wherePart, Map<String, Object> parameterMap) {
 
     }
 }

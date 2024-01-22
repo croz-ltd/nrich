@@ -29,10 +29,10 @@ import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
-import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
-import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
+import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
+import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -95,10 +95,10 @@ public class NrichFormConfigurationAutoConfiguration {
                                                              @Autowired(required = false) List<FormConfigurationMappingCustomizer> formConfigurationCustomizerList,
                                                              JavaToJavascriptTypeConversionService formJavaToJavascriptTypeConversionService) {
         Map<String, Class<?>> formConfigurationMapping = FormConfigurationMappingCustomizerUtil.applyCustomizerList(
-            configurationProperties.getFormConfigurationMapping(), formConfigurationCustomizerList
+            configurationProperties.formConfigurationMapping(), formConfigurationCustomizerList
         );
 
-        List<String> packageList = configurationProperties.getFormValidationConfigurationClassesPackageList();
+        List<String> packageList = configurationProperties.formValidationConfigurationClassesPackageList();
         if (!CollectionUtils.isEmpty(packageList)) {
             Map<String, Class<?>> classPathFormConfiguration = formConfigurationAnnotationResolvingService.resolveFormConfigurations(packageList);
 

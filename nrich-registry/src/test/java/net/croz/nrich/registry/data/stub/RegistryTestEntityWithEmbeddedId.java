@@ -26,7 +26,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -51,13 +50,7 @@ public class RegistryTestEntityWithEmbeddedId {
         private Long secondId;
 
         public Map<String, Object> asMap() {
-            Map<String, Object> mapKey = new HashMap<>();
-
-            mapKey.put("firstId", firstId.intValue());
-            mapKey.put("secondId", secondId.intValue());
-
-            return mapKey;
+            return Map.of("firstId", firstId.intValue(), "secondId", secondId.intValue());
         }
-
     }
 }

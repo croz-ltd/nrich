@@ -17,31 +17,15 @@
 
 package net.croz.nrich.encrypt.api.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 /**
  * Method encrypt/decrypt configuration.
+ *
+ * @param methodToEncryptDecrypt       Name of the method to encrypt/decrypt (fullyQualifiedClassName.methodName).
+ * @param propertyToEncryptDecryptList List of property paths to encrypt/decrypt.
+ * @param encryptionOperation          Whether to encrypt method result or decrypt method parameters.
  */
-@RequiredArgsConstructor
-@Getter
-public class EncryptionConfiguration {
-
-    /**
-     * Name of the method to encrypt/decrypt (fullyQualifiedClassName.methodName).
-     */
-    private final String methodToEncryptDecrypt;
-
-    /**
-     * List of property paths to encrypt/decrypt.
-     */
-    private final List<String> propertyToEncryptDecryptList;
-
-    /**
-     * Whether to encrypt method result or decrypt method parameters.
-     */
-    private final EncryptionOperation encryptionOperation;
+public record EncryptionConfiguration(String methodToEncryptDecrypt, List<String> propertyToEncryptDecryptList, EncryptionOperation encryptionOperation) {
 
 }

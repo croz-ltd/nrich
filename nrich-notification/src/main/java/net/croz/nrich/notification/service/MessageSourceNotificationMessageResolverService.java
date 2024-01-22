@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class MessageSourceNotificationMessageResolverService implements NotificationMessageResolverService {
@@ -53,7 +52,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
     @Override
     public String resolveMessageForObjectError(Class<?> validationFailedOwningType, ObjectError objectError) {
         String constraintName = objectError.getCode();
-        String fieldName = objectError instanceof FieldError ? ((FieldError) objectError).getField() : null;
+        String fieldName = objectError instanceof FieldError fieldError ? fieldError.getField() : null;
         String name = validationFailedOwningType == null ? NotificationConstants.EMPTY_NAME : StringUtils.uncapitalize(validationFailedOwningType.getName());
         String shortName = validationFailedOwningType == null ? NotificationConstants.EMPTY_NAME : StringUtils.uncapitalize(validationFailedOwningType.getSimpleName());
 
@@ -101,8 +100,8 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         }
 
         return Arrays.stream(filteredArguments)
-            .map(value -> value instanceof Object[] ? convertToString((Object[]) value) : value)
-            .collect(Collectors.toList());
+            .map(value -> value instanceof Object[] objectArray ? convertToString(objectArray) : value)
+            .toList();
     }
 
     private String convertToString(Object[] value) {

@@ -94,7 +94,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AutoConfigureAfter({ ValidationAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
-@ConditionalOnBean({ EntityManagerFactory.class })
+@ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnPropertyNotEmpty("nrich.registry.registry-configuration.group-definition-configuration-list")
 @EnableConfigurationProperties(NrichRegistryProperties.class)
 @Configuration(proxyBeanMethods = false)
@@ -149,14 +149,15 @@ public class NrichRegistryAutoConfiguration {
     @Bean
     public StringToTypeConverter<Object> registryDefaultStringToTypeConverter(NrichRegistryProperties registryProperties) {
         return new DefaultStringToTypeConverter(
-            registryProperties.getRegistrySearch().getDateFormatList(), registryProperties.getRegistrySearch().getDecimalNumberFormatList(),
-            registryProperties.getRegistrySearch().getBooleanTrueRegexPattern(), registryProperties.getRegistrySearch().getBooleanFalseRegexPattern()
+            registryProperties.registrySearch().dateFormatList(), registryProperties.registrySearch().decimalNumberFormatList(),
+            registryProperties.registrySearch().booleanTrueRegexPattern(), registryProperties.registrySearch().booleanFalseRegexPattern()
         );
     }
 
     @ConditionalOnMissingBean(name = "registryStringToEntityPropertyMapConverter")
     @Bean
     public StringToEntityPropertyMapConverter registryStringToEntityPropertyMapConverter(@Lazy @Autowired(required = false) Map<String, StringToTypeConverter<?>> stringToTypeConverterList) {
+        @SuppressWarnings("java:S6204")
         List<StringToTypeConverter<?>> registryConverters = stringToTypeConverterList.entrySet().stream()
             .filter(entry -> entry.getKey().toLowerCase(Locale.ROOT).contains(REGISTRY_CONVERTER))
             .map(Map.Entry::getValue)
@@ -170,7 +171,7 @@ public class NrichRegistryAutoConfiguration {
     public RegistryConfigurationResolverService registryConfigurationResolverService(NrichRegistryProperties registryProperties,
                                                                                      @Autowired(required = false) List<RegistryOverrideConfigurationHolder> registryOverrideConfigurationHolderList) {
 
-        List<RegistryOverrideConfigurationHolder> overrideConfigurationHolderList = registryProperties.getRegistryConfiguration().getOverrideConfigurationHolderList();
+        List<RegistryOverrideConfigurationHolder> overrideConfigurationHolderList = registryProperties.registryConfiguration().getOverrideConfigurationHolderList();
 
         if (overrideConfigurationHolderList == null) {
             overrideConfigurationHolderList = new ArrayList<>();
@@ -179,9 +180,9 @@ public class NrichRegistryAutoConfiguration {
             overrideConfigurationHolderList.addAll(registryOverrideConfigurationHolderList);
         }
 
-        registryProperties.getRegistryConfiguration().setOverrideConfigurationHolderList(overrideConfigurationHolderList);
+        registryProperties.registryConfiguration().setOverrideConfigurationHolderList(overrideConfigurationHolderList);
 
-        return new DefaultRegistryConfigurationResolverService(entityManager, registryProperties.getRegistryConfiguration());
+        return new DefaultRegistryConfigurationResolverService(entityManager, registryProperties.registryConfiguration());
     }
 
     @ConditionalOnMissingBean
@@ -207,7 +208,7 @@ public class NrichRegistryAutoConfiguration {
     @Bean
     public RegistryConfigurationService registryConfigurationService(MessageSource messageSource, RegistryConfigurationResolverService registryConfigurationResolverService,
                                                                      NrichRegistryProperties registryProperties, JavaToJavascriptTypeConversionService registryJavaToJavascriptTypeConversionService) {
-        List<String> readOnlyPropertyList = Optional.ofNullable(registryProperties.getDefaultReadOnlyPropertyList()).orElse(Collections.emptyList());
+        List<String> readOnlyPropertyList = Optional.ofNullable(registryProperties.defaultReadOnlyPropertyList()).orElse(Collections.emptyList());
         RegistryGroupDefinitionHolder registryGroupDefinitionHolder = registryConfigurationResolverService.resolveRegistryGroupDefinition();
         RegistryHistoryConfigurationHolder registryHistoryConfigurationHolder = registryConfigurationResolverService.resolveRegistryHistoryConfiguration();
         Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap = registryConfigurationResolverService.resolveRegistryOverrideConfigurationMap();
@@ -227,7 +228,7 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RegistryEntityFinderService registryEntityFinderService(ModelMapper registryBaseModelMapper, RegistryConfigurationResolverService registryConfigurationResolverService) {
-        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().getClassNameManagedTypeWrapperMap();
+        Map<String, ManagedTypeWrapper> managedTypeWrapperMap = registryConfigurationResolverService.resolveRegistryDataConfiguration().classNameManagedTypeWrapperMap();
 
         return new EntityManagerRegistryEntityFinderService(entityManager, registryBaseModelMapper, managedTypeWrapperMap);
     }
@@ -249,8 +250,8 @@ public class NrichRegistryAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public RegistryClassResolvingService registryClassResolvingService(RegistryConfigurationResolverService registryConfigurationResolverService, NrichRegistryProperties registryProperties) {
-        Map<String, Class<?>> createRegistryClassMapping = registryProperties.getRegistryConfiguration().getCreateRegistryClassMapping();
-        Map<String, Class<?>> updateRegistryClassMapping = registryProperties.getRegistryConfiguration().getUpdateRegistryClassMapping();
+        Map<String, Class<?>> createRegistryClassMapping = registryProperties.registryConfiguration().getCreateRegistryClassMapping();
+        Map<String, Class<?>> updateRegistryClassMapping = registryProperties.registryConfiguration().getUpdateRegistryClassMapping();
 
         return new DefaultRegistryClassResolvingService(registryConfigurationResolverService.resolveRegistryDataConfiguration(), createRegistryClassMapping, updateRegistryClassMapping);
     }
@@ -291,8 +292,9 @@ public class NrichRegistryAutoConfiguration {
     @Bean
     public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService,
                                                                                              RegistryClassResolvingService registryClassResolvingService) {
-        List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-            .map(RegistryDataConfiguration::getRegistryType)
+        @SuppressWarnings("java:S6204")
+        List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().registryDataConfigurationList().stream()
+            .map(RegistryDataConfiguration::registryType)
             .collect(Collectors.toList());
 
         return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);

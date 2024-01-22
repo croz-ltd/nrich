@@ -36,7 +36,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -80,8 +79,8 @@ public class SearchTestConfiguration {
 
     @Bean
     public StringToTypeConverter<Object> defaultStringToTypeConverter() {
-        List<String> dateFormatList = Arrays.asList("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm");
-        List<String> decimalFormatList = Arrays.asList("#0.00", "#0,00");
+        List<String> dateFormatList = List.of("dd.MM.yyyy.", "dd.MM.yyyy.'T'HH:mm");
+        List<String> decimalFormatList = List.of("#0.00", "#0,00");
         String booleanTrueRegexPattern = "^(?i)\\s*(true|yes)\\s*$";
         String booleanFalseRegexPattern = "^(?i)\\s*(false|no)\\s*$";
 

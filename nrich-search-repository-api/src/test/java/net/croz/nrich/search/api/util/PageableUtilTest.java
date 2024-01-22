@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +41,7 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageableSortableRequestWithUniqueSortPropertyToPageable() {
         // given
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
         DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // when
@@ -60,7 +59,7 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageableSortableRequestToPageable() {
         // given
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
         DefaultPageableSortableTestRequest request = new DefaultPageableSortableTestRequest(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
 
         // when
@@ -88,7 +87,7 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyToPageable() {
         // given
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC));
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC));
 
         // when
         Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
@@ -104,7 +103,7 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithSortPropertyToListPageable() {
         // given
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
 
         // when
         Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, sortPropertyList);
@@ -120,7 +119,7 @@ class PageableUtilTest {
     @Test
     void shouldConvertPageDataWithUniqueSortPropertyAndSortPropertyToListPageable() {
         // given
-        List<SortProperty> sortPropertyList = Collections.singletonList(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(SORT_PROPERTY, SortDirection.DESC));
 
         // when
         Pageable pageable = PageableUtil.convertToPageable(PAGE_NUMBER, PAGE_SIZE, new SortProperty(UNIQUE_SORT_PROPERTY, SortDirection.ASC), sortPropertyList);

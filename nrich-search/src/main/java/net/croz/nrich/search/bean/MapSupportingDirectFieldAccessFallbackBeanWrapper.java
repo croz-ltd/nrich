@@ -27,7 +27,7 @@ public class MapSupportingDirectFieldAccessFallbackBeanWrapper extends DirectFie
 
     public MapSupportingDirectFieldAccessFallbackBeanWrapper(Object entity) {
         super(entity);
-        this.entityAsMap = entity instanceof Map ? asMap(entity) : null;
+        entityAsMap = entity instanceof Map ? asMap(entity) : null;
     }
 
     @Override

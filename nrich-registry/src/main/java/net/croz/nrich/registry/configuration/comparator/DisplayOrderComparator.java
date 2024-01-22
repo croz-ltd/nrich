@@ -20,6 +20,7 @@ package net.croz.nrich.registry.configuration.comparator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @Getter
 public class DisplayOrderComparator implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 4980226671627040327L;
 
     private final List<String> propertyDisplayOrderList;

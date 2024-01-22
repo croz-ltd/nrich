@@ -17,28 +17,16 @@
 
 package net.croz.nrich.notification.api.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 /**
  * Represents validation error on a object. Returned with {@link ValidationFailureNotification} instance.
+ *
+ * @param objectName       If validation error occurred on a property then name of a property otherwise <pre>CONTAINING_OBJECT</pre>.
+ * @param errorMessageList List of validation failed messages.
  */
-@RequiredArgsConstructor
-@Getter
-public class ValidationError {
+public record ValidationError(String objectName, List<String> errorMessageList) {
 
     public static final String CONTAINING_OBJECT_NAME = "CONTAINING_OBJECT";
-
-    /**
-     * If validation error occurred on a property then name of a property otherwise <pre>CONTAINING_OBJECT</pre>.
-     */
-    private final String objectName;
-
-    /**
-     * List of validation failed messages.
-     */
-    private final List<String> errorMessageList;
 
 }

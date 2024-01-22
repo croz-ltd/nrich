@@ -17,28 +17,14 @@
 
 package net.croz.nrich.registry.data.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.constraints.NotNull;
 
 /**
  * Request holding data for registry entity deletion.
+ *
+ * @param classFullName Class name of registry entity.
+ * @param id            Registry entity id.
  */
-@Setter
-@Getter
-public class DeleteRegistryRequest {
-
-    /**
-     * Class name of registry entity.
-     */
-    @NotNull
-    private String classFullName;
-
-    /**
-     * Registry entity id.
-     */
-    @NotNull
-    private Object id;
+public record DeleteRegistryRequest(@NotNull String classFullName, @NotNull Object id) {
 
 }

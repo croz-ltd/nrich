@@ -21,7 +21,6 @@ import net.croz.nrich.encrypt.api.model.EncryptionConfiguration;
 import net.croz.nrich.encrypt.api.model.EncryptionOperation;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,8 +31,8 @@ class PointcutResolvingUtilTest {
     void shouldResolvePointcutFromEncryptionConfigurationList() {
         // given
         String method = "net.croz.nrich.encrypt.stub.ExampleService.exampleMethod";
-        EncryptionConfiguration configuration = new EncryptionConfiguration(method, Collections.singletonList("id"), EncryptionOperation.ENCRYPT);
-        List<EncryptionConfiguration> encryptionConfigurationList = Collections.singletonList(configuration);
+        EncryptionConfiguration configuration = new EncryptionConfiguration(method, List.of("id"), EncryptionOperation.ENCRYPT);
+        List<EncryptionConfiguration> encryptionConfigurationList = List.of(configuration);
 
         // when
         String result = PointcutResolvingUtil.resolvePointcutFromEncryptionConfigurationList(encryptionConfigurationList);

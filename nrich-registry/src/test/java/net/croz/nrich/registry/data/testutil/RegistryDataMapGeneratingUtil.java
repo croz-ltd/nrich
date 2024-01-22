@@ -26,10 +26,6 @@ public final class RegistryDataMapGeneratingUtil {
     }
 
     public static Map<String, Class<?>> createFormConfigurationMap(String key, Class<?> value) {
-        Map<String, Class<?>> formConfigurationMap = new HashMap<>();
-
-        formConfigurationMap.put(key, value);
-
-        return formConfigurationMap;
+        return new HashMap<>(Map.of(key, value));
     }
 }

@@ -29,8 +29,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 
 import static net.croz.nrich.notification.testutil.DefaultMessageSourceResolvableGeneratingUtil.createMessageSourceNotificationMessageResolverServiceTestRequestFieldErrorLabelMessageSourceResolvable;
 import static net.croz.nrich.notification.testutil.DefaultMessageSourceResolvableGeneratingUtil.createMessageSourceNotificationMessageResolverServiceTestRequestFieldErrorMessageSourceResolvable;
@@ -51,15 +50,15 @@ class MessageSourceNotificationMessageResolverServiceTest {
     @Test
     void shouldResolveMessage() {
         // given
-        String[] codeList = new String[] { "message.code" };
-        Object[] argumentList = new Object[] { "argument" };
+        String[] codeList = { "message.code" };
+        Object[] argumentList = { "argument" };
         DefaultMessageSourceResolvable messageSourceResolvable = new DefaultMessageSourceResolvable(codeList, argumentList);
         String message = "message";
 
         doReturn(message).when(messageSource).getMessage(messageSourceResolvable, LocaleContextHolder.getLocale());
 
         // when
-        String result = messageResolverService.resolveMessage(Arrays.asList(codeList), Arrays.asList(argumentList), null);
+        String result = messageResolverService.resolveMessage(List.of(codeList), List.of(argumentList), null);
 
         // then
         assertThat(result).isEqualTo(message);
@@ -68,7 +67,7 @@ class MessageSourceNotificationMessageResolverServiceTest {
     @Test
     void shouldNotFailOnNullArguments() {
         // when
-        Throwable thrown = catchThrowable(() -> messageResolverService.resolveMessage(Collections.singletonList("message.code"), null, null));
+        Throwable thrown = catchThrowable(() -> messageResolverService.resolveMessage(List.of("message.code"), null, null));
 
         // then
         assertThat(thrown).isNull();
@@ -116,7 +115,7 @@ class MessageSourceNotificationMessageResolverServiceTest {
     void shouldConvertArrayArgumentsString() {
         // given
         Class<?> requestType = MessageSourceNotificationMessageResolverServiceTestRequest.class;
-        Object[] arguments = new Object[] { new Object[] { "first", "second" } };
+        Object[] arguments = { new Object[] { "first", "second" } };
         ObjectError error = new ObjectError("target", new String[] { "code" }, arguments, "message");
         DefaultMessageSourceResolvable messageSourceResolvable = createMessageSourceNotificationMessageResolverServiceTestRequestObjectErrorMessageSourceResolvable(new Object[] { "first, second" });
         String message = "message";

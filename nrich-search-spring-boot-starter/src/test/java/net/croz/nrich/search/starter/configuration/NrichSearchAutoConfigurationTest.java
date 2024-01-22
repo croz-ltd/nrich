@@ -38,6 +38,8 @@ class NrichSearchAutoConfigurationTest {
             assertThat(context).hasSingleBean(StringToTypeConverter.class);
             assertThat(context).hasSingleBean(StringToEntityPropertyMapConverter.class);
             assertThat(context).hasSingleBean(RepositoryFactorySupportFactory.class);
+            assertThat(context).hasSingleBean(NrichSearchProperties.class);
+            assertThat(context.getBean(NrichSearchProperties.class).stringSearch()).isNotNull();
         });
     }
 
@@ -56,9 +58,9 @@ class NrichSearchAutoConfigurationTest {
             NrichSearchProperties searchProperties = context.getBean(NrichSearchProperties.class);
 
             // then
-            assertThat(searchProperties.getStringSearch()).isNotNull();
-            assertThat(searchProperties.getStringSearch().getBooleanTrueRegexPattern()).isEqualTo("new");
-            assertThat(searchProperties.getStringSearch().getBooleanFalseRegexPattern()).isEqualTo("^(?i)\\s*(false|no|ne)\\s*$");
+            assertThat(searchProperties.stringSearch()).isNotNull();
+            assertThat(searchProperties.stringSearch().booleanTrueRegexPattern()).isEqualTo("new");
+            assertThat(searchProperties.stringSearch().booleanFalseRegexPattern()).isEqualTo("^(?i)\\s*(false|no|ne)\\s*$");
         });
     }
 }

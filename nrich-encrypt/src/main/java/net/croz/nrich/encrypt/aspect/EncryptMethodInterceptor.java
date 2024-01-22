@@ -28,11 +28,9 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.ProxyMethodInvocation;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,13 +44,12 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        if (!(invocation instanceof ProxyMethodInvocation)) {
+        if (!(invocation instanceof ProxyMethodInvocation proxyMethodInvocation)) {
             log.debug("Found method: {} was not instance of ProxyMethodInvocation it will not be encrypted!!", methodName(invocation));
 
             return invocation.proceed();
         }
 
-        ProxyMethodInvocation proxyMethodInvocation = (ProxyMethodInvocation) invocation;
         String methodName = methodName(invocation);
         String anyMethodName = anyClassMethod(invocation);
 
@@ -61,8 +58,8 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
         }
 
         List<EncryptionConfiguration> foundConfigurationList = encryptionConfigurationList.stream()
-            .filter(configuration -> methodName.equals(configuration.getMethodToEncryptDecrypt()) || anyMethodName.equals(configuration.getMethodToEncryptDecrypt()))
-            .collect(Collectors.toList());
+            .filter(configuration -> methodName.equals(configuration.methodToEncryptDecrypt()) || anyMethodName.equals(configuration.methodToEncryptDecrypt()))
+            .toList();
 
         if (!foundConfigurationList.isEmpty()) {
             EncryptionConfiguration decryptArgumentsConfiguration = findEncryptionConfigurationForOperation(foundConfigurationList, EncryptionOperation.DECRYPT);
@@ -75,7 +72,7 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
                 EncryptionContext context = createEncryptionContext(methodName, arguments);
 
-                decryptedArguments = decryptArguments(context, arguments, decryptArgumentsConfiguration.getPropertyToEncryptDecryptList());
+                decryptedArguments = decryptArguments(context, arguments, decryptArgumentsConfiguration.propertyToEncryptDecryptList());
 
                 proxyMethodInvocation.setArguments(decryptedArguments);
             }
@@ -85,7 +82,7 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
                 EncryptionContext context = createEncryptionContext(methodName, decryptedArguments == null ? arguments : decryptedArguments);
 
-                return encryptResult(context, proxyMethodInvocation.proceed(), encryptResultConfiguration.getPropertyToEncryptDecryptList());
+                return encryptResult(context, proxyMethodInvocation.proceed(), encryptResultConfiguration.propertyToEncryptDecryptList());
             }
         }
 
@@ -107,13 +104,13 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
     private EncryptionConfiguration findEncryptionConfigurationForOperation(List<EncryptionConfiguration> encryptionConfigurationList, EncryptionOperation encryptionOperation) {
         return encryptionConfigurationList.stream()
-            .filter(configuration -> configuration.getEncryptionOperation() == encryptionOperation)
+            .filter(configuration -> configuration.encryptionOperation() == encryptionOperation)
             .findFirst()
             .orElse(null);
     }
 
     private EncryptionContext createEncryptionContext(String methodName, Object[] arguments) {
-        List<Object> argumentList = Arrays.asList(arguments);
+        List<Object> argumentList = List.of(arguments);
         String currentUsername = currentUsername();
 
         return EncryptionContext.builder()

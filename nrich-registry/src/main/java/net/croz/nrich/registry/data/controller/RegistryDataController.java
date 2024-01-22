@@ -62,7 +62,7 @@ public class RegistryDataController {
 
     @PostMapping("delete")
     public void delete(@RequestBody @Valid DeleteRegistryRequest request) {
-        registryDataService.delete(request.getClassFullName(), request.getId());
+        registryDataService.delete(request.classFullName(), request.id());
     }
 
     @PostMapping("create")
@@ -71,7 +71,7 @@ public class RegistryDataController {
 
         validateEntityData(entityData);
 
-        return registryDataService.create(request.getClassFullName(), entityData);
+        return registryDataService.create(request.classFullName(), entityData);
     }
 
     @PostMapping("update")
@@ -80,7 +80,7 @@ public class RegistryDataController {
 
         validateEntityData(entityData);
 
-        return registryDataService.update(request.getClassFullName(), request.getId(), entityData);
+        return registryDataService.update(request.classFullName(), request.id(), entityData);
     }
 
     @SneakyThrows

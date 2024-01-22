@@ -17,15 +17,8 @@
 
 package net.croz.nrich.validation.constraint.stub;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.SpelExpression;
 
-@RequiredArgsConstructor
-@Getter
-public class SpelExpressionEnvirnomentTestRequest {
-
-    @SpelExpression("#environment['custom.spel.expresssion.value'] == #this")
-    private final String value;
+public record SpelExpressionEnvirnomentTestRequest(@SpelExpression("#environment['custom.spel.expresssion.value'] == #this") String value) {
 
 }

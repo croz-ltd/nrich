@@ -21,7 +21,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import jakarta.validation.metadata.ConstraintDescriptor;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -73,7 +72,7 @@ public class ConstrainedProperty {
      * @return containing argument map
      */
     public Map<String, Object> getConstraintArgumentMap() {
-        List<String> ignoredKeyList = Arrays.asList("groups", "message", "payload");
+        List<String> ignoredKeyList = List.of("groups", "message", "payload");
 
         return constraintDescriptor.getAttributes().entrySet().stream()
             .filter(entry -> !ignoredKeyList.contains(entry.getKey()))

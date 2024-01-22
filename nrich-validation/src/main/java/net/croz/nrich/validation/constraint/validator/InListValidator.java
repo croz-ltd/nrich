@@ -21,7 +21,7 @@ import net.croz.nrich.validation.api.constraint.InList;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import java.util.Arrays;
+import java.util.List;
 
 public class InListValidator implements ConstraintValidator<InList, Object> {
 
@@ -38,6 +38,6 @@ public class InListValidator implements ConstraintValidator<InList, Object> {
             return true;
         }
 
-        return Arrays.asList(stringList).contains(value.toString());
+        return List.of(stringList).contains(value.toString());
     }
 }

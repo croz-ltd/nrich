@@ -20,7 +20,7 @@ package net.croz.nrich.registry.enumadata.testutil;
 import net.croz.nrich.registry.api.enumdata.request.ListBulkRegistryEnumRequest;
 import net.croz.nrich.registry.api.enumdata.request.ListRegistryEnumRequest;
 
-import java.util.Collections;
+import java.util.List;
 
 public final class RegistryEnumGeneratingUtil {
 
@@ -28,19 +28,10 @@ public final class RegistryEnumGeneratingUtil {
     }
 
     public static ListBulkRegistryEnumRequest createBulkListEnumRequest(String classFullName, String query) {
-        ListBulkRegistryEnumRequest request = new ListBulkRegistryEnumRequest();
-
-        request.setRegistryRequestList(Collections.singletonList(createListEnumRequest(classFullName, query)));
-
-        return request;
+        return new ListBulkRegistryEnumRequest(List.of(createListEnumRequest(classFullName, query)));
     }
 
     public static ListRegistryEnumRequest createListEnumRequest(String classFullName, String query) {
-        ListRegistryEnumRequest request = new ListRegistryEnumRequest();
-
-        request.setClassFullName(classFullName);
-        request.setQuery(query);
-
-        return request;
+        return new ListRegistryEnumRequest(classFullName, query);
     }
 }

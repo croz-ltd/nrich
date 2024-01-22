@@ -33,7 +33,7 @@ public final class PointcutResolvingUtil {
 
     public static String resolvePointcutFromEncryptionConfigurationList(List<EncryptionConfiguration> encryptionConfigurationList) {
         return encryptionConfigurationList.stream()
-            .map(EncryptionConfiguration::getMethodToEncryptDecrypt)
+            .map(EncryptionConfiguration::methodToEncryptDecrypt)
             .map(method -> String.format(EXECUTION_METHOD_POINTCUT, method))
             .collect(Collectors.joining(EXECUTION_METHOD_OR_SEPARATOR));
     }

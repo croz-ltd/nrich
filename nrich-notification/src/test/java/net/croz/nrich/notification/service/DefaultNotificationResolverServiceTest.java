@@ -46,7 +46,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.additionalDataMap;
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceRequestBindingMap;
 import static net.croz.nrich.notification.testutil.NotificationGeneratingUtil.invalidNotificationResolverServiceTestRequest;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,7 +80,7 @@ class DefaultNotificationResolverServiceTest {
             "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
-        assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
+        assertThat(notification.getValidationErrorList().stream().map(ValidationError::objectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
     }
 
     @Test
@@ -123,7 +122,7 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification.getMessageList()).contains("Object error occurred");
 
         assertThat(notification.getValidationErrorList()).isNotEmpty();
-        assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).contains(ValidationError.CONTAINING_OBJECT_NAME);
+        assertThat(notification.getValidationErrorList().stream().map(ValidationError::objectName)).contains(ValidationError.CONTAINING_OBJECT_NAME);
     }
 
     @Test
@@ -244,7 +243,7 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToValidationFailureNotification() {
         // given
-        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("data", "1")).build();
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(Map.of("data", "1")).build();
         Map<String, Object> invalidBindingMap = invalidNotificationResolverServiceRequestBindingMap();
 
         BindingResult result = validate(new NotificationResolverServiceTestRequest(), invalidBindingMap);
@@ -260,7 +259,7 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToExceptionNotification() {
         // given
-        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("data", "1")).build();
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(Map.of("data", "1")).build();
         Exception exception = new NotificationResolverServiceTestExceptionWithCustomTitle();
 
         // when
@@ -274,7 +273,7 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddAdditionalDataToSuccessNotification() {
         // given
-        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("success", "ok")).build();
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(Map.of("success", "ok")).build();
         String actionName = "upload.finished";
 
         // when
@@ -288,7 +287,7 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldIgnoreNotFoundAdditionalDataMessages() {
         // given
-        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(additionalDataMap("notFound", "ok")).build();
+        AdditionalNotificationData notificationData = AdditionalNotificationData.builder().messageListDataMap(Map.of("notFound", "ok")).build();
         String actionName = "upload.finished";
 
         // when
@@ -319,7 +318,7 @@ class DefaultNotificationResolverServiceTest {
             "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
-        assertThat(notification.getValidationErrorList().stream().map(ValidationError::getObjectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
+        assertThat(notification.getValidationErrorList().stream().map(ValidationError::objectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
     }
 
     @Test

@@ -41,7 +41,7 @@ public class NrichCsrfAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public CsrfTokenManagerService tokenManagerService(NrichCsrfProperties csrfProperties) {
-        return new AesCsrfTokenManagerService(csrfProperties.getTokenExpirationInterval(), csrfProperties.getTokenFutureThreshold(), csrfProperties.getCryptoKeyLength());
+        return new AesCsrfTokenManagerService(csrfProperties.tokenExpirationInterval(), csrfProperties.tokenFutureThreshold(), csrfProperties.cryptoKeyLength());
     }
 
     @ConditionalOnMissingBean
@@ -55,7 +55,7 @@ public class NrichCsrfAutoConfiguration {
     @Bean
     public CsrfInterceptor csrfInterceptor(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfInterceptor(
-            csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList()
+            csrfTokenManagerService, csrfProperties.tokenKeyName(), csrfProperties.initialTokenUrl(), csrfProperties.csrfPingUri(), csrfProperties.csrfExcludeConfigList()
         );
     }
 
@@ -64,7 +64,7 @@ public class NrichCsrfAutoConfiguration {
     @Bean
     public CsrfWebFilter webFilter(CsrfTokenManagerService csrfTokenManagerService, NrichCsrfProperties csrfProperties) {
         return new CsrfWebFilter(
-            csrfTokenManagerService, csrfProperties.getTokenKeyName(), csrfProperties.getInitialTokenUrl(), csrfProperties.getCsrfPingUri(), csrfProperties.getCsrfExcludeConfigList()
+            csrfTokenManagerService, csrfProperties.tokenKeyName(), csrfProperties.initialTokenUrl(), csrfProperties.csrfPingUri(), csrfProperties.csrfExcludeConfigList()
         );
     }
 

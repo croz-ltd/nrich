@@ -21,7 +21,6 @@ import net.croz.nrich.notification.stub.NotificationResolverServiceTestRequest;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class NotificationGeneratingUtil {
@@ -30,21 +29,11 @@ public final class NotificationGeneratingUtil {
     }
 
     public static Map<String, Object> invalidNotificationResolverServiceRequestBindingMap() {
-        Map<String, Object> invalidBindingMap = new HashMap<>();
-
-        invalidBindingMap.put("lastName", "too long last name");
-        invalidBindingMap.put("timestamp", Instant.now().minus(1, ChronoUnit.DAYS));
-        invalidBindingMap.put("value", 5);
-
-        return invalidBindingMap;
-    }
-
-    public static Map<String, Object> additionalDataMap(String key, String value) {
-        Map<String, Object> additionalDataMap = new HashMap<>();
-
-        additionalDataMap.put(key, value);
-
-        return additionalDataMap;
+        return Map.of(
+            "lastName", "too long last name",
+            "timestamp", Instant.now().minus(1, ChronoUnit.DAYS),
+            "value", 5
+        );
     }
 
     public static NotificationResolverServiceTestRequest invalidNotificationResolverServiceTestRequest() {

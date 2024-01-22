@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class SearchDataParser {
@@ -84,24 +83,24 @@ public class SearchDataParser {
             if (attributeHolder.isFound()) {
                 String currentPath = resolveCurrentPath(path, fieldNameWithoutPrefixAndSuffix);
 
-                if (attributeHolder.getManagedType() != null) {
+                if (attributeHolder.managedType() != null) {
                     MapSupportingDirectFieldAccessFallbackBeanWrapper currentWrapper = new MapSupportingDirectFieldAccessFallbackBeanWrapper(value);
 
-                    resolveRestrictionListInternal(currentWrapper, propertyPrefix, currentPath, attributeHolder.getManagedType(), restrictionList, attributeHolder.isPlural());
+                    resolveRestrictionListInternal(currentWrapper, propertyPrefix, currentPath, attributeHolder.managedType(), restrictionList, attributeHolder.isPlural());
                     return;
                 }
 
                 // element collections have null managed type but should be treated as plural attributes
                 boolean isCurrentAttributePlural = attributeHolder.isPlural() || attributeHolder.isElementCollection() || isPluralAttribute;
 
-                restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isCurrentAttributePlural));
+                restrictionList.add(createAttributeRestriction(attributeHolder.attribute().getJavaType(), originalFieldName, currentPath, value, isCurrentAttributePlural));
             }
             else if (searchUsingPropertyMapping(searchConfiguration)) {
                 AttributeHolderWithPath attributeWithPath = resolveAttributeFromSearchConfigurationOrPrefix(attributeResolver, originalFieldName);
 
                 if (attributeWithPath.isFound()) {
-                    attributeHolder = attributeWithPath.getAttributeHolder();
-                    restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, attributeWithPath.getPath(), value, attributeHolder.isPlural()));
+                    attributeHolder = attributeWithPath.attributeHolder();
+                    restrictionList.add(createAttributeRestriction(attributeHolder.attribute().getJavaType(), originalFieldName, attributeWithPath.path(), value, attributeHolder.isPlural()));
                 }
             }
         });
@@ -116,13 +115,13 @@ public class SearchDataParser {
         if (wrapper.getEntityAsMap() != null) {
             return wrapper.getEntityAsMap().keySet().stream()
                 .filter(key -> !ignoredFieldList.contains(key))
-                .collect(Collectors.toList());
+                .toList();
         }
 
         return FieldExtractionUtil.getAllFields(wrapper.getRootClass()).stream()
             .filter(field -> shouldIncludeField(ignoredFieldList, field))
             .map(Field::getName)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private boolean shouldIncludeField(List<String> ignoredFieldList, Field field) {
@@ -142,8 +141,8 @@ public class SearchDataParser {
 
     private boolean shouldSkipValue(Object value) {
         boolean skipValue;
-        if (value instanceof Collection) {
-            skipValue = CollectionUtils.isEmpty((Collection<?>) value);
+        if (value instanceof Collection<?> collection) {
+            skipValue = CollectionUtils.isEmpty(collection);
         }
         else {
             skipValue = value == null;
@@ -205,7 +204,7 @@ public class SearchDataParser {
     }
 
     private AttributeHolderWithPath resolveAttributeByPrefix(JpaEntityAttributeResolver attributeResolver, String path, List<String> previousPathList) {
-        String mappedPath = findPathUsingAttributePrefix(path, attributeResolver.getManagedType());
+        String mappedPath = findPathUsingAttributePrefix(path, attributeResolver.managedType());
 
         if (mappedPath == null) {
             return AttributeHolderWithPath.notFound();
@@ -227,7 +226,7 @@ public class SearchDataParser {
                 String leftOverPath = PathResolvingUtil.removeFirstPathElement(currentPath);
                 previousPathList.add(currentPrefix);
 
-                return resolveAttributeByPrefix(new JpaEntityAttributeResolver(attributeHolder.getManagedType()), leftOverPath, previousPathList);
+                return resolveAttributeByPrefix(new JpaEntityAttributeResolver(attributeHolder.managedType()), leftOverPath, previousPathList);
             }
         }
 
@@ -238,8 +237,8 @@ public class SearchDataParser {
         return Optional.ofNullable(propertyMappingList)
             .orElse(Collections.emptyList())
             .stream()
-            .filter(mapping -> fieldName.equals(mapping.getName()))
-            .map(SearchPropertyMapping::getPath)
+            .filter(mapping -> fieldName.equals(mapping.name()))
+            .map(SearchPropertyMapping::path)
             .findAny()
             .orElse(null);
     }
@@ -248,7 +247,7 @@ public class SearchDataParser {
         List<String> attributeNameList = managedType.getAttributes().stream()
             .filter(attribute -> attribute.isAssociation() || attribute.getPersistentAttributeType() == Attribute.PersistentAttributeType.EMBEDDED)
             .map(Attribute::getName)
-            .collect(Collectors.toList());
+            .toList();
 
         return attributeNameList.stream()
             .filter(attribute -> isFieldNameValid(originalFieldName, attribute))

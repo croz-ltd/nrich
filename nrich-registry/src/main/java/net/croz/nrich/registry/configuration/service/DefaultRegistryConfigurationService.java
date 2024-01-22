@@ -53,7 +53,6 @@
     import java.util.Map;
     import java.util.Optional;
     import java.util.function.Predicate;
-    import java.util.stream.Collectors;
 
     @RequiredArgsConstructor
     public class DefaultRegistryConfigurationService implements RegistryConfigurationService {
@@ -77,20 +76,20 @@
 
             List<RegistryPropertyConfiguration> registryPropertyHistoryConfigurationList = resolveHistoryPropertyList(registryHistoryConfiguration);
 
-            registryGroupDefinitionHolder.getGroupDefinitionList().forEach(registryGroupDefinition -> {
-                String registryGroupIdDisplayName = groupDisplayLabel(registryGroupDefinition.getRegistryGroupId());
+        registryGroupDefinitionHolder.groupDefinitionList().forEach(registryGroupDefinition -> {
+            String registryGroupIdDisplayName = groupDisplayLabel(registryGroupDefinition.registryGroupId());
 
-                List<RegistryEntityConfiguration> configurationList = registryGroupDefinition.getRegistryEntityList().stream()
-                    .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.getRegistryGroupId(), managedType, registryPropertyHistoryConfigurationList))
+            List<RegistryEntityConfiguration> configurationList = registryGroupDefinition.registryEntityList().stream()
+                .map(managedType -> resolveRegistryConfiguration(registryGroupDefinition.registryGroupId(), managedType, registryPropertyHistoryConfigurationList))
                     .sorted(Comparator.comparing(RegistryEntityConfiguration::getClassFullName))
-                    .collect(Collectors.toList());
+                .toList();
 
-                RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.getRegistryGroupId(), registryGroupIdDisplayName, configurationList);
+            RegistryGroupConfiguration registryConfiguration = new RegistryGroupConfiguration(registryGroupDefinition.registryGroupId(), registryGroupIdDisplayName, configurationList);
 
                 registryGroupConfigurationList.add(registryConfiguration);
             });
 
-            registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.getGroupDisplayOrderList()));
+        registryGroupConfigurationList.sort(new RegistryGroupConfigurationComparator(registryGroupDefinitionHolder.groupDisplayOrderList()));
 
             return registryGroupConfigurationList;
         }
@@ -189,19 +188,19 @@
         private List<RegistryPropertyConfiguration> resolveHistoryPropertyList(RegistryHistoryConfigurationHolder registryHistoryConfiguration) {
             List<PropertyWithType> historyPropertyList = new ArrayList<>();
 
-            historyPropertyList.add(registryHistoryConfiguration.getRevisionNumberProperty());
-            historyPropertyList.add(registryHistoryConfiguration.getRevisionTimestampProperty());
-            historyPropertyList.add(registryHistoryConfiguration.getRevisionTypeProperty());
-            historyPropertyList.addAll(registryHistoryConfiguration.getRevisionAdditionalPropertyList());
+        historyPropertyList.add(registryHistoryConfiguration.revisionNumberProperty());
+        historyPropertyList.add(registryHistoryConfiguration.revisionTimestampProperty());
+        historyPropertyList.add(registryHistoryConfiguration.revisionTypeProperty());
+        historyPropertyList.addAll(registryHistoryConfiguration.revisionAdditionalPropertyList());
 
             return historyPropertyList.stream()
                 .map(propertyWithType -> resolveRegistryPropertyConfiguration(
-                        RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.getType(), propertyWithType.getName(), false, false,
+                RegistryConfigurationConstants.REGISTRY_REVISION_ENTITY_PREFIX, propertyWithType.type(), propertyWithType.name(), false, false,
                         null, true, true, false
                     )
                 )
-                .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.getPropertyDisplayList()))
-                .collect(Collectors.toList());
+            .sorted(new RegistryPropertyComparator(registryHistoryConfiguration.propertyDisplayList()))
+            .toList();
         }
 
         private RegistryPropertyConfiguration resolveRegistryPropertyConfiguration(String entityTypePrefix, Class<?> attributeType, String attributeName, boolean isIdAttribute,
@@ -267,7 +266,7 @@
         }
 
         private List<String> labelMessageCodeList(String entityTypePrefix, Class<?> attributeType, String attributeName) {
-            return Arrays.asList(
+        return List.of(
                 String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, entityTypePrefix, attributeName),
                 String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_FORMAT, attributeName, attributeType.getName()),
                 String.format(RegistryConfigurationConstants.REGISTRY_FIELD_DISPLAY_LABEL_SHORT_FORMAT, attributeType.getName())
@@ -294,7 +293,7 @@
             List<String> attributeWordList = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(attributeName))
                 .map(value -> value.trim().toLowerCase(Locale.ROOT))
                 .filter(value -> !RegistryCoreConstants.DOT.equals(value))
-                .collect(Collectors.toList());
+            .toList();
 
             return StringUtils.capitalize(String.join(RegistryCoreConstants.SPACE, attributeWordList));
         }

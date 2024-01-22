@@ -69,7 +69,7 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
                 return;
             }
 
-            Attribute<?, ?> attribute = attributeHolder.getAttribute();
+            Attribute<?, ?> attribute = attributeHolder.attribute();
 
             Object convertedValue = doConversion(value, attribute.getJavaType());
 

@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class DefaultFormConfigurationService implements FormConfigurationService {
@@ -57,7 +56,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     public List<FormConfiguration> fetchFormConfigurationList() {
         return formIdConstraintHolderMap.keySet().stream()
             .map(this::resolveFormConfiguration)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Cacheable(value = "nrich.formConfiguration.cache", key = "#formIdList.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
@@ -65,7 +64,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     public List<FormConfiguration> fetchFormConfigurationList(List<String> formIdList) {
         return formIdList.stream()
             .map(this::resolveFormConfiguration)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private FormConfiguration resolveFormConfiguration(String formId) {
@@ -112,7 +111,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
         return constraintDescriptorList.stream()
             .map(constraintDescriptor -> convertProperty(constraintDescriptor, parentType, propertyPath, propertyDescriptor))
             .flatMap(List::stream)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private List<ConstrainedPropertyClientValidatorConfiguration> convertProperty(ConstraintDescriptor<?> constraintDescriptor, Class<?> parentType, String propertyPath,
