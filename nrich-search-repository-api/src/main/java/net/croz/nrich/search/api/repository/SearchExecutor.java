@@ -101,4 +101,10 @@ public interface SearchExecutor<T> {
      */
     <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration);
 
+    /**
+     * Returns repository domain class.
+     *
+     * @return repository domain class
+     */
+    Class<T> getDomainClass();
 }

@@ -46,6 +46,8 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     private final EntityManager entityManager;
 
+    private final Class<T> domainClass;
+
     private final JpaQueryBuilder<T> queryBuilder;
 
     private final ManagedType<?> managedType;
@@ -53,8 +55,9 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
     public JpaStringSearchExecutor(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, EntityManager entityManager, JpaEntityInformation<T, ?> jpaEntityInformation) {
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.entityManager = entityManager;
-        this.queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
-        this.managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
+        domainClass = jpaEntityInformation.getJavaType();
+        queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
+        managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
     }
 
     @Override
@@ -119,6 +122,11 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         CriteriaQuery<Integer> query = queryBuilder.buildExistsQuery(searchMap, searchConfiguration);
 
         return entityManager.createQuery(query).setMaxResults(1).getResultList().size() == 1;
+    }
+
+    @Override
+    public Class<T> getDomainClass() {
+        return domainClass;
     }
 
     private Map<String, Object> convertToMap(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, ?, Map<String, Object>> searchConfiguration) {

@@ -42,11 +42,14 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     private final EntityManager entityManager;
 
+    private final Class<T> domainClass;
+
     private final JpaQueryBuilder<T> queryBuilder;
 
     public JpaSearchExecutor(EntityManager entityManager, JpaEntityInformation<T, ?> entityInformation) {
         this.entityManager = entityManager;
-        this.queryBuilder = new JpaQueryBuilder<>(entityManager, entityInformation.getJavaType());
+        domainClass = entityInformation.getJavaType();
+        queryBuilder = new JpaQueryBuilder<>(entityManager, entityInformation.getJavaType());
     }
 
     @Override
@@ -99,6 +102,11 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         CriteriaQuery<Integer>  query = queryBuilder.buildExistsQuery(request, searchConfiguration);
 
         return entityManager.createQuery(query).setMaxResults(1).getResultList().size() == 1;
+    }
+
+    @Override
+    public Class<T> getDomainClass() {
+        return domainClass;
     }
 
     private <R, P> long executeCountQuery(R request, SearchConfiguration<T, P, R> searchConfiguration) {
