@@ -21,6 +21,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.CellHolder;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
@@ -36,10 +38,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+@RequiredArgsConstructor
 @Order
 public class DefaultCellValueConverter implements CellValueConverter {
 
+    private static final String ENUM_MESSAGE_FORMAT = "%s.%s.description";
+
     private final List<ConverterHolder> converterHolderList = initializeConverterList();
+
+    private final MessageSource messageSource;
 
     @Override
     public void setCellValue(CellHolder cell, Object value) {
@@ -65,7 +72,8 @@ public class DefaultCellValueConverter implements CellValueConverter {
             new ConverterHolder(Long.class, (cell, value) -> cell.setCellValue(((Number) value).longValue())),
             new ConverterHolder(BigDecimal.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
             new ConverterHolder(Float.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
-            new ConverterHolder(Double.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue()))
+            new ConverterHolder(Double.class, (cell, value) -> cell.setCellValue(((Number) value).doubleValue())),
+            new ConverterHolder(Enum.class, (cell, value) -> cell.setCellValue(resolveEnumValue(value)))
         );
     }
 
@@ -80,6 +88,11 @@ public class DefaultCellValueConverter implements CellValueConverter {
             .orElse(null);
     }
 
+    private String resolveEnumValue(Object value) {
+        String messageCode = String.format(ENUM_MESSAGE_FORMAT, value.getClass().getName(), value);
+
+        return messageSource.getMessage(messageCode, null, value.toString(), LocaleContextHolder.getLocale());
+    }
 
     @RequiredArgsConstructor
     @Getter
