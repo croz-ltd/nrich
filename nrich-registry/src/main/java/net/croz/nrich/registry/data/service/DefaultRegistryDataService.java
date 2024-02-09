@@ -25,6 +25,7 @@ import net.croz.nrich.registry.api.data.service.RegistryDataService;
 import net.croz.nrich.registry.core.model.RegistryDataConfiguration;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
+import net.croz.nrich.registry.data.util.HibernateUtil;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
@@ -104,7 +105,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         modelMapper.map(entityData, instance);
 
-        return entityManager.merge(instance);
+        return mergeAndInitializeEntity(instance);
     }
 
     @Transactional
@@ -129,7 +130,7 @@ public class DefaultRegistryDataService implements RegistryDataService {
 
         modelMapper.map(entityData, instance);
 
-        return entityManager.merge(instance);
+        return mergeAndInitializeEntity(instance);
     }
 
     @Transactional
@@ -216,5 +217,13 @@ public class DefaultRegistryDataService implements RegistryDataService {
         Map<String, Object> idValueMap = Collections.singletonMap(managedTypeWrapper.getIdAttributeName(), id);
 
         modelMapper.map(idValueMap, entityData);
+    }
+
+    private <T> T mergeAndInitializeEntity(T instance) {
+        T mergedInstance = entityManager.merge(instance);
+
+        HibernateUtil.initialize(mergedInstance);
+
+        return mergedInstance;
     }
 }

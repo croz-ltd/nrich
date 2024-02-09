@@ -181,6 +181,16 @@ public final class RegistryDataGeneratingUtil {
     }
 
     @SneakyThrows
+    public static CreateRegistryRequest createRegistryRequestWithAssociation(ObjectMapper objectMapper, String classFullName, RegistryTestEntity parent) {
+        CreateRegistryRequest request = new CreateRegistryRequest();
+
+        request.setClassFullName(classFullName);
+        request.setJsonEntityData(objectMapper.writeValueAsString(Map.of("name", "name", "age", 40, "parent", parent)));
+
+        return request;
+    }
+
+    @SneakyThrows
     public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name, Integer age) {
         CreateRegistryRequest request = new CreateRegistryRequest();
 
