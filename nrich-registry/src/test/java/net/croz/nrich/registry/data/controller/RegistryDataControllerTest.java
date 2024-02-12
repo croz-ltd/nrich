@@ -34,13 +34,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createAndSaveRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteEmbeddedUserGroupRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequestWithAssociation;
-import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityWithParent;
@@ -231,7 +231,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
     @Test
     void shouldDeleteRegistryEntityWithEmbeddedId() throws Exception {
         // given
-        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createAndSaveRegistryTestEmbeddedUserGroup(entityManager));
 
         String requestUrl = fullUrl("delete");
         DeleteRegistryRequest request = createDeleteEmbeddedUserGroupRequest(registryTestEmbeddedUserGroup.getUserGroupId());
@@ -246,7 +246,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
     @Test
     void shouldNotFailListingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
         // given
-        executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+        executeInTransaction(platformTransactionManager, () -> createAndSaveRegistryTestEmbeddedUserGroup(entityManager));
 
         String requestUrl = fullUrl("list");
         ListRegistryRequest request = createListRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), "%");
@@ -261,7 +261,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
     @Test
     void shouldNotFailUpdatingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
         // given
-        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createRegistryTestEmbeddedUserGroup(entityManager));
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createAndSaveRegistryTestEmbeddedUserGroup(entityManager));
 
         String requestUrl = fullUrl("update");
         UpdateRegistryRequest request = createUpdateEmbeddedUserGroupRequest(objectMapper, registryTestEmbeddedUserGroup);
