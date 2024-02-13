@@ -22,13 +22,16 @@ import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
 import net.croz.nrich.validation.constraint.mapping.DefaultConstraintValidatorRegistrar;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
+import jakarta.validation.Validator;
 import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
@@ -65,5 +68,12 @@ public class NrichValidationAutoConfiguration {
     @Bean
     ValidationConfigurationCustomizer validationConfigurationCustomizer(ConstraintValidatorRegistrar constraintValidatorRegistrar) {
         return constraintValidatorRegistrar::registerConstraintValidators;
+    }
+
+    @ConditionalOnBean(Validator.class)
+    @ConditionalOnProperty(name = "nrich.validation.register-constraint-validators", havingValue = "true", matchIfMissing = true)
+    @Bean
+    HibernatePropertiesCustomizer validationHibernatePropertiesCustomizer(Validator validator) {
+        return hibernateProperties -> hibernateProperties.put("jakarta.persistence.validation.factory", validator);
     }
 }
