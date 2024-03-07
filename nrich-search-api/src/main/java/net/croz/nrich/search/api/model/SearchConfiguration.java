@@ -25,6 +25,7 @@ import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
 import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
 
+import jakarta.persistence.criteria.JoinType;
 import java.util.List;
 import java.util.function.Function;
 
@@ -102,6 +103,11 @@ public class SearchConfiguration<T, P, R> {
      * Whether OR operator should be used when building query (default is AND).
      */
     private boolean anyMatch;
+
+    /**
+     * Default join type to be used for projections and conditions. If not specified default is JoinType.INNER
+     */
+    private JoinType defaultJoinType;
 
     @Builder.Default
     private SearchPropertyConfiguration searchPropertyConfiguration = SearchPropertyConfiguration.defaultSearchPropertyConfiguration();

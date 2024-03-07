@@ -22,6 +22,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 
+import jakarta.persistence.criteria.JoinType;
+
 /**
  * Configuration for subquery. Allows specifying custom root entity, joins and resolving property values from
  * search request either by property prefix or by a separate class holding all subquery restrictions.
@@ -50,5 +52,10 @@ public class SubqueryConfiguration {
      * Name of property that holds all subquery restrictions.
      */
     private String restrictionPropertyHolder;
+
+    /**
+     * Default join type to be used for conditions. If not specified default is JoinType.INNER
+     */
+    private JoinType defaultJoinType;
 
 }

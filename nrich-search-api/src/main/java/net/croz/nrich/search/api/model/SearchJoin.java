@@ -47,7 +47,7 @@ public class SearchJoin<R> {
     private String alias;
 
     /**
-     * Type of join (inner or left).
+     * Type of join.
      */
     private JoinType joinType;
 

@@ -18,16 +18,23 @@
 package net.croz.nrich.search.util;
 
 import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public final class PathResolvingUtil {
 
     private static final String PATH_SEPARATOR = ".";
 
     private static final String PATH_REGEX = "\\.";
+
+    // Hibernate will throw an exception if trying to find as an attribute but it can be used as an condition and as an projection
+    private static final String CLASS_ATTRIBUTE_NAME = "class";
 
     private PathResolvingUtil() {
     }
@@ -52,28 +59,38 @@ public final class PathResolvingUtil {
         return String.join(PATH_SEPARATOR, Arrays.copyOfRange(path, 1, path.length));
     }
 
-
-    public static Path<?> calculateFullRestrictionPath(Path<?> rootPath, String[] pathList) {
-        return calculateFullPath(rootPath, pathList, false);
-    }
-
-    public static Path<?> calculateFullSelectionPath(Path<?> rootPath, String[] pathList) {
-        return calculateFullPath(rootPath, pathList, true);
-    }
-
-    private static Path<?> calculateFullPath(Path<?> rootPath, String[] pathList, boolean isSelection) {
-        int lastElementIndex = pathList.length - 1;
+    public static Path<?> calculateFullPath(Path<?> rootPath, JoinType defaultJoinType, String[] pathList) {
+        JoinType calculatedJoinPath = Optional.ofNullable(defaultJoinType).orElse(JoinType.INNER);
         Path<?> calculatedPath = rootPath;
 
-        for (int i = 0; i < pathList.length; i++) {
-            if (isSelection || i == lastElementIndex) {
-                calculatedPath = calculatedPath.get(pathList[i]);
+        for (String currentPathSegment : pathList) {
+            if (shouldJoinPath(calculatedPath, currentPathSegment)) {
+                From<?, ?> from = (From<?, ?>) calculatedPath;
+
+                calculatedPath = from.getJoins().stream()
+                    .filter(join -> currentPathSegment.equals(join.getAttribute().getName()))
+                    .findFirst()
+                    .orElseGet(() -> from.join(currentPathSegment, calculatedJoinPath));
             }
             else {
-                calculatedPath = ((From<?, ?>) calculatedPath).join(pathList[i]);
+                calculatedPath = calculatedPath.get(currentPathSegment);
             }
         }
 
         return calculatedPath;
+    }
+
+    private static boolean shouldJoinPath(Path<?> calculatedPath, String currentPathSegment) {
+        if (CLASS_ATTRIBUTE_NAME.equals(currentPathSegment)) {
+            return false;
+        }
+
+        if (calculatedPath.getModel() instanceof EntityType<?> entityType) {
+            Attribute<?, ?> attribute = entityType.getAttribute(currentPathSegment);
+
+            return attribute.isCollection() || attribute.isAssociation();
+        }
+
+        return false;
     }
 }
