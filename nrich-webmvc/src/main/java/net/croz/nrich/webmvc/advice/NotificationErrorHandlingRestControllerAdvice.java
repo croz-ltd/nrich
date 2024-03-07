@@ -18,7 +18,6 @@
 package net.croz.nrich.webmvc.advice;
 
 import lombok.RequiredArgsConstructor;
-import net.croz.nrich.core.api.exception.ExceptionWithArguments;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.notification.api.model.AdditionalNotificationData;
 import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
@@ -111,9 +110,8 @@ public class NotificationErrorHandlingRestControllerAdvice {
 
         HttpStatus status = resolveHttpStatusForException(unwrappedException, HttpStatus.INTERNAL_SERVER_ERROR);
         AdditionalNotificationData additionalNotificationData = AdditionalNotificationData.builder().messageListDataMap(notificationAuxiliaryData).build();
-        Object[] argumentList = resolveExceptionArgumentList(unwrappedException);
 
-        return ResponseEntity.status(status).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, additionalNotificationData, argumentList));
+        return ResponseEntity.status(status).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, additionalNotificationData));
     }
 
     private Exception unwrapException(Exception exception) {
@@ -128,10 +126,6 @@ public class NotificationErrorHandlingRestControllerAdvice {
         Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
-    }
-
-    private Object[] resolveExceptionArgumentList(Exception exception) {
-        return exception instanceof ExceptionWithArguments ? ((ExceptionWithArguments) exception).getArgumentList() : null;
     }
 
     private Map<String, Object> resolveExceptionAuxiliaryData(Exception exception, HttpServletRequest request) {

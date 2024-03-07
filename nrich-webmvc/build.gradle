@@ -1,7 +1,6 @@
 description = "Provides @RestControllerAdvice for exception logging and notification resolving and additional serialization and locale features"
 
 dependencies {
-  api project(":nrich-core-api")
   api project(":nrich-logging-api")
   api project(":nrich-notification-api")
   api project(":nrich-webmvc-api")

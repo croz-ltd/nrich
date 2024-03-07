@@ -26,6 +26,8 @@ import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestException;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithArguments;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithCustomTitle;
+import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithMessage;
+import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithMessageCode;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestRequest;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestRequestWithCustomTitle;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestWithoutMessageRequest;
@@ -157,10 +159,10 @@ class DefaultNotificationResolverServiceTest {
     @Test
     void shouldAddMessageArgumentsForDefinedExceptions() {
         // given
-        Exception exception = new NotificationResolverServiceTestExceptionWithArguments("message");
+        Exception exception = new NotificationResolverServiceTestExceptionWithArguments("message", "1");
 
         // when
-        Notification notification = defaultNotificationResolverService.createNotificationForException(exception, "1");
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
 
         // then
         assertThat(notification).isNotNull();
@@ -322,12 +324,40 @@ class DefaultNotificationResolverServiceTest {
 
     @Test
     void shouldNotFailWithNullArguments() {
-        // when
+        // given
         AdditionalNotificationData notificationData = AdditionalNotificationData.builder().build();
-        Throwable thrown = catchThrowable(() -> defaultNotificationResolverService.createNotificationForException(new RuntimeException(), notificationData, (Object[]) null));
+        Exception exception = new NotificationResolverServiceTestExceptionWithArguments("", (Object[]) null);
+
+        // when
+        Throwable thrown = catchThrowable(() -> defaultNotificationResolverService.createNotificationForException(exception, notificationData));
 
         // then
         assertThat(thrown).isNull();
+    }
+
+    @Test
+    void shouldResolveNotificationContentFromProvidedMessageCode() {
+        // given
+        Exception exception = new NotificationResolverServiceTestExceptionWithMessageCode();
+
+        // when
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
+
+        // then
+        assertThat(notification.getContent()).isEqualTo("Content resolved from message code");
+    }
+
+    @Test
+    void shouldResolveNotificationContentFromProvidedMessage() {
+        // given
+        String messageContent = "Message content";
+        Exception exception = new NotificationResolverServiceTestExceptionWithMessage(messageContent);
+
+        // when
+        Notification notification = defaultNotificationResolverService.createNotificationForException(exception);
+
+        // then
+        assertThat(notification.getContent()).isEqualTo(messageContent);
     }
 
     private BindingResult validate(Object objectToValidate, Map<String, Object> valueMap) {

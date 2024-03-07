@@ -55,8 +55,8 @@ public class WebMvcNotificationResponseService implements NotificationResponseSe
     }
 
     @Override
-    public NotificationResponse responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData, Object... exceptionMessageArgumentList) {
-        Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData, exceptionMessageArgumentList);
+    public NotificationResponse responseWithExceptionNotification(Throwable throwable, AdditionalNotificationData additionalNotificationData) {
+        Notification notification = notificationResolverService.createNotificationForException(throwable, additionalNotificationData);
 
         return new NotificationResponse(notification);
     }

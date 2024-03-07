@@ -15,18 +15,13 @@
  *
  */
 
-package net.croz.nrich.notification.stub;
+package net.croz.nrich.core.api.exception;
 
-import lombok.Getter;
-import net.croz.nrich.core.api.exception.ExceptionWithArguments;
+/**
+ * Implementing this interface enables resolving exception message from <pre>{@code MessageSource}</pre> using supplied message code.
+ */
+public interface ExceptionWithMessageCode {
 
-@Getter
-public class NotificationResolverServiceTestExceptionWithArguments extends RuntimeException implements ExceptionWithArguments {
+    String getMessageCode();
 
-    private final transient Object[] argumentList;
-
-    public NotificationResolverServiceTestExceptionWithArguments(String message, Object... argumentList) {
-        super(message);
-        this.argumentList = argumentList;
-    }
 }

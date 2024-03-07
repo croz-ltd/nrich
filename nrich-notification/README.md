@@ -263,7 +263,11 @@ In [`DefaultNotificationResolverService`][default-notification-resolver-service-
 
 ### Custom exception notification data
 
-Depending on the context of notification creation, if a notification is created while resolving an exception, then the action code is a **fully qualified class name for that exception**.
+Depending on the context of notification creation, if a notification is created while resolving an exception, then the default action code is a **fully qualified class name for that exception**.
+If an exception implements [`ExceptionWithMessageCode`][exception-with-message-code-url] then notification content is resolved through provided message code
+and if an exception implements [`ExceptionWithMessage`][exception-with-message-url] then notification content is equal to exceptions message
+(title is still resolved from fully qualified class name in both cases). If additional arguments are required when resolving message, exception should implement
+[`ExceptionWithArguments`][exception-with-arguments-url].
 
 For example, let's say we have this exception handler:
 
@@ -500,3 +504,9 @@ where we can see that instead of `{0}` the value was interpolated.
 [additional-notification-data-url]: ../nrich-notification-api/src/main/java/net/croz/nrich/notification/api/model/AdditionalNotificationData.java
 
 [default-notification-resolver-service-url]: ../nrich-notification/src/main/java/net/croz/nrich/notification/service/DefaultNotificationResolverService.java
+
+[exception-with-message-code-url]: ../nrich-core-api/src/main/java/net/croz/nrich/core/api/exception/ExceptionWithMessageCode.java
+
+[exception-with-message-url]: ../nrich-core-api/src/main/java/net/croz/nrich/core/api/exception/ExceptionWithMessage.java
+
+[exception-with-arguments-url]: ../nrich-core-api/src/main/java/net/croz/nrich/core/api/exception/ExceptionWithArguments.java
