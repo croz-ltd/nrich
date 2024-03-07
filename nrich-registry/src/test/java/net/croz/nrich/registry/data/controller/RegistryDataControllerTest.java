@@ -26,7 +26,6 @@ import net.croz.nrich.registry.data.stub.RegistryTestEmbeddedUserGroup;
 import net.croz.nrich.registry.data.stub.RegistryTestEntity;
 import net.croz.nrich.registry.test.BaseControllerTest;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -40,6 +39,7 @@ import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.c
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createDeleteRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryRequestWithAssociation;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntity;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEntityList;
@@ -106,6 +106,21 @@ class RegistryDataControllerTest extends BaseControllerTest {
         // then
         result.andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(entityName));
+    }
+
+    @Test
+    void shouldCreateRegistryEntityWithInitializedAssociation() throws Exception {
+        // given
+        RegistryTestEntity entity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+        String requestUrl = fullUrl("create");
+        CreateRegistryRequest request = createRegistryRequestWithAssociation(objectMapper, REGISTRY_TYPE_NAME, entity);
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.parent.id").value(entity.getId()));
     }
 
     @Test
@@ -228,8 +243,6 @@ class RegistryDataControllerTest extends BaseControllerTest {
         result.andExpect(status().isOk());
     }
 
-    // TODO enable when https://hibernate.atlassian.net/browse/HHH-15875 is solved.
-    @Disabled
     @Test
     void shouldNotFailListingRegistryWithLazyAssociationsInEmbeddedId() throws Exception {
         // given
