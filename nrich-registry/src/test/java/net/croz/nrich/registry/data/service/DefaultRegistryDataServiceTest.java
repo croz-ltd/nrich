@@ -40,6 +40,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.Map;
 
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createAndSaveRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
@@ -144,6 +145,19 @@ class DefaultRegistryDataServiceTest {
     }
 
     @Test
+    void shouldListRegistryDataWithEmbeddedId() {
+        // given
+        createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), null);
+
+        // when
+        Page<RegistryTestEmbeddedUserGroup> result = registryDataService.list(request);
+
+        // then
+        assertThat(result).isNotEmpty();
+    }
+
+    @Test
     void shouldCreateRegistryEntity() {
         // when
         RegistryTestEntity registryTestEntity = registryDataService.create(RegistryTestEntity.class.getName(), createRegistryTestEntityRequest("name 1", 50));
@@ -227,7 +241,7 @@ class DefaultRegistryDataServiceTest {
     void shouldUpdateRegistryEntityWithEmbeddedObjectId() {
         // given
         String joinedPropertyUpdateValue = "updated joined property";
-        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
         RegistryTestEmbeddedUserGroupId registryUpdateGroupId = createRegistryTestEmbeddedUserGroupId(entityManager);
         RegistryTestEmbeddedUserGroup entityData = createRegistryTestEmbeddedUserGroup(registryUpdateGroupId, joinedPropertyUpdateValue);
 
@@ -261,7 +275,7 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldDeleteRegistryEntityWithEmbeddedObjectId() {
         // given
-        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createRegistryTestEmbeddedUserGroup(entityManager);
+        RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
 
         // when
         RegistryTestEmbeddedUserGroup result = registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), registryTestEmbeddedUserGroup.getUserGroupId());
@@ -299,7 +313,7 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldThrowExceptionOnInvalidPrimaryKey() {
         // given
-        createRegistryTestEmbeddedUserGroup(entityManager);
+        createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
 
         // when
         Throwable thrown = catchThrowable(() -> registryDataService.delete(RegistryTestEmbeddedUserGroup.class.getName(), new Object()));

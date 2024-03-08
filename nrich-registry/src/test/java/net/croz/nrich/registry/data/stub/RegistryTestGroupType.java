@@ -21,11 +21,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotNull;
-
 
 @Setter
 @Getter
@@ -38,5 +39,8 @@ public class RegistryTestGroupType {
 
     @NotNull
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private RegistryTestGroupType parent;
 
 }

@@ -222,7 +222,7 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
-    public static RegistryTestEmbeddedUserGroup createRegistryTestEmbeddedUserGroup(EntityManager entityManager) {
+    public static RegistryTestEmbeddedUserGroup createAndSaveRegistryTestEmbeddedUserGroup(EntityManager entityManager) {
         RegistryTestEmbeddedUser user = createRegistryTestEmbeddedUser(entityManager);
         RegistryTestEmbeddedGroup group = createRegistryTestEmbeddedGroup(entityManager);
 

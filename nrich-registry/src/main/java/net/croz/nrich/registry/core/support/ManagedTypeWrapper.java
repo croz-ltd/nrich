@@ -123,7 +123,7 @@ public class ManagedTypeWrapper {
             }
 
             if (!association.getJavaType().equals(managedType.getJavaType())) {
-                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), association.getName(), singularAssociationMap);
+                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), associationName, singularAssociationMap);
             }
         }
     }
