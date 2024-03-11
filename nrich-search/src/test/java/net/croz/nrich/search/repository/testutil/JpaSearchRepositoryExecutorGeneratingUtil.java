@@ -32,6 +32,9 @@ import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.JoinType;
+
+import net.croz.nrich.search.repository.stub.TestSubEntity;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -121,6 +124,16 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
             TestEntityWithCustomId entity = new TestEntityWithCustomId();
 
             entity.setEnumElementCollection(Collections.singletonList(value % 2 == 0 ? TestEntityEnum.FIRST : TestEntityEnum.SECOND));
+
+            entityManager.persist(entity);
+        });
+    }
+
+    public static void generateTestSubEntityList(EntityManager entityManager) {
+        IntStream.range(0, 3).forEach(value -> {
+            TestSubEntity entity = new TestSubEntity();
+
+            entity.setSubName("subName" + value);
 
             entityManager.persist(entity);
         });
