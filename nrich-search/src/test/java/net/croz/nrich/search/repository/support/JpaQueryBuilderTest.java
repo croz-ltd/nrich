@@ -59,6 +59,7 @@ import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecu
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithCustomIdList;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestSubEntityList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -842,6 +843,19 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(thrown).isNull();
+    }
+
+    @Test
+    void shouldSupportSubclassAttributeSearch() {
+        // given
+        generateTestSubEntityList(entityManager);
+        Map<String, Object> requestMap = Map.of("subName", "subName0");
+
+        // when
+        List<TestEntity> results = executeQuery(requestMap, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
