@@ -41,6 +41,7 @@ import static net.croz.nrich.registry.history.testutil.RegistryHistoryGenerating
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequest;
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithDefaultSort;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithSort;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +63,7 @@ class DefaultRegistryHistoryServiceTest {
     void shouldReturnAllRevisionsOfEntity() {
         // given
         RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntity.class.getName(), entity.getId());
 
         // when
         Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
@@ -77,24 +78,24 @@ class DefaultRegistryHistoryServiceTest {
         EntityWithRevision<RegistryHistoryTestEntity> firstResult = resultList.getContent().get(0);
 
         // then
-        assertThat(firstResult.getEntity().getParent()).isNotNull();
-        assertThat(firstResult.getEntity().getParent().getName()).isNotNull();
+        assertThat(firstResult.entity().getParent()).isNotNull();
+        assertThat(firstResult.entity().getParent().getName()).isNotNull();
 
-        assertThat(firstResult.getRevisionInfo()).isNotNull();
+        assertThat(firstResult.revisionInfo()).isNotNull();
 
-        assertThat(firstResult.getRevisionInfo().getRevisionType()).isEqualTo(RevisionType.ADD.name());
-        assertThat(firstResult.getRevisionInfo().getRevisionTimestamp()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getRevisionNumber()).isNotNull();
+        assertThat(firstResult.revisionInfo().revisionType()).isEqualTo(RevisionType.ADD.name());
+        assertThat(firstResult.revisionInfo().revisionTimestamp()).isNotNull();
+        assertThat(firstResult.revisionInfo().revisionNumber()).isNotNull();
 
-        assertThat(firstResult.getRevisionInfo().getAdditionalRevisionPropertyMap()).isNotNull();
-        assertThat(firstResult.getRevisionInfo().getAdditionalRevisionPropertyMap()).containsEntry("revisionProperty", "revision property value");
+        assertThat(firstResult.revisionInfo().additionalRevisionPropertyMap()).isNotNull();
+        assertThat(firstResult.revisionInfo().additionalRevisionPropertyMap()).containsEntry("revisionProperty", "revision property value");
     }
 
     @Test
     void shouldReturnAllRevisionsOfEntityWithoutId() {
         // given
         creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), null);
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntity.class.getName(), null);
 
         // when
         Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
@@ -111,7 +112,6 @@ class DefaultRegistryHistoryServiceTest {
         // given
         creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
         ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), null);
-        request.setSortPropertyList(null);
 
         // when
         Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
@@ -132,41 +132,41 @@ class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent().get(0).getEntity().getName()).isEqualTo("name 19");
+        assertThat(resultList.getContent().get(0).entity().getName()).isEqualTo("name 19");
     }
 
     @Test
     void shouldSupportFetchingEntityHistoryDataByEmbeddedId() {
         // given
         RegistryHistoryTestEntityWithEmbeddedId entity = creteRegistryHistoryTestEntityWithEmbeddedIdRevisionList(entityManager, platformTransactionManager);
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), entity.getId().asMap());
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), entity.getId().asMap());
 
         // when
         Page<EntityWithRevision<RegistryHistoryTestEntityWithEmbeddedId>> resultList = registryHistoryService.historyList(request);
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent().get(0).getEntity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
+        assertThat(resultList.getContent().get(0).entity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
     }
 
     @Test
     void shouldSupportFetchingEntityHistoryDataByEmbeddedObjectId() {
         // given
         RegistryHistoryTestEntityWithEmbeddedObject entity = creteRegistryHistoryTestEntityWithEmbeddedObjectIdRevisionList(entityManager, platformTransactionManager);
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedObject.class.getName(), entity.getId().asMap());
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntityWithEmbeddedObject.class.getName(), entity.getId().asMap());
 
         // when
         Page<EntityWithRevision<RegistryHistoryTestEntityWithEmbeddedObject>> resultList = registryHistoryService.historyList(request);
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent().get(0).getEntity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
+        assertThat(resultList.getContent().get(0).entity().getAmount()).isEqualByComparingTo(BigDecimal.ONE);
     }
 
     @Test
     void shouldThrowExceptionOnInvalidIdType() {
         // given
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), new Object());
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntityWithEmbeddedId.class.getName(), new Object());
 
         // when
         Throwable thrown = catchThrowable(() -> registryHistoryService.historyList(request));

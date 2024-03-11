@@ -17,22 +17,8 @@
 
 package net.croz.nrich.registry.data.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.constraints.NotNull;
 
-@Setter
-@Getter
-public class UpdateRegistryRequest {
-
-    @NotNull
-    private String classFullName;
-
-    @NotNull
-    private Object id;
-
-    @NotNull
-    private String jsonEntityData;
+public record UpdateRegistryRequest(@NotNull String classFullName, @NotNull Object id, @NotNull String jsonEntityData) {
 
 }

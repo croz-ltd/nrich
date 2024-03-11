@@ -21,11 +21,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 @Setter
 @Getter
 @Entity
 public class EntityClassSerializerModifierTestEntity {
+
+    @Id
+    private Long id;
 
     private String name;
 

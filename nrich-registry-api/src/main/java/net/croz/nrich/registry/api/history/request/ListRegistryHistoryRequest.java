@@ -17,8 +17,6 @@
 
 package net.croz.nrich.registry.api.history.request;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 
 import jakarta.validation.constraints.Max;
@@ -28,39 +26,14 @@ import java.util.List;
 
 /**
  * Request holding data for fetching history list of registry entities.
+ *
+ * @param classFullName    Class name of registry entity.
+ * @param pageNumber       Page number.
+ * @param pageSize         Number of entities to fetch.
+ * @param registryRecordId Optional id of registry if not set history for all registry entities of specific type will be fetched.
+ * @param sortPropertyList List of {@link SortProperty} instances.
  */
-@Setter
-@Getter
-public class ListRegistryHistoryRequest {
-
-    /**
-     * Class name of registry entity.
-     */
-    @NotNull
-    private String classFullName;
-
-    /**
-     * Page number.
-     */
-    @Min(0)
-    @NotNull
-    private Integer pageNumber;
-
-    /**
-     * Number of entities to fetch.
-     */
-    @Max(100)
-    @NotNull
-    private Integer pageSize;
-
-    /**
-     * Optional id of registry if not set history for all registry entities of specific type will be fetched.
-     */
-    private Object registryRecordId;
-
-    /**
-     * List of {@link SortProperty} instances.
-     */
-    private List<SortProperty> sortPropertyList;
+public record ListRegistryHistoryRequest(@NotNull String classFullName, @Min(0) @NotNull Integer pageNumber, @Max(100) @NotNull Integer pageSize, Object registryRecordId,
+                                         List<SortProperty> sortPropertyList) {
 
 }

@@ -24,7 +24,6 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -35,7 +34,7 @@ public class TestEntityAdditionalRestrictionResolver implements AdditionalRestri
     @Override
     public List<Predicate> resolvePredicateList(CriteriaBuilder criteriaBuilder, CriteriaQuery<TestEntity> query, Root<TestEntity> root, TestEntitySearchRequest request) {
         if (appendAdditionalRestriction) {
-            return Collections.singletonList(criteriaBuilder.greaterThan(root.get("age"), 100));
+            return List.of(criteriaBuilder.greaterThan(root.get("age"), 100));
         }
 
         return null;

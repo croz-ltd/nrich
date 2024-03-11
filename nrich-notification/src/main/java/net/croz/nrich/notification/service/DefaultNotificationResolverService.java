@@ -36,13 +36,11 @@ import org.springframework.validation.ObjectError;
 
 import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -71,10 +69,10 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         List<ValidationError> validationErrorList = convertValidationErrorsToMessageList(errors, validationFailedOwningType);
         List<String> additionalNotificationDataMessageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
         List<String> validationMessageList = validationErrorList.stream()
-            .flatMap(value -> value.getErrorMessageList().stream())
-            .collect(Collectors.toList());
+            .flatMap(value -> value.errorMessageList().stream())
+            .toList();
 
-        List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).collect(Collectors.toList());
+        List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).toList();
 
         return new ValidationFailureNotification(title, content, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList);
     }
@@ -132,7 +130,7 @@ public class DefaultNotificationResolverService implements NotificationResolverS
 
         return resultMap.entrySet().stream()
             .map(value -> new ValidationError(value.getKey(), value.getValue()))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private List<String> resolveMessageListFromNotificationData(Map<String, ?> additionalNotificationData) {
@@ -143,11 +141,11 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         return additionalNotificationData.entrySet().stream()
             .map(this::resolveMessageForAdditionalData)
             .filter(message -> !NotificationConstants.UNDEFINED_MESSAGE_VALUE.equals(message))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private String constraintFieldNameOrDefault(ObjectError objectError) {
-        return objectError instanceof FieldError ? ((FieldError) objectError).getField() : ValidationError.CONTAINING_OBJECT_NAME;
+        return objectError instanceof FieldError fieldError ? fieldError.getField() : ValidationError.CONTAINING_OBJECT_NAME;
     }
 
     private String resolveMessageForAdditionalData(Map.Entry<String, ?> additionalDataEntry) {
@@ -190,6 +188,6 @@ public class DefaultNotificationResolverService implements NotificationResolverS
             return Collections.emptyList();
         }
 
-        return Arrays.asList(codeList);
+        return List.of(codeList);
     }
 }

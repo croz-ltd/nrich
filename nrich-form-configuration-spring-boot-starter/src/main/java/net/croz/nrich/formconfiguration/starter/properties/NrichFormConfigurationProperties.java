@@ -17,44 +17,22 @@
 
 package net.croz.nrich.formconfiguration.starter.properties;
 
-import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.List;
 import java.util.Map;
 
-@Getter
+/**
+ * @param defaultConverterEnabled                       Whether default converter service ({@link net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService})
+ *                                                      for converting {@link net.croz.nrich.formconfiguration.api.model.ConstrainedProperty} instances
+ *                                                      to client {@link net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration} list is enabled.
+ * @param defaultJavaToJavascriptConverterEnabled       Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+ * @param formConfigurationMapping                      Mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side).
+ * @param formValidationConfigurationClassesPackageList Optional package list to scan for {@link net.croz.nrich.formconfiguration.api.annotation.FormValidationConfiguration} annotated classes (if not set annotated classes won't be searched).
+ */
 @ConfigurationProperties("nrich.form-configuration")
-public class NrichFormConfigurationProperties {
+public record NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
+                                               Map<String, Class<?>> formConfigurationMapping, List<String> formValidationConfigurationClassesPackageList) {
 
-    /**
-     * Whether default converter service ({@link net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService})
-     * for converting {@link net.croz.nrich.formconfiguration.api.model.ConstrainedProperty} instances
-     * to client {@link net.croz.nrich.formconfiguration.api.model.ConstrainedPropertyClientValidatorConfiguration} list is enabled.
-     */
-    private final boolean defaultConverterEnabled;
-
-    /**
-     * Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
-     */
-    private final boolean defaultJavaToJavascriptConverterEnabled;
-
-    /**
-     * Mapping between a client side form identifier and class holding the constraints for the form (usually the class accepted as input on the server side).
-     */
-    private final Map<String, Class<?>> formConfigurationMapping;
-
-    /**
-     * Optional package list to scan for {@link net.croz.nrich.formconfiguration.api.annotation.FormValidationConfiguration} annotated classes (if not set annotated classes won't be searched).
-     */
-    private final List<String> formValidationConfigurationClassesPackageList;
-
-    public NrichFormConfigurationProperties(@DefaultValue("true") boolean defaultConverterEnabled, @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
-                                            Map<String, Class<?>> formConfigurationMapping, List<String> formValidationConfigurationClassesPackageList) {
-        this.defaultConverterEnabled = defaultConverterEnabled;
-        this.defaultJavaToJavascriptConverterEnabled = defaultJavaToJavascriptConverterEnabled;
-        this.formConfigurationMapping = formConfigurationMapping;
-        this.formValidationConfigurationClassesPackageList = formValidationConfigurationClassesPackageList;
-    }
 }

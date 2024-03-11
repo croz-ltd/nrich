@@ -37,7 +37,6 @@ import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
@@ -67,7 +66,7 @@ class CsrfInterceptorTest {
     @BeforeEach
     void setup() {
         CsrfTokenManagerService csrfTokenManagerService = new AesCsrfTokenManagerService(Duration.ofMinutes(35), Duration.ofMinutes(1), 128);
-        List<CsrfExcludeConfig> csrfExcludeConfigList = Arrays.asList(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null));
+        List<CsrfExcludeConfig> csrfExcludeConfigList = List.of(csrfExcludeConfig(CSRF_EXCLUDED_URI, null), csrfExcludeConfig(CSRF_INITIAL_TOKEN_URL, null));
 
         csrfInterceptor = new CsrfInterceptor(csrfTokenManagerService, CSRF_TOKEN_KEY_NAME, CSRF_INITIAL_TOKEN_URL, CSRF_PING_URL, csrfExcludeConfigList);
     }

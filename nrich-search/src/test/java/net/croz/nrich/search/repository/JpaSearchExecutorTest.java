@@ -39,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -176,7 +175,7 @@ class JpaSearchExecutorTest {
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
             .distinct(true)
-            .joinList(Collections.singletonList(SearchJoin.leftJoin("collectionEntityList")))
+            .joinList(List.of(SearchJoin.leftJoin("collectionEntityList")))
             .build();
 
         // when
@@ -193,7 +192,7 @@ class JpaSearchExecutorTest {
 
         SearchConfiguration<TestEntity, TestEntityDto, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntityDto, TestEntitySearchRequest>builder()
             .distinct(true)
-            .joinList(Collections.singletonList(SearchJoin.innerJoinFetch("collectionEntityList")))
+            .joinList(List.of(SearchJoin.innerJoinFetch("collectionEntityList")))
             .build();
         // when
         long result = testEntitySearchRepository.count(request, searchConfiguration);
@@ -211,7 +210,7 @@ class JpaSearchExecutorTest {
             .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
 
         SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
-            .subqueryConfigurationList(Collections.singletonList(subqueryConfiguration))
+            .subqueryConfigurationList(List.of(subqueryConfiguration))
             .build();
 
         TestEntitySearchRequest request = TestEntitySearchRequest.builder()

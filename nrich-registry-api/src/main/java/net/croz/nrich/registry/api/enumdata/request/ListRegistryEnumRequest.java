@@ -17,27 +17,14 @@
 
 package net.croz.nrich.registry.api.enumdata.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.constraints.NotBlank;
 
 /**
  * Request holding data for fetching a list of enum data.
+ *
+ * @param classFullName Enum class name.
+ * @param query         Search query.
  */
-@Setter
-@Getter
-public class ListRegistryEnumRequest {
-
-    /**
-     * Enum class name.
-     */
-    @NotBlank
-    private String classFullName;
-
-    /**
-     * Search query.
-     */
-    private String query;
+public record ListRegistryEnumRequest(@NotBlank String classFullName, String query) {
 
 }
