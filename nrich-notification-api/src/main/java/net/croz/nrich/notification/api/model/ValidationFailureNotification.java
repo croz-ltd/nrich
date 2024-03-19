@@ -39,4 +39,9 @@ public class ValidationFailureNotification extends Notification {
         super(title, content, messageList, severity, uxNotificationOptions);
         this.validationErrorList = validationErrorList;
     }
+
+    @Override
+    public boolean isValidationFailure() {
+        return true;
+    }
 }
