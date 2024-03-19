@@ -96,6 +96,8 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationResponse.getNotification()).isNotNull();
         assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 2");
+        assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 2");
+        assertThat(notificationResponse.getNotification().isValidationFailure()).isTrue();
     }
 
     @Test
@@ -108,6 +110,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationResponse.getNotification()).isNotNull();
         assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.ERROR);
         assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Exception");
+        assertThat(notificationResponse.getNotification().isValidationFailure()).isFalse();
     }
 
     @Test

@@ -62,4 +62,8 @@ public class Notification {
      * Timestamp of the notification.
      */
     private final Instant timestamp = Instant.now();
+
+    public boolean isValidationFailure() {
+        return false;
+    }
 }
