@@ -22,6 +22,6 @@ package net.croz.nrich.javascript.api.model;
  */
 public enum JavascriptType {
 
-    STRING, BOOLEAN, NUMBER, DATE, OBJECT
+    STRING, BOOLEAN, NUMBER, DATE, ARRAY, OBJECT
 
 }

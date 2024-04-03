@@ -23,6 +23,7 @@ import org.springframework.core.annotation.Order;
 
 import java.time.temporal.Temporal;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -42,6 +43,7 @@ public class DefaultJavaToJavascriptTypeConverter implements JavaToJavascriptTyp
         CLASS_JAVASCRIPT_TYPE_MAP.put(Temporal.class, JavascriptType.DATE);
         CLASS_JAVASCRIPT_TYPE_MAP.put(Number.class, JavascriptType.NUMBER);
         CLASS_JAVASCRIPT_TYPE_MAP.put(Enum.class, JavascriptType.STRING);
+        CLASS_JAVASCRIPT_TYPE_MAP.put(Collection.class, JavascriptType.ARRAY);
     }
 
     @Override
@@ -51,11 +53,18 @@ public class DefaultJavaToJavascriptTypeConverter implements JavaToJavascriptTyp
 
     @Override
     public String convert(Class<?> type) {
-        return CLASS_JAVASCRIPT_TYPE_MAP.entrySet().stream()
-            .filter(entry -> entry.getKey().isAssignableFrom(type))
-            .findFirst()
-            .map(Map.Entry::getValue)
-            .orElse(JavascriptType.OBJECT)
-            .name().toLowerCase(Locale.ROOT);
+        JavascriptType javascriptType;
+        if (type.isArray()) {
+            javascriptType = JavascriptType.ARRAY;
+        }
+        else {
+            javascriptType = CLASS_JAVASCRIPT_TYPE_MAP.entrySet().stream()
+                .filter(entry -> entry.getKey().isAssignableFrom(type))
+                .findFirst()
+                .map(Map.Entry::getValue)
+                .orElse(JavascriptType.OBJECT);
+        }
+
+        return javascriptType.name().toLowerCase(Locale.ROOT);
     }
 }
