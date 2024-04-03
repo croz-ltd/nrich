@@ -29,9 +29,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,7 +76,13 @@ class DefaultJavaToJavascriptTypeConverterTest {
             arguments(java.sql.Date.class, JavascriptType.DATE),
             arguments(Boolean.class, JavascriptType.BOOLEAN),
             arguments(Object.class, JavascriptType.OBJECT),
-            arguments(TestEnum.class, JavascriptType.STRING)
+            arguments(TestEnum.class, JavascriptType.STRING),
+            arguments(Collection.class, JavascriptType.ARRAY),
+            arguments(List.class, JavascriptType.ARRAY),
+            arguments(Set.class, JavascriptType.ARRAY),
+            arguments(int[].class, JavascriptType.ARRAY),
+            arguments(Object[].class, JavascriptType.ARRAY),
+            arguments(Map.class, JavascriptType.OBJECT)
         );
     }
 }
