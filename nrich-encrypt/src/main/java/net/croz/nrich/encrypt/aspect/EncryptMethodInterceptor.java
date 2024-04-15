@@ -114,11 +114,13 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
 
     private EncryptionContext createEncryptionContext(String methodName, Object[] arguments) {
         List<Object> argumentList = Arrays.asList(arguments);
+        String currentUsername = currentUsername();
 
         return EncryptionContext.builder()
             .fullyQualifiedMethodName(methodName)
             .methodArguments(argumentList)
             .methodDecryptedArguments(argumentList)
+            .currentUsername(currentUsername)
             .build();
     }
 }
