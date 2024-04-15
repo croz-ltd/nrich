@@ -44,4 +44,9 @@ public class EncryptionContext {
      */
     private final List<Object> methodDecryptedArguments;
 
+    /**
+     * Current username or null if none exist
+     */
+    private final String currentUsername;
+
 }

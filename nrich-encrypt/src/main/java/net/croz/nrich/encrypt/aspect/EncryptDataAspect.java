@@ -98,11 +98,13 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     private EncryptionContext createEncryptionContext(Signature signature, Object[] arguments) {
         List<Object> argumentList = Arrays.asList(arguments);
         String methodName = String.format(EncryptConstants.METHOD_NAME_FORMAT, signature.getDeclaringType().getName(), signature.getName());
+        String currentUsername = currentUsername();
 
         return EncryptionContext.builder()
             .fullyQualifiedMethodName(methodName)
             .methodArguments(argumentList)
             .methodDecryptedArguments(argumentList)
+            .currentUsername(currentUsername)
             .build();
     }
 }

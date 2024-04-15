@@ -20,11 +20,15 @@ package net.croz.nrich.encrypt.aspect;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class BaseEncryptDataAdvice {
@@ -57,6 +61,13 @@ public abstract class BaseEncryptDataAdvice {
     }
 
     protected abstract DataEncryptionService getDataEncryptionService();
+
+    protected String currentUsername() {
+        return Optional.ofNullable(SecurityContextHolder.getContext())
+            .map(SecurityContext::getAuthentication)
+            .map(Authentication::getName)
+            .orElse(null);
+    }
 
     private boolean isCompletableFutureResult(Object forEncryption) {
         return forEncryption instanceof CompletableFuture;
