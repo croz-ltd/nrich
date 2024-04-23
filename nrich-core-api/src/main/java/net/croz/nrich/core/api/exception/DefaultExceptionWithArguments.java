@@ -24,7 +24,7 @@ public class DefaultExceptionWithArguments extends RuntimeException implements E
 
     private final transient Object[] argumentList;
 
-    DefaultExceptionWithArguments(String message, Object[] argumentList) {
+    public DefaultExceptionWithArguments(String message, Object[] argumentList) {
         super(message);
         this.argumentList = argumentList;
     }
