@@ -114,7 +114,7 @@ public class NotificationErrorHandlingRestControllerAdvice {
         return ResponseEntity.status(status).body(notificationResponseService.responseWithExceptionNotification(unwrappedException, additionalNotificationData));
     }
 
-    private Exception unwrapException(Exception exception) {
+    protected Exception unwrapException(Exception exception) {
         if (exceptionToUnwrapList != null && exceptionToUnwrapList.contains(exception.getClass().getName()) && exception.getCause() != null) {
             return (Exception) exception.getCause();
         }
@@ -122,17 +122,17 @@ public class NotificationErrorHandlingRestControllerAdvice {
         return exception;
     }
 
-    private void logExceptionWithResolvedAuxiliaryData(Exception exception, HttpServletRequest request) {
+    protected void logExceptionWithResolvedAuxiliaryData(Exception exception, HttpServletRequest request) {
         Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);
 
         loggingService.logInternalException(exception, exceptionAuxiliaryData);
     }
 
-    private Map<String, Object> resolveExceptionAuxiliaryData(Exception exception, HttpServletRequest request) {
+    protected Map<String, Object> resolveExceptionAuxiliaryData(Exception exception, HttpServletRequest request) {
         return Optional.ofNullable(exceptionAuxiliaryDataResolverService).map(service -> service.resolveRequestExceptionAuxiliaryData(exception, request)).orElse(Collections.emptyMap());
     }
 
-    private HttpStatus resolveHttpStatusForException(Exception exception, HttpStatus defaultStatus) {
+    protected HttpStatus resolveHttpStatusForException(Exception exception, HttpStatus defaultStatus) {
         return Optional.ofNullable(httpStatusResolverService.resolveHttpStatusForException(exception)).map(HttpStatus::resolve).orElse(defaultStatus);
     }
 }
