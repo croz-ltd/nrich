@@ -20,6 +20,7 @@ package net.croz.nrich.search.support;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.model.AttributeHolder;
+import net.croz.nrich.search.util.AttributeResolvingUtil;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import org.springframework.util.Assert;
 
@@ -40,7 +41,7 @@ public class JpaEntityAttributeResolver {
 
         String[] pathList = PathResolvingUtil.convertToPathList(path);
 
-        Attribute<?, ?> attribute = resolveAttributeByName(managedType, pathList[0]);
+        Attribute<?, ?> attribute = AttributeResolvingUtil.resolveAttributeByName(managedType, pathList[0]);
         boolean isPlural = attribute instanceof PluralAttribute;
         ManagedType<?> currentManagedType = resolveManagedTypeFromAttribute(attribute);
 
@@ -52,7 +53,7 @@ public class JpaEntityAttributeResolver {
                     isPlural = false;
                     break;
                 }
-                attribute = resolveAttributeByName(currentManagedType, currentPath);
+                attribute = AttributeResolvingUtil.resolveAttributeByName(currentManagedType, currentPath);
                 currentManagedType = resolveManagedTypeFromAttribute(attribute);
                 isPlural |= attribute instanceof PluralAttribute;
             }
@@ -72,14 +73,5 @@ public class JpaEntityAttributeResolver {
         }
 
         return currentManagedType;
-    }
-
-    private Attribute<?, ?> resolveAttributeByName(ManagedType<?> managedType, String attributeName) {
-        try {
-            return managedType.getAttribute(attributeName);
-        }
-        catch (Exception ignored) {
-            return null;
-        }
     }
 }

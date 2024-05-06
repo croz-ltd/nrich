@@ -86,9 +86,11 @@ public final class PathResolvingUtil {
         }
 
         if (calculatedPath.getModel() instanceof EntityType<?> entityType) {
-            Attribute<?, ?> attribute = entityType.getAttribute(currentPathSegment);
+            Attribute<?, ?> attribute = AttributeResolvingUtil.resolveAttributeByName(entityType, currentPathSegment);
 
-            return attribute.isCollection() || attribute.isAssociation();
+            if (attribute != null) {
+                return attribute.isCollection() || attribute.isAssociation();
+            }
         }
 
         return false;
