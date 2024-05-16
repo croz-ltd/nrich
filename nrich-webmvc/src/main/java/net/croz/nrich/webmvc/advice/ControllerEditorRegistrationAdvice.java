@@ -43,13 +43,19 @@ public class ControllerEditorRegistrationAdvice {
         }
 
         if (ignoreTransientFields) {
-            Object target = binder.getTarget();
+            Class<?> targetType = null;
+            if (binder.getTarget() != null) {
+                targetType = binder.getTarget().getClass();
+            }
+            else if (binder.getTargetType() != null) {
+                targetType = binder.getTargetType().resolve();
+            }
 
-            if (target == null) {
+            if (targetType == null) {
                 return;
             }
 
-            List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(target.getClass());
+            List<String> transientPropertyList = transientPropertyResolverService.resolveTransientPropertyList(targetType);
 
             binder.setDisallowedFields(transientPropertyList.toArray(new String[0]));
         }

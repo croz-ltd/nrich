@@ -62,7 +62,6 @@ class ControllerEditorRegistrationAdviceTest extends BaseControllerTest {
     void shouldNotBindTransientFields() throws Exception {
         // given
         String requestUrl = fullUrl("transient-properties-serialization");
-        String value = "value";
         Map<String, String> request = createMap("transientProperty", "transient", "property", "nonTransient");
 
         // when
