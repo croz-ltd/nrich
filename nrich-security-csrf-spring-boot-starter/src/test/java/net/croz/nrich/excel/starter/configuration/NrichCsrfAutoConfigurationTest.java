@@ -20,6 +20,7 @@ package net.croz.nrich.excel.starter.configuration;
 import net.croz.nrich.security.csrf.api.service.CsrfTokenManagerService;
 import net.croz.nrich.security.csrf.configuration.NrichCsrfAutoConfiguration;
 import net.croz.nrich.security.csrf.core.controller.CsrfPingController;
+import net.croz.nrich.security.csrf.properties.NrichCsrfProperties;
 import net.croz.nrich.security.csrf.webflux.filter.CsrfWebFilter;
 import net.croz.nrich.security.csrf.webmvc.interceptor.CsrfInterceptor;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ class NrichCsrfAutoConfigurationTest {
             assertThat(context).hasSingleBean(CsrfTokenManagerService.class);
             assertThat(context).hasSingleBean(CsrfPingController.class);
             assertThat(context).hasSingleBean(CsrfInterceptor.class);
+            assertThat(context).hasSingleBean(NrichCsrfProperties.class);
         });
     }
 

@@ -23,6 +23,8 @@ import net.croz.nrich.validation.constraint.stub.ValidFileValidatorInvalidTypeFi
 import net.croz.nrich.validation.constraint.stub.ValidFileValidatorMultipartFileTestRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -34,6 +36,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static net.croz.nrich.validation.constraint.testutil.ValidationConstraintGeneratingUtil.filePart;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,10 +50,10 @@ class ValidFileValidatorTest {
     @Autowired
     private Validator validator;
 
-    @Test
-    void shouldReportErrorWhenFileNameIsNotValidForMultipartFile() {
+    @MethodSource("shouldReportErrorForInvalidFileMetadataMethodSource")
+    @ParameterizedTest
+    void shouldReportErrorWhenFileHasInvalidData(MultipartFile file) {
         // given
-        MultipartFile file = new MockMultipartFile("file", "**.txt", null, FILE_BYTES);
         ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
 
         // when
@@ -60,30 +63,13 @@ class ValidFileValidatorTest {
         assertThat(constraintViolationList).isNotEmpty();
     }
 
-    @Test
-    void shouldReportErrorWhenFileExtensionIsNotValidForMultipartFile() {
-        // given
-        MultipartFile file = new MockMultipartFile("file", "1.exe", null, FILE_BYTES);
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
+    private static Stream<Arguments> shouldReportErrorForInvalidFileMetadataMethodSource() {
+        return Stream.of(
+            Arguments.of(new MockMultipartFile("file", "**.txt", null, FILE_BYTES)),
+            Arguments.of(new MockMultipartFile("file", "1.exe", null, FILE_BYTES)),
+            Arguments.of(new MockMultipartFile("1.txt", "1.txt", "application/json", FILE_BYTES))
 
-        // when
-        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
-
-        // then
-        assertThat(constraintViolationList).isNotEmpty();
-    }
-
-    @Test
-    void shouldReportErrorWhenContentTypeIsNotValidForMultipartFile() {
-        // given
-        MultipartFile file = new MockMultipartFile("1.txt", "1.txt", "application/json", FILE_BYTES);
-        ValidFileValidatorMultipartFileTestRequest request = new ValidFileValidatorMultipartFileTestRequest(file);
-
-        // when
-        Set<ConstraintViolation<ValidFileValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
-
-        // then
-        assertThat(constraintViolationList).isNotEmpty();
+        );
     }
 
     @ValueSource(strings = { "1.txt", "1", "c:\\1.txt", "c:/1.txt" })

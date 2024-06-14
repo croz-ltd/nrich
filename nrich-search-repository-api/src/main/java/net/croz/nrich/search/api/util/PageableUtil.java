@@ -25,8 +25,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 // TODO maybe another project? search-util?
 
@@ -76,9 +76,11 @@ public final class PageableUtil {
             }
         }
         else {
-            List<Sort.Order> orderList = sortPropertyList.stream()
+            List<Sort.Order> sortPropertyOrderList = sortPropertyList.stream()
                 .map(PageableUtil::convertToSortOrder)
-                .collect(Collectors.toList());
+                .toList();
+
+            List<Sort.Order> orderList = new ArrayList<>(sortPropertyOrderList);
 
             if (uniqueSortOrder != null && sortPropertyList.stream().map(SortProperty::getProperty).noneMatch(value -> value.equals(uniqueSortProperty.getProperty()))) {
                 orderList.add(uniqueSortOrder);

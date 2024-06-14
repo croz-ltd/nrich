@@ -30,7 +30,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public final class ProjectionListResolverUtil {
 
@@ -43,7 +42,7 @@ public final class ProjectionListResolverUtil {
         return Arrays.stream(projectionType.getDeclaredFields())
             .filter(shouldIncludeField)
             .map(ProjectionListResolverUtil::<R>convertToProjection)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private static <R> SearchProjection<R> convertToProjection(Field field) {
@@ -85,12 +84,12 @@ public final class ProjectionListResolverUtil {
     private static <R> Predicate<R> createPredicateFromClosure(Class<?> conditionClass) {
         Constructor<?> closureConstructor = conditionClass.getDeclaredConstructor(Object.class, Object.class);
 
-        return (value) -> {
+        return value -> {
             try {
                 return Boolean.TRUE.equals(conditionClass.getMethod("call", Object.class).invoke(closureConstructor.newInstance(value, value), value));
             }
-            catch (Exception e) {
-                throw new RuntimeException("Error invoking closure", e);
+            catch (Exception exception) {
+                throw new IllegalArgumentException("Invalid closure provided", exception);
             }
         };
     }

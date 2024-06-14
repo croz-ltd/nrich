@@ -17,24 +17,12 @@
 
 package net.croz.nrich.excel.api.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Holds data format for excel column. Used when overriding default data format for specific column.
+ *
+ * @param columnIndex Column index.
+ * @param dataFormat  Column data format (i.e dd.MM.yyyy, #,##0.00 etc.).
  */
-@RequiredArgsConstructor
-@Getter
-public class ColumnDataFormat {
-
-    /**
-     * Column index.
-     */
-    private final int columnIndex;
-
-    /**
-     * Column data format (i.e dd.MM.yyyy, #,##0.00 etc.).
-     */
-    private final String dataFormat;
+public record ColumnDataFormat(int columnIndex, String dataFormat) {
 
 }

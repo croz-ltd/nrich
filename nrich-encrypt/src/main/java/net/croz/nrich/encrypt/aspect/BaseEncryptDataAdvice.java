@@ -17,7 +17,6 @@
 
 package net.croz.nrich.encrypt.aspect;
 
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.encrypt.api.model.EncryptionContext;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import org.springframework.security.core.Authentication;
@@ -84,21 +83,16 @@ public abstract class BaseEncryptDataAdvice {
         return encryptedFuture;
     }
 
-    @RequiredArgsConstructor
-    private static class ReactorEncryptor {
+    private record ReactorEncryptor(DataEncryptionService dataEncryptionService) {
 
-        private final DataEncryptionService dataEncryptionService;
-
-        public <T> T encryptReactorResult(EncryptionContext encryptionContext, List<String> pathToEncryptList, T forEncryption) {
-            if (forEncryption instanceof Mono) {
-                @SuppressWarnings("unchecked")
-                T encryptedMono = (T) ((Mono<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
+        <T> T encryptReactorResult(EncryptionContext encryptionContext, List<String> pathToEncryptList, T forEncryption) {
+            if (forEncryption instanceof Mono<?> mono) {
+                @SuppressWarnings("unchecked") T encryptedMono = (T) mono.map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
 
                 return encryptedMono;
             }
-            else if (forEncryption instanceof Flux) {
-                @SuppressWarnings("unchecked")
-                T encryptedFlux = (T) ((Flux<?>) forEncryption).map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
+            else if (forEncryption instanceof Flux<?> flux) {
+                @SuppressWarnings("unchecked") T encryptedFlux = (T) flux.map(completedResult -> dataEncryptionService.encryptData(completedResult, pathToEncryptList, encryptionContext));
 
                 return encryptedFlux;
             }

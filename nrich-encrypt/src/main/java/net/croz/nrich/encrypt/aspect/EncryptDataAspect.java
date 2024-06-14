@@ -45,8 +45,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
         Signature signature = proceedingJoinPoint.getSignature();
         Object[] arguments = proceedingJoinPoint.getArgs();
 
-        if (signature instanceof MethodSignature && arguments.length > 0) {
-            MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        if (signature instanceof MethodSignature methodSignature && arguments.length > 0) {
             String methodName = methodSignature.getMethod().getName();
             Class<?>[] parameterTypes = methodSignature.getMethod().getParameterTypes();
             Annotation[][] parameterAnnotationList = proceedingJoinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getParameterAnnotations();
@@ -60,7 +59,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
                     return arguments[index];
                 }
 
-                return decryptArgument(context, arguments[index], Arrays.asList(argumentAnnotation.argumentPathList()));
+                return decryptArgument(context, arguments[index], List.of(argumentAnnotation.argumentPathList()));
 
             }).toArray();
 
@@ -78,7 +77,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
 
         Object result = proceedingJoinPoint.proceed(arguments);
 
-        result = encryptResult(context, result, Arrays.asList(annotation.resultPathList()));
+        result = encryptResult(context, result, List.of(annotation.resultPathList()));
 
         return result;
     }
@@ -96,7 +95,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     }
 
     private EncryptionContext createEncryptionContext(Signature signature, Object[] arguments) {
-        List<Object> argumentList = Arrays.asList(arguments);
+        List<Object> argumentList = List.of(arguments);
         String methodName = String.format(EncryptConstants.METHOD_NAME_FORMAT, signature.getDeclaringType().getName(), signature.getName());
         String currentUsername = currentUsername();
 

@@ -38,7 +38,7 @@ class DefaultExcelReportServiceTest {
 
     private static final int TEMPLATE_DATA_FIRST_ROW_INDEX = 3;
 
-    private static final Object[][] DEFAULT_ROW_DATA = new Object[][] { { 1.1, "value" } };
+    private static final Object[][] DEFAULT_ROW_DATA = { { 1.1, "value" } };
 
     @Autowired
     private DefaultExcelReportService excelReportService;

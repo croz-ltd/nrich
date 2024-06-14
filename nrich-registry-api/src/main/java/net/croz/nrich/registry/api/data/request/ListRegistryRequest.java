@@ -17,8 +17,6 @@
 
 package net.croz.nrich.registry.api.data.request;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 
 import jakarta.validation.constraints.Max;
@@ -28,39 +26,15 @@ import java.util.List;
 
 /**
  * Request holding data for fetching a list of registry entities.
+ *
+ * @param classFullName    Class name of registry entity.
+ * @param pageNumber       Page number.
+ * @param pageSize         Number of entities to fetch.
+ * @param searchParameter  Search parameters.
+ * @param sortPropertyList List of {@link SortProperty} instances.
  */
-@Setter
-@Getter
-public class ListRegistryRequest {
 
-    /**
-     * Class name of registry entity.
-     */
-    @NotNull
-    private String classFullName;
-
-    /**
-     * Page number.
-     */
-    @Min(0)
-    @NotNull
-    private Integer pageNumber;
-
-    /**
-     * Number of entities to fetch.
-     */
-    @Max(1000)
-    @NotNull
-    private Integer pageSize;
-
-    /**
-     * Search parameters.
-     */
-    private SearchParameter searchParameter;
-
-    /**
-     * List of {@link SortProperty} instances.
-     */
-    private List<SortProperty> sortPropertyList;
+public record ListRegistryRequest(@NotNull String classFullName, @Min(0) @NotNull Integer pageNumber, @Max(1000) @NotNull Integer pageSize, SearchParameter searchParameter,
+                                  List<SortProperty> sortPropertyList) {
 
 }

@@ -23,7 +23,6 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.temporal.Temporal;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -76,7 +75,7 @@ public class SearchPropertyConfiguration {
 
     public static SearchPropertyConfiguration defaultSearchPropertyConfiguration() {
         return new SearchPropertyConfigurationBuilder()
-            .rangeQuerySupportedClassList(Arrays.asList(Date.class, java.util.Date.class, Temporal.class, Number.class))
+            .rangeQuerySupportedClassList(List.of(Date.class, java.util.Date.class, Temporal.class, Number.class))
             .defaultSubqueryJoinAttribute("id")
             .rangeQueryFromIncludingSuffix("FromIncluding")
             .rangeQueryFromSuffix("From")

@@ -30,7 +30,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.creteRegistryHistoryTestEntityRevisionList;
-import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequest;
+import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithDefaultSort;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,7 +48,7 @@ class RegistryHistoryControllerTest extends BaseControllerTest {
         // given
         String requestUrl = "/nrich/registry/history/list";
         RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(RegistryHistoryTestEntity.class.getName(), entity.getId());
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntity.class.getName(), entity.getId());
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);

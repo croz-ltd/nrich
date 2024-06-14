@@ -24,8 +24,8 @@ import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationReques
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.doReturn;
@@ -67,7 +67,7 @@ public final class FormConfigurationGeneratingUtil {
     public static FetchFormConfigurationRequest createFetchFormConfigurationRequest() {
         FetchFormConfigurationRequest request = new FetchFormConfigurationRequest();
 
-        request.setFormIdList(Arrays.asList("formId1", "formId2"));
+        request.setFormIdList(List.of("formId1", "formId2"));
 
         return request;
     }

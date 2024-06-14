@@ -17,15 +17,8 @@
 
 package net.croz.nrich.validation.constraint.stub;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.constraint.SpelExpression;
 
-@RequiredArgsConstructor
-@Getter
-public class SpelExpressionSystemPropertiesTestRequest {
-
-    @SpelExpression("#systemProperties['custom.system.property'].startsWith(#this)")
-    private final String value;
+public record SpelExpressionSystemPropertiesTestRequest(@SpelExpression("#systemProperties['custom.system.property'].startsWith(#this)") String value) {
 
 }

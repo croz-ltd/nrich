@@ -39,16 +39,12 @@ public final class PoiDataResolverUtil {
             return null;
         }
 
-        switch (cell.getCellType()) {
-            case STRING:
-                return cell.getStringCellValue();
-            case NUMERIC:
-                return DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue().toInstant() : asIntegerIfApplicable(cell.getNumericCellValue());
-            case BOOLEAN:
-                return cell.getBooleanCellValue();
-            default:
-                return null;
-        }
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue();
+            case NUMERIC -> DateUtil.isCellDateFormatted(cell) ? cell.getDateCellValue().toInstant() : asIntegerIfApplicable(cell.getNumericCellValue());
+            case BOOLEAN -> cell.getBooleanCellValue();
+            default -> null;
+        };
     }
 
     public static List<Object> getRowCellValueList(Row row) {
