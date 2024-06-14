@@ -70,6 +70,7 @@ public class DefaultExcelReportService implements ExcelReportService {
             .outputStream(reportRequest.getOutputStream())
             .templatePath(reportRequest.getTemplatePath())
             .templateVariableList(reportRequest.getTemplateVariableList())
+            .autoSizeColumns(reportRequest.isAutoSizeColumns())
             .build();
     }
 }

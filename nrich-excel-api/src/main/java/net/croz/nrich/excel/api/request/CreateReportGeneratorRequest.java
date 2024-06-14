@@ -54,4 +54,9 @@ public class CreateReportGeneratorRequest {
      */
     private final int firstRowIndex;
 
+    /**
+     * Determines if column size should be calculated based on content.
+     */
+    private final boolean autoSizeColumns;
+
 }

@@ -48,7 +48,8 @@ public class PoiExcelReportGeneratorFactory implements ExcelReportGeneratorFacto
         InputStream template = resolveTemplate(request.getTemplatePath());
 
         return new PoiExcelReportGenerator(
-            cellValueConverterList, request.getOutputStream(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex()
+            cellValueConverterList, request.getOutputStream(), template, request.getTemplateVariableList(), typeDataFormatList, request.getColumnDataFormatList(), request.getFirstRowIndex(),
+            request.isAutoSizeColumns()
         );
     }
 

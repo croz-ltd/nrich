@@ -80,7 +80,7 @@ class PoiExcelReportGeneratorTest {
         outputStream = new ByteArrayOutputStream();
 
         excelReportGenerator = new PoiExcelReportGenerator(
-            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX
+            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX, false
         );
     }
 

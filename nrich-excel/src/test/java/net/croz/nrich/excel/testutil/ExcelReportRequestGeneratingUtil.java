@@ -34,6 +34,7 @@ public final class ExcelReportRequestGeneratingUtil {
             .batchSize(batchSize)
             .outputStream(outputStream)
             .templatePath(TEMPLATE_PATH)
+            .autoSizeColumns(true)
             .firstRowIndex(firstRowIndex).build();
     }
 
