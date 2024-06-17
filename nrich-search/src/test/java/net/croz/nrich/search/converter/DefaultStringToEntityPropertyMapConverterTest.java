@@ -107,6 +107,19 @@ class DefaultStringToEntityPropertyMapConverterTest {
         assertThat(result).containsKeys(propertyToSearchList.toArray(new String[0])).containsValue(dateOf(value));
     }
 
+    @Test
+    void shouldSupportSearchingAssociationsById() {
+        // given
+        String value = "1";
+        List<String> propertyToSearchList = List.of("nestedEntity", "nestedEntityList");
+
+        // when
+        Map<String, Object> result = stringToEntityPropertyMapConverter.convert(value, propertyToSearchList, managedTypeOfTestEntity(), PROPERTY_CONFIGURATION);
+
+        // then
+        assertThat(result).containsKeys("nestedEntity.id", "nestedEntityList.id").containsValue(Long.parseLong(value));
+    }
+
     private ManagedType<?> managedTypeOfTestEntity() {
         return entityManager.getMetamodel().managedType((Class<?>) DefaultStringToEntityPropertyMapConverterTestEntity.class);
     }
