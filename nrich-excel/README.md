@@ -128,6 +128,7 @@ public class ExampleReportService {
                 .batchSize(10)
                 .outputStream(outputStream)
                 .templatePath("classpath:excel/template.xlsx")
+                .autoSizeColumns(true)
                 .firstRowIndex(3)
                 .build();
 

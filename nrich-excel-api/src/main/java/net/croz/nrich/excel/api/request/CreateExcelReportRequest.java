@@ -66,6 +66,11 @@ public class CreateExcelReportRequest {
     private final MultiRowDataProvider multiRowDataProvider;
 
     /**
+     * Determines if column size should be calculated based on content.
+     */
+    private final boolean autoSizeColumns;
+
+    /**
      * Creates {@link CreateExcelReportRequest} Builder instance from flat data.
      *
      * @param data Flat data to be written

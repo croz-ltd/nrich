@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.Assert;
@@ -54,7 +55,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private final SXSSFWorkbook workbook;
 
-    private final Sheet sheet;
+    private final SXSSFSheet sheet;
 
     private final CreationHelper creationHelper;
 
@@ -62,12 +63,14 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private final Map<Class<?>, CellStyle> defaultStyleMap;
 
+    private final boolean autoSizeColumns;
+
     private int currentRowNumber;
 
     private boolean templateOpen = true;
 
     public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
-                                   List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
+                                   List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex, boolean autoSizeColumns) {
         this.cellValueConverterList = cellValueConverterList;
         this.outputStream = outputStream;
         this.workbook = initializeWorkBookWithTemplate(template, templateVariableList);
@@ -75,6 +78,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         this.creationHelper = workbook.getCreationHelper();
         this.cellStyleMap = createStyleMap(columnDataFormatList);
         this.defaultStyleMap = createDefaultStyleMap(typeDataFormatList);
+        this.autoSizeColumns = autoSizeColumns;
+        if (autoSizeColumns) {
+            this.sheet.trackAllColumnsForAutoSizing();
+        }
         this.currentRowNumber = startIndex;
     }
 
@@ -97,6 +104,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     @SneakyThrows
     @Override
     public void flush() {
+        autoSizeColumnsIfRequired();
         workbook.write(outputStream);
         this.templateOpen = false;
     }
@@ -180,5 +188,12 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         return typeDataFormatList.stream()
             .filter(typeDataFormat -> typeDataFormat.getDataFormat() != null)
             .collect(Collectors.toMap(TypeDataFormat::getType, value -> createCellStyle(value.getDataFormat())));
+    }
+
+    private void autoSizeColumnsIfRequired() {
+        if (autoSizeColumns) {
+            int numberOfColumns = this.sheet.getRow(this.sheet.getLastRowNum()).getLastCellNum();
+            IntStream.range(0, numberOfColumns).forEach(sheet::autoSizeColumn);
+        }
     }
 }
