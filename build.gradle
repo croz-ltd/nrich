@@ -155,8 +155,8 @@ nexusPublishing {
       nexusUrl = uri("$sonatypeNexusUrl/service/local/")
       snapshotRepositoryUrl = uri("$sonatypeNexusUrl/content/repositories/snapshots/")
 
-      username = sonatypeUsername
-      password = System.getenv("SONATYPE_PASSWORD")
+      username = System.getenv("SONATYPE_TOKEN_USERNAME")
+      password = System.getenv("SONATYPE_TOKEN_PASSWORD")
 
       // Specifying the configuration property explicitly rather than relying on the API call
       // is considered a performance optimization and can reduce execution time by several seconds
