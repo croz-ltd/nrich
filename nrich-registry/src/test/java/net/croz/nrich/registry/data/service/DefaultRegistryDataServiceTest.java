@@ -42,6 +42,7 @@ import java.util.Map;
 
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createAndSaveRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createBulkListRegistryRequest;
+import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createEmbeddedIdSearchRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroup;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createRegistryTestEmbeddedUserGroupId;
@@ -394,5 +395,19 @@ class DefaultRegistryDataServiceTest {
         assertThat(loaded.getAge()).isEqualTo(50);
         assertThat(loaded.getName()).isEqualTo("name 1");
         assertThat(loaded.getParent()).isNotNull();
+    }
+
+    @Test
+    void shouldSearchByEmbeddedId() {
+        // given
+        createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
+        RegistryTestEmbeddedUserGroup entity = createAndSaveRegistryTestEmbeddedUserGroup(entityManager);
+        ListRegistryRequest request = createEmbeddedIdSearchRequest(entity);
+
+        // when
+        Page<RegistryTestEmbeddedUserGroup> result = registryDataService.list(request);
+
+        // then
+        assertThat(result).hasSize(1);
     }
 }

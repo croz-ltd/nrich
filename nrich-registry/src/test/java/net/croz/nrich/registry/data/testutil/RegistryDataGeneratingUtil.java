@@ -346,6 +346,22 @@ public final class RegistryDataGeneratingUtil {
         return request;
     }
 
+    public static ListRegistryRequest createEmbeddedIdSearchRequest(RegistryTestEmbeddedUserGroup entity) {
+        SearchParameter searchParameter = new SearchParameter();
+
+        searchParameter.setPropertyNameList(List.of("userGroupId.user"));
+        searchParameter.setQuery(entity.getUserGroupId().getGroup().getId().toString());
+
+        ListRegistryRequest request = new ListRegistryRequest();
+
+        request.setClassFullName(RegistryTestEmbeddedUserGroup.class.getName());
+        request.setPageNumber(0);
+        request.setPageSize(10);
+        request.setSearchParameter(searchParameter);
+
+        return request;
+    }
+
     private static RegistryTestEntity createRegistryTestEntity(String name, Integer age, RegistryTestEntity parent) {
         RegistryTestEntity entity = new RegistryTestEntity();
 

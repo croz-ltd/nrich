@@ -23,15 +23,21 @@ import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.support.JpaEntityAttributeResolver;
+import net.croz.nrich.search.util.PathResolvingUtil;
 import net.croz.nrich.search.util.PropertyNameUtil;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.IdentifiableType;
 import jakarta.persistence.metamodel.ManagedType;
+import jakarta.persistence.metamodel.PluralAttribute;
+import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RequiredArgsConstructor
 public class DefaultStringToEntityPropertyMapConverter implements StringToEntityPropertyMapConverter {
@@ -63,10 +69,26 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
                 return;
             }
 
-            Object convertedValue = doConversion(value, attributeHolder.getAttribute().getJavaType());
+            Attribute<?, ?> attribute = attributeHolder.getAttribute();
 
-            resultMap.put(property, convertedValue);
+            Object convertedValue = doConversion(value, attribute.getJavaType());
 
+            if (convertedValue == null && attribute.isAssociation()) {
+                IdentifiableType<?> identifiableType = asIdentifiableType(attribute);
+                if (identifiableType == null || !identifiableType.hasSingleIdAttribute()) {
+                    return;
+                }
+
+                Class<?> idType = identifiableType.getIdType().getJavaType();
+                String idName = identifiableType.getId(idType).getName();
+
+                convertedValue = doConversion(value, idType);
+
+                resultMap.put(PathResolvingUtil.joinPath(property, idName), convertedValue);
+            }
+            else {
+                resultMap.put(property, convertedValue);
+            }
         });
 
         return resultMap;
@@ -83,5 +105,16 @@ public class DefaultStringToEntityPropertyMapConverter implements StringToEntity
             .orElseThrow(() -> new IllegalArgumentException(String.format("No converter found for attribute type %s", attributeType.getName())));
 
         return converter.convert(searchTerm, attributeType);
+    }
+
+    private IdentifiableType<?> asIdentifiableType(Attribute<?, ?> attribute) {
+        if (attribute instanceof SingularAttribute<?, ?> singularAttribute && singularAttribute.getType() instanceof IdentifiableType<?> identifiableType) {
+            return identifiableType;
+        }
+        if (attribute instanceof PluralAttribute<?, ?, ?> pluralAttribute && pluralAttribute.getElementType() instanceof IdentifiableType<?> identifiableType) {
+            return identifiableType;
+        }
+
+        return null;
     }
 }

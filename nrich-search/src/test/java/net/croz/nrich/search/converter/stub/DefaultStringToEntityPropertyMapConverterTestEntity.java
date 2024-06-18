@@ -22,8 +22,10 @@ import lombok.Setter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -41,5 +43,8 @@ public class DefaultStringToEntityPropertyMapConverterTestEntity {
 
     @OneToOne
     private DefaultStringToEntityPropertyMapConverterTestNestedEntity nestedEntity;
+
+    @OneToMany
+    private List<DefaultStringToEntityPropertyMapConverterTestNestedEntity> nestedEntityList;
 
 }
