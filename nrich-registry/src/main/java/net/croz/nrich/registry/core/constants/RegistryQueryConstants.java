@@ -31,8 +31,6 @@ public final class RegistryQueryConstants {
 
     public static final String FIND_QUERY_SEPARATOR = " and ";
 
-    public static final String FIND_QUERY_JOIN_FETCH = " left join fetch " + ENTITY_ALIAS + ".%s ";
-
     private RegistryQueryConstants() {
     }
 }
