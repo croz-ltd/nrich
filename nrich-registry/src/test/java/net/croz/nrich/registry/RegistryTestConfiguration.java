@@ -39,6 +39,7 @@ import net.croz.nrich.registry.api.history.service.RegistryHistoryService;
 import net.croz.nrich.registry.configuration.controller.RegistryConfigurationController;
 import net.croz.nrich.registry.configuration.service.DefaultRegistryConfigurationService;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
 import net.croz.nrich.registry.core.model.RegistryDataConfigurationHolder;
 import net.croz.nrich.registry.core.model.RegistryGroupDefinitionHolder;
 import net.croz.nrich.registry.core.model.RegistryHistoryConfigurationHolder;
@@ -340,7 +341,17 @@ public class RegistryTestConfiguration {
         RegistryOverrideConfigurationHolder searchConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryTestEntityWithOverriddenSearchConfiguration.class).overrideSearchConfiguration(searchConfiguration).build();
 
-        return Arrays.asList(interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder);
+        RegistryOverrideConfiguration embeddedEntityOverrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+
+        embeddedEntityOverrideConfiguration.setPropertyDisplayOrderList(List.of("id.secondId", "id.firstId"));
+
+        RegistryOverrideConfigurationHolder embeddedEntityOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+            .type(RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class).overrideConfiguration(embeddedEntityOverrideConfiguration).build();
+
+        return Arrays.asList(
+            interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder,
+            embeddedEntityOverrideConfigurationHolder
+        );
     }
 
     private ModelMapper strictModelMapper() {
