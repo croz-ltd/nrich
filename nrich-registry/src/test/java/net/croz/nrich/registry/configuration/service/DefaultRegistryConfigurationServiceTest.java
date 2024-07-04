@@ -154,7 +154,7 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactly(
             "id", "amount", "registryConfigurationTestEntityManyToOne", "registryConfigurationTestEntityOneToOne"
         );
-        assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("id.firstId", "id.secondId");
+        assertThat(registryEntityConfiguration.getEmbeddedIdPropertyConfigurationList()).extracting("name").containsExactly("id.secondId", "id.firstId");
 
         // and when
         RegistryPropertyConfiguration numberRegistryConfiguration = registryEntityConfiguration.getPropertyConfigurationList().get(1);
