@@ -308,7 +308,7 @@ public class RegistryTestConfiguration {
     }
 
     private List<RegistryOverrideConfigurationHolder> createRegistryOverrideConfigurationList() {
-        RegistryOverrideConfiguration configurationEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration configurationEntityConfiguration = new RegistryOverrideConfiguration();
 
         configurationEntityConfiguration.setPropertyDisplayOrderList(Arrays.asList("name", "id", "nonEditableProperty", "floatNumber", "doubleNumber"));
         configurationEntityConfiguration.setIgnoredPropertyList(Collections.singletonList("skippedProperty"));
@@ -319,13 +319,13 @@ public class RegistryTestConfiguration {
         RegistryOverrideConfigurationHolder configurationEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryConfigurationTestEntity.class).overrideConfiguration(configurationEntityConfiguration).build();
 
-        RegistryOverrideConfiguration interceptorTestEntityConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration interceptorTestEntityConfiguration = new RegistryOverrideConfiguration();
         interceptorTestEntityConfiguration.setReadOnly(true);
 
         RegistryOverrideConfigurationHolder interceptorTestEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
 
-        RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = new RegistryOverrideConfiguration();
 
         InterceptorTestNonEntityNonModifiableConfiguration.setDeletable(false);
         InterceptorTestNonEntityNonModifiableConfiguration.setUpdateable(false);
