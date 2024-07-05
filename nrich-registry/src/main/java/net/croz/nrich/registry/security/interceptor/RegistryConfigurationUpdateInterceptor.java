@@ -56,7 +56,7 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
 
     private RegistryOverrideConfiguration resolveConfiguration(String classFullName) {
         if (registryOverrideConfigurationMap.get(classFullName) == null) {
-            return RegistryOverrideConfiguration.defaultConfiguration();
+            return new RegistryOverrideConfiguration();
         }
 
         return registryOverrideConfigurationMap.get(classFullName);
@@ -71,9 +71,9 @@ public class RegistryConfigurationUpdateInterceptor extends BaseRegistryDataInte
             .collect(Collectors.toMap(entry -> entry.getKey().getName(), Map.Entry::getValue));
     }
 
-    private void verifyRegistryOperation(String registryClassName, boolean isAllowed) {
-        if (isAllowed) {
-            throw new RegistryUpdateNotAllowedException(String.format("Trying to update registry: %s that is not updatable", registryClassName));
+    private void verifyRegistryOperation(String registryClassName, boolean isNotAllowed) {
+        if (isNotAllowed) {
+            throw new RegistryUpdateNotAllowedException(String.format("Trying to edit registry: %s that is not editable", registryClassName));
         }
     }
 }
