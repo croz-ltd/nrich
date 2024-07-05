@@ -71,7 +71,7 @@ public final class RegistryConfigurationGeneratingUtil {
     }
 
     public static List<RegistryOverrideConfigurationHolder> createRegistryOverrideConfigurationList() {
-        RegistryOverrideConfiguration overrideConfiguration = RegistryOverrideConfiguration.defaultConfiguration();
+        RegistryOverrideConfiguration overrideConfiguration = new RegistryOverrideConfiguration();
 
         RegistryOverrideConfigurationHolder registryOverrideConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryConfigurationRegularTestEntity.class)
