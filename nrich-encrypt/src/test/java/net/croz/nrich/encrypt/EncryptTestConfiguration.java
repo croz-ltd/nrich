@@ -40,8 +40,6 @@ import org.springframework.security.crypto.encrypt.BytesEncryptor;
 import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @EnableAspectJAutoProxy
@@ -67,17 +65,10 @@ public class EncryptTestConfiguration {
 
     @Bean
     public Advisor encryptorAdvisor(DataEncryptionService dataEncryptionService) {
-        List<String> propertyList = Collections.singletonList("value");
+        List<String> propertyList = List.of("value");
         String encryptMethodName = "net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToEncryptFromConfiguration";
-        String decryptMethodName = "net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration";
-        String allInterceptorServiceMethods = "net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*";
-        List<EncryptionConfiguration> encryptionConfigurationList = Arrays.asList(
-            new EncryptionConfiguration(encryptMethodName, propertyList, EncryptionOperation.ENCRYPT),
-            new EncryptionConfiguration(decryptMethodName, propertyList, EncryptionOperation.DECRYPT),
-            new EncryptionConfiguration(allInterceptorServiceMethods, propertyList, EncryptionOperation.ENCRYPT),
-            new EncryptionConfiguration(allInterceptorServiceMethods, propertyList, EncryptionOperation.DECRYPT)
-        );
-        List<String> ignoredMethodList = Collections.singletonList("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod");
+        List<EncryptionConfiguration> encryptionConfigurationList = createEncryptionConfiguration(encryptMethodName, propertyList);
+        List<String> ignoredMethodList = List.of("net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.ignoredMethod");
 
         AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
 
@@ -94,5 +85,17 @@ public class EncryptTestConfiguration {
     @Bean
     public EncryptionMethodInterceptorTestService encryptionMethodInterceptorTestService() {
         return new DefaultEncryptionMethodInterceptorTestService();
+    }
+
+    private List<EncryptionConfiguration> createEncryptionConfiguration(String encryptMethodName, List<String> propertyList) {
+        String decryptMethodName = "net.croz.nrich.encrypt.aspect.stub.DefaultEncryptDataAspectTestService.dataToDecryptFromConfiguration";
+        String allInterceptorServiceMethods = "net.croz.nrich.encrypt.aspect.stub.DefaultEncryptionMethodInterceptorTestService.*";
+
+        return List.of(
+            new EncryptionConfiguration(encryptMethodName, propertyList, EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration(decryptMethodName, propertyList, EncryptionOperation.DECRYPT),
+            new EncryptionConfiguration(allInterceptorServiceMethods, propertyList, EncryptionOperation.ENCRYPT),
+            new EncryptionConfiguration(allInterceptorServiceMethods, propertyList, EncryptionOperation.DECRYPT)
+        );
     }
 }

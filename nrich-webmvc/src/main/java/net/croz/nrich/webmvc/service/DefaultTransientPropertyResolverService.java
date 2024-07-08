@@ -24,7 +24,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class DefaultTransientPropertyResolverService implements TransientPropertyResolverService {
 
@@ -38,7 +37,7 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
             List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
                 .filter(this::includeField)
                 .map(Field::getName)
-                .collect(Collectors.toList());
+                .toList();
 
             transientPropertyList.addAll(currentTransientPropertyList);
 

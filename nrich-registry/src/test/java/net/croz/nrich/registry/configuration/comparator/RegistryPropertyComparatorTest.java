@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +46,7 @@ class RegistryPropertyComparatorTest {
     @Test
     void shouldCompareByDisplayOrderWhenPresent() {
         // given
-        RegistryPropertyComparator registryPropertyComparator = new RegistryPropertyComparator(Arrays.asList("first", "second"));
+        RegistryPropertyComparator registryPropertyComparator = new RegistryPropertyComparator(List.of("first", "second"));
 
         // when
         Integer result = registryPropertyComparator.compare(RegistryPropertyConfiguration.builder().name("first").build(), RegistryPropertyConfiguration.builder().name("second").build());

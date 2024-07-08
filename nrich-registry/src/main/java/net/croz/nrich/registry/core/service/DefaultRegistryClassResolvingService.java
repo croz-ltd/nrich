@@ -25,7 +25,6 @@ import net.croz.nrich.registry.data.util.ClassLoadingUtil;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +69,7 @@ public class DefaultRegistryClassResolvingService implements RegistryClassResolv
     }
 
     private Class<?> resolveClassByPackage(String registryFullClassName, String requestClassNameFormat) {
-        List<String> registryClassNameList = new ArrayList<>(Arrays.asList(registryFullClassName.split(RegistryClassResolvingConstants.PACKAGE_SEPARATOR)));
+        List<String> registryClassNameList = new ArrayList<>(List.of(registryFullClassName.split(RegistryClassResolvingConstants.PACKAGE_SEPARATOR)));
 
         int indexOfLastPackage = registryClassNameList.size() - 2;
         if (RegistryClassResolvingConstants.CLASS_NAME_SUFFIX_LIST_TO_REPLACE.contains(registryClassNameList.get(indexOfLastPackage))) {
@@ -85,7 +84,7 @@ public class DefaultRegistryClassResolvingService implements RegistryClassResolv
     }
 
     private Class<?> resolveClass(String fullClassName, String fullClassNameWithRequestPackage, String requestClassNameFormat) {
-        List<String> classNameList = Arrays.asList(
+        List<String> classNameList = List.of(
             String.format(requestClassNameFormat, fullClassNameWithRequestPackage),
             String.format(RegistryClassResolvingConstants.REQUEST_CLASS_NAME_FORMAT, fullClassNameWithRequestPackage),
             String.format(requestClassNameFormat, fullClassName),

@@ -33,16 +33,16 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
 
     @Override
     public Object convertEntityDataToTyped(CreateRegistryRequest request) {
-        Class<?> type = registryClassResolvingService.resolveCreateClass(request.getClassFullName());
+        Class<?> type = registryClassResolvingService.resolveCreateClass(request.classFullName());
 
-        return convertStringToInstance(request.getJsonEntityData(), type);
+        return convertStringToInstance(request.jsonEntityData(), type);
     }
 
     @Override
     public Object convertEntityDataToTyped(UpdateRegistryRequest request) {
-        Class<?> type = registryClassResolvingService.resolveUpdateClass(request.getClassFullName());
+        Class<?> type = registryClassResolvingService.resolveUpdateClass(request.classFullName());
 
-        return convertStringToInstance(request.getJsonEntityData(), type);
+        return convertStringToInstance(request.jsonEntityData(), type);
     }
 
     @SneakyThrows

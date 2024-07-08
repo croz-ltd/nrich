@@ -52,17 +52,17 @@ public class DefaultRegistryEnumService implements RegistryEnumService {
 
     @Override
     public Map<String, List<EnumResult>> listBulk(ListBulkRegistryEnumRequest request) {
-        return request.getRegistryRequestList().stream().collect(Collectors.toMap(ListRegistryEnumRequest::getClassFullName, this::list));
+        return request.registryRequestList().stream().collect(Collectors.toMap(ListRegistryEnumRequest::classFullName, this::list));
     }
 
     @Override
     public List<EnumResult> list(ListRegistryEnumRequest request) {
-        boolean isEmptyQuery = !StringUtils.hasText(request.getQuery());
-        List<EnumResult> enumResults = loadEnumRegistry(request.getClassFullName(), LocaleContextHolder.getLocale());
+        boolean isEmptyQuery = !StringUtils.hasText(request.query());
+        List<EnumResult> enumResults = loadEnumRegistry(request.classFullName(), LocaleContextHolder.getLocale());
 
         List<EnumResult> foundEnums = new ArrayList<>();
         enumResults.forEach(enumResult -> {
-            if (isEmptyQuery || enumResult.getDescription().toLowerCase().contains(request.getQuery().toLowerCase())) {
+            if (isEmptyQuery || enumResult.description().toLowerCase().contains(request.query().toLowerCase())) {
                 foundEnums.add(enumResult);
             }
         });

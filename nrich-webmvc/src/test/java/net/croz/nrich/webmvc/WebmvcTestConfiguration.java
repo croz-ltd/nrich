@@ -47,7 +47,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @ComponentScan("net.croz.nrich.webmvc")
@@ -133,7 +133,7 @@ public class WebmvcTestConfiguration {
                                                                                                        ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService,
                                                                                                        ExceptionHttpStatusResolverService exceptionHttpStatusResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(
-            Collections.singletonList(ExecutionException.class.getName()), Collections.singletonList("uuid"), notificationResponseService,
+            List.of(ExecutionException.class.getName()), List.of("uuid"), notificationResponseService,
             loggingService, exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService
         );
     }

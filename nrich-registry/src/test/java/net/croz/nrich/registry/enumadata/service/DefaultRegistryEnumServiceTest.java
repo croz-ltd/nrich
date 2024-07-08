@@ -57,10 +57,10 @@ class DefaultRegistryEnumServiceTest {
 
         EnumResult enumResult = result.get(classFullName).get(0);
 
-        assertThat(enumResult.getId()).isEqualTo(classFullName);
-        assertThat(enumResult.getDescription()).isEqualTo("First description");
-        assertThat(enumResult.getValue()).isEqualTo(RegistryTestEnum.FIRST);
-        assertThat(enumResult.getAdditionalData()).isEmpty();
+        assertThat(enumResult.id()).isEqualTo(classFullName);
+        assertThat(enumResult.description()).isEqualTo("First description");
+        assertThat(enumResult.value()).isEqualTo(RegistryTestEnum.FIRST);
+        assertThat(enumResult.additionalData()).isEmpty();
     }
 
     @Test
@@ -77,9 +77,9 @@ class DefaultRegistryEnumServiceTest {
 
         EnumResult enumResult = result.get(0);
 
-        assertThat(enumResult.getDescription()).isEqualTo("Second with additional methods description");
-        assertThat(enumResult.getValue()).isEqualTo(RegistryTestEnumWithAdditionalData.SECOND_WITH_ADDITIONAL_METHODS);
-        assertThat(enumResult.getAdditionalData()).isEqualTo(Map.of("firstAdditionalMethod", List.of("additional method second value")));
+        assertThat(enumResult.description()).isEqualTo("Second with additional methods description");
+        assertThat(enumResult.value()).isEqualTo(RegistryTestEnumWithAdditionalData.SECOND_WITH_ADDITIONAL_METHODS);
+        assertThat(enumResult.additionalData()).isEqualTo(Map.of("firstAdditionalMethod", List.of("additional method second value")));
     }
 
     @Test
@@ -119,6 +119,6 @@ class DefaultRegistryEnumServiceTest {
 
         // then
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getDescription()).isEqualTo("FIRST");
+        assertThat(result.get(0).description()).isEqualTo("FIRST");
     }
 }

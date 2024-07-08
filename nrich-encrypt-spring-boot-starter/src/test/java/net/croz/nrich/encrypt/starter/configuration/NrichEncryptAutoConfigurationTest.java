@@ -20,6 +20,7 @@ package net.croz.nrich.encrypt.starter.configuration;
 import net.croz.nrich.encrypt.api.service.DataEncryptionService;
 import net.croz.nrich.encrypt.api.service.TextEncryptionService;
 import net.croz.nrich.encrypt.aspect.EncryptDataAspect;
+import net.croz.nrich.encrypt.starter.properties.NrichEncryptProperties;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -39,6 +40,7 @@ class NrichEncryptAutoConfigurationTest {
             assertThat(context).hasSingleBean(TextEncryptionService.class);
             assertThat(context).hasSingleBean(DataEncryptionService.class);
             assertThat(context).hasSingleBean(EncryptDataAspect.class);
+            assertThat(context).hasSingleBean(NrichEncryptProperties.class);
         });
     }
 

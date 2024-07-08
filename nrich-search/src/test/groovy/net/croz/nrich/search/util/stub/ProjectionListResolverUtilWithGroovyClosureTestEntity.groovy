@@ -22,18 +22,15 @@ import org.springframework.beans.factory.annotation.Value
 
 class ProjectionListResolverUtilWithGroovyClosureTestEntity {
 
-  private static String STATIC_PROPERTY = "value"
-
-  private String name
-
-  private transient String transientProperty
+  String name
 
   @Projection(path = "nestedEntity.nestedEntityName")
-  private String nestedName
+  String nestedName
 
   @Value("nestedEntity.id")
-  private Long nestedId
+  Long nestedId
 
   @Projection(path = "nestedEntity.anotherName", condition = { it == null })
-  private String conditionalName
+  String conditionalName
+
 }
