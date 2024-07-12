@@ -137,6 +137,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             return;
         }
 
+        if (style != null) {
+            cell.setCellStyle(style);
+        }
+
         PoiCellHolder cellHolder = new PoiCellHolder(cell);
 
         CellValueConverter converter = cellValueConverterList.stream()
@@ -146,13 +150,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
         if (converter == null) {
             cell.setCellValue(value.toString());
+            cell.getCellStyle().setQuotePrefixed(true);
         }
         else {
             converter.setCellValue(cellHolder, value);
-        }
-
-        if (style != null) {
-            cell.setCellStyle(style);
         }
     }
 
