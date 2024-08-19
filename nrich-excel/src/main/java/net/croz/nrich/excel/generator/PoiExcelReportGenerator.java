@@ -49,6 +49,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private static final Pattern TEMPLATE_VARIABLE_PATTERN = Pattern.compile("\\$\\{(.*?)}");
 
+    private static final List<String> FORMULA_CHARACTER_LIST = List.of("=", "+", "-", "@");
+
     private final List<CellValueConverter> cellValueConverterList;
 
     private final OutputStream outputStream;
@@ -149,8 +151,11 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             .orElse(null);
 
         if (converter == null) {
-            cell.setCellValue(value.toString());
-            cell.getCellStyle().setQuotePrefixed(true);
+            String stringValue = value.toString();
+            cell.setCellValue(stringValue);
+            if (stringValue != null && FORMULA_CHARACTER_LIST.stream().anyMatch(stringValue::startsWith)) {
+                cell.getCellStyle().setQuotePrefixed(true);
+            }
         }
         else {
             converter.setCellValue(cellHolder, value);

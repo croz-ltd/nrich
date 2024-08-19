@@ -90,10 +90,10 @@ class PoiExcelReportGeneratorTest {
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
         Object[] rowData = new Object[] {
             1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1,
-            LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, TestEnum.FIRST, TestEnum.SECOND, null
+            LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, TestEnum.FIRST, TestEnum.SECOND, null, "=123"
         };
         // when resolving data from cells all dates are converted to instant, all decimal numbers are converted to double and all whole numbers are converted to integer
-        Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, "First", "SECOND", null };
+        Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, "First", "SECOND", null, "=123" };
 
         // when
         excelReportGenerator.writeRowData(rowData);
