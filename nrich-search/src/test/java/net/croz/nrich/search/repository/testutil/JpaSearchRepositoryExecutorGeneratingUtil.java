@@ -29,12 +29,10 @@ import net.croz.nrich.search.repository.stub.TestEntityWithCustomId;
 import net.croz.nrich.search.repository.stub.TestEntityWithEmbeddedId;
 import net.croz.nrich.search.repository.stub.TestNestedEntity;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
+import net.croz.nrich.search.repository.stub.TestSubEntity;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.JoinType;
-
-import net.croz.nrich.search.repository.stub.TestSubEntity;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -75,7 +73,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     public static List<TestStringSearchEntity> generateListForStringSearch(EntityManager entityManager) {
         LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5)
-            .mapToObj(value -> createTestStringSearchEntity("name " + value, 50 + value, date.plus(value, ChronoUnit.DAYS)))
+            .mapToObj(value -> createTestStringSearchEntity("name " + value, 50 + value, date.plusDays(value)))
             .collect(Collectors.toList());
 
         testEntityList.forEach(entityManager::persist);

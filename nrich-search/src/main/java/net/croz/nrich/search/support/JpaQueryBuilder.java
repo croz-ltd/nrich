@@ -32,7 +32,7 @@ import net.croz.nrich.search.parser.SearchDataParser;
 import net.croz.nrich.search.util.PathResolvingUtil;
 import net.croz.nrich.search.util.ProjectionListResolverUtil;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.query.QueryUtils;
+import org.springframework.data.jpa.repository.query.NrichQueryUtils;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -101,7 +101,7 @@ public class JpaQueryBuilder<T> {
         query.distinct(searchConfiguration.isDistinct());
 
         if (sort != null && sort.isSorted()) {
-            query.orderBy(QueryUtils.toOrders(sort, root, criteriaBuilder));
+            query.orderBy(NrichQueryUtils.toOrders(sort, root, criteriaBuilder));
         }
 
         return query;

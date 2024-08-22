@@ -390,6 +390,20 @@ class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldSortBySubclassProperty() {
+        // given
+        generateTestSubEntityList(entityManager);
+        Map<String, Object> requestMap = Map.of("subName", "subName");
+
+        // when
+        List<TestEntity> results = executeQuery(requestMap, SearchConfiguration.emptyConfiguration(), Sort.by(Sort.Order.desc("subName")));
+
+        // then
+        assertThat(results).isNotEmpty();
+        assertThat(results).extracting("subName").containsExactly("subName2", "subName1", "subName0");
+    }
+
+    @Test
     void shouldSortByJoinedEntity() {
         // given
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
