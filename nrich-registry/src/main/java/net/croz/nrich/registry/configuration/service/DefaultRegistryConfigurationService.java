@@ -102,10 +102,11 @@
             String registryDisplayName = registryDisplayLabel(entityType);
             boolean isHistoryAvailable = registryOverrideConfiguration.isHistoryAvailable() || isAudited(entityType);
             List<RegistryPropertyConfiguration> registryPropertyConfigurationList = resolveRegistryPropertyListForType(managedTypeWrapper, registryOverrideConfiguration);
-            List<RegistryPropertyConfiguration> registryEmbeddedIdPropertyConfigurationList = resolverEmbeddedIdPropertyConfigurationList(managedTypeWrapper, registryOverrideConfiguration);
+            List<RegistryPropertyConfiguration> registryEmbeddedIdPropertyConfigurationList = resolveEmbeddedIdPropertyConfigurationList(managedTypeWrapper, registryOverrideConfiguration);
             List<String> registryPropertyDisplayOrderList = Optional.ofNullable(registryOverrideConfiguration.getPropertyDisplayOrderList()).orElse(Collections.emptyList());
 
             registryPropertyConfigurationList.sort(new RegistryPropertyComparator(registryPropertyDisplayOrderList));
+            registryEmbeddedIdPropertyConfigurationList.sort(new RegistryPropertyComparator(registryPropertyDisplayOrderList));
 
             return RegistryEntityConfiguration.builder()
                 .groupId(groupId)
@@ -137,7 +138,7 @@
             );
         }
 
-        private List<RegistryPropertyConfiguration> resolverEmbeddedIdPropertyConfigurationList(ManagedTypeWrapper managedTypeWrapper, RegistryOverrideConfiguration registryOverrideConfiguration) {
+        private List<RegistryPropertyConfiguration> resolveEmbeddedIdPropertyConfigurationList(ManagedTypeWrapper managedTypeWrapper, RegistryOverrideConfiguration registryOverrideConfiguration) {
             if (!managedTypeWrapper.isEmbeddedIdentifier()) {
                 return Collections.emptyList();
             }
