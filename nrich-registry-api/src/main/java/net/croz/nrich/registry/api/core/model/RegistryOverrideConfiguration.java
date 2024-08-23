@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.api.core.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,71 +28,56 @@ import java.util.List;
  */
 @Setter
 @Getter
-@Builder
 public class RegistryOverrideConfiguration {
 
     /**
      * Whether this entity is read only.
      */
-    private boolean readOnly;
+    private boolean readOnly = false;
 
     /**
      * Whether new instances of this entity can be created.
      */
-    private boolean creatable;
+    private boolean creatable = true;
 
     /**
      * Whether this entity can be updated.
      */
-    private boolean updateable;
+    private boolean updateable = true;
 
     /**
      * Whether this entity can be deleted.
      */
-    private boolean deletable;
+    private boolean deletable = true;
 
     /**
      * Whether history for this entity is available.
      */
-    private boolean isHistoryAvailable;
+    private boolean isHistoryAvailable = false;
 
     /**
      * List of properties that should be excluded from configuration.
      */
-    private List<String> ignoredPropertyList;
+    private List<String> ignoredPropertyList = Collections.emptyList();
 
     /**
      * Order of properties.
      */
-    private List<String> propertyDisplayOrderList;
+    private List<String> propertyDisplayOrderList = Collections.emptyList();
 
     /**
      * List of non-editable properties.
      */
-    private List<String> nonEditablePropertyList;
+    private List<String> nonEditablePropertyList = Collections.emptyList();
 
     /**
      * List of non sortable properties.
      */
-    private List<String> nonSortablePropertyList;
+    private List<String> nonSortablePropertyList = Collections.emptyList();
 
     /**
      * List of non-searchable properties.
      */
-    private List<String> nonSearchablePropertyList;
+    private List<String> nonSearchablePropertyList = Collections.emptyList();
 
-    public static RegistryOverrideConfiguration defaultConfiguration() {
-        return RegistryOverrideConfiguration.builder()
-            .readOnly(false)
-            .creatable(true)
-            .updateable(true)
-            .deletable(true)
-            .isHistoryAvailable(false)
-            .ignoredPropertyList(Collections.emptyList())
-            .propertyDisplayOrderList(Collections.emptyList())
-            .nonEditablePropertyList(Collections.emptyList())
-            .nonSortablePropertyList(Collections.emptyList())
-            .nonSearchablePropertyList(Collections.emptyList())
-            .build();
-    }
 }

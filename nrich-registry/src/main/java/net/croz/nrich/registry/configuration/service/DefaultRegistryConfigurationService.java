@@ -284,7 +284,7 @@
 
         private RegistryOverrideConfiguration resolveRegistryOverrideConfiguration(Class<?> type, Map<Class<?>, RegistryOverrideConfiguration> registryOverrideConfigurationMap) {
             if (registryOverrideConfigurationMap == null || registryOverrideConfigurationMap.get(type) == null) {
-                return RegistryOverrideConfiguration.defaultConfiguration();
+                return new RegistryOverrideConfiguration();
             }
 
             return registryOverrideConfigurationMap.get(type);
