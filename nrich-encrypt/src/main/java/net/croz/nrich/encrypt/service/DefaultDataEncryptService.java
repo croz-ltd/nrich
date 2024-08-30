@@ -107,6 +107,10 @@ public class DefaultDataEncryptService implements DataEncryptionService {
     }
 
     protected Object encryptDecryptValue(EncryptionContext encryptionContext, Object value, EncryptionOperation operation) {
+        if (value == null) {
+            return null;
+        }
+
         if (value instanceof String textToEncryptOrDecrypt) {
             return encryptDecryptText(encryptionContext, textToEncryptOrDecrypt, operation);
         }
