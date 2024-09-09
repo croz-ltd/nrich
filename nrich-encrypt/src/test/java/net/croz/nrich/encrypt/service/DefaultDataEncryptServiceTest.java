@@ -262,6 +262,24 @@ class DefaultDataEncryptServiceTest {
     }
 
     @Test
+    void shouldNotFailWhenEncryptingNestedNullData() {
+        // given
+        String key = "mapKey";
+        Map<String, String> nestedData = new HashMap<>();
+        nestedData.put(key, null);
+
+        List<String> propertyList = Collections.singletonList("mapKey.mapKey");
+        Map<String, Map<String, String>> data = Map.of(key, nestedData);
+
+        // when
+        Map<String, Map<String, String>> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
+
+        // then
+        assertThat(result).isNotNull();
+        assertThat(result.get(key)).containsEntry(key, null);
+    }
+
+    @Test
     void shouldEncryptDecryptArrayData() {
         // given
         DataEncryptionServiceArrayTestObject testObject = new DataEncryptionServiceArrayTestObject();
