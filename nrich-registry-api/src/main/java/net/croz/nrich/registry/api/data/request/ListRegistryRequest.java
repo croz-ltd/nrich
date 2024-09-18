@@ -49,7 +49,7 @@ public class ListRegistryRequest {
     /**
      * Number of entities to fetch.
      */
-    @Max(1000)
+    @Max(5000)
     @NotNull
     private Integer pageSize;
 
