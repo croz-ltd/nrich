@@ -92,7 +92,7 @@ public class SearchDataParser {
                 }
 
                 // element collections have null managed type but should be treated as plural attributes
-                boolean isCurrentAttributePlural = attributeHolder.isElementCollection() || isPluralAttribute;
+                boolean isCurrentAttributePlural = attributeHolder.isPlural() || attributeHolder.isElementCollection() || isPluralAttribute;
 
                 restrictionList.add(createAttributeRestriction(attributeHolder.getAttribute().getJavaType(), originalFieldName, currentPath, value, isCurrentAttributePlural));
             }

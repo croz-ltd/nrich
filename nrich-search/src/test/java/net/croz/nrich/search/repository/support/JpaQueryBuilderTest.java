@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntityForCollectionSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntitySearchRequestJoin;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithCustomIdList;
@@ -872,11 +873,28 @@ class JpaQueryBuilderTest {
         assertThat(results).hasSize(1);
     }
 
+    @Test
+    void shouldCountCorrectlyWhenSearchingByCollection() {
+        // given
+        TestEntity entity = createTestEntityForCollectionSearch(entityManager);
+        Map<String, Object> requestMap = Map.of("name", entity.getName(), "collectionEntityList.name", "collection");
+
+        // when
+        Long result = executeCountQuery(requestMap, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(result).isEqualTo(1L);
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration, Sort sort) {
         return entityManager.createQuery(jpaQueryBuilder.buildQuery(request, searchConfiguration, sort)).getResultList();
+    }
+
+    private <P, R> Long executeCountQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
+        return entityManager.createQuery(jpaQueryBuilder.buildCountQuery(request, searchConfiguration)).getSingleResult();
     }
 }
