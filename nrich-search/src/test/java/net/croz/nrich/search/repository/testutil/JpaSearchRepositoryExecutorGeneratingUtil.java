@@ -35,7 +35,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.JoinType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -135,6 +134,16 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
 
             entityManager.persist(entity);
         });
+    }
+
+    public static TestEntity createTestEntityForCollectionSearch(EntityManager entityManager) {
+        TestEntity testEntity = createTestEntity(1, 3);
+
+        testEntity.setName("CollectionSearchEntity");
+
+        entityManager.persist(testEntity);
+
+        return testEntity;
     }
 
     private static TestEntity createTestEntity(Integer value, Integer numberOfCollectionEntities) {
