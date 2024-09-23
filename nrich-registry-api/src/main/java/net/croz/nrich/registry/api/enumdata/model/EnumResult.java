@@ -17,21 +17,8 @@
 
 package net.croz.nrich.registry.api.enumdata.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Getter
-public class EnumResult {
-
-    private final String id;
-
-    private final String description;
-
-    private final Enum<?> value;
-
-    private final Map<String, Object> additionalData;
+public record EnumResult(String id, String description, Enum<?> value, Map<String, Object> additionalData) {
 
 }

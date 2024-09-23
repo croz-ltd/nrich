@@ -27,7 +27,6 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -52,12 +51,7 @@ public class RegistryHistoryTestEntityWithEmbeddedId {
         private Long secondId;
 
         public Map<String, Long> asMap() {
-            Map<String, Long> mapKey = new HashMap<>();
-
-            mapKey.put("firstId", firstId);
-            mapKey.put("secondId", secondId);
-
-            return mapKey;
+            return Map.of("firstId", firstId, "secondId", secondId);
         }
 
     }

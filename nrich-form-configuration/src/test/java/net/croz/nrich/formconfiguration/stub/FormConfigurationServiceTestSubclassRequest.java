@@ -15,16 +15,18 @@
  *
  */
 
-package net.croz.nrich.registry.api.enumdata.request;
+package net.croz.nrich.formconfiguration.stub;
 
-import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Request holding data for fetching a list of enum data.
- *
- * @param classFullName Enum class name.
- * @param query         Search query.
- */
-public record ListRegistryEnumRequest(@NotBlank String classFullName, String query) {
+import jakarta.validation.constraints.Size;
+
+@Setter
+@Getter
+public class FormConfigurationServiceTestSubclassRequest extends FormConfigurationServiceTestRequest {
+
+    @Size(min = 10, max = 100)
+    private String lastName;
 
 }

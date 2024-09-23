@@ -58,7 +58,7 @@ public class NrichWebMvcAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public ControllerEditorRegistrationAdvice controllerEditorRegistrationAdvice(NrichWebMvcProperties webMvcProperties, TransientPropertyResolverService transientPropertyResolverService) {
-        return new ControllerEditorRegistrationAdvice(webMvcProperties.isConvertEmptyStringsToNull(), webMvcProperties.isIgnoreTransientFields(), transientPropertyResolverService);
+        return new ControllerEditorRegistrationAdvice(webMvcProperties.convertEmptyStringsToNull(), webMvcProperties.ignoreTransientFields(), transientPropertyResolverService);
     }
 
     @ConditionalOnMissingBean
@@ -73,7 +73,7 @@ public class NrichWebMvcAutoConfiguration {
                                                                                           LoggingService loggingService, ExceptionHttpStatusResolverService exceptionHttpStatusResolverService,
                                                                                           @Autowired(required = false) ExceptionAuxiliaryDataResolverService exceptionAuxiliaryDataResolverService) {
         return new NotificationErrorHandlingRestControllerAdvice(
-            webMvcProperties.getExceptionToUnwrapList(), webMvcProperties.getExceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService,
+            webMvcProperties.exceptionToUnwrapList(), webMvcProperties.exceptionAuxiliaryDataToIncludeInNotification(), notificationResponseService, loggingService,
             exceptionAuxiliaryDataResolverService, exceptionHttpStatusResolverService
         );
     }
@@ -82,6 +82,6 @@ public class NrichWebMvcAutoConfiguration {
     @ConditionalOnMissingBean
     @Bean
     public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(NrichWebMvcProperties webMvcProperties) {
-        return new ConstrainedSessionLocaleResolver(webMvcProperties.getDefaultLocale(), webMvcProperties.getAllowedLocaleList());
+        return new ConstrainedSessionLocaleResolver(webMvcProperties.defaultLocale(), webMvcProperties.allowedLocaleList());
     }
 }

@@ -69,13 +69,13 @@ class DefaultRegistryConfigurationResolverServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getGroupDefinitionList()).hasSize(1);
+        assertThat(result.groupDefinitionList()).hasSize(1);
 
-        RegistryGroupDefinition groupDefinition = result.getGroupDefinitionList().get(0);
+        RegistryGroupDefinition groupDefinition = result.groupDefinitionList().get(0);
 
-        assertThat(groupDefinition.getRegistryGroupId()).isEqualTo("groupId");
-        assertThat(groupDefinition.getRegistryEntityList()).hasSize(1);
-        assertThat(groupDefinition.getRegistryEntityList()).extracting("identifiableType.javaType").containsExactly(RegistryConfigurationRegularTestEntity.class);
+        assertThat(groupDefinition.registryGroupId()).isEqualTo("groupId");
+        assertThat(groupDefinition.registryEntityList()).hasSize(1);
+        assertThat(groupDefinition.registryEntityList()).extracting("identifiableType.javaType").containsExactly(RegistryConfigurationRegularTestEntity.class);
     }
 
     @Test
@@ -90,7 +90,7 @@ class DefaultRegistryConfigurationResolverServiceTest {
 
         // then
         assertThat(result).isNotNull();
-        assertThat(result.getGroupDefinitionList()).isEmpty();
+        assertThat(result.groupDefinitionList()).isEmpty();
     }
 
     @Test
@@ -132,12 +132,12 @@ class DefaultRegistryConfigurationResolverServiceTest {
         // then
         assertThat(result).isNotNull();
 
-        assertThat(result.getRevisionNumberProperty().getOriginalName()).isEqualTo("customRevisionNumber");
-        assertThat(result.getRevisionNumberProperty().getType()).isEqualTo(Integer.class);
-        assertThat(result.getRevisionTimestampProperty().getOriginalName()).isEqualTo("customRevisionTimestamp");
-        assertThat(result.getRevisionTimestampProperty().getType()).isEqualTo(Instant.class);
-        assertThat(result.getRevisionAdditionalPropertyList()).hasSize(1);
-        assertThat(result.getRevisionAdditionalPropertyList()).extracting("name").containsExactly("customProperty");
-        assertThat(result.getRevisionAdditionalPropertyList()).extracting("type").containsExactly(String.class);
+        assertThat(result.revisionNumberProperty().originalName()).isEqualTo("customRevisionNumber");
+        assertThat(result.revisionNumberProperty().type()).isEqualTo(Integer.class);
+        assertThat(result.revisionTimestampProperty().originalName()).isEqualTo("customRevisionTimestamp");
+        assertThat(result.revisionTimestampProperty().type()).isEqualTo(Instant.class);
+        assertThat(result.revisionAdditionalPropertyList()).hasSize(1);
+        assertThat(result.revisionAdditionalPropertyList()).extracting("name").containsExactly("customProperty");
+        assertThat(result.revisionAdditionalPropertyList()).extracting("type").containsExactly(String.class);
     }
 }

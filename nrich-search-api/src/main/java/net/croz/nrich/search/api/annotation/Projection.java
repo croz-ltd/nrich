@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  * Annotation that indicates a projected value. Only necessary when projecting properties from assocations or embedded class. As an alternative Spring's @Value annotation
  * can also be used but this one allows for specifying condition.
  */
-@Target({ ElementType.FIELD })
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Projection {

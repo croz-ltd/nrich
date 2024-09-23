@@ -20,7 +20,6 @@ package net.croz.nrich.formconfiguration.service;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationAnnotatedTestRequest;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ class DefaultFormConfigurationAnnotationResolvingServiceTest {
     @Test
     void shouldResolveAnnotatedFormConfigurationClasses() {
         // given
-        List<String> packageList = Collections.singletonList("net.croz");
+        List<String> packageList = List.of("net.croz");
 
         // when
         Map<String, Class<?>> result = defaultFormConfigurationAnnotationResolvingService.resolveFormConfigurations(packageList);

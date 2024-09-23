@@ -28,7 +28,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -81,14 +80,14 @@ class TypeDataFormatUtilTest {
         // given
         Class<?> additionalClass = Object.class;
         String dataFormat = "dd/MM/yyyy";
-        List<TypeDataFormat> overriddenFormatList = Collections.singletonList(new TypeDataFormat(additionalClass, dataFormat));
+        List<TypeDataFormat> overriddenFormatList = List.of(new TypeDataFormat(additionalClass, dataFormat));
 
         // when
         List<TypeDataFormat> formatList = TypeDataFormatUtil.resolveTypeDataFormatList("dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, overriddenFormatList);
-        TypeDataFormat dateTypeDataFormat = formatList.stream().filter(typeDataFormat -> additionalClass.equals(typeDataFormat.getType())).findFirst().orElse(null);
+        TypeDataFormat dateTypeDataFormat = formatList.stream().filter(typeDataFormat -> additionalClass.equals(typeDataFormat.type())).findFirst().orElse(null);
 
         // then
         assertThat(dateTypeDataFormat).isNotNull();
-        assertThat(dateTypeDataFormat.getDataFormat()).isEqualTo(dataFormat);
+        assertThat(dateTypeDataFormat.dataFormat()).isEqualTo(dataFormat);
     }
 }

@@ -17,9 +17,6 @@
 
 package net.croz.nrich.registry.api.enumdata.request;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,16 +24,9 @@ import java.util.List;
 
 /**
  * Request holding data for fetching a list of different enum data.
+ *
+ * @param registryRequestList List of {@link ListRegistryEnumRequest} instances.
  */
-@Setter
-@Getter
-public class ListBulkRegistryEnumRequest {
+public record ListBulkRegistryEnumRequest(@Valid @Size(min = 1) @NotNull List<ListRegistryEnumRequest> registryRequestList) {
 
-    /**
-     * List of {@link ListRegistryEnumRequest} instances.
-     */
-    @Valid
-    @Size(min = 1)
-    @NotNull
-    private List<ListRegistryEnumRequest> registryRequestList;
 }

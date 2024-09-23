@@ -52,8 +52,8 @@ public class NrichValidationAutoConfiguration {
 
         @Override
         public void afterPropertiesSet() {
-            if (messageSource instanceof AbstractResourceBasedMessageSource abstractResourceBasedMessageSource) {
-                abstractResourceBasedMessageSource.addBasenames(VALIDATION_MESSAGES_NAME);
+            if (messageSource instanceof AbstractResourceBasedMessageSource resourceBasedMessageSource) {
+                resourceBasedMessageSource.addBasenames(VALIDATION_MESSAGES_NAME);
             }
         }
     }

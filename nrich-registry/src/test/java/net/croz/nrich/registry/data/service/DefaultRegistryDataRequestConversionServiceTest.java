@@ -52,7 +52,7 @@ class DefaultRegistryDataRequestConversionServiceTest {
         CreateRegistryRequest request = createCreateRegistryRequest(entity.getClass());
         String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
-        doReturn(entity).when(objectMapper).readValue(request.getJsonEntityData(), entity.getClass());
+        doReturn(entity).when(objectMapper).readValue(request.jsonEntityData(), entity.getClass());
         doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveCreateClass(className);
 
         // when
@@ -69,7 +69,7 @@ class DefaultRegistryDataRequestConversionServiceTest {
         UpdateRegistryRequest request = createUpdateRegistryRequest(entity.getClass());
         String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
-        doReturn(entity).when(objectMapper).readValue(request.getJsonEntityData(), entity.getClass());
+        doReturn(entity).when(objectMapper).readValue(request.jsonEntityData(), entity.getClass());
         doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveUpdateClass(className);
 
         // when

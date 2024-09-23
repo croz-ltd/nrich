@@ -35,11 +35,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.JoinType;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public final class JpaSearchRepositoryExecutorGeneratingUtil {
@@ -54,7 +51,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     public static List<TestEntity> generateListForSearch(EntityManager entityManager, int numberOfCollectionEntities) {
         List<TestEntity> testEntityList = IntStream.range(0, 5)
             .mapToObj(value -> createTestEntity(value, numberOfCollectionEntities))
-            .collect(Collectors.toList());
+            .toList();
 
         testEntityList.get(1).setTestEntityEnum(TestEntityEnum.SECOND);
 
@@ -73,7 +70,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         LocalDate date = LocalDate.parse("01.01.1970", DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         List<TestStringSearchEntity> testEntityList = IntStream.range(0, 5)
             .mapToObj(value -> createTestStringSearchEntity("name " + value, 50 + value, date.plusDays(value)))
-            .collect(Collectors.toList());
+            .toList();
 
         testEntityList.forEach(entityManager::persist);
 
@@ -83,7 +80,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     public static List<TestEntityWithEmbeddedId> generateTestEntityWithEmbeddedIdList(EntityManager entityManager) {
         return IntStream.range(0, 5)
             .mapToObj(value -> generateTestEntityWithEmbeddedId(entityManager, "name" + value))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     public static TestEntityWithEmbeddedId generateTestEntityWithEmbeddedId(EntityManager entityManager, String name) {
@@ -120,7 +117,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         IntStream.range(0, 3).forEach(value -> {
             TestEntityWithCustomId entity = new TestEntityWithCustomId();
 
-            entity.setEnumElementCollection(Collections.singletonList(value % 2 == 0 ? TestEntityEnum.FIRST : TestEntityEnum.SECOND));
+            entity.setEnumElementCollection(List.of(value % 2 == 0 ? TestEntityEnum.FIRST : TestEntityEnum.SECOND));
 
             entityManager.persist(entity);
         });
@@ -150,7 +147,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         TestNestedEntity nestedEntity = createTestNestedEntity(value);
         List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities)
             .mapToObj(counter -> createTestCollectionEntity("collection" + (value + counter)))
-            .collect(Collectors.toList());
+            .toList();
         TestEntityEmbedded testEntityEmbedded = createTestEntityEmbedded("embedded" + value);
 
         TestEntity entity = new TestEntity();
@@ -161,7 +158,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         entity.setCollectionEntityList(collectionEntityList);
         entity.setTestEntityEnum(TestEntityEnum.FIRST);
         entity.setTestEntityEmbedded(testEntityEmbedded);
-        entity.setElementCollection(Arrays.asList("Element collection 1" + value, "Element collection 2" + value));
+        entity.setElementCollection(List.of("Element collection 1" + value, "Element collection 2" + value));
 
         return entity;
     }
@@ -172,7 +169,7 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         entity.setNestedEntityName("nested" + value);
         entity.setNestedEntityAliasName("nested alias" + value);
         entity.setDoubleNestedEntity(createTestDoubleNestedEntity(value));
-        entity.setRelated(Collections.singletonList(createTestDoubleNestedEntity(value)));
+        entity.setRelated(List.of(createTestDoubleNestedEntity(value)));
 
         return entity;
     }

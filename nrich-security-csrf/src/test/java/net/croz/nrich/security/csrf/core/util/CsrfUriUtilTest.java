@@ -20,7 +20,7 @@ package net.croz.nrich.security.csrf.core.util;
 import net.croz.nrich.security.csrf.core.model.CsrfExcludeConfig;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 
 import static net.croz.nrich.security.csrf.core.testutil.CsrfCoreGeneratingUtil.csrfExcludeConfig;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +42,7 @@ class CsrfUriUtilTest {
         CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("not-matched", null);
 
         // when
-        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(List.of(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isFalse();
@@ -54,7 +54,7 @@ class CsrfUriUtilTest {
         CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, "/*");
 
         // when
-        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(List.of(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isFalse();
@@ -66,7 +66,7 @@ class CsrfUriUtilTest {
         CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig("url", null);
 
         // when
-        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(List.of(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isTrue();
@@ -78,7 +78,7 @@ class CsrfUriUtilTest {
         CsrfExcludeConfig csrfExcludeConfig = csrfExcludeConfig(null, ".*");
 
         // when
-        boolean result = CsrfUriUtil.excludeUri(Collections.singletonList(csrfExcludeConfig), "url");
+        boolean result = CsrfUriUtil.excludeUri(List.of(csrfExcludeConfig), "url");
 
         // then
         assertThat(result).isTrue();

@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
+import java.util.List;
 
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createFetchFormConfigurationRequest;
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createFormConfiguration;
@@ -64,8 +64,8 @@ class FormConfigurationControllerTest {
         FetchFormConfigurationRequest request = createFetchFormConfigurationRequest();
         FormConfiguration formConfiguration = createFormConfiguration();
 
-        doReturn(Collections.singletonList(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList(request.getFormIdList());
-        doReturn(Collections.singletonList(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList();
+        doReturn(List.of(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList(request.getFormIdList());
+        doReturn(List.of(formConfiguration)).when(formConfigurationService).fetchFormConfigurationList();
 
         // when
         ResultActions result = mockMvc.perform(post(uri)
@@ -75,6 +75,6 @@ class FormConfigurationControllerTest {
 
         // then
         result.andExpect(status().isOk())
-            .andExpect(jsonPath("$[*].formId").value(formConfiguration.getFormId()));
+            .andExpect(jsonPath("$[*].formId").value(formConfiguration.formId()));
     }
 }

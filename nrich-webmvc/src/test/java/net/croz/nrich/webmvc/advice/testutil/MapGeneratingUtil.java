@@ -17,7 +17,6 @@
 
 package net.croz.nrich.webmvc.advice.testutil;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class MapGeneratingUtil {
@@ -26,11 +25,6 @@ public final class MapGeneratingUtil {
     }
 
     public static Map<String, String> createMap(String firstKey, String firstValue, String secondKey, String secondValue) {
-        Map<String, String> map = new HashMap<>();
-
-        map.put(firstKey, firstValue);
-        map.put(secondKey, secondValue);
-
-        return map;
+        return Map.of(firstKey, firstValue, secondKey, secondValue);
     }
 }

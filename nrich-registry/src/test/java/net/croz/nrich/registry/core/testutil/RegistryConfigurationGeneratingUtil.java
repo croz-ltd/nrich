@@ -55,7 +55,7 @@ public final class RegistryConfigurationGeneratingUtil {
         doReturn(createAttributeList()).when(enversEntity).getAttributes();
         doReturn(RegistryConfigurationRegularTestEntity.class).when(entity).getJavaType();
 
-        doReturn(new HashSet<>(Arrays.asList(enversEntity, nonIdentifiableEntity, entity))).when(metamodel).getManagedTypes();
+        doReturn(new HashSet<>(List.of(enversEntity, nonIdentifiableEntity, entity))).when(metamodel).getManagedTypes();
 
         return metamodel;
     }
@@ -64,10 +64,10 @@ public final class RegistryConfigurationGeneratingUtil {
         RegistryGroupDefinitionConfiguration groupDefinitionConfiguration = new RegistryGroupDefinitionConfiguration();
 
         groupDefinitionConfiguration.setGroupId("groupId");
-        groupDefinitionConfiguration.setIncludeEntityPatternList(Collections.singletonList(includePatterns));
-        groupDefinitionConfiguration.setExcludeEntityPatternList(Collections.singletonList(excludePatterns));
+        groupDefinitionConfiguration.setIncludeEntityPatternList(List.of(includePatterns));
+        groupDefinitionConfiguration.setExcludeEntityPatternList(excludePatterns == null ? Collections.emptyList() : List.of(excludePatterns));
 
-        return Collections.singletonList(groupDefinitionConfiguration);
+        return List.of(groupDefinitionConfiguration);
     }
 
     public static List<RegistryOverrideConfigurationHolder> createRegistryOverrideConfigurationList() {
@@ -78,7 +78,7 @@ public final class RegistryConfigurationGeneratingUtil {
             .overrideConfiguration(overrideConfiguration)
             .build();
 
-        return Collections.singletonList(registryOverrideConfigurationHolder);
+        return List.of(registryOverrideConfigurationHolder);
     }
 
     private static Set<Attribute<?, ?>> createAttributeList() {

@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,7 +41,7 @@ class JacksonModuleUtilTest {
     @Test
     void shouldCreateClassNameSerializerModule() {
         // when
-        Module module = JacksonModuleUtil.classNameSerializerModule(true, Collections.singletonList("net.croz.nrich"));
+        Module module = JacksonModuleUtil.classNameSerializerModule(true, List.of("net.croz.nrich"));
 
         // then
         assertThat(module.getModuleName()).isEqualTo(JacksonModuleUtil.CLASS_NAME_SERIALIZER_MODULE);

@@ -79,7 +79,7 @@ public class ManagedTypeWrapper {
     }
 
     private EmbeddableType<?> resolveEmbeddedIdentifierType(IdentifiableType<?> identifiableType) {
-        return identifiableType.getIdType() instanceof EmbeddableType ? (EmbeddableType<?>) identifiableType.getIdType() : null;
+        return identifiableType.getIdType() instanceof EmbeddableType<?> embeddableType ? embeddableType : null;
     }
 
     private String resolveIdAttributeName(IdentifiableType<?> identifiableType) {
@@ -109,9 +109,10 @@ public class ManagedTypeWrapper {
     }
 
     private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap) {
-        List<SingularAttribute<?, ?>> currentAssociations = managedType.getSingularAttributes().stream()
+        @SuppressWarnings("unchecked")
+        List<SingularAttribute<?, ?>> currentAssociations = (List<SingularAttribute<?, ?>>) managedType.getSingularAttributes().stream()
             .filter(Attribute::isAssociation)
-            .collect(Collectors.toList());
+            .toList();
 
         for (SingularAttribute<?, ?> association : currentAssociations) {
             String associationName = currentPrefix == null ? association.getName() : String.format(RegistryCoreConstants.PREFIX_FORMAT, currentPrefix, association.getName());

@@ -21,7 +21,6 @@ import net.croz.nrich.search.repository.stub.TestEntityWithNaturalId;
 import net.croz.nrich.search.repository.stub.TestEntityWithSimpleNaturalId;
 
 import jakarta.persistence.EntityManager;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
@@ -45,12 +44,7 @@ public final class HibernateNaturalIdSearchExecutorGeneratingUtil {
     }
 
     public static Map<String, Object> createNaturalId(Object firstValue, Object secondValue) {
-        Map<String, Object> naturalId = new HashMap<>();
-
-        naturalId.put("firstNaturalId", firstValue);
-        naturalId.put("secondNaturalId", secondValue);
-
-        return naturalId;
+        return Map.of("firstNaturalId", firstValue, "secondNaturalId", secondValue);
     }
 
     private static TestEntityWithSimpleNaturalId createTestEntityWithSimpleNaturalId(int value) {

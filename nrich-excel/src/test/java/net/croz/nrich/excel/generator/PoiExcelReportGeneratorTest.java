@@ -38,8 +38,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -68,11 +66,11 @@ class PoiExcelReportGeneratorTest {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
 
-        List<CellValueConverter> cellValueConverterList = Collections.singletonList(new DefaultCellValueConverter(messageSource));
-        InputStream template = this.getClass().getResourceAsStream("/excel/template.xlsx");
-        List<TemplateVariable> templateVariableList = Collections.singletonList(new TemplateVariable("templateVariable", "resolvedValue"));
-        List<ColumnDataFormat> columnDataFormatList = Arrays.asList(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
-        List<TypeDataFormat> additionalFormatList = Collections.singletonList(new TypeDataFormat(Date.class, "dd-MM-yyyy"));
+        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(messageSource));
+        InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
+        List<ColumnDataFormat> columnDataFormatList = List.of(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
+        List<TypeDataFormat> additionalFormatList = List.of(new TypeDataFormat(Date.class, "dd-MM-yyyy"));
         List<TypeDataFormat> typeDataFormatList = TypeDataFormatUtil.resolveTypeDataFormatList(
             "dd.MM.yyyy.", "dd.MM.yyyy. HH:mm", "#,##0", "#,##0.00", true, additionalFormatList
         );
@@ -88,12 +86,12 @@ class PoiExcelReportGeneratorTest {
     void shouldExportDataToExcel() {
         // given
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        Object[] rowData = new Object[] {
+        Object[] rowData = {
             1.1, "value", new Date(now.toEpochMilli()), ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS), OffsetDateTime.now().truncatedTo(ChronoUnit.DAYS), now, now, 1, 1.5F, (short) 1,
             LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, TestEnum.FIRST, TestEnum.SECOND, null, "=123"
         };
         // when resolving data from cells all dates are converted to instant, all decimal numbers are converted to double and all whole numbers are converted to integer
-        Object[] expectedRowData = new Object[] { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, "First", "SECOND", null, "=123" };
+        Object[] expectedRowData = { 1.1, "value", now, now, now, now, now, 1, 1.5, 1, now, now, 1.5, 10, "First", "SECOND", null, "=123" };
 
         // when
         excelReportGenerator.writeRowData(rowData);
@@ -113,7 +111,7 @@ class PoiExcelReportGeneratorTest {
     @Test
     void shouldThrowExceptionWhenTryingToWriteToClosedGenerator() {
         // given
-        Object[] rowData = new Object[] { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
+        Object[] rowData = { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
 
         excelReportGenerator.writeRowData(rowData);
         excelReportGenerator.flush();
@@ -129,7 +127,7 @@ class PoiExcelReportGeneratorTest {
     void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() {
         // given
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
-        Object[] rowData = new Object[] { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, new Date() };
+        Object[] rowData = { 1.1, 1, now, now, (short) 1, LocalDate.now(), LocalDateTime.now().truncatedTo(ChronoUnit.DAYS), BigDecimal.valueOf(1.5), 10L, new Date() };
 
         // when
         excelReportGenerator.writeRowData(rowData);

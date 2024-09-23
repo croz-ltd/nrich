@@ -28,7 +28,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 @Setter
@@ -55,12 +54,7 @@ public class RegistryHistoryTestEntityWithEmbeddedObject {
         private RegistryHistoryTestEntityWithEmbeddedObjectSecondKey secondKey;
 
         public Map<String, Object> asMap() {
-            Map<String, Object> mapKey = new HashMap<>();
-
-            mapKey.put("firstKey", firstKey);
-            mapKey.put("secondKey", secondKey);
-
-            return mapKey;
+            return Map.of("firstKey", firstKey, "secondKey", secondKey);
         }
 
     }

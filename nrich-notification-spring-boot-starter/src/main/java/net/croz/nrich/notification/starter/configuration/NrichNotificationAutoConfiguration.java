@@ -18,10 +18,10 @@
 package net.croz.nrich.notification.starter.configuration;
 
 import lombok.RequiredArgsConstructor;
+import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.notification.api.service.ConstraintConversionService;
 import net.croz.nrich.notification.api.service.NotificationMessageResolverService;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
-import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
 import net.croz.nrich.notification.api.service.NotificationResponseService;
 import net.croz.nrich.notification.service.DefaultConstraintConversionService;
 import net.croz.nrich.notification.service.DefaultNotificationResolverService;
@@ -79,8 +79,8 @@ public class NrichNotificationAutoConfiguration {
 
         @Override
         public void afterPropertiesSet() {
-            if (messageSource instanceof AbstractResourceBasedMessageSource) {
-                ((AbstractResourceBasedMessageSource) messageSource).addBasenames(NOTIFICATION_MESSAGES_NAME);
+            if (messageSource instanceof AbstractResourceBasedMessageSource resourceBasedMessageSource) {
+                resourceBasedMessageSource.addBasenames(NOTIFICATION_MESSAGES_NAME);
             }
         }
     }

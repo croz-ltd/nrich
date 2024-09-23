@@ -28,7 +28,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,7 +50,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptSimpleData() {
         // given
-        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
+        List<String> propertyList = List.of("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setPropertyToEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
@@ -67,7 +66,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldDecryptSimpleData() {
         // given
-        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
+        List<String> propertyList = List.of("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setPropertyToEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
@@ -90,8 +89,8 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptCollectionTextData() {
         // given
-        List<String> propertyList = Collections.singletonList("listToEncrypt");
-        List<String> textList = Collections.singletonList("some text");
+        List<String> propertyList = List.of("listToEncrypt");
+        List<String> textList = List.of("some text");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         data.setListToEncrypt(textList);
@@ -114,7 +113,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptNestedTextData() {
         // given
-        List<String> propertyList = Collections.singletonList("nestedTestObject.nestedFieldToEncrypt");
+        List<String> propertyList = List.of("nestedTestObject.nestedFieldToEncrypt");
         String text = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
@@ -138,11 +137,11 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldEncryptDecryptNestedCollectionTextData() {
         // given
-        List<String> propertyList = Collections.singletonList("nestedTestObjectList.nestedFieldToEncrypt");
+        List<String> propertyList = List.of("nestedTestObjectList.nestedFieldToEncrypt");
         String text = "some text";
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
-        data.setNestedTestObjectList(Collections.singletonList(new DataEncryptionServiceNestedTestObject(text, null)));
+        data.setNestedTestObjectList(List.of(new DataEncryptionServiceNestedTestObject(text, null)));
 
         // when
         DataEncryptionServiceTestObject result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
@@ -162,7 +161,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValues() {
         // given
-        List<String> propertyList = Arrays.asList("propertyToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
+        List<String> propertyList = List.of("propertyToEncryptDecrypt", "listToEncrypt", "nestedTestObject.nestedFieldToEncrypt", "nestedTestObjectList.nestedFieldToEncrypt");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then
@@ -176,7 +175,7 @@ class DefaultDataEncryptServiceTest {
     @ParameterizedTest
     void shouldNotFailOnNestedNullOrInvalidValues() {
         // given
-        List<String> propertyList = Collections.singletonList("nestedTestObject.parent.nestedFieldToEncrypt");
+        List<String> propertyList = List.of("nestedTestObject.parent.nestedFieldToEncrypt");
         DataEncryptionServiceTestObject data = new DataEncryptionServiceTestObject();
 
         // then
@@ -189,7 +188,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenEncryptingData() {
         // given
-        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
+        List<String> propertyList = List.of("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = null;
 
         // when
@@ -202,7 +201,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailOnNullValueWhenDecryptingData() {
         // given
-        List<String> propertyList = Collections.singletonList("propertyToEncryptDecrypt");
+        List<String> propertyList = List.of("propertyToEncryptDecrypt");
         DataEncryptionServiceTestObject data = null;
 
         // when
@@ -216,7 +215,7 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptDecryptMapData() {
         // given
         String key = "mapKey";
-        List<String> propertyList = Collections.singletonList(key);
+        List<String> propertyList = List.of(key);
         Map<String, String> data = new HashMap<>();
 
         data.put(key, TEXT_TO_ENCRYPT_DECRYPT);
@@ -238,7 +237,7 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptDecryptNestedMapData() {
         // given
         String key = "mapKey";
-        List<String> propertyList = Collections.singletonList("mapKey.mapKey");
+        List<String> propertyList = List.of("mapKey.mapKey");
         Map<String, Map<String, String>> data = new HashMap<>();
         Map<String, String> nestedData = new HashMap<>();
 
@@ -283,8 +282,8 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptDecryptArrayData() {
         // given
         DataEncryptionServiceArrayTestObject testObject = new DataEncryptionServiceArrayTestObject();
-        List<String> propertyList = Arrays.asList("propertyEncryptDecrypt", "arrayEncrypt");
-        DataEncryptionServiceArrayTestObject[] data = new DataEncryptionServiceArrayTestObject[] { testObject };
+        List<String> propertyList = List.of("propertyEncryptDecrypt", "arrayEncrypt");
+        DataEncryptionServiceArrayTestObject[] data = { testObject };
 
         testObject.setArrayEncrypt(new String[] { TEXT_TO_ENCRYPT_DECRYPT });
         testObject.setPropertyEncryptDecrypt(TEXT_TO_ENCRYPT_DECRYPT);
@@ -309,7 +308,7 @@ class DefaultDataEncryptServiceTest {
     void shouldNotFailWithUnsupportedTypes() {
         // given
         int[] data = new int[] { 1 };
-        List<String> propertyList = Collections.singletonList("property");
+        List<String> propertyList = List.of("property");
 
         // when
         Throwable thrown = catchThrowable(() -> dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build()));
@@ -322,7 +321,7 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptDecryptStringCollection() {
         // given
         List<String> propertyList = Collections.emptyList();
-        List<String> data = Collections.singletonList(TEXT_TO_ENCRYPT_DECRYPT);
+        List<String> data = List.of(TEXT_TO_ENCRYPT_DECRYPT);
 
         // when
         List<String> result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
@@ -341,7 +340,7 @@ class DefaultDataEncryptServiceTest {
     void shouldEncryptDecryptStringArray() {
         // given
         List<String> propertyList = Collections.emptyList();
-        String[] data = new String[] { TEXT_TO_ENCRYPT_DECRYPT };
+        String[] data = { TEXT_TO_ENCRYPT_DECRYPT };
 
         // when
         String[] result = dataEncryptionService.encryptData(data, propertyList, EncryptionContext.builder().build());
@@ -378,7 +377,7 @@ class DefaultDataEncryptServiceTest {
     @Test
     void shouldNotFailForNonStringCollectionArray() {
         // given
-        Object[] data = new Object[] { "value", Integer.MAX_VALUE };
+        Object[] data = { "value", Integer.MAX_VALUE };
 
         // when
         Throwable thrown = catchThrowable(() -> dataEncryptionService.encryptData(data, Collections.emptyList(), EncryptionContext.builder().build()));

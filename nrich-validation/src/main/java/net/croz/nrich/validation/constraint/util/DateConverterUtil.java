@@ -1,7 +1,22 @@
+/*
+ *  Copyright 2020-2023 CROZ d.o.o, the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package net.croz.nrich.validation.constraint.util;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.util.ObjectUtils;
 
 import java.time.Instant;
@@ -15,7 +30,6 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -31,15 +45,15 @@ public final class DateConverterUtil {
 
     public static Instant convertToInstant(Object date) {
         DateConverter dateConverter = Objects.requireNonNull(DATE_CONVERTER_LIST.stream()
-            .filter(converterHolder -> converterHolder.getType().isAssignableFrom(date.getClass()))
+            .filter(converterHolder -> converterHolder.type().isAssignableFrom(date.getClass()))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException(String.format("Unsupported type defined for conversion: %s", ObjectUtils.nullSafeClassName(date)))));
 
-        return dateConverter.getConverterFunction().apply(date);
+        return dateConverter.converterFunction().apply(date);
     }
 
     private static List<DateConverter> initializeConverterList() {
-        return Arrays.asList(
+        return List.of(
             new DateConverter(ZonedDateTime.class, value -> ((ZonedDateTime) value).toInstant()),
             new DateConverter(LocalDateTime.class, value -> ((LocalDateTime) value).atZone(ZoneId.systemDefault()).toInstant()),
             new DateConverter(LocalDate.class, value -> ((LocalDate) value).atTime(LocalTime.now()).atZone(ZoneId.systemDefault()).toInstant()),
@@ -55,14 +69,7 @@ public final class DateConverterUtil {
         );
     }
 
-
-    @RequiredArgsConstructor
-    @Getter
-    public static class DateConverter {
-
-        private final Class<?> type;
-
-        private final Function<Object, Instant> converterFunction;
+    public record DateConverter(Class<?> type, Function<Object, Instant> converterFunction) {
 
     }
 }

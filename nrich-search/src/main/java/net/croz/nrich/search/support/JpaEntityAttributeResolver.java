@@ -17,8 +17,6 @@
 
 package net.croz.nrich.search.support;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.model.AttributeHolder;
 import net.croz.nrich.search.util.AttributeResolvingUtil;
 import net.croz.nrich.search.util.PathResolvingUtil;
@@ -30,11 +28,7 @@ import jakarta.persistence.metamodel.PluralAttribute;
 import jakarta.persistence.metamodel.SingularAttribute;
 import java.util.Arrays;
 
-@Getter
-@RequiredArgsConstructor
-public class JpaEntityAttributeResolver {
-
-    private final ManagedType<?> managedType;
+public record JpaEntityAttributeResolver(ManagedType<?> managedType) {
 
     public AttributeHolder resolveAttributeByPath(String path) {
         Assert.notNull(path, "Path must be defined when searching for attribute!");
@@ -65,11 +59,11 @@ public class JpaEntityAttributeResolver {
     private ManagedType<?> resolveManagedTypeFromAttribute(Attribute<?, ?> attribute) {
         ManagedType<?> currentManagedType = null;
 
-        if (attribute instanceof SingularAttribute && ((SingularAttribute<?, ?>) attribute).getType() instanceof ManagedType) {
-            currentManagedType = ((ManagedType<?>) ((SingularAttribute<?, ?>) attribute).getType());
+        if (attribute instanceof SingularAttribute && ((SingularAttribute<?, ?>) attribute).getType() instanceof ManagedType<?> attributeManagedType) {
+            currentManagedType = attributeManagedType;
         }
-        else if (attribute instanceof PluralAttribute && ((PluralAttribute<?, ?, ?>) attribute).getElementType() instanceof ManagedType) {
-            currentManagedType = ((ManagedType<?>) ((PluralAttribute<?, ?, ?>) attribute).getElementType());
+        else if (attribute instanceof PluralAttribute && ((PluralAttribute<?, ?, ?>) attribute).getElementType() instanceof ManagedType<?> attributeManagedType) {
+            currentManagedType = attributeManagedType;
         }
 
         return currentManagedType;

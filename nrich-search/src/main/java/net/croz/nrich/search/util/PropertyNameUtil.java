@@ -25,7 +25,7 @@ public final class PropertyNameUtil {
     }
 
     public static String propertyNameWithoutSuffix(String originalPropertyName, SearchPropertyConfiguration searchPropertyConfiguration) {
-        String[] suffixListToRemove = new String[] {
+        String[] suffixListToRemove = {
             searchPropertyConfiguration.getRangeQueryFromIncludingSuffix(), searchPropertyConfiguration.getRangeQueryFromSuffix(), searchPropertyConfiguration.getRangeQueryToIncludingSuffix(),
             searchPropertyConfiguration.getRangeQueryToSuffix(), searchPropertyConfiguration.getCollectionQuerySuffix()
         };

@@ -87,14 +87,14 @@ public class NotificationErrorHandlingRestControllerAdvice {
     public ResponseEntity<Object> handleException(Exception exception, HttpServletRequest request) {
         Exception unwrappedException = unwrapException(exception);
 
-        if (unwrappedException instanceof MethodArgumentNotValidException) {
-            return handleMethodArgumentNotValidException((MethodArgumentNotValidException) unwrappedException, request);
+        if (unwrappedException instanceof MethodArgumentNotValidException methodArgumentNotValidException) {
+            return handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
         }
-        else if (unwrappedException instanceof BindException) {
-            return handleBindException((BindException) unwrappedException, request);
+        else if (unwrappedException instanceof BindException bindException) {
+            return handleBindException(bindException, request);
         }
-        else if (unwrappedException instanceof ConstraintViolationException) {
-            return handleConstraintViolationException((ConstraintViolationException) unwrappedException, request);
+        else if (unwrappedException instanceof ConstraintViolationException constraintViolationException) {
+            return handleConstraintViolationException(constraintViolationException, request);
         }
 
         Map<String, Object> exceptionAuxiliaryData = resolveExceptionAuxiliaryData(exception, request);

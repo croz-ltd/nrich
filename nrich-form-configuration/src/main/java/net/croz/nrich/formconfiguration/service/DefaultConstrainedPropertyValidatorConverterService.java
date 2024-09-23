@@ -24,7 +24,6 @@ import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidator
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.Order;
 
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class DefaultConstrainedPropertyValidatorConverterService implements Cons
             constrainedProperty.getConstraintName(), constrainedProperty.getConstraintArgumentMap(), message
         );
 
-        return Collections.singletonList(validator);
+        return List.of(validator);
     }
 
     @Override

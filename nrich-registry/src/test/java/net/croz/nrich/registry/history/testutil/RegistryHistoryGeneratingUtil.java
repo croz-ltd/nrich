@@ -30,8 +30,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransactionWithoutResult;
@@ -116,28 +116,23 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static ListRegistryHistoryRequest listRegistryHistoryRequestWithSort(String className, Object id) {
-        ListRegistryHistoryRequest request = listRegistryHistoryRequest(className, id);
-
-        request.setSortPropertyList(Arrays.asList(
+        List<SortProperty> sortPropertyList = List.of(
             new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.DESC), new SortProperty(RegistryEnversConstants.REVISION_TYPE_PROPERTY_NAME, SortDirection.DESC),
             new SortProperty(RegistryEnversConstants.REVISION_TIMESTAMP_PROPERTY_NAME, SortDirection.DESC), new SortProperty("name", SortDirection.DESC),
             new SortProperty("revisionProperty", SortDirection.ASC)
-        ));
+        );
 
-        return request;
+        return new ListRegistryHistoryRequest(className, 0, 10, id, sortPropertyList);
+    }
+
+    public static ListRegistryHistoryRequest listRegistryHistoryRequestWithDefaultSort(String className, Object id) {
+        List<SortProperty> sortPropertyList = List.of(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC));
+
+        return new ListRegistryHistoryRequest(className, 0, 10, id, sortPropertyList);
     }
 
     public static ListRegistryHistoryRequest listRegistryHistoryRequest(String className, Object id) {
-        ListRegistryHistoryRequest request = new ListRegistryHistoryRequest();
-
-        request.setSortPropertyList(Collections.singletonList(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC)));
-
-        request.setClassFullName(className);
-        request.setRegistryRecordId(id);
-        request.setPageNumber(0);
-        request.setPageSize(10);
-
-        return request;
+        return new ListRegistryHistoryRequest(className, 0, 10, id, Collections.emptyList());
     }
 
     private static RegistryHistoryTestEntity createRegistryHistoryTestEntity(String name, RegistryHistoryTestEntity parent, RegistryHistoryTestEntity related) {

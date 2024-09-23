@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -55,7 +54,7 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldThrowExceptionWhenNoFormConfigurationHasBeenDefinedForFormId() {
         // given
-        List<String> formIdList = Collections.singletonList("invalidFormId");
+        List<String> formIdList = List.of("invalidFormId");
 
         // when
         Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(formIdList));
@@ -67,7 +66,7 @@ class DefaultFormConfigurationServiceTest {
     @Test
     void shouldFetchSimpleFormConfiguration() {
         // given
-        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
 
         // when
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
@@ -79,41 +78,41 @@ class DefaultFormConfigurationServiceTest {
         FormConfiguration formConfiguration = resultList.get(0);
 
         // then
-        assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).hasSize(4);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder(
+        assertThat(formConfiguration.formId()).isEqualTo(FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).hasSize(4);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::path).containsExactlyInAnyOrder(
             "name", "lastName", "timestamp", "value"
         );
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getJavascriptType).containsExactlyInAnyOrder(
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::javascriptType).containsExactlyInAnyOrder(
             "string", "string", "date", "number"
         );
 
         // and when
-        ConstrainedPropertyConfiguration lastNameConstrainedPropertyConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().stream()
-            .filter(constrainedPropertyConfiguration -> "lastName".equals(constrainedPropertyConfiguration.getPath()))
+        ConstrainedPropertyConfiguration lastNameConstrainedPropertyConfiguration = formConfiguration.constrainedPropertyConfigurationList().stream()
+            .filter(constrainedPropertyConfiguration -> "lastName".equals(constrainedPropertyConfiguration.path()))
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Last name not found"));
 
-        assertThat(lastNameConstrainedPropertyConfiguration.getValidatorList()).hasSize(1);
-        assertThat(lastNameConstrainedPropertyConfiguration.getPropertyType()).isEqualTo(String.class);
+        assertThat(lastNameConstrainedPropertyConfiguration.validatorList()).hasSize(1);
+        assertThat(lastNameConstrainedPropertyConfiguration.propertyType()).isEqualTo(String.class);
 
-        formConfiguration.getConstrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::getPath));
+        formConfiguration.constrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::path));
 
         // and when
-        ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = lastNameConstrainedPropertyConfiguration.getValidatorList().get(0);
+        ConstrainedPropertyClientValidatorConfiguration lastNameValidatorConfiguration = lastNameConstrainedPropertyConfiguration.validatorList().get(0);
 
         // then
         assertThat(lastNameValidatorConfiguration).isNotNull();
 
-        assertThat(lastNameValidatorConfiguration.getName()).isEqualTo("Size");
-        assertThat(lastNameValidatorConfiguration.getArgumentMap().values()).containsExactly(1, 5);
-        assertThat(lastNameValidatorConfiguration.getErrorMessage()).isEqualTo("Size must be between: 1 and 5");
+        assertThat(lastNameValidatorConfiguration.name()).isEqualTo("Size");
+        assertThat(lastNameValidatorConfiguration.argumentMap().values()).containsExactly(1, 5);
+        assertThat(lastNameValidatorConfiguration.errorMessage()).isEqualTo("Size must be between: 1 and 5");
     }
 
     @Test
     void shouldFetchNestedFormConfiguration() {
         // given
-        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
 
         // when
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
@@ -125,31 +124,31 @@ class DefaultFormConfigurationServiceTest {
         FormConfiguration formConfiguration = resultList.get(0);
 
         // then
-        assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).hasSize(5);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::getPath).containsExactlyInAnyOrder(
+        assertThat(formConfiguration.formId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).hasSize(5);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::path).containsExactlyInAnyOrder(
             "name", "request.name", "request.lastName", "request.timestamp", "request.value"
         );
 
-        formConfiguration.getConstrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::getPath));
+        formConfiguration.constrainedPropertyConfigurationList().sort(Comparator.comparing(ConstrainedPropertyConfiguration::path));
 
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList().get(4).getValidatorList()).hasSize(1);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList().get(4).validatorList()).hasSize(1);
 
         // and when
-        ConstrainedPropertyClientValidatorConfiguration valueValidatorConfiguration = formConfiguration.getConstrainedPropertyConfigurationList().get(4).getValidatorList().get(0);
+        ConstrainedPropertyClientValidatorConfiguration valueValidatorConfiguration = formConfiguration.constrainedPropertyConfigurationList().get(4).validatorList().get(0);
 
         // then
         assertThat(valueValidatorConfiguration).isNotNull();
 
-        assertThat(valueValidatorConfiguration.getName()).isEqualTo("Min");
-        assertThat(valueValidatorConfiguration.getArgumentMap().values()).containsExactly(10L);
-        assertThat(valueValidatorConfiguration.getErrorMessage()).isEqualTo("Minimum value is: 10");
+        assertThat(valueValidatorConfiguration.name()).isEqualTo("Min");
+        assertThat(valueValidatorConfiguration.argumentMap().values()).containsExactly(10L);
+        assertThat(valueValidatorConfiguration.errorMessage()).isEqualTo("Minimum value is: 10");
     }
 
     @Test
     void shouldIgnoreNestedFieldConfigurationWhenFieldIsNotValidated() {
         // given
-        List<String> formIdList = Collections.singletonList(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
 
         // when
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
@@ -161,7 +160,7 @@ class DefaultFormConfigurationServiceTest {
         FormConfiguration formConfiguration = resultList.get(0);
 
         // then
-        assertThat(formConfiguration.getFormId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
-        assertThat(formConfiguration.getConstrainedPropertyConfigurationList()).isEmpty();
+        assertThat(formConfiguration.formId()).isEqualTo(FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID);
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).isEmpty();
     }
 }

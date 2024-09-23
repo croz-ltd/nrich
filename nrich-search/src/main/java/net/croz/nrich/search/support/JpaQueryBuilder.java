@@ -192,6 +192,7 @@ public class JpaQueryBuilder<T> {
             .forEach(searchJoin -> applyJoinOrJoinFetch(existingFetches, existingJoins, root, searchJoin, applyFetch));
     }
 
+    @SuppressWarnings("java:S6204")
     private <R> List<Selection<?>> resolveQueryProjectionList(Root<?> root, JoinType defaultJoinType, List<SearchProjection<R>> projectionList, R request) {
         if (CollectionUtils.isEmpty(projectionList)) {
             return Collections.emptyList();
@@ -266,7 +267,9 @@ public class JpaQueryBuilder<T> {
             }
         }
 
-        List<Subquery<?>> subqueryList = resolveSubqueryList(request, searchConfiguration.getSearchPropertyConfiguration(), searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder);
+        List<Subquery<Integer>> subqueryList = resolveSubqueryList(
+            request, searchConfiguration.getSearchPropertyConfiguration(), searchConfiguration.getSubqueryConfigurationList(), root, query, criteriaBuilder
+        );
 
         subqueryList.forEach(subquery -> mainQueryPredicateList.add(criteriaBuilder.exists(subquery)));
 
@@ -284,8 +287,8 @@ public class JpaQueryBuilder<T> {
 
         List<Predicate> subQueryPredicateList = convertRestrictionListToPredicateList(restrictionList, subqueryRoot, criteriaBuilder, defaultJoinType);
 
-        Path<?> parentPath = PathResolvingUtil.calculateFullPath(parent, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.getParentProperty()));
-        Path<?> subqueryPath = PathResolvingUtil.calculateFullPath(subqueryRoot, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.getChildProperty()));
+        Path<?> parentPath = PathResolvingUtil.calculateFullPath(parent, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.parentProperty()));
+        Path<?> subqueryPath = PathResolvingUtil.calculateFullPath(subqueryRoot, defaultJoinType, PathResolvingUtil.convertToPathList(searchPropertyJoin.childProperty()));
 
         subQueryPredicateList.add(criteriaBuilder.equal(parentPath, subqueryPath));
 
@@ -296,11 +299,11 @@ public class JpaQueryBuilder<T> {
         List<Predicate> predicateList = new ArrayList<>();
 
         restrictionList.stream().filter(Objects::nonNull).forEach(restriction -> {
-            String[] pathList = PathResolvingUtil.convertToPathList(restriction.getPath());
+            String[] pathList = PathResolvingUtil.convertToPathList(restriction.path());
 
             Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, joinType, pathList);
 
-            predicateList.add(restriction.getSearchOperator().asPredicate(criteriaBuilder, fullPath, restriction.getValue()));
+            predicateList.add(restriction.searchOperator().asPredicate(criteriaBuilder, fullPath, restriction.value()));
         });
 
         return predicateList;
@@ -313,7 +316,7 @@ public class JpaQueryBuilder<T> {
     }
 
     // TODO enable join usage or subquery?
-    private <R> List<Subquery<?>> resolveSubqueryList(R request, SearchPropertyConfiguration searchPropertyConfiguration, List<SubqueryConfiguration> subqueryConfigurationList, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+    private <R> List<Subquery<Integer>> resolveSubqueryList(R request, SearchPropertyConfiguration searchPropertyConfiguration, List<SubqueryConfiguration> subqueryConfigurationList, Root<?> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if (CollectionUtils.isEmpty(subqueryConfigurationList)) {
             return Collections.emptyList();
         }
@@ -321,7 +324,7 @@ public class JpaQueryBuilder<T> {
         return subqueryConfigurationList.stream()
             .map(subqueryConfiguration -> buildSubquery(request, searchPropertyConfiguration, root, query, criteriaBuilder, subqueryConfiguration))
             .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private <R> Subquery<Integer> buildSubquery(
@@ -364,7 +367,8 @@ public class JpaQueryBuilder<T> {
     }
 
     private <R, P> List<Predicate> resolveInterceptorPredicateList(R request, List<AdditionalRestrictionResolver<T, P, R>> additionalRestrictionResolverList, CriteriaBuilder criteriaBuilder, Root<T> root, CriteriaQuery<P> query) {
-        return Optional.ofNullable(additionalRestrictionResolverList).orElse(Collections.emptyList()).stream().map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request)).filter(Objects::nonNull).flatMap(List::stream).collect(Collectors.toList());
+        return Optional.ofNullable(additionalRestrictionResolverList).orElse(Collections.emptyList()).stream().map(interceptor -> interceptor.resolvePredicateList(criteriaBuilder, query, root, request)).filter(Objects::nonNull).flatMap(List::stream)
+            .toList();
     }
 
     private void applyPredicatesToQuery(CriteriaBuilder criteriaBuilder, CriteriaQuery<?> query, boolean anyMatch, List<Predicate> requestPredicateList, List<Predicate> interceptorPredicateList) {

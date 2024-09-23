@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +57,7 @@ class FormConfigurationMappingCustomizerUtilTest {
         FormConfigurationMappingCustomizer customizer = mapping -> mapping.put(key, value);
 
         // when
-        Map<String, Class<?>> result = FormConfigurationMappingCustomizerUtil.applyCustomizerList(formConfigurationMapping, Collections.singletonList(customizer));
+        Map<String, Class<?>> result = FormConfigurationMappingCustomizerUtil.applyCustomizerList(formConfigurationMapping, List.of(customizer));
 
         // then
         assertThat(result).containsEntry(key, value);

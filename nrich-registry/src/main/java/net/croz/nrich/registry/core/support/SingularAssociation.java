@@ -17,15 +17,6 @@
 
 package net.croz.nrich.registry.core.support;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@Getter
-@RequiredArgsConstructor
-public class SingularAssociation {
-
-    private final String path;
-
-    private final boolean optional;
+public record SingularAssociation(String path, boolean optional) {
 
 }

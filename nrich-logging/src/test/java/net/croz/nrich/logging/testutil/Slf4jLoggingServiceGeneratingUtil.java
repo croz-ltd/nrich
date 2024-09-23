@@ -25,7 +25,6 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSourceResolvable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -53,11 +52,7 @@ public final class Slf4jLoggingServiceGeneratingUtil {
     }
 
     public static Map<String, String> createAuxiliaryExceptionData() {
-        Map<String, String> auxiliaryExceptionData = new HashMap<>();
-
-        auxiliaryExceptionData.put("key", "value");
-
-        return auxiliaryExceptionData;
+        return Map.of("key", "value");
     }
 }
 

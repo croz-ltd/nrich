@@ -27,12 +27,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class TypeDataFormatUtil {
@@ -47,7 +45,7 @@ public final class TypeDataFormatUtil {
 
         List<TypeDataFormat> nonNullAdditionalDataFormatList = Optional.ofNullable(additionalTypeDataFormatList).orElse(Collections.emptyList());
 
-        List<TypeDataFormat> typeDataFormatList = Arrays.asList(
+        List<TypeDataFormat> typeDataFormatList = List.of(
             new TypeDataFormat(Date.class, dateFormat),
             new TypeDataFormat(Instant.class, dateFormat),
             new TypeDataFormat(LocalDate.class, dateFormat),
@@ -66,19 +64,19 @@ public final class TypeDataFormatUtil {
         );
 
         List<TypeDataFormat> allTypeDataFormatList = typeDataFormatList.stream()
-            .map(typeDataFormat -> Optional.ofNullable(findTypeDataFormat(nonNullAdditionalDataFormatList, typeDataFormat.getType())).orElse(typeDataFormat))
-            .collect(Collectors.toList());
+            .map(typeDataFormat -> Optional.ofNullable(findTypeDataFormat(nonNullAdditionalDataFormatList, typeDataFormat.type())).orElse(typeDataFormat))
+            .toList();
 
         List<TypeDataFormat> notAddedAdditionalTypeDataFormatList = nonNullAdditionalDataFormatList.stream()
-            .filter(typeDataFormat -> findTypeDataFormat(allTypeDataFormatList, typeDataFormat.getType()) == null)
-            .collect(Collectors.toList());
+            .filter(typeDataFormat -> findTypeDataFormat(allTypeDataFormatList, typeDataFormat.type()) == null)
+            .toList();
 
-        return Stream.concat(allTypeDataFormatList.stream(), notAddedAdditionalTypeDataFormatList.stream()).collect(Collectors.toList());
+        return Stream.concat(allTypeDataFormatList.stream(), notAddedAdditionalTypeDataFormatList.stream()).toList();
     }
 
     private static TypeDataFormat findTypeDataFormat(List<TypeDataFormat> typeDataFormatList, Class<?> type) {
         return typeDataFormatList.stream()
-            .filter(typeDataFormat -> type.equals(typeDataFormat.getType()))
+            .filter(typeDataFormat -> type.equals(typeDataFormat.type()))
             .findFirst()
             .orElse(null);
     }

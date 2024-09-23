@@ -26,20 +26,10 @@ public final class RegistryRequestGeneratingUtil {
     }
 
     public static CreateRegistryRequest createCreateRegistryRequest(Class<?> type) {
-        CreateRegistryRequest request = new CreateRegistryRequest();
-
-        request.setClassFullName(type.getName());
-        request.setJsonEntityData("{}");
-
-        return request;
+        return new CreateRegistryRequest(type.getName(), "{}");
     }
 
     public static UpdateRegistryRequest createUpdateRegistryRequest(Class<?> type) {
-        UpdateRegistryRequest request = new UpdateRegistryRequest();
-
-        request.setClassFullName(type.getName());
-        request.setJsonEntityData("{}");
-
-        return request;
+        return new UpdateRegistryRequest(type.getName(), null, "{}");
     }
 }

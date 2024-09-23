@@ -22,14 +22,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ConvertEmptyStringToNullDeserializerTest {
 
-    private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<Map<String, String>>() {
+    private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<>() {
     };
 
     private final ObjectMapper objectMapper = new ObjectMapper().registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
@@ -39,10 +38,7 @@ class ConvertEmptyStringToNullDeserializerTest {
         // given
         String emptyKey = "emptyKey";
         String nonEmptyKey = "nonEmptyKey";
-        Map<String, String> testMap = new HashMap<>();
-
-        testMap.put(emptyKey, "");
-        testMap.put(nonEmptyKey, "non empty");
+        Map<String, String> testMap = Map.of(emptyKey, "", nonEmptyKey, "non empty");
 
         // when
         Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), MAP_TYPE_REFERENCE);
