@@ -24,8 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitWebConfig(WebmvcTestConfiguration.class)
 class DefaultTransientPropertyResolverServiceTest {
@@ -43,5 +45,14 @@ class DefaultTransientPropertyResolverServiceTest {
 
         // then
         assertThat(resultList).containsExactlyInAnyOrder("value", "anotherValue");
+    }
+
+    @Test
+    void shouldNotFailWhenResolvingTransientPropertyListFromInteface() {
+        // when
+        Throwable thrown = catchThrowable(() -> transientPropertyResolverService.resolveTransientPropertyList(Map.class));
+
+        // then
+        assertThat(thrown).isNull();
     }
 }

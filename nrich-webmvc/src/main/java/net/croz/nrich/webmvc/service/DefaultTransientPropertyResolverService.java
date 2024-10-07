@@ -33,7 +33,7 @@ public class DefaultTransientPropertyResolverService implements TransientPropert
         List<String> transientPropertyList = new ArrayList<>();
         Class<?> currentType = type;
 
-        while (currentType != Object.class) {
+        while (currentType != null && currentType != Object.class) {
             List<String> currentTransientPropertyList = Arrays.stream(currentType.getDeclaredFields())
                 .filter(this::includeField)
                 .map(Field::getName)
