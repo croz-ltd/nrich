@@ -28,6 +28,8 @@ import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionServi
 import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.api.core.customizer.ModelMapperCustomizer;
+import net.croz.nrich.registry.api.core.customizer.ModelMapperType;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
 import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
@@ -49,6 +51,7 @@ import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
 import net.croz.nrich.registry.data.customizer.RegistryDataFormConfigurationMappingCustomizer;
+import net.croz.nrich.registry.data.customizer.RegistryDataModelMapperCustomizer;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
@@ -79,6 +82,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
@@ -113,16 +117,22 @@ public class NrichRegistryAutoConfiguration {
         return new LocalValidatorFactoryBean();
     }
 
+    @ConditionalOnProperty(name = "nrich.registry.registry-model-mapper-customizer-enabled", havingValue = "true", matchIfMissing = true)
+    @Bean
+    public ModelMapperCustomizer registryDataModelMapperCustomizer(@Autowired(required = false) List<RegistryOverrideConfigurationHolder> registryOverrideConfigurationHolderList) {
+        return new RegistryDataModelMapperCustomizer(registryOverrideConfigurationHolderList);
+    }
+
     @ConditionalOnMissingBean(name = "registryDataModelMapper")
     @Bean
-    public ModelMapper registryDataModelMapper() {
-        return strictModelMapper();
+    public ModelMapper registryDataModelMapper(@Autowired(required = false) List<ModelMapperCustomizer> modelMapperCustomizerList) {
+        return strictModelMapper(ModelMapperType.DATA, modelMapperCustomizerList);
     }
 
     @ConditionalOnMissingBean(name = "registryBaseModelMapper")
     @Bean
-    public ModelMapper registryBaseModelMapper() {
-        return strictModelMapper();
+    public ModelMapper registryBaseModelMapper(@Autowired(required = false) List<ModelMapperCustomizer> modelMapperCustomizerList) {
+        return strictModelMapper(ModelMapperType.BASE, modelMapperCustomizerList);
     }
 
     @ConditionalOnMissingBean
@@ -313,10 +323,14 @@ public class NrichRegistryAutoConfiguration {
         return new RegistryEnumController(registryEnumService);
     }
 
-    private ModelMapper strictModelMapper() {
+    protected ModelMapper strictModelMapper(ModelMapperType type, List<ModelMapperCustomizer> modelMapperCustomizerList) {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        if (!CollectionUtils.isEmpty(modelMapperCustomizerList)) {
+            modelMapperCustomizerList.forEach(modelMapperCustomizer -> modelMapperCustomizer.customize(type, modelMapper));
+        }
 
         return modelMapper;
     }
