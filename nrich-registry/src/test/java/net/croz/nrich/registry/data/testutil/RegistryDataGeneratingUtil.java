@@ -176,6 +176,13 @@ public final class RegistryDataGeneratingUtil {
     }
 
     @SneakyThrows
+    public static UpdateRegistryRequest updateRegistryRequest(ObjectMapper objectMapper, String classFullName, Long id, Long parentId) {
+        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest("name", parentId));
+
+        return new UpdateRegistryRequest(classFullName, id, jsonData);
+    }
+
+    @SneakyThrows
     public static UpdateRegistryRequest updateRegistryRequestWithId(ObjectMapper objectMapper, String classFullName, Long id) {
         String jsonData = objectMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id));
 

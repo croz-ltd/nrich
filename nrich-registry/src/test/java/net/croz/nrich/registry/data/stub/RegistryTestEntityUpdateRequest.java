@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.validation.constraints.NotNull;
+import java.util.Map;
 
 @Setter
 @Getter
@@ -33,5 +34,7 @@ public class RegistryTestEntityUpdateRequest {
 
     @NotNull
     private Integer age;
+
+    Map<String, Long> parent;
 
 }
