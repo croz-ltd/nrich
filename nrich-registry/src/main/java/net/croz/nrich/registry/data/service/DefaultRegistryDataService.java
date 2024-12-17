@@ -33,8 +33,11 @@ import net.croz.nrich.search.api.model.sort.SortDirection;
 import net.croz.nrich.search.api.model.sort.SortProperty;
 import net.croz.nrich.search.api.util.PageableUtil;
 import net.croz.nrich.search.support.JpaQueryBuilder;
+import net.croz.nrich.search.util.PathResolvingUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -47,6 +50,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // TODO better error handling and maybe versioning
@@ -127,6 +131,8 @@ public class DefaultRegistryDataService implements RegistryDataService {
         else {
             setIdFieldToOriginalValue(wrapper, entityData, id);
         }
+
+        clearAssociationValues(wrapper, instance, entityData);
 
         modelMapper.map(entityData, instance);
 
@@ -219,11 +225,29 @@ public class DefaultRegistryDataService implements RegistryDataService {
         modelMapper.map(idValueMap, entityData);
     }
 
+    private void clearAssociationValues(ManagedTypeWrapper managedTypeWrapper, Object instance, Object entityData) {
+        Set<String> associationList = managedTypeWrapper.getSingularAssociationList().stream()
+            .map(association -> PathResolvingUtil.convertToPathList(association.path())[0])
+            .collect(Collectors.toSet());
+
+        associationList.forEach(association -> clearValue(instance, entityData, association));
+    }
+
     private <T> T mergeAndInitializeEntity(T instance) {
         T mergedInstance = entityManager.merge(instance);
 
         HibernateUtil.initialize(mergedInstance);
 
         return mergedInstance;
+    }
+
+    // when updating associations ModelMapper will use reflection and directly change the id value which causes
+    // org.springframework.orm.jpa.JpaSystemException: identifier of an instance of ... was changed ... from ... to ... exception
+    private void clearValue(Object instance, Object entityData, String path) {
+        BeanWrapper entityDataWrapper = PropertyAccessorFactory.forBeanPropertyAccess(entityData);
+
+        if (entityDataWrapper.isReadableProperty(path) && entityDataWrapper.getPropertyValue(path) != null) {
+            PropertyAccessorFactory.forBeanPropertyAccess(instance).setPropertyValue(path, null);
+        }
     }
 }

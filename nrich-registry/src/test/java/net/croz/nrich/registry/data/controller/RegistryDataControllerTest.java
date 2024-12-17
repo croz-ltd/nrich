@@ -187,7 +187,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
         String requestUrl = fullUrl("update");
-        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), null);
+        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), (String) null);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -211,6 +211,23 @@ class RegistryDataControllerTest extends BaseControllerTest {
         // then
         result.andExpect(status().isOk())
             .andExpect(jsonPath("$.name").value(entityName));
+    }
+
+    @Test
+    void shouldNotFailUpdatingRegistryEntityWithChangedAssociation() throws Exception {
+        // given
+        RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityWithParent(entityManager));
+        RegistryTestEntity registryParentEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
+
+        String requestUrl = fullUrl("update");
+        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), registryParentEntity.getId());
+
+        // when
+        ResultActions result = performPostRequest(requestUrl, request);
+
+        // then
+        result.andExpect(status().isOk())
+            .andExpect(jsonPath("$.parent.id").value(registryParentEntity.getId()));
     }
 
     @Test
