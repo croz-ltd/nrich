@@ -26,11 +26,12 @@ import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.DeleteRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
+import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +70,7 @@ public class RegistryDataController {
     public <T> T create(@RequestBody @Valid CreateRegistryRequest request) {
         Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
-        validateEntityData(entityData);
+        validateEntityData("create", CreateRegistryRequest.class, entityData);
 
         return registryDataService.create(request.classFullName(), entityData);
     }
@@ -78,19 +79,19 @@ public class RegistryDataController {
     public <T> T update(@RequestBody @Valid UpdateRegistryRequest request) {
         Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
-        validateEntityData(entityData);
+        validateEntityData("update", UpdateRegistryRequest.class, entityData);
 
         return registryDataService.update(request.classFullName(), request.id(), entityData);
     }
 
     @SneakyThrows
-    private void validateEntityData(Object entityData) {
+    private void validateEntityData(String methodName, Class<?> methodParameter, Object entityData) {
         BindingResult errors = new BeanPropertyBindingResult(entityData, "entityData");
 
         validator.validate(entityData, errors);
 
         if (errors.hasErrors()) {
-            throw new BindException(errors);
+            throw new MethodArgumentNotValidException(new MethodParameter(this.getClass().getMethod(methodName, methodParameter), 0), errors);
         }
     }
 }
