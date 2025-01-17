@@ -22,6 +22,7 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 
 // TODO check if other operators are required
@@ -94,6 +95,17 @@ public enum DefaultSearchOperator implements SearchOperator {
             CriteriaBuilder.In<Object> inClause = criteriaBuilder.in(path);
 
             ((Collection<?>) value).forEach(inClause::value);
+
+            return inClause;
+        }
+    },
+
+    LOWER_IN {
+        @Override
+        public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
+            CriteriaBuilder.In<String> inClause = criteriaBuilder.in(criteriaBuilder.lower((Expression<String>) path));
+
+            ((Collection<?>) value).forEach(item -> inClause.value(((String) item).toLowerCase(Locale.ROOT)));
 
             return inClause;
         }
