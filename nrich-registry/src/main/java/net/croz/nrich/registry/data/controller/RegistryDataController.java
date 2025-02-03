@@ -57,7 +57,7 @@ public class RegistryDataController {
     }
 
     @PostMapping("list")
-    public <P> Page<P> list(@RequestBody @Valid ListRegistryRequest request) {
+    public Page<Object> list(@RequestBody @Valid ListRegistryRequest request) {
         return registryDataService.list(request);
     }
 
@@ -67,7 +67,7 @@ public class RegistryDataController {
     }
 
     @PostMapping("create")
-    public <T> T create(@RequestBody @Valid CreateRegistryRequest request) {
+    public Object create(@RequestBody @Valid CreateRegistryRequest request) {
         Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
         validateEntityData("create", CreateRegistryRequest.class, entityData);
@@ -76,7 +76,7 @@ public class RegistryDataController {
     }
 
     @PostMapping("update")
-    public <T> T update(@RequestBody @Valid UpdateRegistryRequest request) {
+    public Object update(@RequestBody @Valid UpdateRegistryRequest request) {
         Object entityData = registryDataRequestConversionService.convertEntityDataToTyped(request);
 
         validateEntityData("update", UpdateRegistryRequest.class, entityData);

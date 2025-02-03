@@ -37,7 +37,7 @@ public class RegistryHistoryController {
     private final RegistryHistoryService registryHistoryService;
 
     @PostMapping("list")
-    public <T> Page<EntityWithRevision<T>> historyList(@RequestBody @Valid ListRegistryHistoryRequest request) {
+    public Page<EntityWithRevision<Object>> historyList(@RequestBody @Valid ListRegistryHistoryRequest request) {
         return registryHistoryService.historyList(request);
     }
 }
