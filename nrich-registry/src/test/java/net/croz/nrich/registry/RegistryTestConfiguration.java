@@ -26,6 +26,8 @@ import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionServi
 import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.api.core.customizer.ModelMapperCustomizer;
+import net.croz.nrich.registry.api.core.customizer.ModelMapperType;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration;
@@ -49,6 +51,7 @@ import net.croz.nrich.registry.core.service.EntityManagerRegistryEntityFinderSer
 import net.croz.nrich.registry.core.service.RegistryConfigurationResolverService;
 import net.croz.nrich.registry.core.support.ManagedTypeWrapper;
 import net.croz.nrich.registry.data.controller.RegistryDataController;
+import net.croz.nrich.registry.data.customizer.RegistryDataModelMapperCustomizer;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataRequestConversionService;
 import net.croz.nrich.registry.data.service.DefaultRegistryDataService;
 import net.croz.nrich.registry.data.service.RegistryDataRequestConversionService;
@@ -130,8 +133,17 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public ModelMapper registryDataModelMapper() {
-        return strictModelMapper();
+    ModelMapperCustomizer registryDataModelMapperCustomizer(RegistryConfiguration registryConfiguration) {
+        return new RegistryDataModelMapperCustomizer(registryConfiguration.getOverrideConfigurationHolderList());
+    }
+
+    @Bean
+    public ModelMapper registryDataModelMapper(@Autowired(required = false) List<ModelMapperCustomizer> modelMapperCustomizerList) {
+        ModelMapper modelMapper = strictModelMapper();
+
+        modelMapperCustomizerList.forEach(modelMapperCustomizer -> modelMapperCustomizer.customize(ModelMapperType.DATA, modelMapper));
+
+        return modelMapper;
     }
 
     @Bean
