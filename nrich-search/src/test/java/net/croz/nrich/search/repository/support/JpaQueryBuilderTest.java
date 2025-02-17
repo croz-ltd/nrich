@@ -602,6 +602,24 @@ class JpaQueryBuilderTest {
     }
 
     @Test
+    void shouldSupportSearchingByPropertyListUsingLowerOperator() {
+        // given
+        TestEntitySearchRequest request = new TestEntitySearchRequest(null);
+        request.setNameSearchList(List.of("firsT1", "First2"));
+
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .searchOperatorOverrideList(List.of(SearchOperatorOverride.forPath("name", DefaultSearchOperator.LOWER_IN)))
+            .build();
+
+
+        // when
+        List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).hasSize(2);
+    }
+
+    @Test
     void shouldIgnoreEmptyCollectionWhenSearching() {
         // given
         TestEntitySearchRequest request = new TestEntitySearchRequest(null);
