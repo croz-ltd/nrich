@@ -29,12 +29,14 @@ import java.util.List;
  * @param registrySearch                          Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}.
  * @param defaultConverterEnabled                 Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when searching registry is enabled.
  * @param defaultJavaToJavascriptConverterEnabled Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+ * @param registryModelMapperCustomizerEnabled    Whether default ModelMapper customizer  ({@link net.croz.nrich.registry.data.customizer.RegistryDataModelMapperCustomizer}) used for skipping ignored properties when updating registry entities is enabled.
  * @param registryConfiguration                   Registry configuration used for defining entities and groups which will be managed.
  */
 @ConfigurationProperties("nrich.registry")
 public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue @NestedConfigurationProperty RegistrySearchProperties registrySearch,
                                       @DefaultValue("true") boolean defaultConverterEnabled,
                                       @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
+                                      @DefaultValue("true") boolean registryModelMapperCustomizerEnabled,
                                       RegistryConfiguration registryConfiguration) {
 
     /**

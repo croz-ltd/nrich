@@ -42,17 +42,18 @@ Note if using `nrich-bom` dependency versions should be omitted.
 
 Configuration is done through a property file, available properties and descriptions are given bellow (all properties are prefixed with nrich.registry which is omitted for readability):
 
-| property                                               | description                                                                                                                | default value                                            |
-|--------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
-| default-read-only-property-list                        | List of property names that should always be marked as readonly                                                            |                                                          |
-| default-converter-enabled                              | Whether default string to type converter used for converting strings to property values when searching registry is enabled | true                                                     |
-| default-java-to-javascript-converter-enabled           | Whether default Java to Javascript type converter is enabled                                                               | true                                                     |
-| registry-search.date-format-list                       | List of date formats used to convert string to date value                                                                  | dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z' |
-| registry-search.decimal-number-format-list             | List of decimal formats used to convert string to decimal value                                                            | #0.00, #0,00                                             |
-| registry-search.boolean-true-regex-pattern             | Regexp pattern that is used to match boolean true values                                                                   | ^(?i)\s*(true&#124;yes&#124;da)\s*$                      |
-| registry-search.boolean-false-regex-pattern            | Regexp pattern that is used to match boolean false values                                                                  | ^(?i)\s*(false&#124;no&#124;ne)\s*$                      |
-| registry-configuration.create-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry create method                   |                                                          |
-| registry-configuration.update-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry update method                   |                                                          |
+| property                                             | description                                                                                                                | default value                                            |
+|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| default-read-only-property-list                      | List of property names that should always be marked as readonly                                                            |                                                          |
+| default-converter-enabled                            | Whether default string to type converter used for converting strings to property values when searching registry is enabled | true                                                     |
+| default-java-to-javascript-converter-enabled         | Whether default Java to Javascript type converter is enabled                                                               | true                                                     |
+| registry-model-mapper-customizer-enabled             | Whether default ModelMapper customizer used for skipping ignored properties when updating registry entities is enabled.    | true                                                     |
+| registry-search.date-format-list                     | List of date formats used to convert string to date value                                                                  | dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z' |
+| registry-search.decimal-number-format-list           | List of decimal formats used to convert string to decimal value                                                            | #0.00, #0,00                                             |
+| registry-search.boolean-true-regex-pattern           | Regexp pattern that is used to match boolean true values                                                                   | ^(?i)\s*(true&#124;yes&#124;da)\s*$                      |
+| registry-search.boolean-false-regex-pattern          | Regexp pattern that is used to match boolean false values                                                                  | ^(?i)\s*(false&#124;no&#124;ne)\s*$                      |
+| registry-configuration.create-registry-class-mapping | Optional mapping between registry classname and the class holding validations for registry create method                   |                                                          |
+| registry-configuration.update-registry-class-mapping | Optional mapping between registry classname and the class holding validations for registry update method                   |                                                          |
 
 The properties under registry-search are used when converting string received from client to property values that will be used to search registry. For example if a string is sent
 and the property searched by is of type Date, nrich will try to parse string to Date and if parsing succeeds restriction will be added to query and if parsing fails the property will be skipped
@@ -63,14 +64,14 @@ The default configuration values in yaml format for easier modification are give
 ```yaml
 
 nrich.registry:
-  default-read-only-property-list:
-  default-converter-enabled: true
-  default-java-to-javascript-converter-enabled: true
-  registry-search:
-    date-format-list: dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z'
-    decimal-number-format-list: #0.00, #0,00
-    boolean-true-regex-pattern: ^(?i)\s*(true|yes|da)\s*$
-    boolean-false-regex-pattern: ^(?i)\s*(false|no|ne)\s*$
+    default-read-only-property-list:
+    default-converter-enabled: true
+    default-java-to-javascript-converter-enabled: true
+    registry-search:
+        date-format-list: dd.MM.yyyy., dd.MM.yyyy.'T'HH:mm, dd.MM.yyyy.'T'HH:mm'Z'
+        decimal-number-format-list: #0.00, #0,00
+        boolean-true-regex-pattern: ^(?i)\s*(true|yes|da)\s*$
+        boolean-false-regex-pattern: ^(?i)\s*(false|no|ne)\s*$
 
 ```
 
@@ -85,12 +86,12 @@ of type [RegistryClassResolvingService](../nrich-registry-api/src/main/java/net/
 This module is meant to be used through REST API and as such exposes multiple endpoints. For a detailed description of each endpoint see `nrich-registry` [README.MD](../nrich-registry/README.md).
 Bellow is just a short overview of available endpoints (all methods use HTTP POST method):
 
-| request path                          | description                                                                                    |
-|---------------------------------------|------------------------------------------------------------------------------------------------|
-| `nrich/registry/configuration/fetch`  | Fetches configuration of all entities (used on client for generating dynamic forms and tables) |
-| `nrich/registry/data/list-bulk`       | Lists multiple registry entities                                                               |
-| `nrich/registry/data/list`            | List a single registry entity (also supports searching if query parameter is specified)        |
-| `nrich/registry/data/create`          | Creates registry entity                                                                        |
-| `nrich/registry/data/update`          | Update registry entity                                                                         |
-| `nrich/registry/data/delete`          | Deletes registry entity                                                                        |
-| `nrich/registry/history`              | List all the revisions of the entity (available only if envers is on classpath)                |
+| request path                         | description                                                                                    |
+|--------------------------------------|------------------------------------------------------------------------------------------------|
+| `nrich/registry/configuration/fetch` | Fetches configuration of all entities (used on client for generating dynamic forms and tables) |
+| `nrich/registry/data/list-bulk`      | Lists multiple registry entities                                                               |
+| `nrich/registry/data/list`           | List a single registry entity (also supports searching if query parameter is specified)        |
+| `nrich/registry/data/create`         | Creates registry entity                                                                        |
+| `nrich/registry/data/update`         | Update registry entity                                                                         |
+| `nrich/registry/data/delete`         | Deletes registry entity                                                                        |
+| `nrich/registry/history`             | List all the revisions of the entity (available only if envers is on classpath)                |
