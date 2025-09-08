@@ -19,6 +19,7 @@ package net.croz.nrich.search.util;
 
 import net.croz.nrich.search.api.model.SearchProjection;
 import net.croz.nrich.search.util.stub.ProjectionListResolverUtilTestEntity;
+import net.croz.nrich.search.util.stub.ProjectionListResolverUtilTestEntityWithSuperclass;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -57,5 +58,16 @@ class ProjectionListResolverUtilTest {
         assertThat(conditionalProjection).isNotNull();
         assertThat(conditionalProjection.getCondition().test(null)).isTrue();
         assertThat(conditionalProjection.getCondition().test(new ProjectionListResolverUtilTestEntity())).isFalse();
+    }
+
+    @Test
+    void shouldResolveSearchProjectionListFromSuperclass() {
+        // when
+        List<SearchProjection<ProjectionListResolverUtilTestEntity>> result = ProjectionListResolverUtil.resolveSearchProjectionList(ProjectionListResolverUtilTestEntityWithSuperclass.class);
+
+        // then
+        assertThat(result).isNotEmpty();
+        assertThat(result).extracting("path").containsExactly("otherName", "name", "nestedEntity.nestedEntityName", "nestedEntity.id", "nestedEntity.anotherName");
+        assertThat(result).extracting("alias").containsExactly("otherName", "name", "nestedName", "nestedId", "conditionalName");
     }
 }
