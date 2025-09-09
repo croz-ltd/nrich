@@ -19,10 +19,12 @@ package net.croz.nrich.validation.constraint.support.disableconstraints;
 
 import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsAnnotationProcessorInvalidTestRequest;
 import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsAnnotationProcessorTestRequest;
+import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsAnnotationProcessorTestSubclassRequest;
 import org.junit.jupiter.api.Test;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.lang.annotation.Annotation;
@@ -59,5 +61,18 @@ class DisableConstraintsAnnotationProcessorTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Property name not allowed on method or property annotation.");
+    }
+
+    @Test
+    void shouldSupportDisablingOfConstraintsFromSuperclass() {
+        // when
+        Map<String, List<Class<? extends Annotation>>> result = constraintAnnotationProcessor.getDisabledConstraintForType(DisableConstraintsAnnotationProcessorTestSubclassRequest.class);
+
+        // then
+        assertThat(result).containsAllEntriesOf(
+            Map.of(
+                "net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsAnnotationProcessorTestSubclassRequest", List.of(NotEmpty.class, NotNull.class)
+            )
+        );
     }
 }

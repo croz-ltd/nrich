@@ -20,6 +20,7 @@ package net.croz.nrich.validation.constraint.support.disableconstraints;
 import net.croz.nrich.validation.ValidationTestConfiguration;
 import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsParentTestRequest;
 import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsPropertyAnnotationTestRequest;
+import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsTypeAnnotationSubclassTestRequest;
 import net.croz.nrich.validation.constraint.support.disableconstraints.stub.DisableConstraintsTypeAnnotationTestRequest;
 import org.hibernate.validator.HibernateValidatorFactory;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,18 @@ class ValidatorAdapterTest {
 
         // and when
         constraintViolationList = validator.validateValue(DisableConstraintsTypeAnnotationTestRequest.class, "age", null);
+
+        // then
+        assertThat(constraintViolationList).isEmpty();
+    }
+
+    @Test
+    void shouldNotReportErrorForParentTypeDisabledConstraints() {
+        // given
+        DisableConstraintsTypeAnnotationSubclassTestRequest request = new DisableConstraintsTypeAnnotationSubclassTestRequest(null, null);
+
+        // when
+        Set<ConstraintViolation<DisableConstraintsTypeAnnotationSubclassTestRequest>> constraintViolationList = validator.validate(request);
 
         // then
         assertThat(constraintViolationList).isEmpty();
