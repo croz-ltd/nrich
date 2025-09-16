@@ -31,6 +31,7 @@ The following table contains nrich versions with a corresponding minimum Java an
 | 1.5.x - 1.7.x | 1.8          | 2.7.4               |
 | 1.8.x         | 1.8          | 2.7.7               |
 | 2.0.0         | 17           | 3.1.3               |
+| 2.10.x        | 17           | 3.4.5               |
 
 ## Modules
 
