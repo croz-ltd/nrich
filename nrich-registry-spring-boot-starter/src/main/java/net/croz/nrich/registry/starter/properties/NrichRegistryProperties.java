@@ -35,7 +35,7 @@ import java.util.List;
 public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue @NestedConfigurationProperty RegistrySearchProperties registrySearch,
                                       @DefaultValue("true") boolean defaultConverterEnabled,
                                       @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
-                                      RegistryConfiguration registryConfiguration) {
+                                      @NestedConfigurationProperty RegistryConfiguration registryConfiguration) {
 
     /**
      * @param dateFormatList           List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
