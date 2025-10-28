@@ -41,7 +41,7 @@ import jakarta.validation.Valid;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RequestMapping("${nrich.registry.data.endpoint-path:nrich/registry/data}")
+@RequestMapping("${nrich.registry.data-endpoint-path:nrich/registry/data}")
 @RestController
 public class RegistryDataController {
 

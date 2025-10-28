@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static net.croz.nrich.registry.data.testutil.RegistryDataGeneratingUtil.createListRegistryRequest;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = "nrich.registry.data.endpoint-path=api/registry/data")
+@TestPropertySource(properties = "nrich.registry.data-endpoint-path=api/registry/data")
 class RegistryDataControllerEndpointTest extends BaseControllerTest {
 
     @Test
