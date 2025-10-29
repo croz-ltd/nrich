@@ -20,20 +20,21 @@ package net.croz.nrich.validation.starter.configuration;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
 import net.croz.nrich.validation.constraint.mapping.DefaultConstraintValidatorRegistrar;
+import net.croz.nrich.validation.starter.properties.NrichValidationProperties;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 import jakarta.validation.Validator;
-import java.util.List;
 
+@EnableConfigurationProperties(NrichValidationProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichValidationAutoConfiguration {
 
@@ -60,8 +61,8 @@ public class NrichValidationAutoConfiguration {
 
     @ConditionalOnProperty(name = "nrich.validation.register-constraint-validators", havingValue = "true", matchIfMissing = true)
     @Bean
-    ConstraintValidatorRegistrar constraintMappingRegistrar(@Value("${nrich.validation.validator-package-list:net.croz.nrich.validation.constraint.validator}") List<String> validatorPackageList) {
-        return new DefaultConstraintValidatorRegistrar(validatorPackageList);
+    ConstraintValidatorRegistrar constraintMappingRegistrar(NrichValidationProperties validationProperties) {
+        return new DefaultConstraintValidatorRegistrar(validationProperties.validatorPackageList());
     }
 
     @ConditionalOnProperty(name = "nrich.validation.register-constraint-validators", havingValue = "true", matchIfMissing = true)
