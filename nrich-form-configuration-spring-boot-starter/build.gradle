@@ -16,6 +16,7 @@ dependencies {
   runtimeOnly "org.apache.tomcat.embed:tomcat-embed-el"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
   testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

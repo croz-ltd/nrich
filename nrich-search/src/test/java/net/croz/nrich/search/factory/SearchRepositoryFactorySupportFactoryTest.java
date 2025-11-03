@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -45,8 +46,9 @@ class SearchRepositoryFactorySupportFactoryTest {
         // given
         Class<?> type = Object.class;
         EntityManager entityManager = mock(EntityManager.class);
+        EntityManagerFactory entityManagerFactory = mock(EntityManagerFactory.class);
 
-        doReturn(new Object()).when(entityManager).getDelegate();
+        doReturn(entityManagerFactory).when(entityManager).getEntityManagerFactory();
 
         // when
         RepositoryFactorySupport result = searchRepositoryFactorySupportFactory.createRepositoryFactory(type, entityManager);

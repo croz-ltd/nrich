@@ -21,6 +21,7 @@ dependencies {
   testImplementation project(":nrich-notification-spring-boot-starter")
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
   testImplementation "org.springframework:spring-web"
   testImplementation "org.springframework.boot:spring-boot-starter-test"

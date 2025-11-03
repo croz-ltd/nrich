@@ -10,6 +10,7 @@ dependencies {
   implementation "org.springframework:spring-context"
 
   testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
   testImplementation "ch.qos.logback:logback-classic"
   testImplementation "org.assertj:assertj-core"
