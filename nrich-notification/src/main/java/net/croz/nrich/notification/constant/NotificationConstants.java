@@ -35,6 +35,8 @@ public final class NotificationConstants {
 
     public static final String MESSAGE_CONTENT_SUFFIX = "content";
 
+    public static final String MESSAGE_CODE_SUFFIX = "code";
+
     public static final String MESSAGE_SEVERITY_SUFFIX = "severity";
 
     public static final String EMPTY_MESSAGE = "";
@@ -46,6 +48,8 @@ public final class NotificationConstants {
     public static final String VALIDATION_FAILED_MESSAGE_TITLE_CODE = "notification.validation-failed.title";
 
     public static final String VALIDATION_FAILED_CONTENT_CODE = "notification.validation-failed.content";
+
+    public static final String VALIDATION_FAILED_CODE = "notification.validation-failed";
 
     public static final String ERROR_OCCURRED_MESSAGE_TITLE_CODE = "notification.error-occurred.title";
 

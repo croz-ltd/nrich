@@ -44,6 +44,11 @@ public class Notification {
     private final String content;
 
     /**
+     * Notification code
+     */
+    private final String code;
+
+    /**
      * List of messages (i.e. for validation failure notification this will contain all validation failure messages).
      */
     private final List<String> messageList;

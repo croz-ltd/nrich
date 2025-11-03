@@ -24,6 +24,7 @@ import net.croz.nrich.notification.api.model.ValidationFailureNotification;
 import net.croz.nrich.notification.api.response.NotificationDataResponse;
 import net.croz.nrich.notification.api.response.NotificationResponse;
 import net.croz.nrich.notification.api.service.NotificationResolverService;
+import net.croz.nrich.notification.constant.NotificationConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -47,13 +48,13 @@ class WebMvcNotificationResponseServiceTest {
     @BeforeEach
     void setup() {
         NotificationResolverService notificationResolverService = mock(NotificationResolverService.class);
-        Notification firstNotification = new Notification("title", "Action success", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap());
-        Notification secondNotification = new Notification("title", "Exception", Collections.emptyList(), NotificationSeverity.ERROR, Collections.emptyMap());
+        Notification firstNotification = new Notification("title", "Action success", "action.code", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap());
+        Notification secondNotification = new Notification("title", "Exception", "exception.code", Collections.emptyList(), NotificationSeverity.ERROR, Collections.emptyMap());
         ValidationFailureNotification firstValidationNotification = new ValidationFailureNotification(
-            "validation", "Validation failed 1", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()
+            "validation", "Validation failed 1", NotificationConstants.VALIDATION_FAILED_CODE, Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()
         );
         ValidationFailureNotification secondValidationNotification = new ValidationFailureNotification(
-            "validation", "Validation failed 2", Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()
+            "validation", "Validation failed 2", NotificationConstants.VALIDATION_FAILED_CODE, Collections.emptyList(), NotificationSeverity.INFO, Collections.emptyMap(), Collections.emptyList()
         );
 
         when(notificationResolverService.createNotificationForAction(eq("actionPrefix.actionSuffix"), any(AdditionalNotificationData.class))).thenReturn(firstNotification);
@@ -84,6 +85,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationResponse.getNotification()).isNotNull();
         assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 1");
+        assertThat(notificationResponse.getNotification().getCode()).isEqualTo(NotificationConstants.VALIDATION_FAILED_CODE);
     }
 
     @Test
@@ -96,7 +98,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationResponse.getNotification()).isNotNull();
         assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 2");
-        assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Validation failed 2");
+        assertThat(notificationResponse.getNotification().getCode()).isEqualTo(NotificationConstants.VALIDATION_FAILED_CODE);
         assertThat(notificationResponse.getNotification().isValidationFailure()).isTrue();
     }
 
@@ -110,6 +112,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationResponse.getNotification()).isNotNull();
         assertThat(notificationResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.ERROR);
         assertThat(notificationResponse.getNotification().getContent()).isEqualTo("Exception");
+        assertThat(notificationResponse.getNotification().getCode()).isEqualTo("exception.code");
         assertThat(notificationResponse.getNotification().isValidationFailure()).isFalse();
     }
 
@@ -129,6 +132,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationDataResponse.getNotification()).isNotNull();
         assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse.getNotification().getCode()).isEqualTo("action.code");
     }
 
     @Test
@@ -145,6 +149,7 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationDataResponse.getNotification()).isNotNull();
         assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse.getNotification().getCode()).isEqualTo("action.code");
     }
 
     @Test
@@ -173,5 +178,6 @@ class WebMvcNotificationResponseServiceTest {
         assertThat(notificationDataResponse.getNotification()).isNotNull();
         assertThat(notificationDataResponse.getNotification().getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notificationDataResponse.getNotification().getContent()).isEqualTo("Action success");
+        assertThat(notificationDataResponse.getNotification().getCode()).isEqualTo("action.code");
     }
 }

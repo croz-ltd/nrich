@@ -73,8 +73,11 @@ public class DefaultNotificationResolverService implements NotificationResolverS
             .toList();
 
         List<String> messageList = Stream.concat(additionalNotificationDataMessageList.stream(), validationMessageList.stream()).toList();
+        String notificationCodeMessage = notificationMessageResolverService.resolveMessage(toList(NotificationConstants.VALIDATION_FAILED_CODE), NotificationConstants.VALIDATION_FAILED_CODE);
 
-        return new ValidationFailureNotification(title, content, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList);
+        return new ValidationFailureNotification(
+            title, content, notificationCodeMessage, messageList, severity, additionalNotificationData.getUxNotificationOptions(), validationErrorList
+        );
     }
 
     @Override
@@ -90,17 +93,20 @@ public class DefaultNotificationResolverService implements NotificationResolverS
     @Override
     public Notification createNotificationForException(Throwable throwable, AdditionalNotificationData additionalNotificationData) {
         String typeName = throwable.getClass().getName();
-        String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
 
+        String titleCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_TITLE_SUFFIX);
         String title = notificationMessageResolverService.resolveMessage(toList(titleCode, NotificationConstants.ERROR_OCCURRED_MESSAGE_TITLE_CODE), NotificationConstants.EMPTY_MESSAGE);
 
         String severityCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_SEVERITY_SUFFIX);
         String content = resolveExceptionContent(throwable);
 
+        String notificationCode = String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, typeName, NotificationConstants.MESSAGE_CODE_SUFFIX);
+        String notificationCodeMessage = notificationMessageResolverService.resolveMessage(toList(notificationCode), notificationCode);
+
         NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(resolveExceptionSeverity(severityCode));
         List<String> messageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
 
-        return new Notification(title, content, messageList, severity, additionalNotificationData.getUxNotificationOptions());
+        return new Notification(title, content, notificationCodeMessage, messageList, severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     @Override
@@ -113,7 +119,9 @@ public class DefaultNotificationResolverService implements NotificationResolverS
         NotificationSeverity severity = Optional.ofNullable(additionalNotificationData.getSeverity()).orElse(NotificationSeverity.INFO);
         List<String> messageList = resolveMessageListFromNotificationData(additionalNotificationData.getMessageListDataMap());
 
-        return new Notification(title, content, messageList, severity, additionalNotificationData.getUxNotificationOptions());
+        String notificationCodeMessage = notificationMessageResolverService.resolveMessage(toList(actionName), actionName);
+
+        return new Notification(title, content, notificationCodeMessage, messageList, severity, additionalNotificationData.getUxNotificationOptions());
     }
 
     private List<ValidationError> convertValidationErrorsToMessageList(Errors errors, Class<?> validationFailedOwningType) {

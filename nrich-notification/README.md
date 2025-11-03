@@ -24,6 +24,7 @@ Keys can be either fixed strings or in case of exceptions their class names.
 To be able to use this module following bean configuration is required:
 
 ```java
+
 @Configuration
 public class NrichNotificationConfiguration {
 
@@ -102,6 +103,7 @@ attributes:
 |-------------------------|--------------------------------------------------|
 | `title`                 | notification title                               |
 | `content`               | notification content                             |
+| `coee`                  | notification code                                |
 | `messageList`           | list of additional messages                      |
 | `severity`              | indicates the importance of notification         |
 | `uxNotificationOptions` | additional options that the client can interpret |
@@ -115,6 +117,7 @@ If we wish to have unified error notification handling we can define `RestContro
 A simple implementation of former advice would look something like this:
 
 ```java
+
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -151,6 +154,7 @@ The resulting response to the request that triggered an exception would then be:
     "notification": {
         "title": "Error",
         "content": "Error occurred",
+        "code": "error.code",
         "messageList": [
             "UUID: 4d2aae89-76a9-4768-96e4-e75ea604615e"
         ],
@@ -170,6 +174,7 @@ Users can also use [`NotificationResponseService`][notification-response-service
 For given request class:
 
 ```java
+
 @Getter
 @Setter
 public class ExampleEntity {
@@ -183,6 +188,7 @@ public class ExampleEntity {
 when we call `save` method that should save a new instance of `ExampleEntity` class:
 
 ```java
+
 @RestController("example")
 @RequiredArgsConstructor
 public class NotificationTestController {
@@ -208,6 +214,7 @@ the resulting response to the request that executed an action would be:
     "notification": {
         "title": "Success",
         "content": "Action has been executed",
+        "code": "example.save",
         "messageList": [],
         "severity": "INFO",
         "uxNotificationOptions": null,
@@ -231,6 +238,7 @@ For example, if we fail to provide a valid value field for class `ExampleEntity`
     "notification": {
         "title": "Validation failed",
         "content": "Found validation errors:",
+        "code": "notification.validation-failed",
         "messageList": [
             "value: Cannot be null"
         ],
@@ -272,6 +280,7 @@ and if an exception implements [`ExceptionWithMessage`][exception-with-message-u
 For example, let's say we have this exception handler:
 
 ```java
+
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
@@ -295,6 +304,7 @@ and we have this key-value pair in the `messages.properties` file:
 ```properties
 example.CustomExampleException.title=Custom exception title
 example.CustomExampleException.content=Custom exception content
+example.CustomExampleException.code=custom-exception.code
 ```
 
 Then the response will be:
@@ -304,6 +314,7 @@ Then the response will be:
     "notification": {
         "title": "Custom exception title",
         "content": "Custom exception content",
+        "code": "custom-exception.code",
         "messageList": [],
         "severity": "ERROR",
         "uxNotificationOptions": null,
@@ -328,6 +339,7 @@ Manual providing of action code is recommended when automatic resolving from the
 Example of manual providing:
 
 ```java
+
 @RequiredArgsConstructor
 @RequestMapping("notification-example")
 @RestController
@@ -356,6 +368,7 @@ response is:
     "notification": {
         "title": "Manual title",
         "content": "Manual content",
+        "code": "manual.example",
         "messageList": [],
         "severity": "INFO",
         "uxNotificationOptions": null,
@@ -372,6 +385,7 @@ current request and HTTP method and the key for resolving title and content is: 
 Example of automatic resolving:
 
 ```java
+
 @RequiredArgsConstructor
 @RequestMapping("notification-example")
 @RestController
@@ -391,6 +405,7 @@ If we were to put these key-value pairs into the `messages.properties` file:
 ```properties
 notification-example.save.post.title=Automatic resolution title
 notification-example.save.post.content=Automatic resolution content
+notification-example.save.post.code=resolved.code
 ```
 
 then the response that we would receive would be different from the one already seen:
@@ -400,6 +415,7 @@ then the response that we would receive would be different from the one already 
     "notification": {
         "title": "Automatic resolution title",
         "content": "Automatic resolution content",
+        "code": "resolved.code",
         "messageList": [],
         "severity": "INFO",
         "uxNotificationOptions": null,
@@ -465,6 +481,7 @@ notification response will be:
     "notification": {
         "title": "Error",
         "content": "Error occurred",
+        "code": "exception.code",
         "messageList": [
             "UUID example data is: 2162225c-cdf8-45cd-b579-b3389f464aa0"
         ],
