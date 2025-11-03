@@ -22,6 +22,7 @@ import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingC
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.registry.api.configuration.service.RegistryConfigurationService;
+import net.croz.nrich.registry.api.core.customizer.ModelMapperCustomizer;
 import net.croz.nrich.registry.api.core.model.RegistryConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryGroupDefinitionConfiguration;
 import net.croz.nrich.registry.api.core.model.RegistryOverrideConfigurationHolder;
@@ -79,6 +80,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).doesNotHaveBean(RegistryHistoryService.class);
             assertThat(context).doesNotHaveBean(RegistryEnumService.class);
             assertThat(context).doesNotHaveBean(FormConfigurationMappingCustomizer.class);
+            assertThat(context).doesNotHaveBean(ModelMapperCustomizer.class);
         });
     }
 
@@ -154,6 +156,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasSingleBean(JavaToJavascriptTypeConversionService.class);
             assertThat(context).hasSingleBean(RegistryEnumService.class);
             assertThat(context).hasSingleBean(NrichRegistryProperties.class);
+            assertThat(context).hasSingleBean(ModelMapperCustomizer.class);
             assertThat(context.getBean(NrichRegistryProperties.class).registrySearch()).isNotNull();
 
             assertThat(context).doesNotHaveBean(RegistryConfigurationController.class);
@@ -201,5 +204,14 @@ class NrichRegistryAutoConfigurationTest {
             // then
             assertThat(registryProperties.registryConfiguration().getOverrideConfigurationHolderList()).containsExactly(holder);
         });
+    }
+
+    @Test
+    void shouldNotCreateRegistryModelMapperCustomizerWhenCreationIsDisabled() {
+        // expect
+        contextRunner.withPropertyValues(REGISTRY_CONFIGURATION).withBean(LocalValidatorFactoryBean.class)
+            .withPropertyValues("nrich.registry.registry-model-mapper-customizer-enabled=false").run(context ->
+                assertThat(context).doesNotHaveBean(ModelMapperCustomizer.class)
+            );
     }
 }
