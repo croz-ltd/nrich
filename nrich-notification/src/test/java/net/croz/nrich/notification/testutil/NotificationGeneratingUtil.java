@@ -21,6 +21,7 @@ import net.croz.nrich.notification.stub.NotificationResolverServiceTestRequest;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Map;
 
 public final class NotificationGeneratingUtil {
@@ -42,6 +43,7 @@ public final class NotificationGeneratingUtil {
         request.setLastName("too long last name");
         request.setTimestamp(Instant.now().minus(1, ChronoUnit.DAYS));
         request.setValue(5);
+        request.setElementList(List.of("this is ok", "nok"));
 
         return request;
     }
