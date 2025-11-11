@@ -23,7 +23,6 @@ public class ApplicationConfiguration {
 
 ```
 
-
 `LoggingService` is responsible for logging exceptions. Default implementation is `Slf4jLoggingService` that uses `Slf4J` logger for logging exceptions and resolves verbosity and logging levels from
 Spring's `MessageSource`.
 
@@ -51,13 +50,13 @@ For example for exception: net.croz.TextException
 
 verbosity level is resolved from following key value:
 
-`net.croz.TextException.verbosityLevel` supported values are NONE, COMPACT, FULL
+`net.croz.TextException.loggingVerbosityLevel` supported values are NONE, COMPACT, FULL
 
 logging level is resolved from following key value:
 
 `net.croz.TextException.loggingLevel` supported values are DEBUG, WARN, INFO, ERROR
 
-When `verbosityLevel` is set to NONE the logging of the exception is skipped.
+When `loggingVerbosityLevel` is set to NONE the logging of the exception is skipped.
 
 When it is set to COMPACT the output is given bellow:
 
