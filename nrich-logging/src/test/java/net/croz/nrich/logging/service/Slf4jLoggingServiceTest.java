@@ -78,7 +78,10 @@ class Slf4jLoggingServiceTest {
         // then
         assertThat(event.getLevel()).isEqualTo(Level.ERROR);
         assertThat(event.getMessage()).isEqualTo(
-            "---------------- Information about above exception Exception occurred: [className: java.lang.RuntimeException], message: exception:  ----------------"
+            """
+                ---------------- Information about above exception Exception occurred: [className: java.lang.RuntimeException], message: exception:
+
+                -------------"""
         );
     }
 

@@ -74,7 +74,9 @@ When it is set to FULL the output is given bellow (note that full stacktrace is 
 net.croz.TestException: Something went wrong
 	at net.croz.nrich.logging.service.Slf4jLoggingServiceTest.shouldLogOnFullVerbosityLevel(Slf4jLoggingServiceTest.java:121)
 	.... (rest of stacktrace is omitted for brevity)
-09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - ---------------- Information about above exception Exception occurred: [className: net.croz.TestException], message: Something went wrong:  ----------------
+09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - ---------------- Information about above exception Exception occurred: [className: net.croz.TestException], message: Something went wrong:
+
+----------------
 
 
 ```
