@@ -28,7 +28,7 @@ Spring's `MessageSource`.
 
 ## Usage
 
-`LoggingService` interface has four methods, default behaviour (implemented in `Slf4jLoggingService`) is described here:
+`LoggingService` interface has five methods, default behaviour (implemented in `Slf4jLoggingService`) is described here:
 
 - `void logInternalException(Exception exception, Map<String, ?> exceptionAuxiliaryData)`
 
@@ -39,6 +39,10 @@ Logs exception with optional auxiliary data with verbosity level and logging lev
 Logs exception with optional auxiliary data at compact verbosity level and logging level resolved from message source.
 
 - `void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData)`
+
+Logs exception with optional auxiliary data at selected verbosity level and logging level. If value of loggingLevel or loggingVerbosityLevel is null they are resolved from from configuration.
+
+- `void logInternalException(Exception exception, LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Map<String, ?> exceptionAuxiliaryData);`
 
 Logs exception with optional auxiliary data at full verbosity level and logging level resolved from message source.
 

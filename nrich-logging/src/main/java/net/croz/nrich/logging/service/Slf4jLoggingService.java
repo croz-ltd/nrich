@@ -53,10 +53,10 @@ public class Slf4jLoggingService implements LoggingService {
         String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, ", ");
         String className = fetchClassNameForException(exception);
         String message = fetchMessageForException(exception);
-        String logMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
+        String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
         LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(className);
 
-        logOnLevel(loggingLevel, logMessage);
+        logOnLevel(loggingLevel, exceptionLogMessage);
     }
 
     @Override
@@ -72,6 +72,34 @@ public class Slf4jLoggingService implements LoggingService {
         String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
         logOnLevel(loggingLevel, exceptionLogMessage);
+    }
+
+    @Override
+    public void logInternalException(Exception exception, LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Map<String, ?> exceptionAuxiliaryData) {
+        String className = fetchClassNameForException(exception);
+        LoggingLevel resolvedLoggingLevel = loggingLevel == null ? fetchConfiguredLoggingLevelForException(className) : loggingLevel;
+        LoggingVerbosityLevel resolvedLoggingVerbosityLevel = loggingVerbosityLevel == null ? fetchConfiguredLoggingVerbosityLevelForException(exception) : loggingVerbosityLevel;
+
+        if (resolvedLoggingVerbosityLevel == LoggingVerbosityLevel.NONE) {
+            return;
+        }
+
+        String message = fetchMessageForException(exception);
+        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
+
+        String exceptionLogMessage;
+        if (resolvedLoggingVerbosityLevel == LoggingVerbosityLevel.COMPACT) {
+            exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
+
+            logOnLevel(resolvedLoggingLevel, exceptionLogMessage);
+        }
+        else {
+            String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, className, message);
+            exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
+
+            logOnLevel(resolvedLoggingLevel, "Exception occurred", exception);
+            logOnLevel(resolvedLoggingLevel, exceptionLogMessage);
+        }
     }
 
     @Override

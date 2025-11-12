@@ -26,7 +26,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,6 +39,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static net.croz.nrich.logging.testutil.Slf4jLoggingServiceGeneratingUtil.createAndInitListAppender;
 import static net.croz.nrich.logging.testutil.Slf4jLoggingServiceGeneratingUtil.createAuxiliaryExceptionData;
@@ -140,10 +143,7 @@ class Slf4jLoggingServiceTest {
         // given
         IllegalStateException exception = new IllegalStateException("exception");
 
-        doReturn(LoggingVerbosityLevel.NONE.name()).when(messageSource).getMessage(
-            argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(exception.getClass().getName()))),
-            any(Locale.class)
-        );
+        mockMessageSourceCall(LoggingVerbosityLevel.NONE.name(), exception.getClass().getName());
 
         // when
         loggingService.logInternalException(exception, null);
@@ -159,6 +159,42 @@ class Slf4jLoggingServiceTest {
 
         // then
         assertThat(thrown).isNull();
+    }
+
+    @Test
+    void shouldSkippLoggingWhenLoggingVerbosityLevelIsNone() {
+        // when
+        loggingService.logInternalException(new IllegalArgumentException(), LoggingLevel.ERROR, LoggingVerbosityLevel.NONE, null);
+
+        // then
+        assertThat(appender.list).isEmpty();
+    }
+
+    @MethodSource("shouldLogOnSpecifiedLoggingAndVerbosityLevelMethodSource")
+    @ParameterizedTest
+    void shouldLogOnSpecifiedLoggingAndVerbosityLevel(LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Level expectedLevel, String expectedMessage) {
+        // given
+        IllegalStateException exception = new IllegalStateException("exception");
+
+        mockMessageSourceCall(LoggingVerbosityLevel.FULL.name(), ".loggingVerbosityLevel");
+        mockMessageSourceCall(LoggingLevel.ERROR.name(), ".loggingLevel");
+
+        // when
+        loggingService.logInternalException(exception, loggingLevel, loggingVerbosityLevel, null);
+        ILoggingEvent event = getLastEvent();
+
+
+        // then
+        assertThat(event.getLevel()).isEqualTo(expectedLevel);
+        assertThat(event.getMessage()).contains(expectedMessage);
+    }
+
+    private static Stream<Arguments> shouldLogOnSpecifiedLoggingAndVerbosityLevelMethodSource() {
+        return Stream.of(
+            Arguments.of(LoggingLevel.ERROR, LoggingVerbosityLevel.FULL, Level.ERROR, "Information about above exception Exception occurred: [className: java.lang.IllegalStateException], message: exception"),
+            Arguments.of(LoggingLevel.DEBUG, LoggingVerbosityLevel.COMPACT, Level.DEBUG, "Exception occurred: [className: java.lang.IllegalStateException], message: exception"),
+            Arguments.of(null, null, Level.ERROR, "Information about above exception Exception occurred: [className: java.lang.IllegalStateException], message: exception")
+        );
     }
 
     @Test
@@ -192,5 +228,12 @@ class Slf4jLoggingServiceTest {
         assertThat(appender.list).isNotEmpty();
 
         return appender.list.get(appender.list.size() - 1);
+    }
+
+    private void mockMessageSourceCall(String returnValue, String expectedCode) {
+        lenient().doReturn(returnValue).when(messageSource).getMessage(
+            argThat(argument -> Arrays.stream(Objects.requireNonNull(argument.getCodes())).anyMatch(code -> code.contains(expectedCode))),
+            any(Locale.class)
+        );
     }
 }
