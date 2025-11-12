@@ -315,10 +315,10 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification.getMessageList()).isNotEmpty();
         assertThat(notification.getMessageList()).containsExactlyInAnyOrder(
             "Name description: Name really cannot be null", "Last name: Size is not valid it has to be between: 1 and 5",
-            "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10"
+            "timestamp: Timestamp has to be in the future", "value: Minimum value for value field is: 10", "elementList[1]: size must be between 4 and 20"
         );
         assertThat(notification.getValidationErrorList()).isNotEmpty();
-        assertThat(notification.getValidationErrorList().stream().map(ValidationError::objectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp");
+        assertThat(notification.getValidationErrorList().stream().map(ValidationError::objectName)).containsExactlyInAnyOrder("name", "lastName", "value", "timestamp", "elementList[1]");
     }
 
     @Test

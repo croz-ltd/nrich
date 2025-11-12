@@ -25,6 +25,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
+import java.util.List;
 
 @Setter
 @Getter
@@ -41,5 +42,7 @@ public class NotificationResolverServiceTestRequest {
 
     @Min(10)
     private Integer value;
+
+    private List<@Size(min = 4, max = 20) String> elementList;
 
 }
