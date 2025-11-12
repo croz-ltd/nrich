@@ -18,6 +18,7 @@
 package net.croz.nrich.validation.starter.configuration;
 
 import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
+import net.croz.nrich.validation.starter.properties.NrichValidationProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
@@ -42,6 +43,7 @@ class NrichValidationAutoConfigurationTest {
             assertThat(context).hasSingleBean(NrichValidationAutoConfiguration.ValidationMessageSourceRegistrar.class);
             assertThat(context).hasSingleBean(ConstraintValidatorRegistrar.class);
             assertThat(context).hasSingleBean(ValidationConfigurationCustomizer.class);
+            assertThat(context).hasSingleBean(NrichValidationProperties.class);
         });
     }
 

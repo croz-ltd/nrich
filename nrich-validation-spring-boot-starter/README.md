@@ -4,10 +4,13 @@
 
 ## Overview
 
-Spring Boot starter for `nrich-validation` module. The purpose of `nrich-validation` module is converting constraints defined on the server side in a form that can be used on the client side thus
+Spring Boot starter for [`nrich-validation`][nrich-validation-url] module. The purpose of `nrich-validation` module is converting constraints defined on the server side in a form that can be used on
+the client side thus
 avoiding repeating constraints on both server and client side.
-Starter module provides a `@Configuration` class (`NrichValidationAutoConfiguration`) with default configuration of `nrich-validation` module (while allowing for overriding with conditional
-annotations) and does automatic registration through `spring.factories`.
+
+Starter module provides a `@Configuration` class [`NrichValidationAutoConfiguration`][nrich-validation-auto-configuration-url]) with default configuration of
+[`nrich-validation`][nrich-validation-url] module, a `@ConfigurationProperties` class ([`NrichValidationProperties`][nrich-validation-properties-url]) with default
+configuration values and does automatic bean registration with `spring.factories`. The configuration class permits overriding with the help of conditional annotations.
 
 ## Usage
 
@@ -52,9 +55,9 @@ The default configuration values in yaml format for easier modification are give
 ```yaml
 
 nrich.validation:
-  register-messages: true
-  register-constraint-validators: true
-  validator-package-list: net.croz.nrich.validation.constraint.validator
+    register-messages: true
+    register-constraint-validators: true
+    validator-package-list: net.croz.nrich.validation.constraint.validator
 
 ```
 
@@ -106,3 +109,11 @@ Difference between `@ValidFile` and `@ValidFileResolvable` is that the former re
 | allowed-content-type-list | Property name from which allowed content type list is resolved (empty value allows all content types)                |
 | allowed-extension-list    | Property name from which allowed extension list is resolved (case-insensitive, empty value allows all content types) |
 | allowed-file-name-regex   | Property name from which allowed file name regex is resolved (empty value allows all file names)                     |
+
+[//]: # (Reference links for readability)
+
+[nrich-validation-url]: ../nrich-validation/README.md
+
+[nrich-validation-auto-configuration-url]: ../nrich-validation-spring-boot-starter/src/main/java/net/croz/nrich/validation/starter/configuration/NrichValidationAutoConfiguration.java
+
+[nrich-validation-properties-url]: ../nrich-validation-spring-boot-starter/src/main/java/net/croz/nrich/validation/starter/properties/NrichValidationProperties.java
