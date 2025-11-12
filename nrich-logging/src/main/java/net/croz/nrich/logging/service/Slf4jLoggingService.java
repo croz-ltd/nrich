@@ -50,7 +50,7 @@ public class Slf4jLoggingService implements LoggingService {
 
     @Override
     public void logInternalExceptionAtCompactVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
-        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, ", ");
+        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData);
         String className = fetchClassNameForException(exception);
         String message = fetchMessageForException(exception);
         String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_COMPACT_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
@@ -63,13 +63,12 @@ public class Slf4jLoggingService implements LoggingService {
     public void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
         String className = fetchClassNameForException(exception);
         String message = fetchMessageForException(exception);
-        String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, className, message);
         LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(className);
 
         logOnLevel(loggingLevel, "Exception occurred", exception);
 
-        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
-        String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
+        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData);
+        String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
 
         logOnLevel(loggingLevel, exceptionLogMessage);
     }
@@ -85,7 +84,7 @@ public class Slf4jLoggingService implements LoggingService {
         }
 
         String message = fetchMessageForException(exception);
-        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
+        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData);
 
         String exceptionLogMessage;
         if (resolvedLoggingVerbosityLevel == LoggingVerbosityLevel.COMPACT) {
@@ -94,8 +93,7 @@ public class Slf4jLoggingService implements LoggingService {
             logOnLevel(resolvedLoggingLevel, exceptionLogMessage);
         }
         else {
-            String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, className, message);
-            exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
+            exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, className, message, exceptionAuxiliaryDataMessage);
 
             logOnLevel(resolvedLoggingLevel, "Exception occurred", exception);
             logOnLevel(resolvedLoggingLevel, exceptionLogMessage);
@@ -108,10 +106,9 @@ public class Slf4jLoggingService implements LoggingService {
             return;
         }
 
-        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData, System.lineSeparator());
-        String exceptionInfoString = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_MESSAGE_FORMAT, exceptionClassName, exceptionMessage);
+        String exceptionAuxiliaryDataMessage = prepareExceptionAuxiliaryDataMessage(exceptionAuxiliaryData);
+        String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionClassName, exceptionMessage, exceptionAuxiliaryDataMessage);
 
-        String exceptionLogMessage = String.format(LoggingConstants.EXCEPTION_FULL_LEVEL_LOG_FORMAT, exceptionInfoString, exceptionAuxiliaryDataMessage);
 
         LoggingLevel loggingLevel = fetchConfiguredLoggingLevelForException(exceptionClassName);
 
@@ -166,14 +163,14 @@ public class Slf4jLoggingService implements LoggingService {
         return LoggingLevel.ERROR;
     }
 
-    private String prepareExceptionAuxiliaryDataMessage(Map<String, ?> exceptionAuxiliaryData, String separator) {
+    private String prepareExceptionAuxiliaryDataMessage(Map<String, ?> exceptionAuxiliaryData) {
         if (exceptionAuxiliaryData == null) {
             return "";
         }
 
         return exceptionAuxiliaryData.entrySet().stream()
             .map(entry -> String.format(LoggingConstants.AUXILIARY_DATA_FORMAT, entry.getKey(), entry.getValue()))
-            .collect(Collectors.joining(separator));
+            .collect(Collectors.joining(", "));
     }
 
     private void logOnLevel(LoggingLevel loggingLevel, String message) {

@@ -35,10 +35,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceResolvable;
 
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static net.croz.nrich.logging.testutil.Slf4jLoggingServiceGeneratingUtil.createAndInitListAppender;
@@ -81,10 +84,29 @@ class Slf4jLoggingServiceTest {
         // then
         assertThat(event.getLevel()).isEqualTo(Level.ERROR);
         assertThat(event.getMessage()).isEqualTo(
-            """
-                ---------------- Information about above exception Exception occurred: [className: java.lang.RuntimeException], message: exception:
+            "Information about the exception above: [className: java.lang.RuntimeException], [message: exception], [additionalInfoData: ]"
+        );
+    }
 
-                -------------"""
+    @Test
+    void shouldLogInternalExceptionWithNoConfigurationAndWithAuxiliaryData() {
+        // given
+        String uuid = UUID.randomUUID().toString();
+        Instant occurrenceTime = Instant.now();
+
+        RuntimeException exception = new RuntimeException("exception");
+        Map<String, Object> exceptionAuxiliaryData = new LinkedHashMap<>();
+        exceptionAuxiliaryData.put("uuid", uuid);
+        exceptionAuxiliaryData.put("occurrenceTime", occurrenceTime);
+
+        // when
+        loggingService.logInternalException(exception, exceptionAuxiliaryData);
+        ILoggingEvent event = getLastEvent();
+
+        // then
+        assertThat(event.getLevel()).isEqualTo(Level.ERROR);
+        assertThat(event.getMessage()).isEqualTo(
+            "Information about the exception above: [className: java.lang.RuntimeException], [message: exception], [additionalInfoData: uuid: %s, occurrenceTime: %s]".formatted(uuid, occurrenceTime)
         );
     }
 
@@ -135,7 +157,7 @@ class Slf4jLoggingServiceTest {
         ILoggingEvent event = getLastEvent();
 
         // then
-        assertThat(event.getMessage()).contains("Exception occurred: [className: java.lang.IllegalStateException], message: exception");
+        assertThat(event.getMessage()).contains("Exception occurred: [className: java.lang.IllegalStateException], [message: exception]");
     }
 
     @Test
@@ -186,14 +208,14 @@ class Slf4jLoggingServiceTest {
 
         // then
         assertThat(event.getLevel()).isEqualTo(expectedLevel);
-        assertThat(event.getMessage()).contains(expectedMessage);
+        assertThat(event.getMessage()).isEqualTo(expectedMessage);
     }
 
     private static Stream<Arguments> shouldLogOnSpecifiedLoggingAndVerbosityLevelMethodSource() {
         return Stream.of(
-            Arguments.of(LoggingLevel.ERROR, LoggingVerbosityLevel.FULL, Level.ERROR, "Information about above exception Exception occurred: [className: java.lang.IllegalStateException], message: exception"),
-            Arguments.of(LoggingLevel.DEBUG, LoggingVerbosityLevel.COMPACT, Level.DEBUG, "Exception occurred: [className: java.lang.IllegalStateException], message: exception"),
-            Arguments.of(null, null, Level.ERROR, "Information about above exception Exception occurred: [className: java.lang.IllegalStateException], message: exception")
+            Arguments.of(LoggingLevel.ERROR, LoggingVerbosityLevel.FULL, Level.ERROR, "Information about the exception above: [className: java.lang.IllegalStateException], [message: exception], [additionalInfoData: ]"),
+            Arguments.of(LoggingLevel.DEBUG, LoggingVerbosityLevel.COMPACT, Level.DEBUG, "Exception occurred: [className: java.lang.IllegalStateException], [message: exception], [additionalInfoData: ]"),
+            Arguments.of(null, null, Level.ERROR, "Information about the exception above: [className: java.lang.IllegalStateException], [message: exception], [additionalInfoData: ]")
         );
     }
 
