@@ -29,13 +29,21 @@ import java.util.List;
  * @param registrySearch                          Registry search configuration used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}.
  * @param defaultConverterEnabled                 Whether default string to type converter ({@link net.croz.nrich.search.converter.DefaultStringToTypeConverter}) used for converting strings to property values when searching registry is enabled.
  * @param defaultJavaToJavascriptConverterEnabled Whether default Java to Javascript type converter ({@link net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter}) used for converting Java to Javascript types is enabled.
+ * @param configurationEndpointPath               Endpoint path of {@link net.croz.nrich.registry.configuration.controller.RegistryConfigurationController}
+ * @param dataEndpointPath                        Endpoint path of {@link net.croz.nrich.registry.data.controller.RegistryDataController}
+ * @param enumEndpointPath                        Endpoint path of {@link net.croz.nrich.registry.enumdata.controller.RegistryEnumController}
+ * @param historyEndpointPath                     Endpoint path of {@link net.croz.nrich.registry.history.controller.RegistryHistoryController}
  * @param registryConfiguration                   Registry configuration used for defining entities and groups which will be managed.
  */
 @ConfigurationProperties("nrich.registry")
 public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue @NestedConfigurationProperty RegistrySearchProperties registrySearch,
                                       @DefaultValue("true") boolean defaultConverterEnabled,
                                       @DefaultValue("true") boolean defaultJavaToJavascriptConverterEnabled,
-                                      RegistryConfiguration registryConfiguration) {
+                                      @DefaultValue("nrich/registry/configuration") String configurationEndpointPath,
+                                      @DefaultValue("nrich/registry/data") String dataEndpointPath,
+                                      @DefaultValue("nrich/registry/enum") String enumEndpointPath,
+                                      @DefaultValue("nrich/registry/history") String historyEndpointPath,
+                                      @NestedConfigurationProperty RegistryConfiguration registryConfiguration) {
 
     /**
      * @param dateFormatList           List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.

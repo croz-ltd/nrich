@@ -1,0 +1,89 @@
+{
+    "properties": [
+        {
+            "name": "nrich.registry.registry-configuration.group-definition-configuration-list[*].group-id",
+            "type": "java.lang.String",
+            "description": "Unique id of group."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.group-definition-configuration-list[*].include-entity-pattern-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of regex patterns that matches included registry entities."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.group-definition-configuration-list[*].exclude-entity-pattern-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of regex patterns that matches excluded registry entities."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].type",
+            "type": "java.lang.Class<?>",
+            "description": "Entity type."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration",
+            "type": "net.croz.nrich.registry.api.core.model.RegistryOverrideConfiguration",
+            "description": "Registry override configuration."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-search-configuration",
+            "type": "net.croz.nrich.search.api.model.SearchConfiguration<java.lang.Object,java.lang.Object,java.util.Map<java.lang.String,java.lang.Object>>",
+            "description": "Search override configuration."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.read-only",
+            "type": "java.lang.Boolean",
+            "description": "Whether this entity is read only.",
+            "defaultValue": false
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.creatable",
+            "type": "java.lang.Boolean",
+            "description": "Whether new instances of this entity can be created.",
+            "defaultValue": true
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.updateable",
+            "type": "java.lang.Boolean",
+            "description": "Whether this entity can be updated.",
+            "defaultValue": true
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.deletable",
+            "type": "java.lang.Boolean",
+            "description": "Whether this entity can be deleted.",
+            "defaultValue": true
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.is-history-available",
+            "type": "java.lang.Boolean",
+            "description": "Whether history for this entity is available.",
+            "defaultValue": false
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.ignored-property-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of properties that should be excluded from configuration."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.property-display-order-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "Order of properties."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.non-editable-property-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of non-editable properties."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.non-sortable-property-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of non sortable properties."
+        },
+        {
+            "name": "nrich.registry.registry-configuration.override-configuration-holder-list[*].override-configuration.non-searchable-property-list",
+            "type": "java.util.List<java.lang.String>",
+            "description": "List of non-searchable properties."
+        }
+    ]
+}

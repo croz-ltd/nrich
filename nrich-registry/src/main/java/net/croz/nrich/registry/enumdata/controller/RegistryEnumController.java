@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@RequestMapping("${nrich.registry.enum.endpoint-path:nrich/registry/enum}")
+@RequestMapping("${nrich.registry.enum-endpoint-path:nrich/registry/enum}")
 @RestController
 public class RegistryEnumController {
 

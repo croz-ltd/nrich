@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("${nrich.registry.configuration.endpoint-path:nrich/registry/configuration}")
+@RequestMapping("${nrich.registry.configuration-endpoint-path:nrich/registry/configuration}")
 @RestController
 public class RegistryConfigurationController {
 

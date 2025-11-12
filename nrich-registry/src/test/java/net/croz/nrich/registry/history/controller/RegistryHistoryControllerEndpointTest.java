@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static net.croz.nrich.registry.history.testutil.RegistryHistoryGeneratingUtil.listRegistryHistoryRequestWithDefaultSort;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = "nrich.registry.history.endpoint-path=api/registry/history")
+@TestPropertySource(properties = "nrich.registry.history-endpoint-path=api/registry/history")
 class RegistryHistoryControllerEndpointTest extends BaseControllerTest {
 
     @Test

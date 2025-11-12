@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestPropertySource(properties = "nrich.registry.configuration.endpoint-path=api/registry/configuration")
+@TestPropertySource(properties = "nrich.registry.configuration-endpoint-path=api/registry/configuration")
 class RegistryConfigurationControllerEndpointTest extends BaseControllerTest {
 
     @Test

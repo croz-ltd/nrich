@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 @RequiredArgsConstructor
-@RequestMapping("${nrich.registry.history.endpoint-path:nrich/registry/history}")
+@RequestMapping("${nrich.registry.history-endpoint-path:nrich/registry/history}")
 @RestController
 public class RegistryHistoryController {
 
