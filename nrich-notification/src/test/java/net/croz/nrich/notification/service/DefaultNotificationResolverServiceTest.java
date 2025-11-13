@@ -23,6 +23,7 @@ import net.croz.nrich.notification.api.model.Notification;
 import net.croz.nrich.notification.api.model.NotificationSeverity;
 import net.croz.nrich.notification.api.model.ValidationError;
 import net.croz.nrich.notification.api.model.ValidationFailureNotification;
+import net.croz.nrich.notification.constant.NotificationConstants;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestException;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithArguments;
 import net.croz.nrich.notification.stub.NotificationResolverServiceTestExceptionWithCustomTitle;
@@ -152,6 +153,7 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification.getTitle()).isNotBlank();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getContent()).isEqualTo("Error message");
+        assertThat(notification.getCode()).isEqualTo("notificationResolverServiceTestException.error.code");
         assertThat(notification.getMessageList()).isEmpty();
     }
 
@@ -166,6 +168,7 @@ class DefaultNotificationResolverServiceTest {
         // then
         assertThat(notification).isNotNull();
         assertThat(notification.getContent()).isEqualTo("Error message with arguments: 1");
+        assertThat(notification.getCode()).isEqualTo(NotificationResolverServiceTestExceptionWithArguments.class.getName() + ".code");
     }
 
     @Test
@@ -210,6 +213,7 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification).isNotNull();
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.WARNING);
         assertThat(notification.getTitle()).isEqualTo("Validation failure custom title");
+        assertThat(notification.getCode()).isEqualTo(NotificationConstants.VALIDATION_FAILED_CODE);
     }
 
     @Test
@@ -238,6 +242,7 @@ class DefaultNotificationResolverServiceTest {
         assertThat(notification.getTitle()).isEqualTo("Custom title");
         assertThat(notification.getSeverity()).isEqualTo(NotificationSeverity.INFO);
         assertThat(notification.getContent()).isEqualTo("Upload finished");
+        assertThat(notification.getCode()).isEqualTo(actionName);
     }
 
     @Test
