@@ -40,7 +40,7 @@ Logs exception with optional auxiliary data at compact verbosity level and loggi
 
 - `void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData)`
 
-Logs exception with optional auxiliary data at selected verbosity level and logging level. If value of loggingLevel or loggingVerbosityLevel is null they are resolved from from configuration.
+Logs exception with optional auxiliary data at selected verbosity level and logging level. If value of loggingLevel or loggingVerbosityLevel is null they are resolved from configuration.
 
 - `void logInternalException(Exception exception, LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Map<String, ?> exceptionAuxiliaryData);`
 
