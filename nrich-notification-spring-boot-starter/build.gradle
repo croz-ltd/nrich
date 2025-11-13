@@ -12,6 +12,7 @@ dependencies {
   implementation "org.springframework.boot:spring-boot-autoconfigure"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
   testImplementation "jakarta.servlet:jakarta.servlet-api"
   testImplementation "org.springframework:spring-webmvc"
