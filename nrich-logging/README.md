@@ -23,13 +23,12 @@ public class ApplicationConfiguration {
 
 ```
 
-
 `LoggingService` is responsible for logging exceptions. Default implementation is `Slf4jLoggingService` that uses `Slf4J` logger for logging exceptions and resolves verbosity and logging levels from
 Spring's `MessageSource`.
 
 ## Usage
 
-`LoggingService` interface has four methods, default behaviour (implemented in `Slf4jLoggingService`) is described here:
+`LoggingService` interface has five methods, default behaviour (implemented in `Slf4jLoggingService`) is described here:
 
 - `void logInternalException(Exception exception, Map<String, ?> exceptionAuxiliaryData)`
 
@@ -41,6 +40,10 @@ Logs exception with optional auxiliary data at compact verbosity level and loggi
 
 - `void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData)`
 
+Logs exception with optional auxiliary data at selected verbosity level and logging level. If value of loggingLevel or loggingVerbosityLevel is null they are resolved from configuration.
+
+- `void logInternalException(Exception exception, LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Map<String, ?> exceptionAuxiliaryData);`
+
 Logs exception with optional auxiliary data at full verbosity level and logging level resolved from message source.
 
 - `void logExternalException(String exceptionClassName, String exceptionMessage, Map<String, ?> exceptionAuxiliaryData)`
@@ -51,19 +54,19 @@ For example for exception: net.croz.TextException
 
 verbosity level is resolved from following key value:
 
-`net.croz.TextException.verbosityLevel` supported values are NONE, COMPACT, FULL
+`net.croz.TextException.loggingVerbosityLevel` supported values are NONE, COMPACT, FULL
 
 logging level is resolved from following key value:
 
 `net.croz.TextException.loggingLevel` supported values are DEBUG, WARN, INFO, ERROR
 
-When `verbosityLevel` is set to NONE the logging of the exception is skipped.
+When `loggingVerbosityLevel` is set to NONE the logging of the exception is skipped.
 
 When it is set to COMPACT the output is given bellow:
 
 ```shell
 
-ERROR net.croz.nrich.logging.service.Slf4jLoggingService - Exception occurred: [className: net.croz.TestException], message: Something went wrong, additionalInfoData:
+ERROR net.croz.nrich.logging.service.Slf4jLoggingService - Exception occurred: [className: net.croz.TestException], [message: Something went wrong], [additionalInfoData: ]
 
 ```
 
@@ -75,7 +78,5 @@ When it is set to FULL the output is given bellow (note that full stacktrace is 
 net.croz.TestException: Something went wrong
 	at net.croz.nrich.logging.service.Slf4jLoggingServiceTest.shouldLogOnFullVerbosityLevel(Slf4jLoggingServiceTest.java:121)
 	.... (rest of stacktrace is omitted for brevity)
-09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - ---------------- Information about above exception Exception occurred: [className: net.croz.TestException], message: Something went wrong:  ----------------
-
-
+09:42:00.841 [main] ERROR net.croz.nrich.logging.service.Slf4jLoggingService - Information about the exception above: [className: net.croz.TestException], [message: Something went wrong], [additionalInfoData: ]
 ```

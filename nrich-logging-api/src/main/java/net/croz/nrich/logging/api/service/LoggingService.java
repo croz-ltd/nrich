@@ -17,6 +17,9 @@
 
 package net.croz.nrich.logging.api.service;
 
+import net.croz.nrich.logging.api.model.LoggingLevel;
+import net.croz.nrich.logging.api.model.LoggingVerbosityLevel;
+
 import java.util.Map;
 
 /**
@@ -48,6 +51,16 @@ public interface LoggingService {
      * @param exceptionAuxiliaryData additional data that should be logged
      */
     void logInternalExceptionAtFullVerbosityLevel(Exception exception, Map<String, ?> exceptionAuxiliaryData);
+
+    /**
+     * Logs exception with optional auxiliary data at selected verbosity level and logging level. If value of loggingLevel or loggingVerbosityLevel is null they are resolved from configuration.
+     *
+     * @param exception              exception to log
+     * @param loggingLevel           exception logging level
+     * @param loggingVerbosityLevel  exception verbosity level
+     * @param exceptionAuxiliaryData additional data that should be logged
+     */
+    void logInternalException(Exception exception, LoggingLevel loggingLevel, LoggingVerbosityLevel loggingVerbosityLevel, Map<String, ?> exceptionAuxiliaryData);
 
     /**
      * Logs external exception (i.e. exceptions for which a class is not on classpath).
