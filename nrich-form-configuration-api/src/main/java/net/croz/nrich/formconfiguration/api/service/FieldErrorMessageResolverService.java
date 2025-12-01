@@ -15,7 +15,7 @@
  *
  */
 
-package net.croz.nrich.formconfiguration.service;
+package net.croz.nrich.formconfiguration.api.service;
 
 import net.croz.nrich.formconfiguration.api.model.ConstrainedProperty;
 
