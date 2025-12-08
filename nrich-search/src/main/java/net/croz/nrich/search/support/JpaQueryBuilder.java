@@ -23,6 +23,7 @@ import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.subquery.SubqueryConfiguration;
@@ -335,13 +336,15 @@ public class JpaQueryBuilder<T> {
         Set<Restriction> subqueryRestrictionList;
         if (subqueryConfiguration.getRestrictionPropertyHolder() == null) {
             String propertyPrefix = subqueryConfiguration.getPropertyPrefix() == null ? entityNamePrefix(subqueryConfiguration) : subqueryConfiguration.getPropertyPrefix();
-            SearchDataParser searchDataParser = new SearchDataParser(subqueryRoot, request, searchDataParserConfiguration(searchPropertyConfiguration, false));
+            SearchDataParserConfiguration searchConfiguration = subquerySearchDataParserConfiguration(searchPropertyConfiguration, subqueryConfiguration.getSearchOperatorOverrideList(), false);
+            SearchDataParser searchDataParser = new SearchDataParser(subqueryRoot, request, searchConfiguration);
 
             subqueryRestrictionList = searchDataParser.resolveRestrictionList(propertyPrefix);
         }
         else {
             Object subqueryRestrictionPropertyHolder = new DirectFieldAccessFallbackBeanWrapper(request).getPropertyValue(subqueryConfiguration.getRestrictionPropertyHolder());
-            SearchDataParser searchDataParser = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, searchDataParserConfiguration(searchPropertyConfiguration, true));
+            SearchDataParserConfiguration searchConfiguration = subquerySearchDataParserConfiguration(searchPropertyConfiguration, subqueryConfiguration.getSearchOperatorOverrideList(), true);
+            SearchDataParser searchDataParser = new SearchDataParser(subqueryRoot, subqueryRestrictionPropertyHolder, searchConfiguration);
 
             subqueryRestrictionList = searchDataParser.resolveRestrictionList();
         }
@@ -399,7 +402,11 @@ public class JpaQueryBuilder<T> {
         return StringUtils.uncapitalize(subqueryConfiguration.getRootEntity().getSimpleName());
     }
 
-    private SearchDataParserConfiguration searchDataParserConfiguration(SearchPropertyConfiguration searchPropertyConfiguration, boolean resolvePropertyMappingUsingPrefix) {
-        return SearchDataParserConfiguration.builder().searchPropertyConfiguration(searchPropertyConfiguration).resolvePropertyMappingUsingPrefix(resolvePropertyMappingUsingPrefix).build();
+    private SearchDataParserConfiguration subquerySearchDataParserConfiguration(SearchPropertyConfiguration searchPropertyConfiguration, List<SearchOperatorOverride> searchOperatorOverrideList, boolean resolvePropertyMappingUsingPrefix) {
+        return SearchDataParserConfiguration.builder()
+            .searchPropertyConfiguration(searchPropertyConfiguration)
+            .searchOperatorOverrideList(searchOperatorOverrideList)
+            .resolvePropertyMappingUsingPrefix(resolvePropertyMappingUsingPrefix)
+            .build();
     }
 }
