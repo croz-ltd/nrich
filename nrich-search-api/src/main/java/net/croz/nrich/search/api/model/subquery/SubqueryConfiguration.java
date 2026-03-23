@@ -20,9 +20,11 @@ package net.croz.nrich.search.api.model.subquery;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 
 import jakarta.persistence.criteria.JoinType;
+import java.util.List;
 
 /**
  * Configuration for subquery. Allows specifying custom root entity, joins and resolving property values from
@@ -57,5 +59,10 @@ public class SubqueryConfiguration {
      * Default join type to be used for conditions. If not specified default is JoinType.INNER
      */
     private JoinType defaultJoinType;
+
+    /**
+     * List of search operators override (i.e. if strings are to be searched by equality instead of like).
+     */
+    private List<SearchOperatorOverride> searchOperatorOverrideList;
 
 }

@@ -897,6 +897,30 @@ class JpaQueryBuilderTest {
         assertThat(result).isEqualTo(1L);
     }
 
+    @Test
+    void shouldSupportSearchOperatorOverrideListInSubqueries() {
+        // given
+        SubqueryConfiguration subqueryConfiguration = SubqueryConfiguration.builder()
+            .rootEntity(TestEntityCollectionWithReverseAssociation.class)
+            .propertyPrefix("subqueryRestriction")
+            .searchOperatorOverrideList(List.of(SearchOperatorOverride.forPath("name", DefaultSearchOperator.CONTAINS)))
+            .joinBy(new SearchPropertyJoin("id", "testEntity.id")).build();
+
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .subqueryConfigurationList(List.of(subqueryConfiguration))
+            .build();
+
+        TestEntitySearchRequest request = TestEntitySearchRequest.builder()
+            .subqueryRestrictionName("1-association-1")
+            .build();
+
+        // when
+        List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {
         return executeQuery(request, searchConfiguration, Sort.unsorted());
     }
