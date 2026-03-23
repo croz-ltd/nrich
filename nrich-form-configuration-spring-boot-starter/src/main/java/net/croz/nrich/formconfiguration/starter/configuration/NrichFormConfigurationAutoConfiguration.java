@@ -19,6 +19,7 @@ package net.croz.nrich.formconfiguration.starter.configuration;
 
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.formconfiguration.api.service.ConstrainedPropertyValidatorConverterService;
+import net.croz.nrich.formconfiguration.api.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
 import net.croz.nrich.formconfiguration.api.util.FormConfigurationMappingCustomizerUtil;
@@ -26,7 +27,6 @@ import net.croz.nrich.formconfiguration.controller.FormConfigurationController;
 import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValidatorConverterService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
-import net.croz.nrich.formconfiguration.service.FieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
 import net.croz.nrich.formconfiguration.starter.properties.NrichFormConfigurationProperties;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
