@@ -25,6 +25,7 @@ import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValida
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
+import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceDeeplyNestedTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedIgnoredTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceTestRequest;
@@ -47,6 +48,8 @@ public class FormConfigurationTestConfiguration {
     public static final String SIMPLE_FORM_CONFIGURATION_FORM_ID = "simpleForm.formId";
 
     public static final String NESTED_FORM_CONFIGURATION_FORM_ID = "nestedForm.formId";
+
+    public static final String DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID = "deeplyNestedForm.formId";
 
     public static final String NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID = "nestedFormNotValidated.formId";
 
@@ -87,6 +90,7 @@ public class FormConfigurationTestConfiguration {
 
         formIdConstraintHolderMap.put(SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedTestRequest.class);
+        formIdConstraintHolderMap.put(DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceDeeplyNestedTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedIgnoredTestRequest.class);
 
         return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList, javaToJavascriptTypeConversionService);
