@@ -94,7 +94,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
             }
 
             if (shouldResolveConstraintListForType(propertyDescriptor)) {
-                recursiveResolveFieldConfiguration(propertyDescriptor.getElementClass(), constrainedPropertyConfigurationList, propertyName);
+                recursiveResolveFieldConfiguration(propertyDescriptor.getElementClass(), constrainedPropertyConfigurationList, propertyPath);
             }
         });
 

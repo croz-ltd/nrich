@@ -43,9 +43,11 @@ class DefaultFormConfigurationServiceTest {
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList();
 
         // then
-        assertThat(resultList).hasSize(4);
+        assertThat(resultList).hasSize(5);
         assertThat(resultList).extracting("formId").containsExactlyInAnyOrder(
-            FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID, FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID,
             "annotatedForm.formId"
         );
@@ -143,6 +145,32 @@ class DefaultFormConfigurationServiceTest {
         assertThat(valueValidatorConfiguration.name()).isEqualTo("Min");
         assertThat(valueValidatorConfiguration.argumentMap().values()).containsExactly(10L);
         assertThat(valueValidatorConfiguration.errorMessage()).isEqualTo("Minimum value is: 10");
+    }
+
+    @Test
+    void shouldFetchDeeplyNestedFormConfigurationWithFullPaths() {
+        // given
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID);
+
+        // when
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+
+        // then
+        assertThat(resultList).hasSize(1);
+
+        // and when
+        FormConfiguration formConfiguration = resultList.get(0);
+
+        // then
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::path).containsExactlyInAnyOrder(
+            "rootName",
+            "nested.topLevelName",
+            "nested.doubleNested.name",
+            "nested.doubleNested.request.name",
+            "nested.doubleNested.request.lastName",
+            "nested.doubleNested.request.timestamp",
+            "nested.doubleNested.request.value"
+        );
     }
 
     @Test
