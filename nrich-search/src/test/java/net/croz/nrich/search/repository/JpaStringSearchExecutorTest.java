@@ -23,10 +23,14 @@ import net.croz.nrich.search.repository.stub.TestEntityStringSearchRepository;
 import net.croz.nrich.search.repository.stub.TestStringSearchEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +40,7 @@ import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForStringSearch;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -124,6 +129,26 @@ class JpaStringSearchExecutorTest {
         assertThat(result).isNotEmpty();
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.getContent()).hasSize(5);
+    }
+
+    @MethodSource("shouldFindAllSlicedMethodSource")
+    @ParameterizedTest
+    void shouldFindAllSliced(String searchTerm, List<String> propertyToSearchList, Pageable pageable, int expectedContentSize, boolean expectedHasNext) {
+        // when
+        Slice<TestStringSearchEntity> result = testEntityStringSearchRepository.findAllSliced(searchTerm, propertyToSearchList, EMPTY_CONFIGURATION, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(expectedContentSize);
+        assertThat(result.hasNext()).isEqualTo(expectedHasNext);
+    }
+
+    private static Stream<Arguments> shouldFindAllSlicedMethodSource() {
+        return Stream.of(
+            Arguments.of("10", List.of("ageFrom"), PageRequest.of(0, 2), 2, true),
+            Arguments.of("10", List.of("ageFrom"), PageRequest.of(2, 2), 1, false),
+            Arguments.of("10", List.of("ageFrom"), Pageable.unpaged(), 5, false),
+            Arguments.of("5555", List.of("age"), PageRequest.of(0, 1), 0, false)
+        );
     }
 
     @Test
