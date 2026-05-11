@@ -29,10 +29,14 @@ import net.croz.nrich.search.repository.stub.TestEntitySearchRepository;
 import net.croz.nrich.search.repository.stub.TestEntitySearchRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +45,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -140,6 +145,26 @@ class JpaSearchExecutorTest {
         assertThat(result).isNotEmpty();
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.getContent()).hasSize(5);
+    }
+
+    @MethodSource("shouldFindAllSlicedMethodSource")
+    @ParameterizedTest
+    void shouldFindAllSliced(TestEntitySearchRequest request, Pageable pageable, int expectedContentSize, boolean expectedHasNext) {
+        // when
+        Slice<TestEntity> result = testEntitySearchRepository.findAllSliced(request, SearchConfiguration.emptyConfiguration(), pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(expectedContentSize);
+        assertThat(result.hasNext()).isEqualTo(expectedHasNext);
+    }
+
+    private static Stream<Arguments> shouldFindAllSlicedMethodSource() {
+        return Stream.of(
+            Arguments.of(new TestEntitySearchRequest(null), PageRequest.of(0, 2), 2, true),
+            Arguments.of(new TestEntitySearchRequest(null), PageRequest.of(2, 2), 1, false),
+            Arguments.of(new TestEntitySearchRequest(null), Pageable.unpaged(), 5, false),
+            Arguments.of(new TestEntitySearchRequest("non existing name"), PageRequest.of(0, 1), 0, false)
+        );
     }
 
     @Test
