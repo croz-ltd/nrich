@@ -83,17 +83,13 @@ public class DefaultRegistryHistoryService implements RegistryHistoryService {
     @Transactional(readOnly = true)
     public <T> Page<EntityWithRevision<T>> historyList(ListRegistryHistoryRequest request) {
         AuditQuery auditQuery = createAuditQuery(request);
+        Pageable pageable = PageableUtil.convertToPageable(request.pageNumber(), request.pageSize());
 
         addOrder(auditQuery, request.sortPropertyList());
 
-        List<?> resultList = auditQuery
-            .setFirstResult(request.pageNumber())
-            .setMaxResults(request.pageSize()).getResultList();
+        List<?> resultList = auditQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
 
         List<EntityWithRevision<T>> entityWithRevisionList = convertToEntityRevisionList(resultList);
-
-        Pageable pageable = PageableUtil.convertToPageable(request.pageNumber(), request.pageSize());
-
         return PageableExecutionUtils.getPage(entityWithRevisionList, pageable, () -> executeCountQuery(createAuditQuery(request)));
     }
 
