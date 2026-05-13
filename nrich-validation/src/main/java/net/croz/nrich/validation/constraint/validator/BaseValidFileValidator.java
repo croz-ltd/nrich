@@ -21,7 +21,6 @@ import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,6 +37,10 @@ abstract class BaseValidFileValidator {
     protected String[] allowedExtensionList;
 
     protected String allowedFileNameRegex;
+
+    protected boolean requireContentType;
+
+    protected boolean requireExtension;
 
     protected boolean isValid(Object value) {
         if (value == null) {
@@ -61,8 +64,13 @@ abstract class BaseValidFileValidator {
         }
 
         boolean valid = true;
-        if (fileContentType != null && allowedContentTypeList.length > 0) {
-            valid = List.of(allowedContentTypeList).contains(fileContentType);
+        if (allowedContentTypeList.length > 0) {
+            if (fileContentType == null) {
+                valid = !requireContentType;
+            }
+            else {
+                valid = Arrays.stream(allowedContentTypeList).anyMatch(fileContentType::equalsIgnoreCase);
+            }
         }
         if (!allowedFileNameRegex.isEmpty()) {
             valid &= fileName.matches(allowedFileNameRegex);
@@ -78,7 +86,10 @@ abstract class BaseValidFileValidator {
                 extension = null;
             }
 
-            if (extension != null) {
+            if (extension == null) {
+                valid &= !requireExtension;
+            }
+            else {
                 valid &= Arrays.stream(allowedExtensionList).anyMatch(extension::equalsIgnoreCase);
             }
         }

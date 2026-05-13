@@ -73,6 +73,23 @@ public @interface ValidFile {
     String allowedFileNameRegex() default "";
 
     /**
+     * Whether a {@code null} content type causes validation to fail when {@link #allowedContentTypeList()} is non-empty.
+     * Default {@code true} (strict). Set to {@code false} to allow uploads without a {@code Content-Type} header
+     * through the content-type gate.
+     *
+     * @return require content type
+     */
+    boolean requireContentType() default true;
+
+    /**
+     * Whether a filename without a recognizable extension causes validation to fail when {@link #allowedExtensionList()} is non-empty.
+     * Default {@code true} (strict). Set to {@code false} to allow extensionless filenames through the extension gate.
+     *
+     * @return require extension
+     */
+    boolean requireExtension() default true;
+
+    /**
      * Defines several {@link ValidFile} annotations on the same element.
      *
      * @see ValidFile

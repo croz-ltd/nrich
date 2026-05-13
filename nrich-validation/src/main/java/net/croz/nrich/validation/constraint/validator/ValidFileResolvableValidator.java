@@ -37,6 +37,8 @@ public class ValidFileResolvableValidator extends BaseValidFileValidator impleme
         this.allowedContentTypeList = resolvePropertyValue(constraintAnnotation.allowedContentTypeListPropertyName(), String[].class, new String[0]);
         this.allowedExtensionList = resolvePropertyValue(constraintAnnotation.allowedExtensionListPropertyName(), String[].class, new String[0]);
         this.allowedFileNameRegex = resolvePropertyValue(constraintAnnotation.allowedFileNameRegexPropertyName(), String.class, "");
+        this.requireContentType = resolvePropertyValue(constraintAnnotation.requireContentTypePropertyName(), Boolean.class, true);
+        this.requireExtension = resolvePropertyValue(constraintAnnotation.requireExtensionPropertyName(), Boolean.class, true);
     }
 
     @Override
