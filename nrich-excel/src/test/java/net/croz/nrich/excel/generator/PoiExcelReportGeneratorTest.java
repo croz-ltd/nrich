@@ -24,6 +24,7 @@ import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.stub.TestEnum;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -121,6 +122,25 @@ class PoiExcelReportGeneratorTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has been closed and cannot be written anymore");
+    }
+
+    @Test
+    void shouldQuotePrefixOnlyFormulaStartingCellsWithoutMutatingSharedStyle() {
+        // given
+        Object[] rowData = { "=formula", "safe" };
+
+        // when
+        excelReportGenerator.writeRowData(rowData);
+        excelReportGenerator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(outputStream);
+        Cell formulaCell = sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX).getCell(0);
+        Cell safeCell = sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX).getCell(1);
+
+        // then
+        assertThat(formulaCell.getCellStyle().getQuotePrefixed()).isTrue();
+        assertThat(safeCell.getCellStyle().getQuotePrefixed()).isFalse();
     }
 
     @Test

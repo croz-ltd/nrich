@@ -65,6 +65,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private final Map<Class<?>, CellStyle> defaultStyleMap;
 
+    private final Map<Short, CellStyle> quotePrefixedStyleCache = new HashMap<>();
+
     private final boolean autoSizeColumns;
 
     private int currentRowNumber;
@@ -154,12 +156,23 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             String stringValue = value.toString();
             cell.setCellValue(stringValue);
             if (stringValue != null && FORMULA_CHARACTER_LIST.stream().anyMatch(stringValue::startsWith)) {
-                cell.getCellStyle().setQuotePrefixed(true);
+                cell.setCellStyle(resolveQuotePrefixedStyle(cell.getCellStyle()));
             }
         }
         else {
             converter.setCellValue(cellHolder, value);
         }
+    }
+
+    private CellStyle resolveQuotePrefixedStyle(CellStyle source) {
+        return quotePrefixedStyleCache.computeIfAbsent(source.getIndex(), index -> {
+            CellStyle clonedStyle = workbook.createCellStyle();
+
+            clonedStyle.cloneStyleFrom(source);
+            clonedStyle.setQuotePrefixed(true);
+
+            return clonedStyle;
+        });
     }
 
     private Map<Integer, CellStyle> createStyleMap(List<ColumnDataFormat> columnDataFormatList) {
