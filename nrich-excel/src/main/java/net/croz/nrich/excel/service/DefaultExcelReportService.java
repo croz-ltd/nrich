@@ -40,27 +40,28 @@ public class DefaultExcelReportService implements ExcelReportService {
         Assert.isTrue(request.getBatchSize() > 0, "Batch size must be greater than zero!");
 
         CreateReportGeneratorRequest createReportGeneratorRequest = toCreateReportGeneratorRequest(request);
-        ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(createReportGeneratorRequest);
 
-        MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
+        try (ExcelReportGenerator excelReportGenerator = excelReportGeneratorFactory.createReportGenerator(createReportGeneratorRequest)) {
+            MultiRowDataProvider multiRowDataProvider = request.getMultiRowDataProvider();
 
-        int limit = request.getBatchSize();
-        int start = 0;
-        Object[][] rowBatchData;
-        while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
+            int limit = request.getBatchSize();
+            int start = 0;
+            Object[][] rowBatchData;
+            while ((rowBatchData = multiRowDataProvider.resolveMultiRowData(start, limit)) != null) {
 
-            if (rowBatchData.length == 0) {
-                break;
+                if (rowBatchData.length == 0) {
+                    break;
+                }
+
+                Arrays.stream(rowBatchData)
+                    .filter(Objects::nonNull)
+                    .forEach(excelReportGenerator::writeRowData);
+
+                start += limit;
             }
 
-            Arrays.stream(rowBatchData)
-                .filter(Objects::nonNull)
-                .forEach(excelReportGenerator::writeRowData);
-
-            start += limit;
+            excelReportGenerator.flush();
         }
-
-        excelReportGenerator.flush();
     }
 
     private CreateReportGeneratorRequest toCreateReportGeneratorRequest(CreateExcelReportRequest reportRequest) {
