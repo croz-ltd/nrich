@@ -39,7 +39,7 @@ public class BytesEncryptorTextEncryptService implements TextEncryptionService {
             return new String(encoded, charset);
         }
         catch (Exception exception) {
-            throw new EncryptOperationFailedException(String.format("Error occurred during encryption for data: %s", textToEncrypt), exception);
+            throw new EncryptOperationFailedException(String.format("Error occurred during encryption (data length: %d)", textToEncrypt == null ? 0 : textToEncrypt.length()), exception);
         }
     }
 
@@ -51,7 +51,7 @@ public class BytesEncryptorTextEncryptService implements TextEncryptionService {
             return new String(encryptor.decrypt(decoded), charset);
         }
         catch (Exception exception) {
-            throw new EncryptOperationFailedException(String.format("Error occurred during decryption for data: %s", textToDecrypt), exception);
+            throw new EncryptOperationFailedException(String.format("Error occurred during decryption (data length: %d)", textToDecrypt == null ? 0 : textToDecrypt.length()), exception);
         }
     }
 }
