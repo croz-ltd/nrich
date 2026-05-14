@@ -30,6 +30,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -48,6 +49,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAn
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithNumericAndStringCell;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -164,6 +166,28 @@ class PoiExcelReportGeneratorTest {
 
         // then
         assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("$1.99 \\ literal");
+    }
+
+    @Test
+    void shouldSkipNonStringCellsWhenResolvingTemplateVariables() {
+        // given
+        InputStream template = new ByteArrayInputStream(createTemplateWithNumericAndStringCell());
+        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(new ResourceBundleMessageSource()));
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = new PoiExcelReportGenerator(
+            cellValueConverterList, out, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), 1, false
+        );
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo(42);
+        assertThat(getCellValue(sheet.getRow(0).getCell(1))).isEqualTo("resolvedValue");
     }
 
     @Test

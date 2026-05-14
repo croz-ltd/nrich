@@ -26,6 +26,7 @@ import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.model.PoiCellHolder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -119,6 +120,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         }
 
         sheet.forEach(row -> row.forEach(cell -> {
+            if (cell.getCellType() != CellType.STRING) {
+                return;
+            }
+
             Matcher matcher = TEMPLATE_VARIABLE_PATTERN.matcher(cell.getStringCellValue());
 
             if (matcher.find()) {
