@@ -129,7 +129,7 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
                     .findFirst()
                     .orElse("");
 
-                String updatedValue = matcher.replaceFirst(variableValue);
+                String updatedValue = matcher.replaceFirst(Matcher.quoteReplacement(variableValue));
 
                 setCellValue(cell, updatedValue, cell.getCellStyle());
             }

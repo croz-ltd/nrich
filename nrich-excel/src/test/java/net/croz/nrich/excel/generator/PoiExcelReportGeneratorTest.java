@@ -39,6 +39,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -141,6 +142,28 @@ class PoiExcelReportGeneratorTest {
         // then
         assertThat(formulaCell.getCellStyle().getQuotePrefixed()).isTrue();
         assertThat(safeCell.getCellStyle().getQuotePrefixed()).isFalse();
+    }
+
+    @Test
+    void shouldReplaceTemplateVariableContainingRegexMetacharacters() {
+        // given
+        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(new ResourceBundleMessageSource()));
+        InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "$1.99 \\ literal"));
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = new PoiExcelReportGenerator(
+            cellValueConverterList, out, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), TEMPLATE_DATA_FIRST_ROW_INDEX, false
+        );
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("$1.99 \\ literal");
     }
 
     @Test
