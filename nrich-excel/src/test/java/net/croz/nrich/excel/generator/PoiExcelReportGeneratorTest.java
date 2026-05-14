@@ -17,18 +17,15 @@
 
 package net.croz.nrich.excel.generator;
 
-import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
-import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.stub.TestEnum;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,7 +37,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -49,6 +45,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAn
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createGenerator;
 import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithNumericAndStringCell;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -67,10 +64,6 @@ class PoiExcelReportGeneratorTest {
 
     @BeforeEach
     void setup() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
-
-        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(messageSource));
         InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
         List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
         List<ColumnDataFormat> columnDataFormatList = List.of(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
@@ -81,9 +74,7 @@ class PoiExcelReportGeneratorTest {
 
         outputStream = new ByteArrayOutputStream();
 
-        excelReportGenerator = new PoiExcelReportGenerator(
-            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX, false
-        );
+        excelReportGenerator = createGenerator(outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @Test
@@ -149,14 +140,10 @@ class PoiExcelReportGeneratorTest {
     @Test
     void shouldReplaceTemplateVariableContainingRegexMetacharacters() {
         // given
-        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(new ResourceBundleMessageSource()));
         InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
         List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "$1.99 \\ literal"));
-
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PoiExcelReportGenerator generator = new PoiExcelReportGenerator(
-            cellValueConverterList, out, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), TEMPLATE_DATA_FIRST_ROW_INDEX, false
-        );
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, TEMPLATE_DATA_FIRST_ROW_INDEX);
 
         // when
         generator.flush();
@@ -172,12 +159,9 @@ class PoiExcelReportGeneratorTest {
     void shouldSkipNonStringCellsWhenResolvingTemplateVariables() {
         // given
         InputStream template = new ByteArrayInputStream(createTemplateWithNumericAndStringCell());
-        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(new ResourceBundleMessageSource()));
         List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        PoiExcelReportGenerator generator = new PoiExcelReportGenerator(
-            cellValueConverterList, out, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), 1, false
-        );
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, 1);
 
         // when
         generator.flush();

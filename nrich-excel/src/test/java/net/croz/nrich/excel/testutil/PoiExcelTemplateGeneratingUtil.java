@@ -18,11 +18,22 @@
 package net.croz.nrich.excel.testutil;
 
 import lombok.SneakyThrows;
+import net.croz.nrich.excel.api.converter.CellValueConverter;
+import net.croz.nrich.excel.api.model.ColumnDataFormat;
+import net.croz.nrich.excel.api.model.TemplateVariable;
+import net.croz.nrich.excel.api.model.TypeDataFormat;
+import net.croz.nrich.excel.converter.DefaultCellValueConverter;
+import net.croz.nrich.excel.generator.PoiExcelReportGenerator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
 
 public final class PoiExcelTemplateGeneratingUtil {
 
@@ -41,5 +52,21 @@ public final class PoiExcelTemplateGeneratingUtil {
 
             return out.toByteArray();
         }
+    }
+
+    public static PoiExcelReportGenerator createGenerator(OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList, int startIndex) {
+        return createGenerator(outputStream, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), startIndex);
+    }
+
+    public static PoiExcelReportGenerator createGenerator(OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
+                                                          List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+
+        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(messageSource));
+
+        return new PoiExcelReportGenerator(
+            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, startIndex, false
+        );
     }
 }
