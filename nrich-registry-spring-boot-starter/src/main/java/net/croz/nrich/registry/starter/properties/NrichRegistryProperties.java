@@ -34,6 +34,7 @@ import java.util.List;
  * @param enumEndpointPath                        Endpoint path of {@link net.croz.nrich.registry.enumdata.controller.RegistryEnumController}
  * @param historyEndpointPath                     Endpoint path of {@link net.croz.nrich.registry.history.controller.RegistryHistoryController}
  * @param registryConfiguration                   Registry configuration used for defining entities and groups which will be managed.
+ * @param allowedEnumPackageList                  Optional whitelist of packages whose {@link Enum} classes {@link net.croz.nrich.registry.api.enumdata.service.RegistryEnumService} will resolve; matched as a prefix so sub-packages are included. When empty, any {@link Enum} class is accepted.
  */
 @ConfigurationProperties("nrich.registry")
 public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, @DefaultValue @NestedConfigurationProperty RegistrySearchProperties registrySearch,
@@ -43,7 +44,8 @@ public record NrichRegistryProperties(List<String> defaultReadOnlyPropertyList, 
                                       @DefaultValue("nrich/registry/data") String dataEndpointPath,
                                       @DefaultValue("nrich/registry/enum") String enumEndpointPath,
                                       @DefaultValue("nrich/registry/history") String historyEndpointPath,
-                                      @NestedConfigurationProperty RegistryConfiguration registryConfiguration) {
+                                      @NestedConfigurationProperty RegistryConfiguration registryConfiguration,
+                                      @DefaultValue List<String> allowedEnumPackageList) {
 
     /**
      * @param dateFormatList           List of date formats used by {@link net.croz.nrich.search.converter.DefaultStringToTypeConverter} to convert string to date values.
