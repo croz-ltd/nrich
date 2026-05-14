@@ -22,6 +22,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class RegistryPropertyComparator extends DisplayOrderComparator implements Comparator<RegistryPropertyConfiguration> {
 
@@ -33,18 +34,19 @@ public class RegistryPropertyComparator extends DisplayOrderComparator implement
     public int compare(RegistryPropertyConfiguration firstProperty, RegistryPropertyConfiguration secondProperty) {
         String firstPropertyName = firstProperty.getName();
         String secondPropertyName = secondProperty.getName();
+        List<String> displayOrderList = getPropertyDisplayOrderList();
+        boolean eitherPropertyInDisplayOrder = !CollectionUtils.isEmpty(displayOrderList) && Stream.of(firstPropertyName, secondPropertyName).anyMatch(displayOrderList::contains);
 
-        if (CollectionUtils.isEmpty(getPropertyDisplayOrderList())) {
-            if (firstProperty.isId()) {
-                return -1;
-            }
-            if (secondProperty.isId()) {
-                return 1;
-            }
-
-            return firstPropertyName.compareTo(secondPropertyName);
+        if (eitherPropertyInDisplayOrder) {
+            return comparePropertiesByDisplayList(firstPropertyName, secondPropertyName);
+        }
+        if (firstProperty.isId() && !secondProperty.isId()) {
+            return -1;
+        }
+        if (!firstProperty.isId() && secondProperty.isId()) {
+            return 1;
         }
 
-        return comparePropertiesByDisplayList(firstPropertyName, secondPropertyName);
+        return firstPropertyName.compareTo(secondPropertyName);
     }
 }

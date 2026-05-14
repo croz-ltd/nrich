@@ -54,4 +54,20 @@ class RegistryPropertyComparatorTest {
         // then
         assertThat(result).isEqualTo(-1);
     }
+
+    @Test
+    void shouldFallBackToNameOrderWhenBothPropertiesAreIdAndDisplayOrderIsEmpty() {
+        // given
+        RegistryPropertyConfiguration first = RegistryPropertyConfiguration.builder().isId(true).name("alpha").build();
+        RegistryPropertyConfiguration second = RegistryPropertyConfiguration.builder().isId(true).name("beta").build();
+        RegistryPropertyComparator registryPropertyComparator = new RegistryPropertyComparator(null);
+
+        // when
+        int forwardResult = registryPropertyComparator.compare(first, second);
+        int reverseResult = registryPropertyComparator.compare(second, first);
+
+        // then
+        assertThat(forwardResult).isNegative();
+        assertThat(reverseResult).isPositive();
+    }
 }
