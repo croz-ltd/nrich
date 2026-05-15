@@ -27,6 +27,17 @@ public final class HibernateUtilGeneratingUtil {
     private HibernateUtilGeneratingUtil() {
     }
 
+    public static HibernateUtilTestEntity createAndSaveHibernateUtilTestEntityWithSameParent(EntityManager entityManager) {
+        HibernateUtilTestEntity entity = new HibernateUtilTestEntity();
+
+        entity.setName("same");
+        entity.setParent(entity);
+
+        entityManager.persist(entity);
+
+        return entity;
+    }
+
     public static HibernateUtilTestEntity createAndSaveHibernateUtilTestEntity(EntityManager entityManager) {
         HibernateUtilTestEntity firstChild = createHibernateUtilTestEntityInternal(entityManager, "first", null, null);
         HibernateUtilTestEntity secondChild = createHibernateUtilTestEntityInternal(entityManager, "second", null, null);
