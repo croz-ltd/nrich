@@ -28,9 +28,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import static net.croz.nrich.registry.data.util.testutil.HibernateUtilGeneratingUtil.createAndSaveHibernateUtilTestEntity;
+import static net.croz.nrich.registry.data.util.testutil.HibernateUtilGeneratingUtil.createAndSaveHibernateUtilTestEntityWithSameParent;
 import static net.croz.nrich.registry.testutil.PersistenceTestUtil.executeInTransaction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
 class HibernateUtilTest {
@@ -57,6 +59,18 @@ class HibernateUtilTest {
 
         // then
         assertThat(exception).isNull();
+    }
+
+    @Test
+    void shouldHandleSelfReferencingEntityWithoutStackOverflow() {
+        // given
+        HibernateUtilTestEntity entity = executeInTransaction(transactionManager, () -> createAndSaveHibernateUtilTestEntityWithSameParent(entityManager));
+
+        // when
+        Throwable thrown = catchThrowable(() -> HibernateUtil.initialize(entity));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     private HibernateUtilTestEntity loadAndInitializeEntity(Long id) {
