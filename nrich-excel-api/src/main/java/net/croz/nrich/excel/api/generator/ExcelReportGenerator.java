@@ -20,7 +20,7 @@ package net.croz.nrich.excel.api.generator;
 /**
  * Writes data to excel report.
  */
-public interface ExcelReportGenerator {
+public interface ExcelReportGenerator extends AutoCloseable {
 
     /**
      * Write a single row to excel report.
@@ -33,5 +33,10 @@ public interface ExcelReportGenerator {
      * Flushes data to report (the OutputStream is not closed that's the user responsibility). No further writing is possible after this call.
      */
     void flush();
+
+    /**
+     * Releases workbook resources (temp files, internal handles). The OutputStream remains caller-owned. Idempotent — safe to call multiple times.
+     */
+    void close();
 
 }

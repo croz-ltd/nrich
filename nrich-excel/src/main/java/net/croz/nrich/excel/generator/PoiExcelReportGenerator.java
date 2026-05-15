@@ -71,6 +71,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     private boolean templateOpen = true;
 
+    private boolean workbookClosed;
+
     public PoiExcelReportGenerator(List<CellValueConverter> cellValueConverterList, OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
                                    List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex, boolean autoSizeColumns) {
         this.cellValueConverterList = cellValueConverterList;
@@ -106,9 +108,32 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     @SneakyThrows
     @Override
     public void flush() {
+        if (!templateOpen) {
+            return;
+        }
+
+        templateOpen = false;
+
         autoSizeColumnsIfRequired();
         workbook.write(outputStream);
-        this.templateOpen = false;
+    }
+
+    @SneakyThrows
+    @Override
+    public void close() {
+        if (workbookClosed) {
+            return;
+        }
+
+        workbookClosed = true;
+        templateOpen = false;
+
+        try {
+            workbook.dispose();
+        }
+        finally {
+            workbook.close();
+        }
     }
 
     private void processTemplateVariableMap(Sheet sheet, List<TemplateVariable> templateVariableList) {
@@ -183,7 +208,10 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
     @SneakyThrows
     private SXSSFWorkbook initializeWorkBookWithTemplate(InputStream template, List<TemplateVariable> templateVariableList) {
-        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(template);
+        XSSFWorkbook xssfWorkbook;
+        try (template) {
+            xssfWorkbook = new XSSFWorkbook(template);
+        }
 
         processTemplateVariableMap(xssfWorkbook.getSheetAt(0), templateVariableList);
 
