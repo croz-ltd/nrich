@@ -54,6 +54,18 @@ public final class PoiExcelTemplateGeneratingUtil {
         }
     }
 
+    @SneakyThrows
+    public static byte[] createTemplateWithMultiVariableCell() {
+        try (XSSFWorkbook workbook = new XSSFWorkbook(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Sheet sheet = workbook.createSheet();
+
+            sheet.createRow(0).createCell(0).setCellValue("Hello ${firstName} ${lastName}");
+            workbook.write(out);
+
+            return out.toByteArray();
+        }
+    }
+
     public static PoiExcelReportGenerator createGenerator(OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList, int startIndex) {
         return createGenerator(outputStream, template, templateVariableList, Collections.emptyList(), Collections.emptyList(), startIndex);
     }

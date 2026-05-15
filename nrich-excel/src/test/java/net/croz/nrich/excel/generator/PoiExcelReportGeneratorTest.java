@@ -46,6 +46,7 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
 import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createGenerator;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithMultiVariableCell;
 import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithNumericAndStringCell;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -153,6 +154,24 @@ class PoiExcelReportGeneratorTest {
 
         // then
         assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("$1.99 \\ literal");
+    }
+
+    @Test
+    void shouldResolveMultipleTemplateVariablesInSameCell() {
+        // given
+        InputStream template = new ByteArrayInputStream(createTemplateWithMultiVariableCell());
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("firstName", "Alice"), new TemplateVariable("lastName", "Smith"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, 1);
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("Hello Alice Smith");
     }
 
     @Test

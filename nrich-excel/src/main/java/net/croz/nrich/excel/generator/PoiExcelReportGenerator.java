@@ -126,18 +126,22 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
 
             Matcher matcher = TEMPLATE_VARIABLE_PATTERN.matcher(cell.getStringCellValue());
 
-            if (matcher.find()) {
-                String matchedExpression = matcher.group(1);
+            if (!matcher.find()) {
+                return;
+            }
+
+            String updatedValue = matcher.replaceAll(match -> {
+                String variableName = match.group(1);
                 String variableValue = templateVariableList.stream()
-                    .filter(variable -> matchedExpression.equals(variable.name()))
+                    .filter(variable -> variableName.equals(variable.name()))
                     .map(TemplateVariable::value)
                     .findFirst()
                     .orElse("");
 
-                String updatedValue = matcher.replaceFirst(Matcher.quoteReplacement(variableValue));
+                return Matcher.quoteReplacement(variableValue);
+            });
 
-                setCellValue(cell, updatedValue, cell.getCellStyle());
-            }
+            setCellValue(cell, updatedValue, cell.getCellStyle());
         }));
     }
 
