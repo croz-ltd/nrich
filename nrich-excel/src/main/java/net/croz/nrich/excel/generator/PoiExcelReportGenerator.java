@@ -219,9 +219,11 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     }
 
     private void autoSizeColumnsIfRequired() {
-        if (autoSizeColumns) {
-            int numberOfColumns = this.sheet.getRow(this.sheet.getLastRowNum()).getLastCellNum();
-            IntStream.range(0, numberOfColumns).forEach(sheet::autoSizeColumn);
+        if (!autoSizeColumns || sheet.getLastRowNum() < 0) {
+            return;
         }
+
+        int numberOfColumns = this.sheet.getRow(this.sheet.getLastRowNum()).getLastCellNum();
+        IntStream.range(0, numberOfColumns).forEach(sheet::autoSizeColumn);
     }
 }

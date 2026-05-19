@@ -72,13 +72,18 @@ public final class PoiExcelTemplateGeneratingUtil {
 
     public static PoiExcelReportGenerator createGenerator(OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
                                                           List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex) {
+        return createGenerator(outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, startIndex, false);
+    }
+
+    public static PoiExcelReportGenerator createGenerator(OutputStream outputStream, InputStream template, List<TemplateVariable> templateVariableList,
+                                                          List<TypeDataFormat> typeDataFormatList, List<ColumnDataFormat> columnDataFormatList, int startIndex, boolean autoSizeColumns) {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");
 
         List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(messageSource));
 
         return new PoiExcelReportGenerator(
-            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, startIndex, false
+            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, startIndex, autoSizeColumns
         );
     }
 }

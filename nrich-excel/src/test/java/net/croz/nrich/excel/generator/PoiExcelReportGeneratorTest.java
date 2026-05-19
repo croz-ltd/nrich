@@ -194,6 +194,21 @@ class PoiExcelReportGeneratorTest {
     }
 
     @Test
+    void shouldNotFailWhenFlushingEmptySheetWithAutoSizeEnabled() {
+        // given
+        InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
+        List<TemplateVariable> templateVariableList = List.of();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator autoSizeGenerator = createGenerator(out, template, templateVariableList, List.of(), List.of(), TEMPLATE_DATA_FIRST_ROW_INDEX, true);
+
+        // when
+        Throwable thrown = catchThrowable(autoSizeGenerator::flush);
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
     void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() {
         // given
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
