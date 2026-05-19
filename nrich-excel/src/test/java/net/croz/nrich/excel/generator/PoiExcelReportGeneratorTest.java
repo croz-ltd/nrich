@@ -17,18 +17,17 @@
 
 package net.croz.nrich.excel.generator;
 
-import net.croz.nrich.excel.api.converter.CellValueConverter;
 import net.croz.nrich.excel.api.model.ColumnDataFormat;
 import net.croz.nrich.excel.api.model.TemplateVariable;
 import net.croz.nrich.excel.api.model.TypeDataFormat;
-import net.croz.nrich.excel.converter.DefaultCellValueConverter;
 import net.croz.nrich.excel.stub.TestEnum;
 import net.croz.nrich.excel.util.TypeDataFormatUtil;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.support.ResourceBundleMessageSource;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -46,6 +45,9 @@ import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.createWorkbookAn
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getCellValue;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellStyleList;
 import static net.croz.nrich.excel.testutil.PoiDataResolverUtil.getRowCellValueList;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createGenerator;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithMultiVariableCell;
+import static net.croz.nrich.excel.testutil.PoiExcelTemplateGeneratingUtil.createTemplateWithNumericAndStringCell;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -63,10 +65,6 @@ class PoiExcelReportGeneratorTest {
 
     @BeforeEach
     void setup() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("messages");
-
-        List<CellValueConverter> cellValueConverterList = List.of(new DefaultCellValueConverter(messageSource));
         InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
         List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
         List<ColumnDataFormat> columnDataFormatList = List.of(new ColumnDataFormat(2, "dd-MM-yyyy"), new ColumnDataFormat(3, "dd-MM-yyyy HH:mm"));
@@ -77,9 +75,7 @@ class PoiExcelReportGeneratorTest {
 
         outputStream = new ByteArrayOutputStream();
 
-        excelReportGenerator = new PoiExcelReportGenerator(
-            cellValueConverterList, outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX, false
-        );
+        excelReportGenerator = createGenerator(outputStream, template, templateVariableList, typeDataFormatList, columnDataFormatList, TEMPLATE_DATA_FIRST_ROW_INDEX);
     }
 
     @Test
@@ -121,6 +117,95 @@ class PoiExcelReportGeneratorTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has been closed and cannot be written anymore");
+    }
+
+    @Test
+    void shouldQuotePrefixOnlyFormulaStartingCellsWithoutMutatingSharedStyle() {
+        // given
+        Object[] rowData = { "=formula", "safe" };
+
+        // when
+        excelReportGenerator.writeRowData(rowData);
+        excelReportGenerator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(outputStream);
+        Cell formulaCell = sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX).getCell(0);
+        Cell safeCell = sheet.getRow(TEMPLATE_DATA_FIRST_ROW_INDEX).getCell(1);
+
+        // then
+        assertThat(formulaCell.getCellStyle().getQuotePrefixed()).isTrue();
+        assertThat(safeCell.getCellStyle().getQuotePrefixed()).isFalse();
+    }
+
+    @Test
+    void shouldReplaceTemplateVariableContainingRegexMetacharacters() {
+        // given
+        InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "$1.99 \\ literal"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, TEMPLATE_DATA_FIRST_ROW_INDEX);
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("$1.99 \\ literal");
+    }
+
+    @Test
+    void shouldResolveMultipleTemplateVariablesInSameCell() {
+        // given
+        InputStream template = new ByteArrayInputStream(createTemplateWithMultiVariableCell());
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("firstName", "Alice"), new TemplateVariable("lastName", "Smith"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, 1);
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo("Hello Alice Smith");
+    }
+
+    @Test
+    void shouldSkipNonStringCellsWhenResolvingTemplateVariables() {
+        // given
+        InputStream template = new ByteArrayInputStream(createTemplateWithNumericAndStringCell());
+        List<TemplateVariable> templateVariableList = List.of(new TemplateVariable("templateVariable", "resolvedValue"));
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator generator = createGenerator(out, template, templateVariableList, 1);
+
+        // when
+        generator.flush();
+
+        // and when
+        Sheet sheet = createWorkbookAndResolveSheet(out);
+
+        // then
+        assertThat(getCellValue(sheet.getRow(0).getCell(0))).isEqualTo(42);
+        assertThat(getCellValue(sheet.getRow(0).getCell(1))).isEqualTo("resolvedValue");
+    }
+
+    @Test
+    void shouldNotFailWhenFlushingEmptySheetWithAutoSizeEnabled() {
+        // given
+        InputStream template = getClass().getResourceAsStream("/excel/template.xlsx");
+        List<TemplateVariable> templateVariableList = List.of();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PoiExcelReportGenerator autoSizeGenerator = createGenerator(out, template, templateVariableList, List.of(), List.of(), TEMPLATE_DATA_FIRST_ROW_INDEX, true);
+
+        // when
+        Throwable thrown = catchThrowable(autoSizeGenerator::flush);
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     @Test
