@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
 class EncryptDataAspectTest {
@@ -113,6 +114,15 @@ class EncryptDataAspectTest {
         // then
         assertThat(result).isNotNull();
         assertThat(result.getValue()).isEqualTo(VALUE_TO_ENCRYPT);
+    }
+
+    @Test
+    void shouldNotFailWhenMethodArgumentIsNull() {
+        // when
+        Throwable thrown = catchThrowable(() -> encryptDataAspectTestService.dataToEncrypt((String) null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     @Test

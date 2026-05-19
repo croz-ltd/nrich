@@ -28,6 +28,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.aop.ProxyMethodInvocation;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -110,7 +111,7 @@ public class EncryptMethodInterceptor extends BaseEncryptDataAdvice implements M
     }
 
     private EncryptionContext createEncryptionContext(String methodName, Object[] arguments) {
-        List<Object> argumentList = List.of(arguments);
+        List<Object> argumentList = Arrays.asList(arguments);
         String currentUsername = currentUsername();
 
         return EncryptionContext.builder()
