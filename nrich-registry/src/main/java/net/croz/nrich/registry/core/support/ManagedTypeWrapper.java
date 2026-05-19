@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -102,13 +104,15 @@ public class ManagedTypeWrapper {
 
     private List<SingularAssociation> resolveSingularAssociationList(ManagedType<?> managedType) {
         Map<String, SingularAssociation> associationMap = new HashMap<>();
+        Set<Class<?>> currentPathTypes = new HashSet<>(Set.of(managedType.getJavaType()));
 
-        resolveSingularAssociationList(managedType, null, null, associationMap);
+        resolveSingularAssociationList(managedType, null, null, associationMap, currentPathTypes);
 
         return new ArrayList<>(associationMap.values());
     }
 
-    private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap) {
+    private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap,
+                                                Set<Class<?>> currentPathTypes) {
         @SuppressWarnings("unchecked")
         List<SingularAttribute<?, ?>> currentAssociations = (List<SingularAttribute<?, ?>>) managedType.getSingularAttributes().stream()
             .filter(Attribute::isAssociation)
@@ -123,8 +127,15 @@ public class ManagedTypeWrapper {
                 singularAssociationMap.remove(currentPrefix);
             }
 
-            if (!association.getJavaType().equals(managedType.getJavaType())) {
-                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), associationName, singularAssociationMap);
+            Class<?> associationType = association.getJavaType();
+
+            if (currentPathTypes.add(associationType)) {
+                try {
+                    resolveSingularAssociationList((ManagedType<?>) association.getType(), isCurrentPathOptional, associationName, singularAssociationMap, currentPathTypes);
+                }
+                finally {
+                    currentPathTypes.remove(associationType);
+                }
             }
         }
     }
