@@ -95,7 +95,7 @@ public class EncryptDataAspect extends BaseEncryptDataAdvice {
     }
 
     private EncryptionContext createEncryptionContext(Signature signature, Object[] arguments) {
-        List<Object> argumentList = List.of(arguments);
+        List<Object> argumentList = Arrays.asList(arguments);
         String methodName = String.format(EncryptConstants.METHOD_NAME_FORMAT, signature.getDeclaringType().getName(), signature.getName());
         String currentUsername = currentUsername();
 
