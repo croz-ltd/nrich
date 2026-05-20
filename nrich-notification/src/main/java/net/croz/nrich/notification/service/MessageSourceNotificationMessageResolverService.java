@@ -59,13 +59,13 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
         List<String> messageCodeList = new ArrayList<>();
 
         if (fieldName == null) {
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, constraintName, NotificationConstants.INVALID_SUFFIX));
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.EXTENDED_PREFIX_MESSAGE_FORMAT, name, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.EXTENDED_PREFIX_MESSAGE_FORMAT, shortName, constraintName, NotificationConstants.INVALID_SUFFIX));
         }
         else {
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, name, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_FULL_MESSAGE_FORMAT, shortName, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
-            messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.FULL_PREFIX_MESSAGE_FORMAT, name, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.FULL_PREFIX_MESSAGE_FORMAT, shortName, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
+            messageCodeList.add(String.format(NotificationConstants.EXTENDED_PREFIX_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.INVALID_SUFFIX));
         }
 
         messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, constraintName, NotificationConstants.INVALID_SUFFIX));
@@ -78,9 +78,9 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
 
         messageCodeList.clear();
 
-        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
-        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
-        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.EXTENDED_PREFIX_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.EXTENDED_PREFIX_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
 
         String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
 
