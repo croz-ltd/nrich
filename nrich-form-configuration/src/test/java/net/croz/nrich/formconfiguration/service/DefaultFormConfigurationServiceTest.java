@@ -43,12 +43,13 @@ class DefaultFormConfigurationServiceTest {
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList();
 
         // then
-        assertThat(resultList).hasSize(5);
+        assertThat(resultList).hasSize(6);
         assertThat(resultList).extracting("formId").containsExactlyInAnyOrder(
             FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.LIST_NESTED_FORM_CONFIGURATION_FORM_ID,
             "annotatedForm.formId"
         );
     }
@@ -170,6 +171,24 @@ class DefaultFormConfigurationServiceTest {
             "nested.doubleNested.request.lastName",
             "nested.doubleNested.request.timestamp",
             "nested.doubleNested.request.value"
+        );
+    }
+
+    @Test
+    void shouldCascadeIntoElementTypeForListProperty() {
+        // given
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.LIST_NESTED_FORM_CONFIGURATION_FORM_ID);
+
+        // when
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+
+        // then
+        assertThat(resultList).hasSize(1);
+
+        FormConfiguration formConfiguration = resultList.get(0);
+
+        assertThat(formConfiguration.constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::path).containsExactlyInAnyOrder(
+            "name", "requestList.name", "requestList.lastName", "requestList.timestamp", "requestList.value"
         );
     }
 

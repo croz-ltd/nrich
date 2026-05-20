@@ -30,6 +30,7 @@ import org.springframework.cache.annotation.Cacheable;
 import jakarta.validation.Validator;
 import jakarta.validation.metadata.BeanDescriptor;
 import jakarta.validation.metadata.ConstraintDescriptor;
+import jakarta.validation.metadata.ContainerElementTypeDescriptor;
 import jakarta.validation.metadata.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +95,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
             }
 
             if (shouldResolveConstraintListForType(propertyDescriptor)) {
-                recursiveResolveFieldConfiguration(propertyDescriptor.getElementClass(), constrainedPropertyConfigurationList, propertyPath);
+                recursiveResolveFieldConfiguration(resolveCascadedType(propertyDescriptor), constrainedPropertyConfigurationList, propertyPath);
             }
         });
 
@@ -103,6 +104,13 @@ public class DefaultFormConfigurationService implements FormConfigurationService
 
     private boolean shouldResolveConstraintListForType(PropertyDescriptor propertyDescriptor) {
         return propertyDescriptor.isCascaded();
+    }
+
+    private Class<?> resolveCascadedType(PropertyDescriptor propertyDescriptor) {
+        return propertyDescriptor.getConstrainedContainerElementTypes().stream()
+            .map(ContainerElementTypeDescriptor::getElementClass)
+            .findFirst()
+            .orElseGet(propertyDescriptor::getElementClass);
     }
 
     private List<ConstrainedPropertyClientValidatorConfiguration> resolvePropertyValidatorList(Class<?> parentType, String propertyPath, PropertyDescriptor propertyDescriptor) {
