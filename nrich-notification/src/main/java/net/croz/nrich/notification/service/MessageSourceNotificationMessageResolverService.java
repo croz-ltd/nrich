@@ -80,7 +80,7 @@ public class MessageSourceNotificationMessageResolverService implements Notifica
 
         messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, name, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
         messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, shortName, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
-        messageCodeList.add(String.format(NotificationConstants.CONSTRAINT_SHORT_MESSAGE_FORMAT, fieldName, constraintName, NotificationConstants.FIELD_LABEL_SUFFIX));
+        messageCodeList.add(String.format(NotificationConstants.PREFIX_MESSAGE_FORMAT, fieldName, NotificationConstants.FIELD_LABEL_SUFFIX));
 
         String fieldNameMessage = resolveMessage(messageCodeList, null, fieldName);
 
