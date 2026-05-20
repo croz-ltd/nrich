@@ -69,7 +69,7 @@
 
         private final JavaToJavascriptTypeConversionService javaToJavascriptTypeConversionService;
 
-        @Cacheable("nrich.registryConfiguration.cache")
+        @Cacheable(value = "nrich.registryConfiguration.cache", key = "T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
         @Override
         public List<RegistryGroupConfiguration> fetchRegistryGroupConfigurationList() {
             List<RegistryGroupConfiguration> registryGroupConfigurationList = new ArrayList<>();
