@@ -21,9 +21,9 @@ public final class NotificationConstants {
 
     public static final String PREFIX_MESSAGE_FORMAT = "%s.%s";
 
-    public static final String CONSTRAINT_SHORT_MESSAGE_FORMAT = "%s.%s.%s";
+    public static final String EXTENDED_PREFIX_MESSAGE_FORMAT = "%s.%s.%s";
 
-    public static final String CONSTRAINT_FULL_MESSAGE_FORMAT = "%s.%s.%s.%s";
+    public static final String FULL_PREFIX_MESSAGE_FORMAT = "%s.%s.%s.%s";
 
     public static final String FIELD_ERROR_FORMAT = "%s: %s";
 
