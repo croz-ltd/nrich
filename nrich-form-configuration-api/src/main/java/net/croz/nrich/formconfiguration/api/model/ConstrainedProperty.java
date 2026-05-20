@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import jakarta.validation.metadata.ConstraintDescriptor;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,7 +77,7 @@ public class ConstrainedProperty {
 
         return constraintDescriptor.getAttributes().entrySet().stream()
             .filter(entry -> !ignoredKeyList.contains(entry.getKey()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (first, second) -> first, LinkedHashMap::new));
     }
 
     /**

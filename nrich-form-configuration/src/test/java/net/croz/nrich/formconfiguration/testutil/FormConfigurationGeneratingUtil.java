@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.metadata.ConstraintDescriptor;
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,15 @@ public final class FormConfigurationGeneratingUtil {
             .type(String.class)
             .parentType(parentType).build();
 
+    }
+
+    public static Map<String, Object> createOrderedAttributeMap(String firstKey, Object firstValue, String secondKey, Object secondValue) {
+        Map<String, Object> attributeMap = new LinkedHashMap<>();
+
+        attributeMap.put(firstKey, firstValue);
+        attributeMap.put(secondKey, secondValue);
+
+        return attributeMap;
     }
 
     public static FetchFormConfigurationRequest createFetchFormConfigurationRequest() {
