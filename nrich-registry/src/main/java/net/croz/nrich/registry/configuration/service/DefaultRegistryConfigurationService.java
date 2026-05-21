@@ -299,7 +299,7 @@
         }
 
         private boolean isDecimal(Class<?> type) {
-            return type.isAssignableFrom(BigDecimal.class) || type.isAssignableFrom(Float.class) || type.isAssignableFrom(Double.class);
+            return BigDecimal.class.isAssignableFrom(type) || Float.class.isAssignableFrom(type) || Double.class.isAssignableFrom(type);
         }
 
     }
