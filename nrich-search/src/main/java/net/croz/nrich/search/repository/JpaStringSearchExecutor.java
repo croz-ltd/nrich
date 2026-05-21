@@ -57,7 +57,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         this.entityManager = entityManager;
         domainClass = jpaEntityInformation.getJavaType();
         queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
-        managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
+        managedType = entityManager.getMetamodel().managedType(domainClass);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, Sort.unsorted());
 
         try {
-            return Optional.of(entityManager.createQuery(query).getSingleResult());
+            return Optional.of(entityManager.createQuery(query).setMaxResults(2).getSingleResult());
         }
         catch (NoResultException ignored) {
             return Optional.empty();
