@@ -57,7 +57,7 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         this.entityManager = entityManager;
         domainClass = jpaEntityInformation.getJavaType();
         queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
-        managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
+        managedType = entityManager.getMetamodel().managedType(domainClass);
     }
 
     @Override
