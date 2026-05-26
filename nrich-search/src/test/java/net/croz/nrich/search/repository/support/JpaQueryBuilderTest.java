@@ -23,6 +23,8 @@ import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
 import net.croz.nrich.search.api.model.operator.DefaultSearchOperator;
+import net.croz.nrich.search.api.model.operator.SearchEscapeCharacter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
 import net.croz.nrich.search.api.model.property.SearchPropertyMapping;
@@ -55,6 +57,7 @@ import java.util.Map;
 
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntityForCollectionSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntitySearchRequestJoin;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.createTestEntityWithName;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateListForSearch;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithCustomIdList;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
@@ -919,6 +922,58 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldEscapeWildcardCharactersInStringLikeOperator() {
+        // given
+        TestEntity matchingEntity = createTestEntityWithName(entityManager, "first1%special");
+        createTestEntityWithName(entityManager, "first1foo");
+
+        TestEntitySearchRequest request = new TestEntitySearchRequest("first1%");
+
+        // when
+        List<TestEntity> results = executeQuery(request, SearchConfiguration.emptyConfiguration());
+
+        // then
+        assertThat(results).containsExactly(matchingEntity);
+    }
+
+    @Test
+    void shouldEscapeWildcardCharactersInContainsOperator() {
+        // given
+        TestEntity matchingEntity = createTestEntityWithName(entityManager, "value%match");
+        createTestEntityWithName(entityManager, "valueAnythingMatch");
+
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.<TestEntity, TestEntity, TestEntitySearchRequest>builder()
+            .searchOperatorOverrideList(List.of(SearchOperatorOverride.forPath("name", DefaultSearchOperator.CONTAINS)))
+            .build();
+
+        TestEntitySearchRequest request = new TestEntitySearchRequest("value%");
+
+        // when
+        List<TestEntity> results = executeQuery(request, searchConfiguration);
+
+        // then
+        assertThat(results).containsExactly(matchingEntity);
+    }
+
+    @Test
+    void shouldEscapeWildcardCharactersInStringLikeOperatorWithCustomEscapeCharacter() {
+        // given
+        JpaQueryBuilder<TestEntity> customQueryBuilder = new JpaQueryBuilder<>(entityManager, TestEntity.class, new SearchOperatorContext(new SearchEscapeCharacter('|')));
+
+        TestEntity matchingEntity = createTestEntityWithName(entityManager, "first1%special");
+        createTestEntityWithName(entityManager, "first1foo");
+
+        TestEntitySearchRequest request = new TestEntitySearchRequest("first1%");
+        SearchConfiguration<TestEntity, TestEntity, TestEntitySearchRequest> searchConfiguration = SearchConfiguration.emptyConfiguration();
+
+        // when
+        List<TestEntity> results = entityManager.createQuery(customQueryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted())).getResultList();
+
+        // then
+        assertThat(results).containsExactly(matchingEntity);
     }
 
     private <P, R> List<P> executeQuery(R request, SearchConfiguration<TestEntity, P, R> searchConfiguration) {

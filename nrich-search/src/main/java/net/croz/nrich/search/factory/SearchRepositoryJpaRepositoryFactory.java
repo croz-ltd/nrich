@@ -18,6 +18,7 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import net.croz.nrich.search.api.repository.NaturalIdSearchExecutor;
 import net.croz.nrich.search.api.repository.SearchExecutor;
 import net.croz.nrich.search.api.repository.StringSearchExecutor;
@@ -39,10 +40,13 @@ public class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
 
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
-    public SearchRepositoryJpaRepositoryFactory(EntityManager entityManager, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter) {
+    private final SearchOperatorContext searchOperatorContext;
+
+    public SearchRepositoryJpaRepositoryFactory(EntityManager entityManager, StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, SearchOperatorContext searchOperatorContext) {
         super(entityManager);
         this.entityManager = entityManager;
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
+        this.searchOperatorContext = searchOperatorContext;
     }
 
     @Override
@@ -52,12 +56,14 @@ public class SearchRepositoryJpaRepositoryFactory extends JpaRepositoryFactory {
         Class<?> repositoryInterface = metadata.getRepositoryInterface();
 
         if (SearchExecutor.class.isAssignableFrom(repositoryInterface)) {
-            SearchExecutor<?> searchExecutorFragment = instantiateClass(JpaSearchExecutor.class, entityManager, entityInformation);
+            SearchExecutor<?> searchExecutorFragment = instantiateClass(JpaSearchExecutor.class, entityManager, entityInformation, searchOperatorContext);
 
             fragments = fragments.append(RepositoryFragment.implemented(SearchExecutor.class, searchExecutorFragment));
         }
         if (StringSearchExecutor.class.isAssignableFrom(repositoryInterface)) {
-            StringSearchExecutor<?> stringSearchExecutorFragment = instantiateClass(JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation);
+            StringSearchExecutor<?> stringSearchExecutorFragment = instantiateClass(
+                JpaStringSearchExecutor.class, stringToEntityPropertyMapConverter, entityManager, entityInformation, searchOperatorContext
+            );
 
             fragments = fragments.append(RepositoryFragment.implemented(StringSearchExecutor.class, stringSearchExecutorFragment));
         }

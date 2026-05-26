@@ -38,6 +38,14 @@ public enum DefaultSearchOperator implements SearchOperator {
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
             return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), "%" + Objects.requireNonNull(value).toString().toLowerCase() + "%");
         }
+
+        @Override
+        public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value, SearchOperatorContext context) {
+            SearchEscapeCharacter escapeCharacter = context.escapeCharacter();
+            String escapedValue = escapeCharacter.escape(Objects.requireNonNull(value).toString().toLowerCase());
+
+            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), "%" + escapedValue + "%", escapeCharacter.value());
+        }
     },
 
     ILIKE {
@@ -45,12 +53,28 @@ public enum DefaultSearchOperator implements SearchOperator {
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
             return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), Objects.requireNonNull(value).toString().toLowerCase() + "%");
         }
+
+        @Override
+        public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value, SearchOperatorContext context) {
+            SearchEscapeCharacter escapeCharacter = context.escapeCharacter();
+            String escapedValue = escapeCharacter.escape(Objects.requireNonNull(value).toString().toLowerCase());
+
+            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), escapedValue + "%", escapeCharacter.value());
+        }
     },
 
     LIKE {
         @Override
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
             return criteriaBuilder.like((Expression<String>) path, Objects.requireNonNull(value) + "%");
+        }
+
+        @Override
+        public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value, SearchOperatorContext context) {
+            SearchEscapeCharacter escapeCharacter = context.escapeCharacter();
+            String escapedValue = escapeCharacter.escape(Objects.requireNonNull(value).toString());
+
+            return criteriaBuilder.like((Expression<String>) path, escapedValue + "%", escapeCharacter.value());
         }
     },
 

@@ -376,6 +376,21 @@ Default operators (see [`DefaultSearchOperator`][default-search-operator-url]) a
 uses `criteriaBuilder.greaterThan`), _**LT**_ (uses `criteriaBuilder.lessThan`), _**GE**_ (uses `criteriaBuilder.greaterThanOrEqualTo`), _**LE**_ (uses `criteriaBuilder.lessThanOrEqualTo`)
 and for all other classes _**EQ**_ but this can be overridden either on type level or on property level by using `searchOperatorOverrideList`.
 
+#### Wildcard escaping
+
+The wildcard-based operators _**CONTAINS**_, _**ILIKE**_ and _**LIKE**_ escape `%` and `_` characters in user supplied values so they are matched as literals instead of acting as `LIKE`
+wildcards. The escape character is configured per repository factory via the standard `escapeCharacter` attribute on `@EnableJpaRepositories` and defaults to `\` (matching Spring Data JPA):
+
+```java
+@EnableJpaRepositories(repositoryFactoryBeanClass = SearchExecutorJpaRepositoryFactoryBean.class, escapeCharacter = '|')
+```
+
+The configured character flows through `SearchExecutorJpaRepositoryFactoryBean` into [`SearchOperatorContext`][search-operator-context-url], which is passed to the new
+`SearchOperator#asPredicate(CriteriaBuilder, Path, Object, SearchOperatorContext)` overload. Custom `SearchOperator` implementations that need consistent escaping can call
+`context.escapeCharacter().escape(value)` and pass `context.escapeCharacter().value()` to `criteriaBuilder.like(...)`.
+
+To restore the previous behaviour (where `%` and `_` in user input were interpreted as wildcards), supply a custom `SearchOperator` for the affected fields via `searchOperatorOverrideList`.
+
 Queries on plural associations are done using exists query (to avoid duplicate results) but that can be overridden by property `pluralAssociationRestrictionType`.
 Additional restrictions (not dependent on data in search request, for example security restrictions) can be specified using `additionalRestrictionResolverList`.
 
@@ -430,3 +445,5 @@ This can be also customized for individual associations by specifying a `SearchJ
 [base-sortable-pageable-request-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/request/BaseSortablePageableRequest.java
 
 [default-search-operator-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/model/operator/DefaultSearchOperator.java
+
+[search-operator-context-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/model/operator/SearchOperatorContext.java
