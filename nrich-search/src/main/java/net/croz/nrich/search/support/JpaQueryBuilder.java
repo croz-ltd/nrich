@@ -17,12 +17,12 @@
 
 package net.croz.nrich.search.support;
 
-import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.model.AdditionalRestrictionResolver;
 import net.croz.nrich.search.api.model.PluralAssociationRestrictionType;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import net.croz.nrich.search.api.model.SearchJoin;
 import net.croz.nrich.search.api.model.SearchProjection;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import net.croz.nrich.search.api.model.operator.SearchOperatorOverride;
 import net.croz.nrich.search.api.model.property.SearchPropertyConfiguration;
 import net.croz.nrich.search.api.model.property.SearchPropertyJoin;
@@ -64,12 +64,23 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 public class JpaQueryBuilder<T> {
 
     private final EntityManager entityManager;
 
     private final Class<T> entityType;
+
+    private final SearchOperatorContext searchOperatorContext;
+
+    public JpaQueryBuilder(EntityManager entityManager, Class<T> entityType) {
+        this(entityManager, entityType, SearchOperatorContext.DEFAULT);
+    }
+
+    public JpaQueryBuilder(EntityManager entityManager, Class<T> entityType, SearchOperatorContext searchOperatorContext) {
+        this.entityManager = entityManager;
+        this.entityType = entityType;
+        this.searchOperatorContext = searchOperatorContext;
+    }
 
     public <R, P> CriteriaQuery<P> buildQuery(R request, SearchConfiguration<T, P, R> searchConfiguration, Sort sort) {
         validateArguments(request, searchConfiguration);
@@ -304,7 +315,7 @@ public class JpaQueryBuilder<T> {
 
             Path<?> fullPath = PathResolvingUtil.calculateFullPath(rootPath, joinType, pathList);
 
-            predicateList.add(restriction.searchOperator().asPredicate(criteriaBuilder, fullPath, restriction.value()));
+            predicateList.add(restriction.searchOperator().asPredicate(criteriaBuilder, fullPath, restriction.value(), searchOperatorContext));
         });
 
         return predicateList;

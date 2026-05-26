@@ -37,4 +37,21 @@ public interface SearchOperator {
      */
     Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value);
 
+    /**
+     * Returns predicate for query honoring the supplied {@link SearchOperatorContext}. Default implementation ignores the context and delegates to
+     * {@link #asPredicate(CriteriaBuilder, Path, Object)} so existing operator implementations remain functional.
+     * Custom wildcard-based operators (e.g. those wrapping the value with {@code %}) <strong>must</strong> override this method and apply
+     * {@link SearchOperatorContext#escapeCharacter()} to the value, otherwise user supplied {@code %} and {@code _} characters will be treated as {@code LIKE} wildcards. Built-in
+     * wildcard operators in {@link DefaultSearchOperator} already do this.
+     *
+     * @param criteriaBuilder criteria builder
+     * @param path            property path in relation to root query entity
+     * @param value           property value
+     * @param context         search operator context
+     * @return predicate that will be added to query
+     */
+    default Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value, SearchOperatorContext context) {
+        return asPredicate(criteriaBuilder, path, value);
+    }
+
 }
