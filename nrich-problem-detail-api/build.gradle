@@ -1,0 +1,7 @@
+description = "Nrich Problem Detail API"
+
+dependencies {
+  api "jakarta.validation:jakarta.validation-api"
+  api "org.springframework:spring-context"
+  api "org.springframework:spring-web"
+}

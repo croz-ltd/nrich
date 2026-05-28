@@ -17,7 +17,6 @@
 
 package net.croz.nrich.logging.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.croz.nrich.logging.api.model.LoggingLevel;
 import net.croz.nrich.logging.api.model.LoggingVerbosityLevel;
@@ -27,14 +26,28 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RequiredArgsConstructor
 public class Slf4jLoggingService implements LoggingService {
 
     private final MessageSource messageSource;
+
+    private final List<String> loggingLevelCodeFormatList;
+
+    private final List<String> loggingVerbosityLevelCodeFormatList;
+
+    public Slf4jLoggingService(MessageSource messageSource) {
+        this(messageSource, List.of(LoggingConstants.LOGGING_LEVEL_RESOLVING_FORMAT), List.of(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT));
+    }
+
+    public Slf4jLoggingService(MessageSource messageSource, List<String> loggingLevelCodeFormatList, List<String> loggingVerbosityLevelCodeFormatList) {
+        this.messageSource = messageSource;
+        this.loggingLevelCodeFormatList = loggingLevelCodeFormatList;
+        this.loggingVerbosityLevelCodeFormatList = loggingVerbosityLevelCodeFormatList;
+    }
 
     @Override
     public void logInternalException(Exception exception, Map<String, ?> exceptionAuxiliaryData) {
@@ -118,14 +131,14 @@ public class Slf4jLoggingService implements LoggingService {
     private LoggingVerbosityLevel fetchConfiguredLoggingVerbosityLevelForException(Exception exception) {
         MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
         String className = fetchClassNameForException(exception);
-        String messageCode = String.format(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT, className);
-        String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingVerbosityLevel.FULL.name())).toUpperCase();
+        String[] messageCodeList = resolveMessageCodeList(loggingVerbosityLevelCodeFormatList, className);
+        String configuredLoggingVerbosityLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(messageCodeList, LoggingVerbosityLevel.FULL.name())).toUpperCase();
 
         try {
             return LoggingVerbosityLevel.valueOf(configuredLoggingVerbosityLevel);
         }
         catch (IllegalArgumentException ignored) {
-            log.warn("Unrecognized verbosity level {} defined for {}", configuredLoggingVerbosityLevel, messageCode);
+            log.warn("Unrecognized verbosity level {} defined for {}", configuredLoggingVerbosityLevel, messageCodeList);
         }
 
         return LoggingVerbosityLevel.FULL;
@@ -150,17 +163,23 @@ public class Slf4jLoggingService implements LoggingService {
     private LoggingLevel fetchConfiguredLoggingLevelForException(String exceptionClassName) {
         MessageSourceAccessor messageSourceAccessor = new MessageSourceAccessor(messageSource);
 
-        String messageCode = String.format(LoggingConstants.LOGGING_LEVEL_RESOLVING_FORMAT, exceptionClassName);
-        String loggingLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(new String[] { messageCode }, LoggingLevel.ERROR.name())).toUpperCase();
+        String[] messageCodeList = resolveMessageCodeList(loggingLevelCodeFormatList, exceptionClassName);
+        String loggingLevel = messageSourceAccessor.getMessage(new DefaultMessageSourceResolvable(messageCodeList, LoggingLevel.ERROR.name())).toUpperCase();
 
         try {
             return LoggingLevel.valueOf(loggingLevel);
         }
         catch (IllegalArgumentException ignored) {
-            log.warn("Unrecognized level {} defined for {}", loggingLevel, messageCode);
+            log.warn("Unrecognized level {} defined for {}", loggingLevel, messageCodeList);
         }
 
         return LoggingLevel.ERROR;
+    }
+
+    private String[] resolveMessageCodeList(List<String> codeFormatList, String exceptionClassName) {
+        return codeFormatList.stream()
+            .map(codeFormat -> String.format(codeFormat, exceptionClassName))
+            .toArray(String[]::new);
     }
 
     private String prepareExceptionAuxiliaryDataMessage(Map<String, ?> exceptionAuxiliaryData) {
