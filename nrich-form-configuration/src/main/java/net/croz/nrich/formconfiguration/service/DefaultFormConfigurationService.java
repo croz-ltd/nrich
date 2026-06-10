@@ -34,6 +34,7 @@ import jakarta.validation.metadata.ContainerElementTypeDescriptor;
 import jakarta.validation.metadata.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -78,6 +79,13 @@ public class DefaultFormConfigurationService implements FormConfigurationService
     }
 
     private List<ConstrainedPropertyConfiguration> recursiveResolveFieldConfiguration(Class<?> type, List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList, String prefix) {
+        Set<Class<?>> ancestorTypeSet = new HashSet<>(Set.of(type));
+
+        return recursiveResolveFieldConfiguration(type, constrainedPropertyConfigurationList, prefix, ancestorTypeSet);
+    }
+
+    private List<ConstrainedPropertyConfiguration> recursiveResolveFieldConfiguration(Class<?> type, List<ConstrainedPropertyConfiguration> constrainedPropertyConfigurationList, String prefix,
+                                                                                      Set<Class<?>> ancestorTypeSet) {
         BeanDescriptor constraintBeanDescriptor = validator.getConstraintsForClass(type);
         Set<PropertyDescriptor> constraintPropertyList = constraintBeanDescriptor.getConstrainedProperties();
 
@@ -95,7 +103,13 @@ public class DefaultFormConfigurationService implements FormConfigurationService
             }
 
             if (shouldResolveConstraintListForType(propertyDescriptor)) {
-                recursiveResolveFieldConfiguration(resolveCascadedType(propertyDescriptor), constrainedPropertyConfigurationList, propertyPath);
+                Class<?> cascadedType = resolveCascadedType(propertyDescriptor);
+
+                if (ancestorTypeSet.add(cascadedType)) {
+                    recursiveResolveFieldConfiguration(cascadedType, constrainedPropertyConfigurationList, propertyPath, ancestorTypeSet);
+
+                    ancestorTypeSet.remove(cascadedType);
+                }
             }
         });
 

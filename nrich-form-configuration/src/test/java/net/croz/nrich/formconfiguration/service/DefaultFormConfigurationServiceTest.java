@@ -43,15 +43,35 @@ class DefaultFormConfigurationServiceTest {
         List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList();
 
         // then
-        assertThat(resultList).hasSize(6);
+        assertThat(resultList).hasSize(7);
         assertThat(resultList).extracting("formId").containsExactlyInAnyOrder(
             FormConfigurationTestConfiguration.SIMPLE_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.NESTED_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID,
             FormConfigurationTestConfiguration.LIST_NESTED_FORM_CONFIGURATION_FORM_ID,
+            FormConfigurationTestConfiguration.CYCLIC_FORM_CONFIGURATION_FORM_ID,
             "annotatedForm.formId"
         );
+    }
+
+    @Test
+    void shouldResolveCyclicNestedFormConfigurationWithoutStackOverflow() {
+        // given
+        List<String> formIdList = List.of(FormConfigurationTestConfiguration.CYCLIC_FORM_CONFIGURATION_FORM_ID);
+
+        // when
+        Throwable thrown = catchThrowable(() -> formConfigurationService.fetchFormConfigurationList(formIdList));
+
+        // then
+        assertThat(thrown).isNull();
+
+        // and when
+        List<FormConfiguration> resultList = formConfigurationService.fetchFormConfigurationList(formIdList);
+
+        // then
+        assertThat(resultList).hasSize(1);
+        assertThat(resultList.get(0).constrainedPropertyConfigurationList()).extracting(ConstrainedPropertyConfiguration::path).contains("name");
     }
 
     @Test
