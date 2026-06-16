@@ -29,6 +29,7 @@ import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.starter.properties.NrichWebMvcProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
@@ -37,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NrichWebMvcAutoConfigurationTest {
 
     private final WebApplicationContextRunner webApplicationContextRunner = new WebApplicationContextRunner()
-        .withConfiguration(AutoConfigurations.of(NrichLoggingAutoConfiguration.class, NrichNotificationAutoConfiguration.class, NrichWebMvcAutoConfiguration.class));
+        .withConfiguration(AutoConfigurations.of(WebMvcAutoConfiguration.class, NrichLoggingAutoConfiguration.class, NrichNotificationAutoConfiguration.class, NrichWebMvcAutoConfiguration.class));
 
     @Test
     void shouldConfigureDefaultConfiguration() {

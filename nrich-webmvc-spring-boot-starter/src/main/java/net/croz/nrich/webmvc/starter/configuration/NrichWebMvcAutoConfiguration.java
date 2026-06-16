@@ -31,13 +31,16 @@ import net.croz.nrich.webmvc.service.MessageSourceExceptionHttpStatusResolverSer
 import net.croz.nrich.webmvc.service.TransientPropertyResolverService;
 import net.croz.nrich.webmvc.starter.properties.NrichWebMvcProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @EnableConfigurationProperties(NrichWebMvcProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichWebMvcAutoConfiguration {
@@ -79,9 +82,8 @@ public class NrichWebMvcAutoConfiguration {
     }
 
     @ConditionalOnPropertyNotEmpty("nrich.webmvc.allowed-locale-list")
-    @ConditionalOnMissingBean
     @Bean
-    public ConstrainedSessionLocaleResolver constrainedSessionLocaleResolver(NrichWebMvcProperties webMvcProperties) {
+    public ConstrainedSessionLocaleResolver localeResolver(NrichWebMvcProperties webMvcProperties) {
         return new ConstrainedSessionLocaleResolver(webMvcProperties.defaultLocale(), webMvcProperties.allowedLocaleList());
     }
 }
