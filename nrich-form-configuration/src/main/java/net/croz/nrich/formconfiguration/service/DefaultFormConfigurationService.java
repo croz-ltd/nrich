@@ -59,7 +59,7 @@ public class DefaultFormConfigurationService implements FormConfigurationService
             .toList();
     }
 
-    @Cacheable(value = "nrich.formConfiguration.cache", key = "#formIdList.hashCode() + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
+    @Cacheable(value = "nrich.formConfiguration.cache", key = "#formIdList + '-' + T(org.springframework.context.i18n.LocaleContextHolder).locale.toLanguageTag()")
     @Override
     public List<FormConfiguration> fetchFormConfigurationList(List<String> formIdList) {
         return formIdList.stream()
