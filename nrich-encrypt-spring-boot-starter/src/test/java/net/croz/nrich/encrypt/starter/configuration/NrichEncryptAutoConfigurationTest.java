@@ -67,7 +67,7 @@ class NrichEncryptAutoConfigurationTest {
         );
     }
 
-    @CsvSource({ "'',''", "ec49c585b7c44f2b,''", "'',ec49c585b7c44f2b" })
+    @CsvSource({ "'',''", "ec49c585b7c44f2b,ec49c585b7c44f2b" })
     @ParameterizedTest
     void shouldCreateTextEncryptionServiceWithProvidedOrDefaultPasswordAndSalt(String password, String salt) {
         // given
@@ -80,5 +80,36 @@ class NrichEncryptAutoConfigurationTest {
         contextRunner.withPropertyValues(propertyValues).run(context ->
             assertThat(context).hasSingleBean(TextEncryptionService.class)
         );
+    }
+
+    @CsvSource({ "ec49c585b7c44f2b,''", "'',ec49c585b7c44f2b" })
+    @ParameterizedTest
+    void shouldFailWhenOnlyOneOfPasswordOrSaltIsConfigured(String password, String salt) {
+        // given
+        String[] propertyValues = {
+            "nrich.encrypt.encrypt-password=" + password,
+            "nrich.encrypt.encrypt-salt=" + salt
+        };
+
+        // expect
+        contextRunner.withPropertyValues(propertyValues).run(context -> {
+            assertThat(context).hasFailed();
+            assertThat(context).getFailure().hasMessageContaining("must be configured together");
+        });
+    }
+
+    @Test
+    void shouldFailWhenConfiguredSaltIsNotHexEncoded() {
+        // given
+        String[] propertyValues = {
+            "nrich.encrypt.encrypt-password=password",
+            "nrich.encrypt.encrypt-salt=not-a-hex-salt"
+        };
+
+        // expect
+        contextRunner.withPropertyValues(propertyValues).run(context -> {
+            assertThat(context).hasFailed();
+            assertThat(context).getFailure().hasMessageContaining("must be a hex-encoded string");
+        });
     }
 }
