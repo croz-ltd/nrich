@@ -32,8 +32,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -102,13 +104,15 @@ public class ManagedTypeWrapper {
 
     private List<SingularAssociation> resolveSingularAssociationList(ManagedType<?> managedType) {
         Map<String, SingularAssociation> associationMap = new HashMap<>();
+        Set<Class<?>> visitedTypes = new HashSet<>(Set.of(managedType.getJavaType()));
 
-        resolveSingularAssociationList(managedType, null, null, associationMap);
+        resolveSingularAssociationList(managedType, null, null, associationMap, visitedTypes);
 
         return new ArrayList<>(associationMap.values());
     }
 
-    private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap) {
+    private void resolveSingularAssociationList(ManagedType<?> managedType, Boolean isCurrentAssociationPathOptional, String currentPrefix, Map<String, SingularAssociation> singularAssociationMap,
+                                                Set<Class<?>> visitedTypes) {
         @SuppressWarnings("unchecked")
         List<SingularAttribute<?, ?>> currentAssociations = (List<SingularAttribute<?, ?>>) managedType.getSingularAttributes().stream()
             .filter(Attribute::isAssociation)
@@ -123,8 +127,8 @@ public class ManagedTypeWrapper {
                 singularAssociationMap.remove(currentPrefix);
             }
 
-            if (!association.getJavaType().equals(managedType.getJavaType())) {
-                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), associationName, singularAssociationMap);
+            if (visitedTypes.add(association.getJavaType())) {
+                resolveSingularAssociationList((ManagedType<?>) association.getType(), association.isOptional(), associationName, singularAssociationMap, visitedTypes);
             }
         }
     }
