@@ -95,12 +95,6 @@ Simplifies the querying of entities.
 Queries can be automatically formed from different types of inputs, such as a query class or a string with a list of search fields.
 Also, special configuration class is used to define how provided query values are used in query creation.
 
-### [nrich-security-csrf](nrich-security-csrf/README.md)
-
-Intended as a replacement for Spring Security csrf functionality.
-`nrich-security-csrf` works with both Spring Web MVC and WebFlux libraries.
-Clients should define the initial token url and after that send the generated token with each request in a header or as a parameter.
-
 ### [nrich-spring-boot](nrich-spring-boot/README.md)
 
 Adds additional functionality to Spring Boot that is used within nrich.
