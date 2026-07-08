@@ -49,7 +49,7 @@ public final class DefaultMessageSourceResolvableGeneratingUtil {
     public static DefaultMessageSourceResolvable createMessageSourceNotificationMessageResolverServiceTestRequestFieldErrorLabelMessageSourceResolvable() {
         String[] fieldLabelCodeList = {
             "net.croz.nrich.notification.stub.MessageSourceNotificationMessageResolverServiceTestRequest.field.label",
-            "messageSourceNotificationMessageResolverServiceTestRequest.field.label", "field.code.label"
+            "messageSourceNotificationMessageResolverServiceTestRequest.field.label", "field.label"
         };
 
         return new DefaultMessageSourceResolvable(fieldLabelCodeList, new Object[0], "field");
