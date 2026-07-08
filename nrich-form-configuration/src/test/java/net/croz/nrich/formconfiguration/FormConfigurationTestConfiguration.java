@@ -25,7 +25,9 @@ import net.croz.nrich.formconfiguration.service.DefaultConstrainedPropertyValida
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationAnnotationResolvingService;
 import net.croz.nrich.formconfiguration.service.DefaultFormConfigurationService;
 import net.croz.nrich.formconfiguration.service.MessageSourceFieldErrorMessageResolverService;
+import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceCyclicTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceDeeplyNestedTestRequest;
+import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceListNestedTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedIgnoredTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceNestedTestRequest;
 import net.croz.nrich.formconfiguration.stub.FormConfigurationServiceTestRequest;
@@ -52,6 +54,10 @@ public class FormConfigurationTestConfiguration {
     public static final String DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID = "deeplyNestedForm.formId";
 
     public static final String NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID = "nestedFormNotValidated.formId";
+
+    public static final String LIST_NESTED_FORM_CONFIGURATION_FORM_ID = "listNestedForm.formId";
+
+    public static final String CYCLIC_FORM_CONFIGURATION_FORM_ID = "cyclicForm.formId";
 
     @Bean
     public MessageSource messageSource() {
@@ -92,6 +98,8 @@ public class FormConfigurationTestConfiguration {
         formIdConstraintHolderMap.put(NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedTestRequest.class);
         formIdConstraintHolderMap.put(DEEPLY_NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceDeeplyNestedTestRequest.class);
         formIdConstraintHolderMap.put(NESTED_FORM_NOT_VALIDATED_CONFIGURATION_FORM_ID, FormConfigurationServiceNestedIgnoredTestRequest.class);
+        formIdConstraintHolderMap.put(LIST_NESTED_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceListNestedTestRequest.class);
+        formIdConstraintHolderMap.put(CYCLIC_FORM_CONFIGURATION_FORM_ID, FormConfigurationServiceCyclicTestRequest.class);
 
         return new DefaultFormConfigurationService(validator.getValidator(), formIdConstraintHolderMap, constrainedPropertyValidatorConverterServiceList, javaToJavascriptTypeConversionService);
     }
