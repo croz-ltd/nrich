@@ -82,6 +82,11 @@ Intended for addition of specified notifications into the server-side response, 
 `nrich-notification` supports three different notification severity levels and can also include a list of validation errors.
 Definition and resolution of messages is realized with Spring's `MessageSource` feature.
 
+### [nrich-problem-detail](nrich-problem-detail/README.md)
+
+Provides unified, Spring-native error handling for Spring Web MVC based on [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) (`ProblemDetail`).
+It enriches error responses with nrich extensions (`code`, `severity`, `errorId`, `timestamp` and structured validation `errors`), all customizable per exception through Spring's `MessageSource`.
+
 ### [nrich-registry](nrich-registry/README.md)
 
 Simplifies the administration of specified JPA entities and provides a formatted representation of them that client-side can interpret and create dynamic forms and grids.
