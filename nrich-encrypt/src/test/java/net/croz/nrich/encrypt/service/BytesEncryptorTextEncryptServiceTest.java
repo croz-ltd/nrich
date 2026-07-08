@@ -17,20 +17,23 @@
 
 package net.croz.nrich.encrypt.service;
 
-import net.croz.nrich.encrypt.EncryptTestConfiguration;
 import net.croz.nrich.encrypt.exception.EncryptOperationFailedException;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.security.crypto.encrypt.BytesEncryptor;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
-@SpringJUnitConfig(EncryptTestConfiguration.class)
 class BytesEncryptorTextEncryptServiceTest {
 
-    @Autowired
-    private BytesEncryptorTextEncryptService textEncryptionService;
+    private final BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+
+    private final BytesEncryptorTextEncryptService textEncryptionService = new BytesEncryptorTextEncryptService(encryptor, "UTF-8");
 
     @Test
     void shouldEncryptDecryptData() {
@@ -71,6 +74,22 @@ class BytesEncryptorTextEncryptServiceTest {
         Throwable thrown = catchThrowable(() -> textEncryptionService.decryptText(textToDecrypt));
 
         // then
-        assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class);
+        assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class).hasMessageNotContaining(textToDecrypt);
+    }
+
+    @Test
+    void shouldNotIncludeOriginalTextInExceptionWhenEncryptingFails() {
+        // given
+        BytesEncryptor throwingEncryptor = mock(BytesEncryptor.class);
+        BytesEncryptorTextEncryptService throwingService = new BytesEncryptorTextEncryptService(throwingEncryptor, "UTF-8");
+        String textToEncrypt = "secret plaintext value 12345";
+
+        doThrow(new RuntimeException()).when(throwingEncryptor).encrypt(any());
+
+        // when
+        Throwable thrown = catchThrowable(() -> throwingService.encryptText(textToEncrypt));
+
+        // then
+        assertThat(thrown).isInstanceOf(EncryptOperationFailedException.class).hasMessageNotContaining(textToEncrypt);
     }
 }
