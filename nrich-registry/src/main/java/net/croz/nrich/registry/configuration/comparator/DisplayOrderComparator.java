@@ -34,17 +34,19 @@ public class DisplayOrderComparator implements Serializable {
     private final List<String> propertyDisplayOrderList;
 
     public int comparePropertiesByDisplayList(String firstPropertyName, String secondPropertyName) {
-        if (!propertyDisplayOrderList.contains(firstPropertyName)) {
+        boolean firstInList = propertyDisplayOrderList.contains(firstPropertyName);
+        boolean secondInList = propertyDisplayOrderList.contains(secondPropertyName);
+
+        if (!firstInList && !secondInList) {
+            return firstPropertyName.compareTo(secondPropertyName);
+        }
+        if (!firstInList) {
             return 1;
         }
-
-        if (!propertyDisplayOrderList.contains(secondPropertyName)) {
+        if (!secondInList) {
             return -1;
         }
 
-        Integer firstPropertyIndex = propertyDisplayOrderList.indexOf(firstPropertyName);
-        Integer secondPropertyIndex = propertyDisplayOrderList.indexOf(secondPropertyName);
-
-        return firstPropertyIndex.compareTo(secondPropertyIndex);
+        return Integer.compare(propertyDisplayOrderList.indexOf(firstPropertyName), propertyDisplayOrderList.indexOf(secondPropertyName));
     }
 }

@@ -44,9 +44,9 @@ class RegistryGroupConfigurationComparatorTest {
     @Test
     void shouldCompareByDisplayOrderWhenItExists() {
         // given
-        RegistryGroupConfiguration firstGroup = new RegistryGroupConfiguration("first", "2.display", Collections.emptyList());
-        RegistryGroupConfiguration secondGroup = new RegistryGroupConfiguration("second", "1.display", Collections.emptyList());
-        RegistryGroupConfigurationComparator comparator = new RegistryGroupConfigurationComparator(List.of("1.display", "2.display"));
+        RegistryGroupConfiguration firstGroup = new RegistryGroupConfiguration("first", "first.display", Collections.emptyList());
+        RegistryGroupConfiguration secondGroup = new RegistryGroupConfiguration("second", "second.display", Collections.emptyList());
+        RegistryGroupConfigurationComparator comparator = new RegistryGroupConfigurationComparator(List.of("second", "first"));
 
         // when
         Integer result = comparator.compare(firstGroup, secondGroup);
