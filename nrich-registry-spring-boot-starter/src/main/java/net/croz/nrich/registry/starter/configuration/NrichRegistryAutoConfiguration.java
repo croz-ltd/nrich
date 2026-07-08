@@ -125,7 +125,7 @@ public class NrichRegistryAutoConfiguration {
         return strictModelMapper();
     }
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(name = "registryObjectMapper")
     @Bean
     public ObjectMapper registryObjectMapper(List<Module> moduleList) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -258,8 +258,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
+    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper registryObjectMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(registryObjectMapper, registryClassResolvingService);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
