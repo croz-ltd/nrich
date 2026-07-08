@@ -143,6 +143,16 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
         return testEntity;
     }
 
+    public static TestEntity createTestEntityWithName(EntityManager entityManager, String name) {
+        TestEntity testEntity = createTestEntity(0, 0);
+
+        testEntity.setName(name);
+
+        entityManager.persist(testEntity);
+
+        return testEntity;
+    }
+
     private static TestEntity createTestEntity(Integer value, Integer numberOfCollectionEntities) {
         TestNestedEntity nestedEntity = createTestNestedEntity(value);
         List<TestCollectionEntity> collectionEntityList = IntStream.range(0, numberOfCollectionEntities)

@@ -18,6 +18,7 @@
 package net.croz.nrich.search.repository;
 
 import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import net.croz.nrich.search.api.repository.SearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import net.croz.nrich.search.util.QueryUtil;
@@ -46,10 +47,10 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
 
     private final JpaQueryBuilder<T> queryBuilder;
 
-    public JpaSearchExecutor(EntityManager entityManager, JpaEntityInformation<T, ?> entityInformation) {
+    public JpaSearchExecutor(EntityManager entityManager, JpaEntityInformation<T, ?> entityInformation, SearchOperatorContext searchOperatorContext) {
         this.entityManager = entityManager;
         domainClass = entityInformation.getJavaType();
-        queryBuilder = new JpaQueryBuilder<>(entityManager, entityInformation.getJavaType());
+        queryBuilder = new JpaQueryBuilder<>(entityManager, entityInformation.getJavaType(), searchOperatorContext);
     }
 
     @Override

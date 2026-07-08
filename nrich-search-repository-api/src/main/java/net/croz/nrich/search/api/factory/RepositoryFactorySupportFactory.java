@@ -17,6 +17,7 @@
 
 package net.croz.nrich.search.api.factory;
 
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import jakarta.persistence.EntityManager;
@@ -29,10 +30,11 @@ public interface RepositoryFactorySupportFactory {
     /**
      * Returns {@link RepositoryFactorySupport} instance for repository interface.
      *
-     * @param repositoryInterface repository interface for which to return implementation of {@link RepositoryFactorySupport}
-     * @param entityManager       entity manager
+     * @param repositoryInterface   repository interface for which to return implementation of {@link RepositoryFactorySupport}
+     * @param entityManager         entity manager
+     * @param searchOperatorContext context that should be propagated to search operators when building predicates
      * @return {@link RepositoryFactorySupport} instance for repository interface
      */
-    RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager);
+    RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager, SearchOperatorContext searchOperatorContext);
 
 }

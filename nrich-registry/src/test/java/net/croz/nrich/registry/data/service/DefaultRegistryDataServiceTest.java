@@ -77,7 +77,7 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        ListBulkRegistryRequest request = createBulkListRegistryRequest(RegistryTestEntity.class.getName(), "name");
 
         // when
         Map<String, Page<Object>> result = registryDataService.listBulk(request);
@@ -92,7 +92,7 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name");
 
         // when
         Page<RegistryTestEntity> result = registryDataService.list(request);
@@ -106,7 +106,7 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityWithDifferentIdNameList(entityManager);
 
-        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithDifferentIdName.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithDifferentIdName.class.getName(), "name");
 
         // when
         Page<RegistryTestEntity> result = registryDataService.list(request);
@@ -120,7 +120,7 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityList(entityManager);
 
-        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name%", 0, 3);
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntity.class.getName(), "name", 0, 3);
 
         // when
         Page<RegistryTestEntity> result = registryDataService.list(request);
@@ -328,7 +328,7 @@ class DefaultRegistryDataServiceTest {
         // given
         createRegistryTestEntityWithOverriddenSearchConfigurationList(entityManager);
 
-        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name%");
+        ListRegistryRequest request = createListRegistryRequest(RegistryTestEntityWithOverriddenSearchConfiguration.class.getName(), "name");
 
         // when
         Page<RegistryTestEntity> result = registryDataService.list(request);
@@ -348,7 +348,7 @@ class DefaultRegistryDataServiceTest {
     @Test
     void shouldThrowExceptionWhenConfigurationHasNotBeenDefined() {
         // given
-        ListRegistryRequest request = createListRegistryRequest("undefined.configuration", "name%");
+        ListRegistryRequest request = createListRegistryRequest("undefined.configuration", "name");
 
         // when
         Throwable thrown = catchThrowable(() -> registryDataService.list(request));
