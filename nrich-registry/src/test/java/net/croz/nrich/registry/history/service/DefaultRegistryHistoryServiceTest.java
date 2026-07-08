@@ -118,7 +118,25 @@ class DefaultRegistryHistoryServiceTest {
 
         // then
         assertThat(resultList).isNotEmpty();
-        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder("first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent");
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder(
+            "first", "name 0", "name 1", "name 2", "name 3", "name 4", "name 5", "name 6", "related", "parent"
+        );
+    }
+
+    @Test
+    void shouldReturnSecondPageOfRevisionsWhenPageNumberIsOne() {
+        // given
+        RegistryHistoryTestEntity entity = creteRegistryHistoryTestEntityRevisionList(entityManager, platformTransactionManager);
+        ListRegistryHistoryRequest request = listRegistryHistoryRequestWithDefaultSort(RegistryHistoryTestEntity.class.getName(), entity.getId(), 1, 10);
+
+        // when
+        Page<EntityWithRevision<RegistryHistoryTestEntity>> resultList = registryHistoryService.historyList(request);
+
+        // then
+        assertThat(resultList.getTotalElements()).isEqualTo(21);
+        assertThat(resultList.getContent()).extracting("entity.name").containsExactlyInAnyOrder(
+            "name 9", "name 10", "name 11", "name 12", "name 13", "name 14", "name 15", "name 16", "name 17", "name 18"
+        );
     }
 
     @Test
