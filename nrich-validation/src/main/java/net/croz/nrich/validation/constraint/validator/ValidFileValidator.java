@@ -29,6 +29,8 @@ public class ValidFileValidator extends BaseValidFileValidator implements Constr
         this.allowedContentTypeList = constraintAnnotation.allowedContentTypeList();
         this.allowedExtensionList = constraintAnnotation.allowedExtensionList();
         this.allowedFileNameRegex = constraintAnnotation.allowedFileNameRegex();
+        this.requireContentType = constraintAnnotation.requireContentType();
+        this.requireExtension = constraintAnnotation.requireExtension();
     }
 
     @Override

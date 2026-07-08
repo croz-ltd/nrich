@@ -104,11 +104,13 @@ A list of available constraints and descriptions is given bellow:
 Difference between `@ValidFile` and `@ValidFileResolvable` is that the former resolves allowed values from environment. Searched properties are given bellow but can be overridden on each constraint
 (all properties are prefixed with nrich.constraint.file which is omitted for readability):
 
-| property                  | description                                                                                                          |
-|---------------------------|----------------------------------------------------------------------------------------------------------------------|
-| allowed-content-type-list | Property name from which allowed content type list is resolved (empty value allows all content types)                |
-| allowed-extension-list    | Property name from which allowed extension list is resolved (case-insensitive, empty value allows all content types) |
-| allowed-file-name-regex   | Property name from which allowed file name regex is resolved (empty value allows all file names)                     |
+| property                  | description                                                                                                                      |
+|---------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| allowed-content-type-list | Property name from which allowed content type list is resolved (empty value allows all content types)                            |
+| allowed-extension-list    | Property name from which allowed extension list is resolved (case-insensitive, empty value allows all content types)             |
+| allowed-file-name-regex   | Property name from which allowed file name regex is resolved (empty value allows all file names)                                 |
+| require-content-type      | When `true` (default), a null `Content-Type` fails the content-type gate when `allowed-content-type-list` is set                 |
+| require-extension         | When `true` (default), a filename without a recognizable extension fails the extension gate when `allowed-extension-list` is set |
 
 [//]: # (Reference links for readability)
 

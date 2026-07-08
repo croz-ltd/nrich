@@ -21,11 +21,12 @@ import net.croz.nrich.validation.ValidationTestConfiguration;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorEmptyPropertyTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorFilePartTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorInvalidTypeFileTestRequest;
+import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorLenientMultipartFileTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorMultipartFileCustomTestRequest;
 import net.croz.nrich.validation.constraint.stub.ValidFileResolvableValidatorMultipartFileTestRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -128,11 +129,11 @@ class ValidFileResolvableValidatorTest {
         assertThat(thrown.getCause()).isInstanceOf(IllegalArgumentException.class);
     }
 
-    @ValueSource(strings = { "someFile.txt", "someFile", "c:\\someFile.txt", "c:/someFile.txt" })
+    @CsvSource({ "someFile.txt, text/plain", "someFile.txt, TEXT/PLAIN", "c:\\someFile.txt, text/plain", "c:/someFile.txt, text/plain" })
     @ParameterizedTest
-    void shouldValidateMultipartFilename(String fileName) {
+    void shouldNotReportErrorForValidMultipartFile(String filename, String contentType) {
         // given
-        MultipartFile file = new MockMultipartFile("file", fileName, null, FILE_BYTES);
+        MultipartFile file = new MockMultipartFile("file", filename, contentType, FILE_BYTES);
         ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
 
         // when
@@ -140,6 +141,34 @@ class ValidFileResolvableValidatorTest {
 
         // then
         assertThat(constraintViolationList).isEmpty();
+    }
+
+    @CsvSource(value = { "someFile.txt, null", "someFile, text/plain" }, nullValues = "null")
+    @ParameterizedTest
+    void shouldNotReportErrorWhenContentTypeOrExtensionIsMissingInLenientMode(String filename, String contentType) {
+        // given
+        MultipartFile file = new MockMultipartFile("file", filename, contentType, FILE_BYTES);
+        ValidFileResolvableValidatorLenientMultipartFileTestRequest request = new ValidFileResolvableValidatorLenientMultipartFileTestRequest(file);
+
+        // when
+        Set<ConstraintViolation<ValidFileResolvableValidatorLenientMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+
+        // then
+        assertThat(constraintViolationList).isEmpty();
+    }
+
+    @CsvSource(value = { "someFile.txt, null", "someFile, null", "someFile, text/plain" }, nullValues = "null")
+    @ParameterizedTest
+    void shouldReportErrorWhenContentTypeOrExtensionIsMissingForMultipartFile(String filename, String contentType) {
+        // given
+        MultipartFile file = new MockMultipartFile("file", filename, contentType, FILE_BYTES);
+        ValidFileResolvableValidatorMultipartFileTestRequest request = new ValidFileResolvableValidatorMultipartFileTestRequest(file);
+
+        // when
+        Set<ConstraintViolation<ValidFileResolvableValidatorMultipartFileTestRequest>> constraintViolationList = validator.validate(request);
+
+        // then
+        assertThat(constraintViolationList).isNotEmpty();
     }
 
     @Test

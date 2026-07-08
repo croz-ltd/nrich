@@ -73,6 +73,22 @@ public @interface ValidFileResolvable {
     String allowedFileNameRegexPropertyName() default "nrich.constraint.file.allowed-file-name-regex";
 
     /**
+     * Property name from which the require-content-type flag is resolved (default property value {@code true}).
+     * When {@code true}, a null content type causes validation to fail whenever the allowed content type list is non-empty.
+     *
+     * @return require content type property name
+     */
+    String requireContentTypePropertyName() default "nrich.constraint.file.require-content-type";
+
+    /**
+     * Property name from which the require-extension flag is resolved (default property value {@code true}).
+     * When {@code true}, a filename without a recognizable extension causes validation to fail whenever the allowed extension list is non-empty.
+     *
+     * @return require extension property name
+     */
+    String requireExtensionPropertyName() default "nrich.constraint.file.require-extension";
+
+    /**
      * Defines several {@link ValidFileResolvable} annotations on the same element.
      *
      * @see ValidFileResolvable
