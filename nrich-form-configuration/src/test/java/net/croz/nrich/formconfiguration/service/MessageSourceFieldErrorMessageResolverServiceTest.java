@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createConstrainedProperty;
+import static net.croz.nrich.formconfiguration.testutil.FormConfigurationGeneratingUtil.createOrderedAttributeMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.doReturn;
@@ -77,6 +78,18 @@ class MessageSourceFieldErrorMessageResolverServiceTest {
 
         // then
         assertThat(message).isEqualTo("Not in list: one, two");
+    }
+
+    @Test
+    void shouldPreserveAttributeInsertionOrderWhenResolvingMessage() {
+        // given
+        ConstrainedProperty constrainedProperty = createConstrainedProperty(MessageSourceFieldErrorMessageResolverServiceTestRequest.class, createOrderedAttributeMap("max", 20, "min", 4));
+
+        // when
+        String message = fieldErrorMessageResolverService.resolveErrorMessage(constrainedProperty, Locale.ENGLISH);
+
+        // then
+        assertThat(message).isEqualTo("Not in list: 20");
     }
 
     @Test
