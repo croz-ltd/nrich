@@ -22,6 +22,8 @@ import net.croz.nrich.excel.api.model.MultiRowDataProvider;
 import net.croz.nrich.excel.api.request.CreateExcelReportRequest;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -86,6 +88,25 @@ class DefaultExcelReportServiceTest {
 
         // then
         assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Row data provider cannot be null!");
+    }
+
+    @Test
+    @DisabledOnOs(value = OS.WINDOWS, disabledReason = "POI's autoSizeColumn relies on AWT font metrics; since Windows produces narrower widths this test fails on Windows")
+    void shouldAutoSizeColumns() {
+        // given
+        String wideContent = "x".repeat(80);
+        Object[][] rowData = { { "x", wideContent } };
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        CreateExcelReportRequest request = createExcelReportRequest(rowData, 10, outputStream, TEMPLATE_DATA_FIRST_ROW_INDEX);
+
+        // when
+        excelReportService.createExcelReport(request);
+
+        // then
+        Sheet sheet = createWorkbookAndResolveSheet(outputStream);
+
+        // then
+        assertThat(sheet.getColumnWidth(1)).isGreaterThanOrEqualTo(wideContent.length() * 256);
     }
 
     @Test
