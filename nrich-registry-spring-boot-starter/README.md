@@ -53,6 +53,7 @@ Configuration is done through a property file, available properties and descript
 | registry-search.boolean-false-regex-pattern            | Regexp pattern that is used to match boolean false values                                                                  | ^(?i)\s*(false&#124;no&#124;ne)\s*$                      |
 | registry-configuration.create-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry create method                   |                                                          |
 | registry-configuration.update-registry-class-mapping   | Optional mapping between registry classname and the class holding validations for registry update method                   |                                                          |
+| allowed-enum-package-list                              | Whitelist of packages for `POST /nrich/registry/enum/list` (sub-packages included); empty accepts any `Enum`               | `[]`                                                     |
 
 The properties under registry-search are used when converting string received from client to property values that will be used to search registry. For example if a string is sent
 and the property searched by is of type Date, nrich will try to parse string to Date and if parsing succeeds restriction will be added to query and if parsing fails the property will be skipped
