@@ -66,6 +66,6 @@ public class ConstraintFinderAdapter implements ElementDescriptor.ConstraintFind
 
     @Override
     public boolean hasConstraints() {
-        return target.hasConstraints();
+        return !getConstraintDescriptors().isEmpty();
     }
 }
