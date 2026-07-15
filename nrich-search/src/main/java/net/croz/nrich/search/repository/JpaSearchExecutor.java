@@ -24,6 +24,8 @@ import net.croz.nrich.search.util.QueryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -93,13 +95,31 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
     }
 
     @Override
+    public <R, P> Slice<P> findAllSliced(R request, SearchConfiguration<T, P, R> searchConfiguration, Pageable pageable) {
+        CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, pageable.getSort());
+        TypedQuery<P> typedQuery = entityManager.createQuery(query);
+
+        int pageSize = 0;
+        if (pageable.isPaged()) {
+            pageSize = pageable.getPageSize();
+            typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageSize + 1);
+        }
+
+        List<P> resultList = typedQuery.getResultList();
+        boolean hasNext = pageable.isPaged() && resultList.size() > pageSize;
+        List<P> content = hasNext ? resultList.subList(0, pageSize) : resultList;
+
+        return new SliceImpl<>(content, pageable, hasNext);
+    }
+
+    @Override
     public <R, P> long count(R request, SearchConfiguration<T, P, R> searchConfiguration) {
         return executeCountQuery(request, searchConfiguration);
     }
 
     @Override
     public <R, P> boolean exists(R request, SearchConfiguration<T, P, R> searchConfiguration) {
-        CriteriaQuery<Integer>  query = queryBuilder.buildExistsQuery(request, searchConfiguration);
+        CriteriaQuery<Integer> query = queryBuilder.buildExistsQuery(request, searchConfiguration);
 
         return entityManager.createQuery(query).setMaxResults(1).getResultList().size() == 1;
     }

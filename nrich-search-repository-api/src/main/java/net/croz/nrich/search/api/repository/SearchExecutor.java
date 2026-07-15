@@ -20,6 +20,7 @@ package net.croz.nrich.search.api.repository;
 import net.croz.nrich.search.api.model.SearchConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -78,6 +79,19 @@ public interface SearchExecutor<T> {
      * @return a {@link Page} of entities matching the given conditions applied from search request
      */
     <R, P> Page<P> findAll(R request, SearchConfiguration<T, P, R> searchConfiguration, Pageable pageable);
+
+    /**
+     * Returns a {@link Slice} of entities matching conditions applied from search request. In case no match could be found, an empty {@link Slice} is returned.
+     * Unlike {@link #findAll(Object, SearchConfiguration, Pageable)}, no count query is executed; the returned {@link Slice} only knows whether a next slice exists.
+     *
+     * @param request             search request that contains query values
+     * @param searchConfiguration configuration that decides how query should be built
+     * @param pageable            can be {@literal null}.
+     * @param <R>                 type of request
+     * @param <P>                 projection class
+     * @return a {@link Slice} of entities matching the given conditions applied from search request
+     */
+    <R, P> Slice<P> findAllSliced(R request, SearchConfiguration<T, P, R> searchConfiguration, Pageable pageable);
 
     /**
      * Returns the number of instances matching conditions applied from search request.
