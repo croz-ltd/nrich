@@ -115,8 +115,8 @@ public class NotificationErrorHandlingRestControllerAdvice {
     }
 
     protected Exception unwrapException(Exception exception) {
-        if (exceptionToUnwrapList != null && exceptionToUnwrapList.contains(exception.getClass().getName()) && exception.getCause() != null) {
-            return (Exception) exception.getCause();
+        if (exceptionToUnwrapList != null && exceptionToUnwrapList.contains(exception.getClass().getName()) && exception.getCause() instanceof Exception causeAsException) {
+            return causeAsException;
         }
 
         return exception;

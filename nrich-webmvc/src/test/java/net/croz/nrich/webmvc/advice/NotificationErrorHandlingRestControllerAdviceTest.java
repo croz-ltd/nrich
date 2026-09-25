@@ -146,6 +146,19 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseControllerTe
     }
 
     @Test
+    void shouldNotThrowClassCastExceptionWhenUnwrappingExceptionWithErrorCause() throws Exception {
+        // given
+        String requestUrl = fullUrl("unwrapped-exception-with-error-cause-resolving");
+
+        // when
+        ResultActions result = performPostRequest(requestUrl);
+
+        // then
+        result.andExpect(status().is5xxServerError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).isNotEmpty());
+    }
+
+    @Test
     void shouldResolveStatusForUnwrappedException() throws Exception {
         // given
         String requestUrl = fullUrl("unwrapped-exception-status-resolving");
