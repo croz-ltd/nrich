@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @SpringJUnitConfig(EncryptTestConfiguration.class)
 class EncryptMethodInterceptorTest {
@@ -82,6 +83,15 @@ class EncryptMethodInterceptorTest {
 
         // then
         assertThat(result.getValue()).isEqualTo(text);
+    }
+
+    @Test
+    void shouldNotFailWhenMethodArgumentIsNull() {
+        // when
+        Throwable thrown = catchThrowable(() -> encryptionMethodInterceptorTestService.dataToEncryptFromConfiguration(null));
+
+        // then
+        assertThat(thrown).isNull();
     }
 
     @Test
