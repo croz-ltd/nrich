@@ -36,14 +36,14 @@ public enum DefaultSearchOperator implements SearchOperator {
     CONTAINS {
         @Override
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
-            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), "%" + Objects.requireNonNull(value).toString().toLowerCase() + "%");
+            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), "%" + Objects.requireNonNull(value).toString().toLowerCase(Locale.ROOT) + "%");
         }
     },
 
     ILIKE {
         @Override
         public Predicate asPredicate(CriteriaBuilder criteriaBuilder, Path<?> path, Object value) {
-            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), Objects.requireNonNull(value).toString().toLowerCase() + "%");
+            return criteriaBuilder.like(criteriaBuilder.lower((Expression<String>) path), Objects.requireNonNull(value).toString().toLowerCase(Locale.ROOT) + "%");
         }
     },
 
