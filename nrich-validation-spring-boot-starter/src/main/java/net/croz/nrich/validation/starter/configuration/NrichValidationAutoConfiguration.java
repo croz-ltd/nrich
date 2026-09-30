@@ -22,9 +22,11 @@ import net.croz.nrich.validation.api.mapping.ConstraintValidatorRegistrar;
 import net.croz.nrich.validation.constraint.mapping.DefaultConstraintValidatorRegistrar;
 import net.croz.nrich.validation.starter.properties.NrichValidationProperties;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
@@ -34,6 +36,7 @@ import org.springframework.context.support.AbstractResourceBasedMessageSource;
 
 import jakarta.validation.Validator;
 
+@AutoConfigureAfter(ValidationAutoConfiguration.class)
 @EnableConfigurationProperties(NrichValidationProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichValidationAutoConfiguration {

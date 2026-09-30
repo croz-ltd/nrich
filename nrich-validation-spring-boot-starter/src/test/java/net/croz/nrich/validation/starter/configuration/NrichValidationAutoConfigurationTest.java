@@ -22,11 +22,13 @@ import net.croz.nrich.validation.starter.properties.NrichValidationProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
+import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.AbstractResourceBasedMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+import jakarta.validation.Validator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -50,7 +52,10 @@ class NrichValidationAutoConfigurationTest {
     @Test
     void shouldRegisterValidationPropertiesCustomizer() {
         // expect
-        contextRunner.withBean(LocalValidatorFactoryBean.class).run(context -> assertThat(context).hasSingleBean(HibernatePropertiesCustomizer.class));
+        contextRunner.withConfiguration(AutoConfigurations.of(ValidationAutoConfiguration.class)).run(context -> {
+            assertThat(context).hasSingleBean(Validator.class);
+            assertThat(context).hasSingleBean(HibernatePropertiesCustomizer.class);
+        });
     }
 
     @Test
