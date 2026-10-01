@@ -21,6 +21,7 @@ import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryEntityConfiguration;
 import net.croz.nrich.registry.api.configuration.model.RegistryGroupConfiguration;
 import net.croz.nrich.registry.api.configuration.model.property.RegistryPropertyConfiguration;
+import net.croz.nrich.registry.configuration.stub.RegistryConfigurationNumberFieldTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntity;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithAssociationAndEmbeddedId;
 import net.croz.nrich.registry.configuration.stub.RegistryConfigurationTestEntityWithIdClass;
@@ -113,8 +114,8 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(nonEditablePropertyConfiguration.getJavascriptType()).isEqualTo("string");
         assertThat(nonEditablePropertyConfiguration.getOriginalType()).isEqualTo(String.class.getName());
         assertThat(nonEditablePropertyConfiguration.isId()).isFalse();
-        assertThat(nameConfiguration.isDecimal()).isFalse();
-        assertThat(nameConfiguration.isSingularAssociation()).isFalse();
+        assertThat(nonEditablePropertyConfiguration.isDecimal()).isFalse();
+        assertThat(nonEditablePropertyConfiguration.isSingularAssociation()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isEditable()).isFalse();
         assertThat(nonEditablePropertyConfiguration.isSortable()).isFalse();
 
@@ -199,5 +200,20 @@ class DefaultRegistryConfigurationServiceTest {
 
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("name").containsExactlyInAnyOrder("firstId", "secondId", "name");
         assertThat(registryEntityConfiguration.getPropertyConfigurationList()).extracting("isId").containsExactlyInAnyOrder(true, true, false);
+    }
+
+    @Test
+    void shouldNotReportDecimalForNumberSupertypeColumn() {
+        // when
+        List<RegistryGroupConfiguration> result = registryConfigurationService.fetchRegistryGroupConfigurationList();
+        RegistryEntityConfiguration registryEntityConfiguration = result.stream()
+            .flatMap(group -> group.entityConfigurationList().stream())
+            .filter(entityConfig -> RegistryConfigurationNumberFieldTestEntity.class.getName().equals(entityConfig.getClassFullName()))
+            .findFirst()
+            .orElse(null);
+
+        // then
+        assertThat(registryEntityConfiguration).isNotNull();
+        assertThat(registryEntityConfiguration.getPropertyConfigurationList()).filteredOn("name", "numberValue").extracting("isDecimal").containsExactly(false);
     }
 }
