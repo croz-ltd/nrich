@@ -25,6 +25,8 @@ import net.croz.nrich.search.util.QueryUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -106,6 +108,26 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
         }
 
         return new PageImpl<>(typedQuery.getResultList());
+    }
+
+    @Override
+    public <P> Slice<P> findAllSliced(String searchTerm, List<String> propertyToSearchList, SearchConfiguration<T, P, Map<String, Object>> searchConfiguration, Pageable pageable) {
+        Map<String, Object> searchMap = convertToMap(searchTerm, propertyToSearchList, searchConfiguration);
+
+        CriteriaQuery<P> query = queryBuilder.buildQuery(searchMap, searchConfiguration, pageable.getSort());
+        TypedQuery<P> typedQuery = entityManager.createQuery(query);
+
+        int pageSize = 0;
+        if (pageable.isPaged()) {
+            pageSize = pageable.getPageSize();
+            typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageSize + 1);
+        }
+
+        List<P> resultList = typedQuery.getResultList();
+        boolean hasNext = pageable.isPaged() && resultList.size() > pageSize;
+        List<P> content = hasNext ? resultList.subList(0, pageSize) : resultList;
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     @Override

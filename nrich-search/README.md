@@ -202,6 +202,12 @@ public class CarSearchService {
 }
 ```
 
+If the total result count is not needed (e.g. an infinite-scroll or "load more" UI), `findAllSliced` returns a [`Slice<CarSearchResult>`][slice-url] instead of `Page` and skips the COUNT(*) query:
+
+```java
+return carRepository.findAllSliced(request, searchConfiguration, PageableUtil.convertToPageable(request));
+```
+
 In this service we have defined that the query will be executed on the entity `Car` based on the `CarSearchRequest` class and that results of the search will be of type `CarSearchResult`.
 This was defined using [`SearchConfiguration`][search-configuration-url] class and its method `.resultClass(CarSearchResult.class)`.
 [`SearchConfiguration`][search-configuration-url] class dictates how the query should be formed by performing mappings of properties from defined query class to the properties in the target entity.
@@ -326,6 +332,12 @@ public class CarSearchService {
 }
 ```
 
+As with `SearchExecutor`, `findAllSliced` returns a [`Slice<CarSearchResult>`][slice-url] and avoids the COUNT(*) query:
+
+```java
+return carRepository.findAllSliced(request.getSearchTerm(), request.getPropertyToSearchList(), searchConfiguration, Pageable.unpaged());
+```
+
 When using `simpleSearch` method we are searching the `Car` entity by properties supplied in `propertyToSearchList`.
 When property is not a String type conversion is attempted using [`StringToTypeConverter`][string-to-type-converter-url] and if it succeeds then property is searched otherwise it is ignored.
 
@@ -430,3 +442,5 @@ This can be also customized for individual associations by specifying a `SearchJ
 [base-sortable-pageable-request-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/request/BaseSortablePageableRequest.java
 
 [default-search-operator-url]: ../nrich-search-api/src/main/java/net/croz/nrich/search/api/model/operator/DefaultSearchOperator.java
+
+[slice-url]: https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Slice.html
