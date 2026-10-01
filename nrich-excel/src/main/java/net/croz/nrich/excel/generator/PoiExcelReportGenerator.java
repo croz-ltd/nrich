@@ -26,6 +26,7 @@ import net.croz.nrich.excel.api.model.TypeDataFormat;
 import net.croz.nrich.excel.model.PoiCellHolder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -64,6 +65,8 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     private final Map<Integer, CellStyle> cellStyleMap;
 
     private final Map<Class<?>, CellStyle> defaultStyleMap;
+
+    private final Map<Short, CellStyle> quotePrefixedStyleCache = new HashMap<>();
 
     private final boolean autoSizeColumns;
 
@@ -117,20 +120,28 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
         }
 
         sheet.forEach(row -> row.forEach(cell -> {
+            if (cell.getCellType() != CellType.STRING) {
+                return;
+            }
+
             Matcher matcher = TEMPLATE_VARIABLE_PATTERN.matcher(cell.getStringCellValue());
 
-            if (matcher.find()) {
-                String matchedExpression = matcher.group(1);
+            if (!matcher.find()) {
+                return;
+            }
+
+            String updatedValue = matcher.replaceAll(match -> {
+                String variableName = match.group(1);
                 String variableValue = templateVariableList.stream()
-                    .filter(variable -> matchedExpression.equals(variable.name()))
+                    .filter(variable -> variableName.equals(variable.name()))
                     .map(TemplateVariable::value)
                     .findFirst()
                     .orElse("");
 
-                String updatedValue = matcher.replaceFirst(variableValue);
+                return Matcher.quoteReplacement(variableValue);
+            });
 
-                setCellValue(cell, updatedValue, cell.getCellStyle());
-            }
+            setCellValue(cell, updatedValue, cell.getCellStyle());
         }));
     }
 
@@ -154,12 +165,23 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
             String stringValue = value.toString();
             cell.setCellValue(stringValue);
             if (stringValue != null && FORMULA_CHARACTER_LIST.stream().anyMatch(stringValue::startsWith)) {
-                cell.getCellStyle().setQuotePrefixed(true);
+                cell.setCellStyle(resolveQuotePrefixedStyle(cell.getCellStyle()));
             }
         }
         else {
             converter.setCellValue(cellHolder, value);
         }
+    }
+
+    private CellStyle resolveQuotePrefixedStyle(CellStyle source) {
+        return quotePrefixedStyleCache.computeIfAbsent(source.getIndex(), index -> {
+            CellStyle clonedStyle = workbook.createCellStyle();
+
+            clonedStyle.cloneStyleFrom(source);
+            clonedStyle.setQuotePrefixed(true);
+
+            return clonedStyle;
+        });
     }
 
     private Map<Integer, CellStyle> createStyleMap(List<ColumnDataFormat> columnDataFormatList) {
@@ -197,9 +219,11 @@ public class PoiExcelReportGenerator implements ExcelReportGenerator {
     }
 
     private void autoSizeColumnsIfRequired() {
-        if (autoSizeColumns) {
-            int numberOfColumns = this.sheet.getRow(this.sheet.getLastRowNum()).getLastCellNum();
-            IntStream.range(0, numberOfColumns).forEach(sheet::autoSizeColumn);
+        if (!autoSizeColumns || sheet.getLastRowNum() < 0) {
+            return;
         }
+
+        int numberOfColumns = this.sheet.getRow(this.sheet.getLastRowNum()).getLastCellNum();
+        IntStream.range(0, numberOfColumns).forEach(sheet::autoSizeColumn);
     }
 }
