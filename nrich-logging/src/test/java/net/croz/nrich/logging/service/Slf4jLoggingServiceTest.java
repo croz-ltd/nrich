@@ -22,6 +22,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import net.croz.nrich.logging.api.model.LoggingLevel;
 import net.croz.nrich.logging.api.model.LoggingVerbosityLevel;
+import net.croz.nrich.logging.constant.LoggingConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +30,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
@@ -38,6 +38,7 @@ import org.springframework.context.MessageSourceResolvable;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -60,13 +61,14 @@ class Slf4jLoggingServiceTest {
     @Mock
     private MessageSource messageSource;
 
-    @InjectMocks
     private Slf4jLoggingService loggingService;
 
     private final ListAppender<ILoggingEvent> appender = createAndInitListAppender();
 
     @BeforeEach
     void setup() {
+        loggingService = new Slf4jLoggingService(messageSource);
+
         lenient().doAnswer(returnsFirstMessageCode()).when(messageSource).getMessage(any(MessageSourceResolvable.class), any(Locale.class));
 
         appender.list.clear();
@@ -140,6 +142,23 @@ class Slf4jLoggingServiceTest {
 
         // then
         assertThat(event.getLevel()).isEqualTo(Level.valueOf(loggingLevel.name()));
+    }
+
+    @Test
+    void shouldResolveLoggingLevelFromConfiguredCodeFormat() {
+        // given
+        Slf4jLoggingService customLoggingService = new Slf4jLoggingService(
+            messageSource, List.of("custom.logging.level.%s"), List.of(LoggingConstants.LOGGING_VERBOSITY_LEVEL_RESOLVING_FORMAT)
+        );
+        IllegalStateException exception = new IllegalStateException("exception");
+
+        mockMessageSourceCall(LoggingLevel.WARN.name(), "custom.logging.level.");
+
+        // when
+        customLoggingService.logInternalException(exception, null);
+
+        // then
+        assertThat(getLastEvent().getLevel()).isEqualTo(Level.WARN);
     }
 
     @Test

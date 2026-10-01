@@ -1,0 +1,22 @@
+description = "Nrich Problem Detail Spring Boot starter"
+
+dependencies {
+  api project(":nrich-problem-detail-api")
+
+  annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+  implementation project(":nrich-problem-detail")
+  implementation project(":nrich-logging")
+
+  runtimeOnly project(":nrich-logging-spring-boot-starter")
+
+  implementation "org.springframework.boot:spring-boot-autoconfigure"
+
+  testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+  testImplementation project(":nrich-logging-spring-boot-starter")
+
+  testImplementation "org.springframework:spring-web"
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+}

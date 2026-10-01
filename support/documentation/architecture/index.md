@@ -12,3 +12,4 @@ The template is copied from https://github.com/adr/madr.
 - [ADR-0004 - Project structure](decisions/0004-project-structure.md)
 - [ADR-0005 - Use JUnit 5 with AssertJ and Mockito](decisions/0005-use-junit5-with-assertj-and-mockito.md)
 - [ADR-0006 - Test structure](decisions/0006-test-structure.md)
+- [ADR-0007 - RFC 9457 ProblemDetail error handling as a new opt-in module](decisions/0007-problem-detail-module.md)

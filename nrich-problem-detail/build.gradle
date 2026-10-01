@@ -1,0 +1,37 @@
+description = "RFC 9457 ProblemDetail error handling for Spring MVC"
+
+dependencies {
+  api project(":nrich-problem-detail-api")
+  api project(":nrich-core-api")
+  api project(":nrich-logging-api")
+
+  annotationProcessor "org.projectlombok:lombok"
+  compileOnly "org.projectlombok:lombok"
+
+  api "org.springframework:spring-webmvc"
+
+  implementation "org.springframework:spring-context"
+  implementation "org.springframework:spring-web"
+  implementation "jakarta.servlet:jakarta.servlet-api"
+  implementation "jakarta.validation:jakarta.validation-api"
+
+  testAnnotationProcessor "org.projectlombok:lombok"
+  testCompileOnly "org.projectlombok:lombok"
+
+  testRuntimeOnly "ch.qos.logback:logback-classic"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+  testImplementation "com.fasterxml.jackson.core:jackson-core"
+  testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  testImplementation "com.jayway.jsonpath:json-path"
+  testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
+  testImplementation "org.assertj:assertj-core"
+  testImplementation "org.hamcrest:hamcrest"
+  testImplementation "org.hibernate.validator:hibernate-validator"
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "org.junit.jupiter:junit-jupiter-params"
+  testImplementation "org.mockito:mockito-junit-jupiter"
+  testImplementation "org.springframework:spring-test"
+}
