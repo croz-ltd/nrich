@@ -57,7 +57,7 @@ public class JpaSearchExecutor<T> implements SearchExecutor<T> {
         CriteriaQuery<P> query = queryBuilder.buildQuery(request, searchConfiguration, Sort.unsorted());
 
         try {
-            return Optional.of(entityManager.createQuery(query).getSingleResult());
+            return Optional.of(entityManager.createQuery(query).setMaxResults(2).getSingleResult());
         }
         catch (NoResultException ignored) {
             return Optional.empty();
