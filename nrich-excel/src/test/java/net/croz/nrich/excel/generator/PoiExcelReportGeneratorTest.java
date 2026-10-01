@@ -124,6 +124,46 @@ class PoiExcelReportGeneratorTest {
     }
 
     @Test
+    void shouldNotProduceOutputWhenClosedWithoutFlush() {
+        // given
+        Object[] rowData = { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
+
+        excelReportGenerator.writeRowData(rowData);
+
+        // when
+        excelReportGenerator.close();
+
+        // then
+        assertThat(outputStream.size()).isZero();
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryingToWriteAfterClose() {
+        // given
+        Object[] rowData = { 1.0, "value", Instant.now().truncatedTo(ChronoUnit.DAYS), Instant.now().truncatedTo(ChronoUnit.DAYS) };
+
+        excelReportGenerator.close();
+
+        // when
+        Throwable thrown = catchThrowable(() -> excelReportGenerator.writeRowData(rowData));
+
+        // then
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class).hasMessage("Template has been closed and cannot be written anymore");
+    }
+
+    @Test
+    void shouldNotThrowWhenClosedMultipleTimes() {
+        // given
+        excelReportGenerator.close();
+
+        // when
+        Throwable thrown = catchThrowable(excelReportGenerator::close);
+
+        // then
+        assertThat(thrown).isNull();
+    }
+
+    @Test
     void shouldSetDefaultFormatToColumnsWithoutDefinedFormat() {
         // given
         Instant now = Instant.now().truncatedTo(ChronoUnit.DAYS);
