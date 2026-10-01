@@ -17,6 +17,7 @@
 
 package net.croz.nrich.registry.configuration.comparator;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -33,5 +34,16 @@ class DisplayOrderComparatorTest {
     void shouldReturnCorrectOrder(String firstProperty, String secondProperty, int expectedResult) {
         // expect
         assertThat(displayOrderComparator.comparePropertiesByDisplayList(firstProperty, secondProperty)).isEqualTo(expectedResult);
+    }
+
+    @Test
+    void shouldFallBackToNameOrderWhenNeitherPropertyIsInDisplayList() {
+        // when
+        int forwardResult = displayOrderComparator.comparePropertiesByDisplayList("alpha", "beta");
+        int reverseResult = displayOrderComparator.comparePropertiesByDisplayList("beta", "alpha");
+
+        // then
+        assertThat(forwardResult).isNegative();
+        assertThat(reverseResult).isPositive();
     }
 }
