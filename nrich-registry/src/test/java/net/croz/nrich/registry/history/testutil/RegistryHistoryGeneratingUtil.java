@@ -126,9 +126,13 @@ public final class RegistryHistoryGeneratingUtil {
     }
 
     public static ListRegistryHistoryRequest listRegistryHistoryRequestWithDefaultSort(String className, Object id) {
+        return listRegistryHistoryRequestWithDefaultSort(className, id, 0, 10);
+    }
+
+    public static ListRegistryHistoryRequest listRegistryHistoryRequestWithDefaultSort(String className, Object id, int pageNumber, int pageSize) {
         List<SortProperty> sortPropertyList = List.of(new SortProperty(RegistryEnversConstants.REVISION_NUMBER_PROPERTY_NAME, SortDirection.ASC));
 
-        return new ListRegistryHistoryRequest(className, 0, 10, id, sortPropertyList);
+        return new ListRegistryHistoryRequest(className, pageNumber, pageSize, id, sortPropertyList);
     }
 
     public static ListRegistryHistoryRequest listRegistryHistoryRequest(String className, Object id) {
