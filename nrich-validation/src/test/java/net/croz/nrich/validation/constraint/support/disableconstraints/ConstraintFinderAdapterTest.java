@@ -109,12 +109,28 @@ class ConstraintFinderAdapterTest {
     @Test
     void shouldReturnWhetherTargetHasConstraints() {
         // given
-        doReturn(true).when(target).hasConstraints();
+        ConstraintDescriptor<?> notEmptyDescriptor = createConstraintDescriptor(NotEmpty.class);
+
+        doReturn(Set.of(notEmptyDescriptor)).when(target).getConstraintDescriptors();
 
         // when
         boolean result = constraintFinderAdapter.hasConstraints();
 
         // then
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void shouldReportNoConstraintsWhenAllConstraintsAreDisabled() {
+        // given
+        ConstraintDescriptor<?> notNullDescriptor = createConstraintDescriptor(NotNull.class);
+
+        doReturn(Set.of(notNullDescriptor)).when(target).getConstraintDescriptors();
+
+        // when
+        boolean result = constraintFinderAdapter.hasConstraints();
+
+        // then
+        assertThat(result).isFalse();
     }
 }
