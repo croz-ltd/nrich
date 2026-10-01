@@ -26,6 +26,7 @@ import net.croz.nrich.registry.api.enumdata.service.RegistryEnumService;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -50,6 +51,8 @@ public class DefaultRegistryEnumService implements RegistryEnumService {
 
     private final MessageSource messageSource;
 
+    private final List<String> allowedEnumPackageList;
+
     @Override
     public Map<String, List<EnumResult>> listBulk(ListBulkRegistryEnumRequest request) {
         return request.registryRequestList().stream().collect(Collectors.toMap(ListRegistryEnumRequest::classFullName, this::list));
@@ -73,7 +76,7 @@ public class DefaultRegistryEnumService implements RegistryEnumService {
     private List<EnumResult> loadEnumRegistry(String enumClassName, Locale locale) {
         Class<? extends Enum<?>> enumType = loadEnumClass(enumClassName);
 
-        if (enumType == null || !Enum.class.isAssignableFrom(enumType)) {
+        if (enumType == null) {
             return Collections.emptyList();
         }
 
@@ -104,8 +107,15 @@ public class DefaultRegistryEnumService implements RegistryEnumService {
 
     @SuppressWarnings("unchecked")
     private Class<? extends Enum<?>> loadEnumClass(String enumClassName) {
+        if (!CollectionUtils.isEmpty(allowedEnumPackageList) && allowedEnumPackageList.stream().noneMatch(packageName -> enumClassName.startsWith(packageName + "."))) {
+            return null;
+        }
         try {
-            return (Class<? extends Enum<?>>) Class.forName(enumClassName, true, Thread.currentThread().getContextClassLoader());
+            Class<?> rawType = Class.forName(enumClassName, false, Thread.currentThread().getContextClassLoader());
+            if (!Enum.class.isAssignableFrom(rawType)) {
+                return null;
+            }
+            return (Class<? extends Enum<?>>) rawType;
         }
         catch (ClassNotFoundException ignored) {
             return null;

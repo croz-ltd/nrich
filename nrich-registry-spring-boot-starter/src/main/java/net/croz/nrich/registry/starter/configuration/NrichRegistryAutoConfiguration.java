@@ -302,8 +302,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean(RegistryEnumService.class)
     @Bean
-    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource) {
-        return new DefaultRegistryEnumService(messageSource);
+    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource, NrichRegistryProperties registryProperties) {
+        return new DefaultRegistryEnumService(messageSource, registryProperties.allowedEnumPackageList());
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

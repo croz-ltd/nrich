@@ -70,6 +70,7 @@ import net.croz.nrich.search.converter.DefaultStringToTypeConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -278,8 +279,11 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public DefaultRegistryEnumService registryEnumService(MessageSource messageSource) {
-        return new DefaultRegistryEnumService(messageSource);
+    public DefaultRegistryEnumService registryEnumService(
+        MessageSource messageSource,
+        @Value("${nrich.registry.allowed-enum-package-list:#{T(java.util.Collections).emptyList()}}") List<String> allowedEnumPackageList
+    ) {
+        return new DefaultRegistryEnumService(messageSource, allowedEnumPackageList);
     }
 
     @Bean
