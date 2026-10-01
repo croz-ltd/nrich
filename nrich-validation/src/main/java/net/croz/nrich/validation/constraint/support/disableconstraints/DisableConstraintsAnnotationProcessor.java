@@ -22,6 +22,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,9 +62,13 @@ public class DisableConstraintsAnnotationProcessor {
             }
         });
 
-        DisableConstraints[] disableConstraints = type.getAnnotationsByType(DisableConstraints.class);
+        Class<?> currentType = type;
+        while (currentType.getSuperclass() != null) {
+            DisableConstraints[] disableConstraints = currentType.getAnnotationsByType(DisableConstraints.class);
 
-        registerDisableConstraints(pathHolderMap, disableConstraints, PathUtil.getPath(type, null), true);
+            registerDisableConstraints(pathHolderMap, disableConstraints, PathUtil.getPath(type, null), true);
+            currentType = currentType.getSuperclass();
+        }
 
         return pathHolderMap;
     }
@@ -75,8 +80,11 @@ public class DisableConstraintsAnnotationProcessor {
             }
 
             String fullPath = PathUtil.getPath(path, disableConstraint.propertyName());
+            List<Class<? extends Annotation>> currentConstraints = pathHolderMap.getOrDefault(fullPath, new ArrayList<>());
 
-            pathHolderMap.put(fullPath, List.of(disableConstraint.value()));
+            currentConstraints.addAll(Arrays.asList(disableConstraint.value()));
+
+            pathHolderMap.put(fullPath, currentConstraints);
         });
     }
 }
