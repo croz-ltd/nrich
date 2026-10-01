@@ -209,6 +209,27 @@ public class ExampleRequest {
 
 will validate that file has content type of `text/plain`, extension `txt` and matches regex: `(?U)[\\w-.]+`
 
+By default the validator is strict: a null `Content-Type` (e.g. an HTTP request omitting the header) fails the content-type gate when `allowedContentTypeList` is non-empty, and a filename without a recognizable extension fails the extension gate when `allowedExtensionList` is non-empty. Set `requireContentType = false` or `requireExtension = false` to relax either gate individually:
+
+```java
+
+@Setter
+@Getter
+public class ExampleRequest {
+
+    @ValidFile(
+        allowedContentTypeList = "text/plain",
+        allowedExtensionList = "txt",
+        requireContentType = false
+    )
+    private MultipartFile file;
+
+}
+
+```
+
+Content-type matching is case-insensitive (per RFC 6838), so `IMAGE/PNG` and `image/png` are treated as the same type.
+
 #### ValidFileResolvable
 
 Does the same thing as `ValidFile` constraint but resolves allowedContentTypeList, allowedExtensionList and allowedFileNameRegex from Spring's `Environment` bean allowing those properties to be
@@ -233,6 +254,15 @@ public class ExampleRequest {
 
 will resolve allowedContentTypeList from `my.custom.validation.file.allowed-content-type-list`, allowedExtensionList from `my.custom.validation.file.allowed-extension-list`
 and allowedFileNameRegex from `my.custom.validation.file.allowed-file-name-regex` properties and perform validation while skipping resolved empty or null property values.
+
+The same strict-vs-lenient knobs as on `ValidFile` are exposed as resolvable property names:
+
+| attribute                        | default property name                        | default value |
+|----------------------------------|----------------------------------------------|---------------|
+| `requireContentTypePropertyName` | `nrich.constraint.file.require-content-type` | `true`        |
+| `requireExtensionPropertyName`   | `nrich.constraint.file.require-extension`    | `true`        |
+
+Setting `nrich.constraint.file.require-content-type=false` (or `nrich.constraint.file.require-extension=false`) restores the legacy behaviour of skipping that gate when the corresponding input is missing.
 
 ### ValidOib
 
