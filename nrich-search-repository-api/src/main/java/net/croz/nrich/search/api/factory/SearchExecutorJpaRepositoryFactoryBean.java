@@ -17,6 +17,8 @@
 
 package net.croz.nrich.search.api.factory;
 
+import net.croz.nrich.search.api.model.operator.SearchEscapeCharacter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.Repository;
@@ -36,6 +38,8 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, I>, 
     private RepositoryFactorySupportFactory repositoryFactorySupportFactory;
 
     private BeanFactory beanFactory;
+
+    private SearchOperatorContext searchOperatorContext = SearchOperatorContext.DEFAULT;
 
     private final Class<? extends T> repositoryInterface;
 
@@ -57,7 +61,13 @@ public class SearchExecutorJpaRepositoryFactoryBean<T extends Repository<S, I>, 
     }
 
     @Override
+    public void setEscapeCharacter(char escapeCharacter) {
+        super.setEscapeCharacter(escapeCharacter);
+        this.searchOperatorContext = new SearchOperatorContext(new SearchEscapeCharacter(escapeCharacter));
+    }
+
+    @Override
     protected RepositoryFactorySupport createRepositoryFactory(EntityManager entityManager) {
-        return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager);
+        return repositoryFactorySupportFactory.createRepositoryFactory(repositoryInterface, entityManager, searchOperatorContext);
     }
 }

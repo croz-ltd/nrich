@@ -67,7 +67,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
 
         String requestUrl = fullUrl("list-bulk");
-        ListBulkRegistryRequest request = createBulkListRegistryRequest(REGISTRY_TYPE_NAME, "name%");
+        ListBulkRegistryRequest request = createBulkListRegistryRequest(REGISTRY_TYPE_NAME, "name");
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -83,7 +83,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         executeInTransaction(platformTransactionManager, () -> createRegistryTestEntityList(entityManager));
 
         String requestUrl = fullUrl("list");
-        ListRegistryRequest request = createListRegistryRequest(REGISTRY_TYPE_NAME, "name%");
+        ListRegistryRequest request = createListRegistryRequest(REGISTRY_TYPE_NAME, "name");
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);

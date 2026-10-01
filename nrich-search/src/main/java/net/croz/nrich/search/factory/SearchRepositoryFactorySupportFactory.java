@@ -20,6 +20,7 @@ package net.croz.nrich.search.factory;
 import lombok.RequiredArgsConstructor;
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.factory.RepositoryFactorySupportFactory;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 
 import jakarta.persistence.EntityManager;
@@ -30,7 +31,7 @@ public class SearchRepositoryFactorySupportFactory implements RepositoryFactoryS
     private final StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter;
 
     @Override
-    public RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager) {
-        return new SearchRepositoryJpaRepositoryFactory(entityManager, stringToEntityPropertyMapConverter);
+    public RepositoryFactorySupport createRepositoryFactory(Class<?> repositoryInterface, EntityManager entityManager, SearchOperatorContext searchOperatorContext) {
+        return new SearchRepositoryJpaRepositoryFactory(entityManager, stringToEntityPropertyMapConverter, searchOperatorContext);
     }
 }

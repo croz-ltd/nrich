@@ -19,6 +19,7 @@ package net.croz.nrich.search.repository;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.model.SearchConfiguration;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import net.croz.nrich.search.api.repository.StringSearchExecutor;
 import net.croz.nrich.search.support.JpaQueryBuilder;
 import net.croz.nrich.search.util.QueryUtil;
@@ -52,11 +53,12 @@ public class JpaStringSearchExecutor<T> implements StringSearchExecutor<T> {
 
     private final ManagedType<?> managedType;
 
-    public JpaStringSearchExecutor(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, EntityManager entityManager, JpaEntityInformation<T, ?> jpaEntityInformation) {
+    public JpaStringSearchExecutor(StringToEntityPropertyMapConverter stringToEntityPropertyMapConverter, EntityManager entityManager, JpaEntityInformation<T, ?> jpaEntityInformation,
+                                   SearchOperatorContext searchOperatorContext) {
         this.stringToEntityPropertyMapConverter = stringToEntityPropertyMapConverter;
         this.entityManager = entityManager;
         domainClass = jpaEntityInformation.getJavaType();
-        queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType());
+        queryBuilder = new JpaQueryBuilder<>(entityManager, jpaEntityInformation.getJavaType(), searchOperatorContext);
         managedType = jpaEntityInformation.getRequiredIdAttribute().getDeclaringType();
     }
 

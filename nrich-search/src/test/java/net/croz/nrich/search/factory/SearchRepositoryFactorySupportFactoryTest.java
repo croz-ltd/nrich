@@ -18,6 +18,7 @@
 package net.croz.nrich.search.factory;
 
 import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
+import net.croz.nrich.search.api.model.operator.SearchOperatorContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,7 +52,7 @@ class SearchRepositoryFactorySupportFactoryTest {
         doReturn(entityManagerFactory).when(entityManager).getEntityManagerFactory();
 
         // when
-        RepositoryFactorySupport result = searchRepositoryFactorySupportFactory.createRepositoryFactory(type, entityManager);
+        RepositoryFactorySupport result = searchRepositoryFactorySupportFactory.createRepositoryFactory(type, entityManager, SearchOperatorContext.DEFAULT);
 
         // then
         assertThat(result).isInstanceOf(SearchRepositoryJpaRepositoryFactory.class);
