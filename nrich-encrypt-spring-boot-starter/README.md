@@ -40,28 +40,28 @@ Note if using `nrich-bom` dependency versions should be omitted.
 
 Configuration is done through a property file, available properties and descriptions are given bellow (all properties are prefixed with nrich.encrypt which is omitted for readability):
 
-| property                      | description                                                                                                                                                                     | default value |
-|-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
-| encryption-configuration-list | Configuration list containing methods for encryption and decryption                                                                                                             |               |
-| ignored-method-list           | Used in conjunction with encryption-configuration-list. It allows defining methods that will not be encrypted. Methods should be in format: fullyQualifiedClasName.methodName.  |               |
-| text-encrypt-charset          | Charset to use for encryption                                                                                                                                                   | UTF-8         |     |
-| encrypt-aspect-enabled        | Whether an aspect bean that handles encryption for `@EncryptResult` and `@DecryptArgument` annotations is active                                                                | true          |
-| encrypt-advisor-enabled       | Whether an advisor bean that handles encryption from encryption-configuration-list is active                                                                                    | true          |
-| encrypt-password              | Encrypt password if null data is encrypted with randomly generated password on each application restart. If encrypted data will be persisted this parameter should be specified |               |
-| encrypt-salt                  | Encrypt salt if null data is encrypted with randomly generated password on each application restart. If encrypted data will be persisted this parameter should be specified     |               |
+| property                      | description                                                                                                                                                                                                                                                                                            | default value |
+|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| encryption-configuration-list | Configuration list containing methods for encryption and decryption                                                                                                                                                                                                                                    |               |
+| ignored-method-list           | Used in conjunction with encryption-configuration-list. It allows defining methods that will not be encrypted. Methods should be in format: fullyQualifiedClasName.methodName.                                                                                                                         |               |
+| text-encrypt-charset          | Charset to use for encryption                                                                                                                                                                                                                                                                          | UTF-8         |     |
+| encrypt-aspect-enabled        | Whether an aspect bean that handles encryption for `@EncryptResult` and `@DecryptArgument` annotations is active                                                                                                                                                                                       | true          |
+| encrypt-advisor-enabled       | Whether an advisor bean that handles encryption from encryption-configuration-list is active                                                                                                                                                                                                           | true          |
+| encrypt-password              | Encrypt password if null data is encrypted with randomly generated password on each application restart. If encrypted data will be persisted this parameter should be specified. This paraameter must be specified togheter with encrypt-salt.                                                         |               |
+| encrypt-salt                  | Encrypt salt if null data is encrypted with randomly salt password on each application restart. If encrypted data will be persisted this parameter should be specified togheter with encrypt-password (configuring only one of the two is rejected at startup). When specified it must be hex encoded. |               |
 
 The default configuration values in yaml format for easier modification are given bellow:
 
 ```yaml
 
 nrich.encrypt:
-  encryption-configuration-list:
-  ignored-method-list:
-  text-encrypt-charset: UTF-8
-  encrypt-aspect-enabled: true
-  encrypt-advisor-enabled: true
-  encrypt-password:
-  encrypt-salt:
+    encryption-configuration-list:
+    ignored-method-list:
+    text-encrypt-charset: UTF-8
+    encrypt-aspect-enabled: true
+    encrypt-advisor-enabled: true
+    encrypt-password:
+    encrypt-salt:
 
 ```
 
@@ -78,15 +78,15 @@ also possible to encrypt/decrypt all methods using `*` in that case ignored-meth
 ```yaml
 
 nrich.encrypt:
-  encryption-configuration-list:
-    - method-to-encrypt-decrypt: net.croz.example.DocumentService.fetchDocuments
-      property-to-encrypt-decrypt-list: documentId
-      encryption-operation: ENCRYPT
-    - method-to-encrypt-decrypt: net.croz.example.DocumentService.updateDocument
-      property-to-encrypt-decrypt-list: documentId
-      encryption-operation: DECRYPT
-  encrypt-password: 43a62546066cebe4
-  encrypt-salt: 529564719fc0edc4
+    encryption-configuration-list:
+        -   method-to-encrypt-decrypt: net.croz.example.DocumentService.fetchDocuments
+            property-to-encrypt-decrypt-list: documentId
+            encryption-operation: ENCRYPT
+        -   method-to-encrypt-decrypt: net.croz.example.DocumentService.updateDocument
+            property-to-encrypt-decrypt-list: documentId
+            encryption-operation: DECRYPT
+    encrypt-password: 43a62546066cebe4
+    encrypt-salt: 529564719fc0edc4
 
 ```
 
