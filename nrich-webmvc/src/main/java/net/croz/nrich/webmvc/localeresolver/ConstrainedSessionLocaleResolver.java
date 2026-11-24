@@ -17,6 +17,10 @@
 
 package net.croz.nrich.webmvc.localeresolver;
 
+import org.springframework.context.i18n.LocaleContext;
+import org.springframework.context.i18n.SimpleTimeZoneAwareLocaleContext;
+import org.springframework.context.i18n.TimeZoneAwareLocaleContext;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
@@ -24,25 +28,79 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ConstrainedSessionLocaleResolver extends SessionLocaleResolver {
 
-    private final String defaultLocaleCode;
+    private final Locale defaultLocale;
 
-    private final List<String> supportedLocaleCodeList;
+    private final Set<Locale> supportedLocaleSet;
+
+    private final Map<String, Locale> languageOnlySupportedLocaleMap;
 
     public ConstrainedSessionLocaleResolver(String defaultLocaleCode, List<String> supportedLocaleCodeList) {
-        this.defaultLocaleCode = defaultLocaleCode == null ? Locale.getDefault().toLanguageTag() : defaultLocaleCode;
-        this.supportedLocaleCodeList = supportedLocaleCodeList;
+        this.defaultLocale = defaultLocaleCode == null ? Locale.getDefault() : StringUtils.parseLocale(defaultLocaleCode);
+        this.supportedLocaleSet = supportedLocaleCodeList.stream()
+            .map(StringUtils::parseLocale)
+            .collect(Collectors.toSet());
+        this.languageOnlySupportedLocaleMap = supportedLocaleSet.stream()
+            .filter(this::isLanguageOnly)
+            .collect(Collectors.toMap(Locale::getLanguage, Function.identity()));
+    }
+
+    @Override
+    public Locale resolveLocale(HttpServletRequest request) {
+        return resolveSupportedLocale(super.resolveLocale(request));
+    }
+
+    @Override
+    public LocaleContext resolveLocaleContext(HttpServletRequest request) {
+        LocaleContext localeContext = super.resolveLocaleContext(request);
+        Locale locale = localeContext.getLocale();
+        Locale supportedLocale = resolveSupportedLocale(locale);
+
+        if (supportedLocale.equals(locale)) {
+            return localeContext;
+        }
+
+        return new SimpleTimeZoneAwareLocaleContext(supportedLocale, resolveTimeZone(localeContext));
     }
 
     @Override
     public void setLocale(HttpServletRequest request, HttpServletResponse response, Locale locale) {
-        Locale localeToSet = locale;
-        if (locale == null || !supportedLocaleCodeList.contains(locale.toString())) {
-            localeToSet = Locale.forLanguageTag(defaultLocaleCode);
+        WebUtils.setSessionAttribute(request, LOCALE_SESSION_ATTRIBUTE_NAME, resolveSupportedLocale(locale));
+    }
+
+    @Override
+    public void setLocaleContext(HttpServletRequest request, HttpServletResponse response, LocaleContext localeContext) {
+        Locale locale = localeContext == null ? null : localeContext.getLocale();
+        Locale supportedLocale = resolveSupportedLocale(locale);
+        LocaleContext localeContextToSet = localeContext != null && supportedLocale.equals(locale) ? localeContext : new SimpleTimeZoneAwareLocaleContext(supportedLocale, resolveTimeZone(localeContext));
+
+        super.setLocaleContext(request, response, localeContextToSet);
+    }
+
+    private Locale resolveSupportedLocale(Locale locale) {
+        if (locale == null) {
+            return defaultLocale;
         }
 
-        WebUtils.setSessionAttribute(request, LOCALE_SESSION_ATTRIBUTE_NAME, localeToSet);
+        if (supportedLocaleSet.contains(locale)) {
+            return locale;
+        }
+
+        return languageOnlySupportedLocaleMap.getOrDefault(locale.getLanguage(), defaultLocale);
+    }
+
+    private boolean isLanguageOnly(Locale locale) {
+        return locale.getCountry().isEmpty() && locale.getScript().isEmpty() && locale.getVariant().isEmpty() && !locale.hasExtensions();
+    }
+
+    private TimeZone resolveTimeZone(LocaleContext localeContext) {
+        return localeContext instanceof TimeZoneAwareLocaleContext timeZoneAwareLocaleContext ? timeZoneAwareLocaleContext.getTimeZone() : null;
     }
 }
