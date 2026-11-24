@@ -19,6 +19,7 @@ package net.croz.nrich.registry.core.support;
 
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import net.croz.nrich.registry.core.stub.ManagedTypeWrapperCyclicTestEntityFirst;
+import net.croz.nrich.registry.core.stub.ManagedTypeWrapperOptionalPathTestEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 @SpringJUnitWebConfig(RegistryTestConfiguration.class)
 class ManagedTypeWrapperTest {
@@ -61,5 +63,21 @@ class ManagedTypeWrapperTest {
         // then
         assertThat(singularAssociationList).hasSize(2);
         assertThat(singularAssociationList).extracting(SingularAssociation::path).containsExactlyInAnyOrder("first.parent", "second.parent");
+    }
+
+    @Test
+    void shouldPropagateOptionalityToAllDeeperLevelsOfAssociationPath() {
+        // given
+        ManagedType<ManagedTypeWrapperOptionalPathTestEntity> managedType = entityManager.getMetamodel().managedType(ManagedTypeWrapperOptionalPathTestEntity.class);
+        ManagedTypeWrapper wrapper = new ManagedTypeWrapper(managedType);
+
+        // when
+        List<SingularAssociation> singularAssociationList = wrapper.getSingularAssociationList();
+
+        // then
+        assertThat(singularAssociationList).extracting(SingularAssociation::path, SingularAssociation::optional).containsExactlyInAnyOrder(
+            tuple("optionalFirst.second.root", true),
+            tuple("requiredFirst.second.root", false)
+        );
     }
 }
