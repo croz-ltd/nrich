@@ -23,6 +23,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.concurrent.ExecutionException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -143,6 +146,25 @@ class NotificationErrorHandlingRestControllerAdviceTest extends BaseControllerTe
             .andExpect(jsonPath(NOTIFICATION_CONTENT_PATH).value("Found validation errors:"))
             .andExpect(jsonPath(NOTIFICATION_MESSAGE_LIST_PATH).value("name: Name really cannot be null"))
             .andExpect(jsonPath(NOTIFICATION_VALIDATION_ERROR_LIST_PATH).isNotEmpty());
+    }
+
+    @Test
+    void shouldNotThrowClassCastExceptionWhenUnwrappingExceptionWithErrorCause() throws Exception {
+        // given
+        String requestUrl = fullUrl("unwrapped-exception-with-error-cause-resolving");
+
+        // when
+        ResultActions result = performPostRequest(requestUrl);
+
+        // then
+        result.andExpect(status().is5xxServerError())
+            .andExpect(jsonPath(NOTIFICATION_TITLE_PATH).isNotEmpty());
+
+        // and when
+        Exception exception = result.andReturn().getResolvedException();
+
+        // then
+        assertThat(exception).isInstanceOf(ExecutionException.class);
     }
 
     @Test
