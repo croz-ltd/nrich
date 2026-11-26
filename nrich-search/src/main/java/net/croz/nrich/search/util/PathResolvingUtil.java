@@ -17,11 +17,14 @@
 
 package net.croz.nrich.search.util;
 
+import org.hibernate.query.criteria.JpaFrom;
+
 import jakarta.persistence.criteria.From;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.ManagedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,8 +67,18 @@ public final class PathResolvingUtil {
         Path<?> calculatedPath = rootPath;
 
         for (String currentPathSegment : pathList) {
-            if (shouldJoinPath(calculatedPath, currentPathSegment)) {
-                From<?, ?> from = (From<?, ?>) calculatedPath;
+            Attribute<?, ?> attribute = null;
+            EntityType<?> entityType = null;
+            if (!CLASS_ATTRIBUTE_NAME.equals(currentPathSegment) && calculatedPath.getModel() instanceof EntityType<?> pathEntityType) {
+                entityType = pathEntityType;
+                attribute = AttributeResolvingUtil.resolveAttributeByName(entityType, currentPathSegment);
+            }
+
+            if (attribute == null) {
+                calculatedPath = calculatedPath.get(currentPathSegment);
+            }
+            else if (shouldJoinPath(attribute)) {
+                From<?, ?> from = (From<?, ?>) castPathIfNecessary(calculatedPath, entityType, attribute);
 
                 calculatedPath = from.getJoins().stream()
                     .filter(join -> currentPathSegment.equals(join.getAttribute().getName()))
@@ -73,26 +86,47 @@ public final class PathResolvingUtil {
                     .orElseGet(() -> from.join(currentPathSegment, calculatedJoinPath));
             }
             else {
-                calculatedPath = calculatedPath.get(currentPathSegment);
+                calculatedPath = castPathIfNecessary(calculatedPath, entityType, attribute).get(currentPathSegment);
             }
         }
 
         return calculatedPath;
     }
 
-    private static boolean shouldJoinPath(Path<?> calculatedPath, String currentPathSegment) {
-        if (CLASS_ATTRIBUTE_NAME.equals(currentPathSegment)) {
-            return false;
+    public static <T extends Path<?>> T castPathIfNecessary(T path, String attributeName) {
+        if (CLASS_ATTRIBUTE_NAME.equals(attributeName) || !(path.getModel() instanceof EntityType<?> entityType)) {
+            return path;
         }
 
-        if (calculatedPath.getModel() instanceof EntityType<?> entityType) {
-            Attribute<?, ?> attribute = AttributeResolvingUtil.resolveAttributeByName(entityType, currentPathSegment);
-
-            if (attribute != null) {
-                return attribute.isCollection() || attribute.isAssociation();
-            }
+        Attribute<?, ?> attribute = AttributeResolvingUtil.resolveAttributeByName(entityType, attributeName);
+        if (attribute == null) {
+            return path;
         }
 
-        return false;
+        @SuppressWarnings("unchecked")
+        T castedPath = (T) castPathIfNecessary(path, entityType, attribute);
+
+        return castedPath;
+    }
+
+    private static boolean shouldJoinPath(Attribute<?, ?> attribute) {
+        return attribute.isCollection() || attribute.isAssociation();
+    }
+
+    private static <S> Path<?> castPathIfNecessary(Path<?> path, ManagedType<?> managedType, Attribute<?, ?> attribute) {
+        if (!(path instanceof JpaFrom<?, ?>)) {
+            return path;
+        }
+
+        @SuppressWarnings("unchecked")
+        Class<S> declaringJavaType = (Class<S>) attribute.getDeclaringType().getJavaType();
+        if (declaringJavaType.isAssignableFrom(managedType.getJavaType())) {
+            return path;
+        }
+
+        @SuppressWarnings("unchecked")
+        JpaFrom<?, S> from = (JpaFrom<?, S>) path;
+
+        return from.treatAs(declaringJavaType);
     }
 }

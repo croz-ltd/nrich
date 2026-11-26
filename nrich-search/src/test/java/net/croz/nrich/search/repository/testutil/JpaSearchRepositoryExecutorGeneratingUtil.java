@@ -126,11 +126,29 @@ public final class JpaSearchRepositoryExecutorGeneratingUtil {
     public static void generateTestSubEntityList(EntityManager entityManager) {
         IntStream.range(0, 3).forEach(value -> {
             TestSubEntity entity = new TestSubEntity();
+            TestSubEntity child = new TestSubEntity();
+
+            child.setSubName("childSubname" + value);
 
             entity.setSubName("subName" + value);
+            entity.setSubEntityList(List.of(child));
 
             entityManager.persist(entity);
         });
+    }
+
+    public static void generateTestSubEntityWithMultipleChildren(EntityManager entityManager) {
+        TestSubEntity entity = new TestSubEntity();
+        TestSubEntity firstChild = new TestSubEntity();
+        TestSubEntity secondChild = new TestSubEntity();
+
+        firstChild.setSubName("childSubname0");
+        secondChild.setSubName("childSubname1");
+
+        entity.setSubName("subName0");
+        entity.setSubEntityList(List.of(firstChild, secondChild));
+
+        entityManager.persist(entity);
     }
 
     public static TestEntity createTestEntityForCollectionSearch(EntityManager entityManager) {
