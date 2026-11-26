@@ -28,12 +28,16 @@ allprojects {
   }
 
   configurations {
-    compileOnly.extendsFrom(annotationProcessor)
-
     springBom
-    annotationProcessor.extendsFrom(springBom)
-    implementation.extendsFrom(springBom)
-    testAnnotationProcessor.extendsFrom(springBom)
+  }
+
+  pluginManager.withPlugin("java") {
+    configurations {
+      compileOnly.extendsFrom(annotationProcessor)
+      annotationProcessor.extendsFrom(springBom)
+      implementation.extendsFrom(springBom)
+      testAnnotationProcessor.extendsFrom(springBom)
+    }
   }
 }
 
@@ -53,9 +57,9 @@ subprojects { Project subproject ->
     apply plugin: "java-library"
     apply plugin: "jacoco"
 
-    sourceCompatibility = "17"
-
     java {
+      sourceCompatibility = "17"
+
       ["envers", "reactor", "web", "webMvc", "webFlux", "hibernate", "spel"].forEach {
         registerFeature(it) {
           usingSourceSet(sourceSets.main)
