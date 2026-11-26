@@ -10,6 +10,8 @@ dependencies {
   implementation project(":nrich-validation")
 
   implementation "org.springframework.boot:spring-boot-autoconfigure"
+  implementation "org.springframework.boot:spring-boot-validation"
+  implementation "org.springframework.boot:spring-boot-data-jpa"
 
   testRuntimeOnly "ch.qos.logback:logback-classic"
   testRuntimeOnly "org.junit.platform:junit-platform-launcher"
