@@ -17,17 +17,16 @@
 
 package net.croz.nrich.registry.data.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
+import tools.jackson.databind.json.JsonMapper;
 
 @RequiredArgsConstructor
 public class DefaultRegistryDataRequestConversionService implements RegistryDataRequestConversionService {
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
     private final RegistryClassResolvingService registryClassResolvingService;
 
@@ -45,8 +44,7 @@ public class DefaultRegistryDataRequestConversionService implements RegistryData
         return convertStringToInstance(request.jsonEntityData(), type);
     }
 
-    @SneakyThrows
     private Object convertStringToInstance(String entityData, Class<?> entityType) {
-        return objectMapper.readValue(entityData, entityType);
+        return jsonMapper.readValue(entityData, entityType);
     }
 }

@@ -17,11 +17,6 @@
 
 package net.croz.nrich.registry;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
 import net.croz.nrich.javascript.converter.DefaultJavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.service.DefaultJavaToJavascriptTypeConversionService;
@@ -84,6 +79,10 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -140,20 +139,17 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public ObjectMapper objectMapper(List<Module> moduleList) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.findAndRegisterModules();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
-
-        objectMapper.setDateFormat(new StdDateFormat());
-
-        objectMapper.registerModules(moduleList);
-
-        return objectMapper;
+    public JsonMapper jsonMapper(List<JacksonModule> moduleList) {
+        return JsonMapper.builder()
+            .findAndAddModules()
+            .enable(MapperFeature.DETECT_PARAMETER_NAMES)
+            .disable(tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(tools.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
+            .defaultDateFormat(new tools.jackson.databind.util.StdDateFormat())
+            .addModules(moduleList)
+            .build();
     }
 
     @Bean
@@ -166,8 +162,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryWebMvcTestConfiguration registryWebMvcConfiguration(ObjectMapper objectMapper) {
-        return new RegistryWebMvcTestConfiguration(objectMapper);
+    public RegistryWebMvcTestConfiguration registryWebMvcConfiguration(JsonMapper jsonMapper) {
+        return new RegistryWebMvcTestConfiguration(jsonMapper);
     }
 
     @Bean
@@ -254,8 +250,8 @@ public class RegistryTestConfiguration {
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
+    public RegistryDataRequestConversionService registryDataRequestConversionService(JsonMapper jsonMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(jsonMapper, registryClassResolvingService);
     }
 
     @Bean
@@ -325,14 +321,14 @@ public class RegistryTestConfiguration {
         RegistryOverrideConfigurationHolder interceptorTestEntityConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
             .type(RegistryConfigurationUpdateInterceptorTestEntity.class).overrideConfiguration(interceptorTestEntityConfiguration).build();
 
-        RegistryOverrideConfiguration InterceptorTestNonEntityNonModifiableConfiguration = new RegistryOverrideConfiguration();
+        RegistryOverrideConfiguration interceptorTestNonEntityNonModifiableConfiguration = new RegistryOverrideConfiguration();
 
-        InterceptorTestNonEntityNonModifiableConfiguration.setDeletable(false);
-        InterceptorTestNonEntityNonModifiableConfiguration.setUpdateable(false);
-        InterceptorTestNonEntityNonModifiableConfiguration.setCreatable(false);
+        interceptorTestNonEntityNonModifiableConfiguration.setDeletable(false);
+        interceptorTestNonEntityNonModifiableConfiguration.setUpdateable(false);
+        interceptorTestNonEntityNonModifiableConfiguration.setCreatable(false);
 
-        RegistryOverrideConfigurationHolder InterceptorTestNonEntityNonModifiableConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
-            .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(InterceptorTestNonEntityNonModifiableConfiguration).build();
+        RegistryOverrideConfigurationHolder interceptorTestNonEntityNonModifiableConfigurationHolder = RegistryOverrideConfigurationHolder.builder()
+            .type(RegistryConfigurationUpdateInterceptorNonModifiableEntity.class).overrideConfiguration(interceptorTestNonEntityNonModifiableConfiguration).build();
 
         SearchConfiguration<Object, Object, Map<String, Object>> searchConfiguration = SearchConfiguration.emptyConfiguration();
         searchConfiguration.setSearchOperatorOverrideList(List.of(SearchOperatorOverride.forType(String.class, DefaultSearchOperator.EQ)));
@@ -348,7 +344,7 @@ public class RegistryTestConfiguration {
             .type(RegistryConfigurationTestEntityWithAssociationAndEmbeddedId.class).overrideConfiguration(embeddedEntityOverrideConfiguration).build();
 
         return List.of(
-            interceptorTestEntityConfigurationHolder, InterceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder,
+            interceptorTestEntityConfigurationHolder, interceptorTestNonEntityNonModifiableConfigurationHolder, searchConfigurationHolder, configurationEntityConfigurationHolder,
             embeddedEntityOverrideConfigurationHolder
         );
     }

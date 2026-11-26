@@ -10,7 +10,7 @@ dependencies {
 
   implementation "org.springframework:spring-context"
 
-  webMvcImplementation "com.fasterxml.jackson.core:jackson-databind"
+  webMvcImplementation "tools.jackson.core:jackson-databind"
   webMvcImplementation "jakarta.servlet:jakarta.servlet-api"
   webMvcImplementation "org.springframework:spring-webmvc"
 

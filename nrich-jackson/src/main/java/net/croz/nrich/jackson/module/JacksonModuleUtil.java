@@ -17,10 +17,10 @@
 
 package net.croz.nrich.jackson.module;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.croz.nrich.jackson.deserializer.ConvertEmptyStringToNullDeserializer;
 import net.croz.nrich.jackson.serializer.EntityClassSerializerModifier;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.module.SimpleModule;
 
 import java.util.List;
 
@@ -33,16 +33,16 @@ public final class JacksonModuleUtil {
     private JacksonModuleUtil() {
     }
 
-    public static Module convertEmptyStringToNullModule() {
-        SimpleModule simpleModule = new SimpleModule(JacksonModuleUtil.CONVERT_EMPTY_STRING_TO_NULL_MODULE_NAME);
+    public static JacksonModule convertEmptyStringToNullModule() {
+        SimpleModule simpleModule = new SimpleModule(CONVERT_EMPTY_STRING_TO_NULL_MODULE_NAME);
 
         simpleModule.addDeserializer(String.class, new ConvertEmptyStringToNullDeserializer());
 
         return simpleModule;
     }
 
-    public static Module classNameSerializerModule(boolean serializeEntityAnnotatedClasses, List<String> packageList) {
-        SimpleModule simpleModule = new SimpleModule(JacksonModuleUtil.CLASS_NAME_SERIALIZER_MODULE);
+    public static JacksonModule classNameSerializerModule(boolean serializeEntityAnnotatedClasses, List<String> packageList) {
+        SimpleModule simpleModule = new SimpleModule(CLASS_NAME_SERIALIZER_MODULE);
 
         simpleModule.setSerializerModifier(new EntityClassSerializerModifier(serializeEntityAnnotatedClasses, packageList));
 

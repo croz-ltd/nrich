@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.RegistryTestConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 
@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public abstract class BaseControllerTest {
 
     @Autowired
-    protected ObjectMapper objectMapper;
+    protected JsonMapper jsonMapper;
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
@@ -54,7 +54,7 @@ public abstract class BaseControllerTest {
 
     protected ResultActions performPostRequest(String requestUrl, Object requestData) throws Exception {
         return mockMvc.perform(post(requestUrl)
-            .content(objectMapper.writeValueAsString(requestData))
+            .content(jsonMapper.writeValueAsString(requestData))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON));
     }

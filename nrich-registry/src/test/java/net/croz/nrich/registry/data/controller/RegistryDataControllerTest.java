@@ -98,7 +98,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         // given
         String requestUrl = fullUrl("create");
         String entityName = "name for creating";
-        CreateRegistryRequest request = createRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, entityName);
+        CreateRegistryRequest request = createRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, entityName);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -113,7 +113,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         // given
         RegistryTestEntity entity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
         String requestUrl = fullUrl("create");
-        CreateRegistryRequest request = createRegistryRequestWithAssociation(objectMapper, REGISTRY_TYPE_NAME, entity);
+        CreateRegistryRequest request = createRegistryRequestWithAssociation(jsonMapper, REGISTRY_TYPE_NAME, entity);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -127,7 +127,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
     void shouldReturnErrorWhenCreateInputDataIsNotValid() throws Exception {
         // given
         String requestUrl = fullUrl("create");
-        CreateRegistryRequest request = createRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, null);
+        CreateRegistryRequest request = createRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, null);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -140,7 +140,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
     void shouldReturnErrorWhenCreateInputDataIsNotValidWithValidationGroups() throws Exception {
         // given
         String requestUrl = fullUrl("create");
-        CreateRegistryRequest request = createRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, "name", 10);
+        CreateRegistryRequest request = createRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, "name", 10);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -156,7 +156,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
 
         String requestUrl = fullUrl("update");
         String entityName = "name for creating update";
-        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), entityName);
+        UpdateRegistryRequest request = updateRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), entityName);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -172,7 +172,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
         String requestUrl = fullUrl("update");
-        UpdateRegistryRequest request = updateRegistryRequestWithId(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId());
+        UpdateRegistryRequest request = updateRegistryRequestWithId(jsonMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId());
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -187,7 +187,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         RegistryTestEntity registryTestEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
         String requestUrl = fullUrl("update");
-        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), (String) null);
+        UpdateRegistryRequest request = updateRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), (String) null);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -203,7 +203,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
 
         String requestUrl = fullUrl("update");
         String entityName = "name for update";
-        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), entityName);
+        UpdateRegistryRequest request = updateRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), entityName);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -220,7 +220,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         RegistryTestEntity registryParentEntity = executeInTransaction(platformTransactionManager, () -> createRegistryTestEntity(entityManager));
 
         String requestUrl = fullUrl("update");
-        UpdateRegistryRequest request = updateRegistryRequest(objectMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), registryParentEntity.getId());
+        UpdateRegistryRequest request = updateRegistryRequest(jsonMapper, REGISTRY_TYPE_NAME, registryTestEntity.getId(), registryParentEntity.getId());
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);
@@ -281,7 +281,7 @@ class RegistryDataControllerTest extends BaseControllerTest {
         RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup = executeInTransaction(platformTransactionManager, () -> createAndSaveRegistryTestEmbeddedUserGroup(entityManager));
 
         String requestUrl = fullUrl("update");
-        UpdateRegistryRequest request = createUpdateEmbeddedUserGroupRequest(objectMapper, registryTestEmbeddedUserGroup);
+        UpdateRegistryRequest request = createUpdateEmbeddedUserGroupRequest(jsonMapper, registryTestEmbeddedUserGroup);
 
         // when
         ResultActions result = performPostRequest(requestUrl, request);

@@ -17,10 +17,10 @@
 
 package net.croz.nrich.jackson.util;
 
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.module.SimpleModule;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ class JacksonModuleUtilTest {
     @Test
     void shouldCreateConvertEmptyStringToNullModule() {
         // when
-        Module module = JacksonModuleUtil.convertEmptyStringToNullModule();
+        JacksonModule module = JacksonModuleUtil.convertEmptyStringToNullModule();
 
         // then
         assertThat(module.getModuleName()).isEqualTo(JacksonModuleUtil.CONVERT_EMPTY_STRING_TO_NULL_MODULE_NAME);
@@ -41,7 +41,7 @@ class JacksonModuleUtilTest {
     @Test
     void shouldCreateClassNameSerializerModule() {
         // when
-        Module module = JacksonModuleUtil.classNameSerializerModule(true, List.of("net.croz.nrich"));
+        JacksonModule module = JacksonModuleUtil.classNameSerializerModule(true, List.of("net.croz.nrich"));
 
         // then
         assertThat(module.getModuleName()).isEqualTo(JacksonModuleUtil.CLASS_NAME_SERIALIZER_MODULE);

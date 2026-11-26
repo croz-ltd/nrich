@@ -17,26 +17,27 @@
 
 package net.croz.nrich.jackson.serializer;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.PropertyName;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
-import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
-import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
-import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
-import com.fasterxml.jackson.databind.type.SimpleType;
-import com.fasterxml.jackson.databind.util.SimpleBeanPropertyDefinition;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import tools.jackson.databind.BeanDescription;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.PropertyName;
+import tools.jackson.databind.SerializationConfig;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.introspect.AnnotatedMethod;
+import tools.jackson.databind.introspect.BeanPropertyDefinition;
+import tools.jackson.databind.ser.BeanPropertyWriter;
+import tools.jackson.databind.ser.ValueSerializerModifier;
+import tools.jackson.databind.type.SimpleType;
+import tools.jackson.databind.util.SimpleBeanPropertyDefinition;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class EntityClassSerializerModifier extends BeanSerializerModifier {
+public class EntityClassSerializerModifier extends ValueSerializerModifier {
 
     private static final String ENTITY_ANNOTATION = "jakarta.persistence.Entity";
 
@@ -46,9 +47,9 @@ public class EntityClassSerializerModifier extends BeanSerializerModifier {
 
     @SneakyThrows
     @Override
-    public List<BeanPropertyWriter> changeProperties(SerializationConfig serializationConfig, BeanDescription beanDescription, List<BeanPropertyWriter> beanPropertyList) {
+    public List<BeanPropertyWriter> changeProperties(SerializationConfig serializationConfig, BeanDescription.Supplier beanDescription, List<BeanPropertyWriter> beanPropertyList) {
 
-        Class<?> type = beanDescription.getType().getRawClass();
+        Class<?> type = beanDescription.getBeanClass();
 
         if (serializeEntityAnnotatedClasses && isEntity(type) || packageList != null && packageList.contains(type.getPackage().getName())) {
             Method method = type.getMethod("getClass");
@@ -56,9 +57,9 @@ public class EntityClassSerializerModifier extends BeanSerializerModifier {
 
             BeanPropertyDefinition beanPropertyDefinition = SimpleBeanPropertyDefinition.construct(serializationConfig, annotatedMethod, PropertyName.construct("class"));
             JavaType javaType = SimpleType.constructUnsafe(String.class);
-            JsonSerializer<Class<?>> myJsonSerializer = new EntityClassNameSerializer();
+            ValueSerializer<Class<?>> classNameSerializer = new EntityClassNameSerializer();
 
-            BeanPropertyWriter beanPropertyWriter = new BeanPropertyWriter(beanPropertyDefinition, annotatedMethod, null, javaType, myJsonSerializer, null, null, true, null, null);
+            BeanPropertyWriter beanPropertyWriter = new BeanPropertyWriter(beanPropertyDefinition, annotatedMethod, null, javaType, classNameSerializer, null, null, true, null, null, JsonInclude.Value.empty());
 
             beanPropertyList.add(beanPropertyWriter);
         }

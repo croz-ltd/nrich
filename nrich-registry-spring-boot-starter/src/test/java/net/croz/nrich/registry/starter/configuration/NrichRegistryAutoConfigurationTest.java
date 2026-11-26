@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.starter.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
@@ -40,11 +39,12 @@ import net.croz.nrich.search.api.converter.StringToEntityPropertyMapConverter;
 import net.croz.nrich.search.api.converter.StringToTypeConverter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.boot.test.context.runner.WebApplicationContextRunner;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -141,7 +141,7 @@ class NrichRegistryAutoConfigurationTest {
             assertThat(context).hasBean("registryDataModelMapper");
             assertThat(context).hasBean("registryBaseModelMapper");
 
-            assertThat(context).hasSingleBean(ObjectMapper.class);
+            assertThat(context).hasSingleBean(JsonMapper.class);
             assertThat(context).hasSingleBean(StringToTypeConverter.class);
             assertThat(context).hasSingleBean(StringToEntityPropertyMapConverter.class);
             assertThat(context).hasSingleBean(RegistryConfigurationResolverService.class);

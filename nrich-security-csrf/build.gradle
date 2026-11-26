@@ -23,7 +23,7 @@ dependencies {
   testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
   testImplementation "io.projectreactor:reactor-test"
-  testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "tools.jackson.core:jackson-databind"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.hamcrest:hamcrest"
   testImplementation "com.jayway.jsonpath:json-path"

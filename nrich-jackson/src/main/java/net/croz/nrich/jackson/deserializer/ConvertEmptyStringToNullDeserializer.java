@@ -17,23 +17,21 @@
 
 package net.croz.nrich.jackson.deserializer;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ValueDeserializer;
 
-import java.io.IOException;
-
-public class ConvertEmptyStringToNullDeserializer extends JsonDeserializer<String> {
+public class ConvertEmptyStringToNullDeserializer extends ValueDeserializer<String> {
 
     @Override
-    public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+    public String deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
         JsonNode node = jsonParser.readValueAsTree();
 
-        if (node.asText().isEmpty()) {
+        if (node.asString().isEmpty()) {
             return null;
         }
 
-        return node.asText();
+        return node.asString();
     }
 }

@@ -7,12 +7,12 @@
 `nrich-registry` is a module whose purpose is to make administration of registry entities on client side easier. It transforms JPA entities in a format that client can interpret to create dynamic
 forms and tables for administration of entities without additional implementation on server side. Library provides REST API for searching, creating, updating and deleting entities.
 Users are only required to provide list of regular expressions for including entities they want to administrate. Optionally, users can provide display labels and headers for forms and tables
-in `messages.properties` files. For searching, it relies on `nrich-search` module and provides capability of overriding `SearchConfiguration` for each entity
-(default configuration performs a join fetch on each association attribute).
+in `messages.properties` files. For searching, it relies on `nrich-search` module and provides capability of overriding `SearchConfiguration` for each entity (default configuration performs a join
+fetch on each association attribute).
 
 ## Setting up Spring beans
 
-To be able to use this module following configuration is required. If Jackson's `ObjectMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
+To be able to use this module following configuration is required. If Jackson's `JsonMapper` is not available it should also be defined and if `nrich-form-configuration` (provides client side
 validation of registry entities) module is not on classpath then `RegistryDataFormConfigurationMappingCustomizer` bean is not needed. History requires `hibernate-envers` dependency and if history is
 not needed then all beans with history suffix can be omitted.
 
@@ -109,8 +109,8 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
+    public RegistryDataRequestConversionService registryDataRequestConversionService(JsonMapper jsonMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(jsonMapper, registryClassResolvingService);
     }
 
     @Bean
@@ -146,8 +146,8 @@ public class ApplicationConfiguration {
     public FormConfigurationMappingCustomizer registryDataFormConfigurationMappingCustomizer(RegistryConfigurationResolverService registryConfigurationResolverService,
                                                                                              RegistryClassResolvingService registryClassResolvingService) {
         List<Class<?>> registryClassList = registryConfigurationResolverService.resolveRegistryDataConfiguration().getRegistryDataConfigurationList().stream()
-            .map(RegistryDataConfiguration::getRegistryType)
-            .collect(Collectors.toList());
+                                                                               .map(RegistryDataConfiguration::getRegistryType)
+                                                                               .collect(Collectors.toList());
 
         return new RegistryDataFormConfigurationMappingCustomizer(registryClassResolvingService, registryClassList);
     }
@@ -176,8 +176,8 @@ implementation (`DefaultStringToTypeConverter`)
 accepts a list of data formats and regexes that are used to convert string to types found in properties of entity classes.
 
 `StringToEntityPropertyMapConverter` is also an interface from `nrich-search` module that is used for querying registry entities, it is responsible for assembling conditions Map from query string and
-a list of properties to search (
-conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties to be searched.
+a list of properties to search (conversion to typed instances is delegated to `StringToTypeConverter<?>`). When querying registry entities client API accepts a query (string), and a list of properties
+to be searched.
 
 `RegistryConfigurationResolverService` is a service that parses `RegistryConfiguration` and returns data in format required by other registry services.
 
@@ -215,7 +215,7 @@ Users can provide their own implementation of `RegistryClassResolvingService` in
 
 `RegistryHistoryService` is service that is reponsible for listing changes on an entity, default implementation uses `hibernate-envers` to find changes.
 
-`RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity  (a list of `EntityWithRevision`) to client.
+`RegistryHistoryController` is a REST endpoint with single url `nrich/registry/history/fetch` that returns history of changes on a registry entity (a list of `EntityWithRevision`) to client.
 
 `RegistryDataFormConfigurationMappingCustomizer` is used to register registry entities with `nrich-form-configuration` module so clients can fetch validations for specific entities.
 
