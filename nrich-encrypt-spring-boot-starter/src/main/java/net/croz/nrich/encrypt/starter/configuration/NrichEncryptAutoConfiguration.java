@@ -34,8 +34,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.encrypt.AesCbcBytesEncryptor;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.util.ObjectUtils;
 
@@ -48,7 +48,7 @@ public class NrichEncryptAutoConfiguration {
     public TextEncryptionService textEncryptionService(NrichEncryptProperties encryptProperties) {
         String password = ObjectUtils.isEmpty(encryptProperties.encryptPassword()) ? KeyGenerators.string().generateKey() : encryptProperties.encryptPassword();
         String salt = ObjectUtils.isEmpty(encryptProperties.encryptSalt()) ? KeyGenerators.string().generateKey() : encryptProperties.encryptSalt();
-        BytesEncryptor encryptor = Encryptors.standard(password, salt);
+        BytesEncryptor encryptor = AesCbcBytesEncryptor.withPassword(password, salt).build();
 
         return new BytesEncryptorTextEncryptService(encryptor, encryptProperties.textEncryptCharset());
     }

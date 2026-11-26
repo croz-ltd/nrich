@@ -43,7 +43,7 @@ class ExcelRuntimeHintsRegistrarTest {
         assertThat(RuntimeHintsPredicates.resource().forResource(ExcelRuntimeHintsRegistrar.RESOURCE_PATTERN)).accepts(hints);
 
         ExcelRuntimeHintsRegistrar.CLASS_LIST.forEach(type -> assertThat(RuntimeHintsPredicates.reflection().onType(type)).accepts(hints));
-        ExcelRuntimeHintsRegistrar.CONSTRUCTOR_CLASS_LIST.forEach(type -> assertThat(RuntimeHintsPredicates.reflection().onConstructor(resolveConstructor(type))).accepts(hints));
+        ExcelRuntimeHintsRegistrar.CONSTRUCTOR_CLASS_LIST.forEach(type -> assertThat(RuntimeHintsPredicates.reflection().onConstructorInvocation(resolveConstructor(type))).accepts(hints));
     }
 
     @SneakyThrows
