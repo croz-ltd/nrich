@@ -16,41 +16,24 @@ jobs:
     name: ${{ matrix.os }} - JDK ${{ matrix.java }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Cache Gradle caches
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ matrix.java }}-${{ matrix.os }}-gradle-caches-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ matrix.java }}-${{ matrix.os }}-gradle-caches-
-
-      - name: Cache Gradle wrapper
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/wrapper
-          key: ${{ matrix.java }}-${{ matrix.os }}-gradle-wrapper-${{ hashFiles('**/*.gradle') }}
-          restore-keys: |
-            ${{ matrix.java }}-${{ matrix.os }}-gradle-wrapper-
-
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: zulu
           java-version: ${{ matrix.java }}
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
       - name: Build
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: clean build
+        run: ./gradlew clean build
 
       - name: Publish
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository --info -Dorg.gradle.internal.http.socketTimeout=180000 -Dorg.gradle.internal.http.connectionTimeout=180000
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --info -Dorg.gradle.internal.http.socketTimeout=180000 -Dorg.gradle.internal.http.connectionTimeout=180000
         env:
           SONATYPE_TOKEN_USERNAME: ${{ secrets.SONATYPE_TOKEN_USERNAME }}
           SONATYPE_TOKEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
