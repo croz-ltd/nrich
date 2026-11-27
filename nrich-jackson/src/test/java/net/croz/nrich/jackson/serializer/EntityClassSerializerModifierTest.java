@@ -17,9 +17,6 @@
 
 package net.croz.nrich.jackson.serializer;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import net.croz.nrich.jackson.serializer.stub.EntityClassSerializerModifierTestEntity;
 import net.croz.nrich.jackson.serializer.stub.EntityClassSerializerModifierTestEntityWithoutAnnotation;
@@ -27,6 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -41,13 +41,12 @@ class EntityClassSerializerModifierTest {
     };
 
     @Test
-    void shouldSerializeClassNameForEntityClassWhenEnabled() throws Exception {
+    void shouldSerializeClassNameForEntityClassWhenEnabled() {
         // given
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(true, null));
+        JsonMapper jsonMapper = JsonMapper.builder().addModule(JacksonModuleUtil.classNameSerializerModule(true, null)).build();
 
         // when
-        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), MAP_TYPE_REFERENCE);
+        Map<String, String> deserialized = jsonMapper.readValue(jsonMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), MAP_TYPE_REFERENCE);
 
         // then
         assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());
@@ -55,13 +54,12 @@ class EntityClassSerializerModifierTest {
 
     @MethodSource("shouldNotSerializeWhenSerializationIsNotEnabledMethodSource")
     @ParameterizedTest
-    void shouldNotSerializeWhenSerializationIsNotEnabled(boolean serializeEntityAnnotatedClasses, List<String> packageList, Object entity) throws Exception {
+    void shouldNotSerializeWhenSerializationIsNotEnabled(boolean serializeEntityAnnotatedClasses, List<String> packageList, Object entity) {
         // given
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(JacksonModuleUtil.classNameSerializerModule(serializeEntityAnnotatedClasses, packageList));
+        JsonMapper jsonMapper = JsonMapper.builder().addModule(JacksonModuleUtil.classNameSerializerModule(serializeEntityAnnotatedClasses, packageList)).build();
 
         // when
-        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(entity), MAP_TYPE_REFERENCE);
+        Map<String, String> deserialized = jsonMapper.readValue(jsonMapper.writeValueAsString(entity), MAP_TYPE_REFERENCE);
 
         // then
         assertThat(deserialized.get("class")).isNull();
@@ -76,15 +74,14 @@ class EntityClassSerializerModifierTest {
     }
 
     @Test
-    void shouldSerializeClassNameForPackage() throws Exception {
+    void shouldSerializeClassNameForPackage() {
         // given
-        ObjectMapper objectMapper = new ObjectMapper();
-        Module module = JacksonModuleUtil.classNameSerializerModule(false, List.of(EntityClassSerializerModifierTestEntity.class.getPackage().getName()));
+        JacksonModule module = JacksonModuleUtil.classNameSerializerModule(false, List.of(EntityClassSerializerModifierTestEntity.class.getPackage().getName()));
+        JsonMapper jsonMapper = JsonMapper.builder().addModule(module).build();
 
-        objectMapper.registerModule(module);
 
         // when
-        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), MAP_TYPE_REFERENCE);
+        Map<String, String> deserialized = jsonMapper.readValue(jsonMapper.writeValueAsString(new EntityClassSerializerModifierTestEntity()), MAP_TYPE_REFERENCE);
 
         // then
         assertThat(deserialized).containsEntry("class", EntityClassSerializerModifierTestEntity.class.getName());

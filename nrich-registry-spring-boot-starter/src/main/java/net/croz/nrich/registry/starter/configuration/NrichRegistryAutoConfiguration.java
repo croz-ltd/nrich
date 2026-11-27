@@ -17,11 +17,7 @@
 
 package net.croz.nrich.registry.starter.configuration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
+
 import net.croz.nrich.formconfiguration.api.customizer.FormConfigurationMappingCustomizer;
 import net.croz.nrich.javascript.api.converter.JavaToJavascriptTypeConverter;
 import net.croz.nrich.javascript.api.service.JavaToJavascriptTypeConversionService;
@@ -72,8 +68,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -81,6 +75,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -93,7 +91,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoConfigureAfter({ ValidationAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
+@AutoConfigureAfter(name = { "org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration", "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration" })
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnPropertyNotEmpty("nrich.registry.registry-configuration.group-definition-configuration-list")
 @EnableConfigurationProperties(NrichRegistryProperties.class)
@@ -127,21 +125,17 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public ObjectMapper registryObjectMapper(List<Module> moduleList) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.findAndRegisterModules();
-
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        objectMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
-
-        objectMapper.setDateFormat(new StdDateFormat());
-
-        objectMapper.registerModules(moduleList);
-
-        return objectMapper;
+    public JsonMapper registerJsonMapper(List<JacksonModule> moduleList) {
+        return JsonMapper.builder()
+            .findAndAddModules()
+            .enable(MapperFeature.DETECT_PARAMETER_NAMES)
+            .disable(tools.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(tools.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
+            .defaultDateFormat(new tools.jackson.databind.util.StdDateFormat())
+            .addModules(moduleList)
+            .build();
     }
 
     @ConditionalOnProperty(name = "nrich.registry.default-converter-enabled", havingValue = "true", matchIfMissing = true)
@@ -258,8 +252,8 @@ public class NrichRegistryAutoConfiguration {
 
     @ConditionalOnMissingBean
     @Bean
-    public RegistryDataRequestConversionService registryDataRequestConversionService(ObjectMapper objectMapper, RegistryClassResolvingService registryClassResolvingService) {
-        return new DefaultRegistryDataRequestConversionService(objectMapper, registryClassResolvingService);
+    public RegistryDataRequestConversionService registryDataRequestConversionService(JsonMapper jsonMapper, RegistryClassResolvingService registryClassResolvingService) {
+        return new DefaultRegistryDataRequestConversionService(jsonMapper, registryClassResolvingService);
     }
 
     @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)

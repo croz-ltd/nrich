@@ -17,16 +17,14 @@
 
 package net.croz.nrich.jackson.serializer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
 
-import java.io.IOException;
-
-public class EntityClassNameSerializer extends JsonSerializer<Class<?>> {
+public class EntityClassNameSerializer extends ValueSerializer<Class<?>> {
 
     @Override
-    public void serialize(Class<?> type, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Class<?> type, JsonGenerator jsonGenerator, SerializationContext context) {
         jsonGenerator.writeString(type.getName());
     }
 }

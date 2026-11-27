@@ -17,7 +17,7 @@
 
 package net.croz.nrich.notification.testutil;
 
-import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.hibernate.validator.internal.engine.path.MutablePath;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.constraints.NotNull;
@@ -53,7 +53,7 @@ public final class ConstraintViolationGeneratingUtil {
         doReturn(target).when(constraintViolation).getLeafBean();
         doReturn("message").when(constraintViolation).getMessage();
         doReturn("message.template").when(constraintViolation).getMessageTemplate();
-        doReturn(PathImpl.createPathFromString("property")).when(constraintViolation).getPropertyPath();
+        doReturn(MutablePath.createPathFromString("property")).when(constraintViolation).getPropertyPath();
         doReturn("invalid").when(constraintViolation).getInvalidValue();
         doReturn(constraintDescriptor).when(constraintViolation).getConstraintDescriptor();
 

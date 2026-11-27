@@ -5,9 +5,9 @@
 ## Overview
 
 Spring Boot starter for `nrich-jackson` module. The purpose of `nrich-jackson` is to provide additional Jackson's serializers and deserializers.
-Starter module provides a `@Configuration` class  (`NrichJacksonAutoConfiguration`) with default configuration of `nrich-jackson` module
+Starter module provides a `@Configuration` class (`NrichJacksonAutoConfiguration`) with default configuration of `nrich-jackson` module
 and a `@ConfigurationProperties` class (`NrichJacksonProperties`) with default configured values and does automatic registration through `spring.factories`. On top of that it configures
-Spring Boot's `ObjectMapper` instance with some useful defaults defined in nrich-jackson.properties file (i.e. spring.jackson.serialization.WRITE_DATES_AS_TIMESTAMPS=false)
+Spring Boot's `JsonMapper` instance with some useful defaults defined in nrich-jackson.properties file (i.e. spring.jackson.datatype.datetime.WRITE_DATES_AS_TIMESTAMPS=false)
 
 ## Usage
 
@@ -53,33 +53,34 @@ The default configuration values in yaml format for easier modification are give
 ```yaml
 
 nrich.jackson:
-  convert-empty-strings-to-null: true
-  serialize-class-name: true
-  serialize-class-name-for-entity-annotated-classes: true
-  additional-package-list-for-class-name-serialization:
+    convert-empty-strings-to-null: true
+    serialize-class-name: true
+    serialize-class-name-for-entity-annotated-classes: true
+    additional-package-list-for-class-name-serialization:
 
 ```
 
-On top of that following properties are configured for Spring Boot's `ObjectMapper`:
+On top of that following properties are configured for Spring Boot's `JsonMapper`:
 
 ```yaml
 
 spring.jackson:
-  default-property-inclusion: non_null
-  mapper.PROPAGATE_TRANSIENT_MARKER: true
-  parser.ALLOW_COMMENTS: true
-  serialization:
-    FAIL_ON_EMPTY_BEANS: false
-    WRITE_DATES_AS_TIMESTAMPS: false
-    WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+    default-property-inclusion: non_null
+    mapper.PROPAGATE_TRANSIENT_MARKER: true
+    json.read.ALLOW_JAVA_COMMENTS: true
+    serialization:
+        FAIL_ON_EMPTY_BEANS: false
+    datatype.datetime:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
 
-  deserialization:
-    ACCEPT_SINGLE_VALUE_AS_ARRAY: true
-    FAIL_ON_UNKNOWN_PROPERTIES: false
+    deserialization:
+        ACCEPT_SINGLE_VALUE_AS_ARRAY: true
+        FAIL_ON_UNKNOWN_PROPERTIES: false
 
 ```
 
 ### Using the module
 
-This module configures `ObjectMapper` instance by adding additional modules and options to it. It is used when serializing or deserializing JSON using `ObjectMapper` bean.
+This module configures `JsonMapper` instance by adding additional modules and options to it. It is used when serializing or deserializing JSON using `JsonMapper` bean.
 For example if `nrich.jackson.convert-empty-strings-to-null` is active and received JSON contains empty strings they will be converted to null values when deserializing JSON to class instance.

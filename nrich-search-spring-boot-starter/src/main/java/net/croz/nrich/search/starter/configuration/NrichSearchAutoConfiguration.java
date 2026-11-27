@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@AutoConfigureAfter(HibernateJpaAutoConfiguration.class)
+@AutoConfigureAfter(name = "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration")
 @EnableConfigurationProperties(NrichSearchProperties.class)
 @Configuration(proxyBeanMethods = false)
 public class NrichSearchAutoConfiguration {

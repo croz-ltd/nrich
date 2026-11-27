@@ -18,16 +18,17 @@
 package net.croz.nrich.jackson.starter.configuration;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import net.croz.nrich.jackson.starter.properties.NrichJacksonProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,32 +57,33 @@ class NrichJacksonAutoConfigurationTest {
     void shouldConfigureJacksonProperties() {
         contextRunner.run(context -> {
             // when
-            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            JsonMapper jsonMapper = context.getBean(JsonMapper.class);
 
             // then
-            assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isTrue();
-            assertThat(objectMapper.isEnabled(MapperFeature.PROPAGATE_TRANSIENT_MARKER)).isTrue();
+            assertThat(jsonMapper.isEnabled(JsonReadFeature.ALLOW_JAVA_COMMENTS)).isTrue();
+            assertThat(jsonMapper.isEnabled(MapperFeature.PROPAGATE_TRANSIENT_MARKER)).isTrue();
 
-            assertThat(objectMapper.getSerializationConfig().getDefaultPropertyInclusion().getValueInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
-            assertThat(objectMapper.getSerializationConfig().getDefaultPropertyInclusion().getContentInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
+            JsonInclude.Value inclusion = jsonMapper.serializationConfig().getDefaultPropertyInclusion();
+            assertThat(inclusion.getValueInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
+            assertThat(inclusion.getContentInclusion()).isEqualTo(JsonInclude.Include.NON_NULL);
 
-            assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.FAIL_ON_EMPTY_BEANS)).isFalse();
-            assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)).isFalse();
-            assertThat(objectMapper.getSerializationConfig().isEnabled(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)).isFalse();
+            assertThat(jsonMapper.isEnabled(SerializationFeature.FAIL_ON_EMPTY_BEANS)).isFalse();
+            assertThat(jsonMapper.isEnabled(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)).isFalse();
+            assertThat(jsonMapper.isEnabled(DateTimeFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)).isFalse();
 
-            assertThat(objectMapper.getDeserializationConfig().isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)).isFalse();
-            assertThat(objectMapper.getDeserializationConfig().isEnabled(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)).isTrue();
+            assertThat(jsonMapper.isEnabled(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)).isFalse();
+            assertThat(jsonMapper.isEnabled(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)).isTrue();
         });
     }
 
     @Test
     void shouldSupportStandardOverrideOfJacksonProperties() {
-        contextRunner.withPropertyValues("spring.jackson.parser.ALLOW_COMMENTS=false").run(context -> {
+        contextRunner.withPropertyValues("spring.jackson.json.read.ALLOW_JAVA_COMMENTS=false").run(context -> {
             // when
-            ObjectMapper objectMapper = context.getBean(ObjectMapper.class);
+            JsonMapper jsonMapper = context.getBean(JsonMapper.class);
 
             // then
-            assertThat(objectMapper.isEnabled(JsonParser.Feature.ALLOW_COMMENTS)).isFalse();
+            assertThat(jsonMapper.isEnabled(JsonReadFeature.ALLOW_JAVA_COMMENTS)).isFalse();
         });
     }
 }

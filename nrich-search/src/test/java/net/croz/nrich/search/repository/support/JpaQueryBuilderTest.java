@@ -59,6 +59,7 @@ import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecu
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithCustomIdList;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestEntityWithEmbeddedIdList;
 import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestSubEntityList;
+import static net.croz.nrich.search.repository.testutil.JpaSearchRepositoryExecutorGeneratingUtil.generateTestSubEntityWithMultipleChildren;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
@@ -882,6 +883,32 @@ class JpaQueryBuilderTest {
 
         // then
         assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldSupportSubclassCollectionAttributeSearch() {
+        // given
+        generateTestSubEntityList(entityManager);
+        Map<String, Object> requestMap = Map.of("subEntityList.subName", "childSubName0");
+
+        // when
+        List<TestEntity> results = executeQuery(requestMap, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).hasSize(1);
+    }
+
+    @Test
+    void shouldSearchSubclassCollectionAttributeWithMultipleConditionsOnSamePath() {
+        // given
+        generateTestSubEntityWithMultipleChildren(entityManager);
+        Map<String, Object> requestMap = Map.of("subEntityList.subNameFrom", "childSubname0", "subEntityList.subNameTo", "childSubname1");
+
+        // when
+        List<TestEntity> results = executeQuery(requestMap, SearchConfiguration.emptyConfigurationWithDefaultMappingResolve());
+
+        // then
+        assertThat(results).isEmpty();
     }
 
     @Test

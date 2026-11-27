@@ -17,7 +17,6 @@
 
 package net.croz.nrich.registry.data.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.registry.api.core.service.RegistryClassResolvingService;
 import net.croz.nrich.registry.data.request.CreateRegistryRequest;
 import net.croz.nrich.registry.data.request.UpdateRegistryRequest;
@@ -27,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tools.jackson.databind.json.JsonMapper;
 
 import static net.croz.nrich.registry.data.testutil.RegistryRequestGeneratingUtil.createCreateRegistryRequest;
 import static net.croz.nrich.registry.data.testutil.RegistryRequestGeneratingUtil.createUpdateRegistryRequest;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.doReturn;
 class DefaultRegistryDataRequestConversionServiceTest {
 
     @Mock
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @Mock
     private RegistryClassResolvingService registryClassResolvingService;
@@ -46,13 +46,13 @@ class DefaultRegistryDataRequestConversionServiceTest {
     private DefaultRegistryDataRequestConversionService defaultRegistryDataRequestConversionService;
 
     @Test
-    void shouldConvertRequestDataToTypedInstance() throws Exception {
+    void shouldConvertRequestDataToTypedInstance() {
         // given
         DefaultRegistryDataRequestConversionServiceTestEntity entity = new DefaultRegistryDataRequestConversionServiceTestEntity();
         CreateRegistryRequest request = createCreateRegistryRequest(entity.getClass());
         String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
-        doReturn(entity).when(objectMapper).readValue(request.jsonEntityData(), entity.getClass());
+        doReturn(entity).when(jsonMapper).readValue(request.jsonEntityData(), entity.getClass());
         doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveCreateClass(className);
 
         // when
@@ -63,13 +63,13 @@ class DefaultRegistryDataRequestConversionServiceTest {
     }
 
     @Test
-    void shouldConvertUpdateRequestDataToTypedInstance() throws Exception {
+    void shouldConvertUpdateRequestDataToTypedInstance() {
         // given
         DefaultRegistryDataRequestConversionServiceTestEntity entity = new DefaultRegistryDataRequestConversionServiceTestEntity();
         UpdateRegistryRequest request = createUpdateRegistryRequest(entity.getClass());
         String className = DefaultRegistryDataRequestConversionServiceTestEntity.class.getName();
 
-        doReturn(entity).when(objectMapper).readValue(request.jsonEntityData(), entity.getClass());
+        doReturn(entity).when(jsonMapper).readValue(request.jsonEntityData(), entity.getClass());
         doReturn(DefaultRegistryDataRequestConversionServiceTestEntity.class).when(registryClassResolvingService).resolveUpdateClass(className);
 
         // when

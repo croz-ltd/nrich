@@ -19,9 +19,9 @@ package net.croz.nrich.registry.history.stub;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.envers.DefaultRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionListener;
+import org.hibernate.envers.RevisionMapping;
 
 import jakarta.persistence.Entity;
 
@@ -29,7 +29,7 @@ import jakarta.persistence.Entity;
 @Getter
 @RevisionEntity(RegistryHistoryTestRevisionEntity.CustomRevisionListener.class)
 @Entity
-public class RegistryHistoryTestRevisionEntity extends DefaultRevisionEntity {
+public class RegistryHistoryTestRevisionEntity extends RevisionMapping {
 
     private String revisionProperty;
 

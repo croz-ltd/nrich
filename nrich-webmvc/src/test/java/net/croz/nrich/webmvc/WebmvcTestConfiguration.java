@@ -17,7 +17,6 @@
 
 package net.croz.nrich.webmvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.logging.api.service.LoggingService;
 import net.croz.nrich.logging.service.Slf4jLoggingService;
 import net.croz.nrich.notification.api.service.BaseNotificationResponseService;
@@ -46,6 +45,7 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -70,12 +70,8 @@ public class WebmvcTestConfiguration {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        objectMapper.findAndRegisterModules();
-
-        return objectMapper;
+    public JsonMapper jsonMapper() {
+        return JsonMapper.builder().findAndAddModules().build();
     }
 
     @Bean

@@ -1,15 +1,21 @@
 package net.croz.nrich.search.repository.stub;
 
-import jakarta.persistence.Entity;
-
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import java.util.List;
+
 @Setter
 @Getter
+@Entity
 public class TestSubEntity extends TestEntity {
 
-    String subName;
+    private String subName;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TestSubEntity> subEntityList;
 
 }

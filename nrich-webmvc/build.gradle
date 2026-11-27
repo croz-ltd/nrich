@@ -11,8 +11,6 @@ dependencies {
   implementation "jakarta.validation:jakarta.validation-api"
   implementation "org.springframework:spring-webmvc"
 
-  runtimeOnly "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-
   testAnnotationProcessor "org.projectlombok:lombok"
   testCompileOnly "org.projectlombok:lombok"
 
@@ -23,8 +21,8 @@ dependencies {
   testImplementation project(":nrich-logging")
   testImplementation project(":nrich-notification")
 
-  testImplementation "com.fasterxml.jackson.core:jackson-core"
-  testImplementation "com.fasterxml.jackson.core:jackson-databind"
+  testImplementation "tools.jackson.core:jackson-core"
+  testImplementation "tools.jackson.core:jackson-databind"
   testImplementation "org.apache.tomcat.embed:tomcat-embed-el"
   testImplementation "org.assertj:assertj-core"
   testImplementation "org.hibernate.validator:hibernate-validator"

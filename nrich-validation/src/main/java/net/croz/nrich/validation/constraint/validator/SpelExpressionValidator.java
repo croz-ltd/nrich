@@ -20,13 +20,13 @@ import net.croz.nrich.validation.api.constraint.SpelExpression;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.context.expression.EnvironmentAccessor;
-import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.SpelCompilerMode;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.MapAccessor;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import jakarta.validation.ConstraintValidator;
@@ -67,7 +67,7 @@ public class SpelExpressionValidator implements ConstraintValidator<SpelExpressi
     }
 
     private EvaluationContext createEvaluationContext(ApplicationContext applicationContext) {
-        SpelParserConfiguration config = new SpelParserConfiguration(SpelCompilerMode.MIXED, this.getClass().getClassLoader());
+        SpelParserConfiguration config = SpelParserConfiguration.builder().compilerMode(SpelCompilerMode.MIXED).compilerClassLoader(this.getClass().getClassLoader()).build();
         StandardEvaluationContext standardEvaluationContext = new StandardEvaluationContext(config);
 
         standardEvaluationContext.setBeanResolver(new BeanFactoryResolver(applicationContext));

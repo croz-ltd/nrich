@@ -36,8 +36,8 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.crypto.encrypt.AesCbcBytesEncryptor;
 import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 
 import java.util.List;
@@ -48,7 +48,7 @@ public class EncryptTestConfiguration {
 
     @Bean
     public TextEncryptionService textEncryptionService() {
-        BytesEncryptor encryptor = Encryptors.standard(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey());
+        BytesEncryptor encryptor = AesCbcBytesEncryptor.withPassword(KeyGenerators.string().generateKey(), KeyGenerators.string().generateKey()).build();
 
         return new BytesEncryptorTextEncryptService(encryptor, "UTF-8");
     }

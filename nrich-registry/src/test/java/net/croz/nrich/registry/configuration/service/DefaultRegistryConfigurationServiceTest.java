@@ -193,7 +193,7 @@ class DefaultRegistryConfigurationServiceTest {
         assertThat(registryEntityConfiguration).isNotNull();
 
         assertThat(registryEntityConfiguration.isIdentifierAssigned()).isTrue();
-        assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isFalse();
+        assertThat(registryEntityConfiguration.isEmbeddedIdentity()).isTrue();
         assertThat(registryEntityConfiguration.isIdClassIdentity()).isTrue();
         assertThat(registryEntityConfiguration.getIdClassPropertyNameList()).containsExactlyInAnyOrder("firstId", "secondId");
 

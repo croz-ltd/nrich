@@ -17,8 +17,6 @@
 
 package net.croz.nrich.registry.data.testutil;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import net.croz.nrich.registry.api.data.request.ListBulkRegistryRequest;
 import net.croz.nrich.registry.api.data.request.ListRegistryRequest;
 import net.croz.nrich.registry.api.data.request.SearchParameter;
@@ -39,6 +37,7 @@ import net.croz.nrich.registry.data.stub.RegistryTestEntityWithoutAssociation;
 import net.croz.nrich.registry.data.stub.RegistryTestGroupType;
 import net.croz.nrich.registry.data.stub.UpdateRegistryTestEntityRequest;
 import net.croz.nrich.registry.data.stub.request.CreateEntityRequest;
+import tools.jackson.databind.json.JsonMapper;
 
 import jakarta.persistence.EntityManager;
 import java.util.Collections;
@@ -149,42 +148,36 @@ public final class RegistryDataGeneratingUtil {
         return new DeleteRegistryRequest(classFullName, id);
     }
 
-    @SneakyThrows
-    public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name) {
-        return createRegistryRequest(objectMapper, classFullName, name, 50);
+    public static CreateRegistryRequest createRegistryRequest(JsonMapper jsonMapper, String classFullName, String name) {
+        return createRegistryRequest(jsonMapper, classFullName, name, 50);
     }
 
-    @SneakyThrows
-    public static CreateRegistryRequest createRegistryRequestWithAssociation(ObjectMapper objectMapper, String classFullName, RegistryTestEntity parent) {
-        String jsonEntityData = objectMapper.writeValueAsString(Map.of("name", "name", "age", 40, "parent", parent));
+    public static CreateRegistryRequest createRegistryRequestWithAssociation(JsonMapper jsonMapper, String classFullName, RegistryTestEntity parent) {
+        String jsonEntityData = jsonMapper.writeValueAsString(Map.of("name", "name", "age", 40, "parent", parent));
 
         return new CreateRegistryRequest(classFullName, jsonEntityData);
     }
 
-    @SneakyThrows
-    public static CreateRegistryRequest createRegistryRequest(ObjectMapper objectMapper, String classFullName, String name, Integer age) {
-        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, age));
+    public static CreateRegistryRequest createRegistryRequest(JsonMapper jsonMapper, String classFullName, String name, Integer age) {
+        String jsonData = jsonMapper.writeValueAsString(createRegistryTestEntityRequest(name, age));
 
         return new CreateRegistryRequest(classFullName, jsonData);
     }
 
-    @SneakyThrows
-    public static UpdateRegistryRequest updateRegistryRequest(ObjectMapper objectMapper, String classFullName, Long id, String name) {
-        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest(name, 50));
+    public static UpdateRegistryRequest updateRegistryRequest(JsonMapper jsonMapper, String classFullName, Long id, String name) {
+        String jsonData = jsonMapper.writeValueAsString(createRegistryTestEntityRequest(name, 50));
 
         return new UpdateRegistryRequest(classFullName, id, jsonData);
     }
 
-    @SneakyThrows
-    public static UpdateRegistryRequest updateRegistryRequest(ObjectMapper objectMapper, String classFullName, Long id, Long parentId) {
-        String jsonData = objectMapper.writeValueAsString(createRegistryTestEntityRequest("name", parentId));
+    public static UpdateRegistryRequest updateRegistryRequest(JsonMapper jsonMapper, String classFullName, Long id, Long parentId) {
+        String jsonData = jsonMapper.writeValueAsString(createRegistryTestEntityRequest("name", parentId));
 
         return new UpdateRegistryRequest(classFullName, id, jsonData);
     }
 
-    @SneakyThrows
-    public static UpdateRegistryRequest updateRegistryRequestWithId(ObjectMapper objectMapper, String classFullName, Long id) {
-        String jsonData = objectMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id));
+    public static UpdateRegistryRequest updateRegistryRequestWithId(JsonMapper jsonMapper, String classFullName, Long id) {
+        String jsonData = jsonMapper.writeValueAsString(createUpdateRegistryTestEntityRequest(id));
 
         return new UpdateRegistryRequest(classFullName, id, jsonData);
     }
@@ -247,7 +240,7 @@ public final class RegistryDataGeneratingUtil {
         return new DeleteRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), idMap);
     }
 
-    public static UpdateRegistryRequest createUpdateEmbeddedUserGroupRequest(ObjectMapper objectMapper, RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup) throws Exception {
+    public static UpdateRegistryRequest createUpdateEmbeddedUserGroupRequest(JsonMapper jsonMapper, RegistryTestEmbeddedUserGroup registryTestEmbeddedUserGroup) {
         Map<String, Object> idMap = Map.of(
             "user", registryTestEmbeddedUserGroup.getUserGroupId().getUser(),
             "group", registryTestEmbeddedUserGroup.getUserGroupId().getGroup()
@@ -255,7 +248,7 @@ public final class RegistryDataGeneratingUtil {
 
         registryTestEmbeddedUserGroup.setJoinedPropertyValue("updated");
 
-        String jsonData = objectMapper.writeValueAsString(registryTestEmbeddedUserGroup);
+        String jsonData = jsonMapper.writeValueAsString(registryTestEmbeddedUserGroup);
 
         return new UpdateRegistryRequest(RegistryTestEmbeddedUserGroup.class.getName(), idMap, jsonData);
     }

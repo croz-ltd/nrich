@@ -1,9 +1,9 @@
 package net.croz.nrich.search.util;
 
+import org.hibernate.metamodel.model.domain.internal.AbstractManagedType;
+
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.ManagedType;
-
-import org.hibernate.metamodel.model.domain.AbstractManagedType;
 
 public final class AttributeResolvingUtil {
 

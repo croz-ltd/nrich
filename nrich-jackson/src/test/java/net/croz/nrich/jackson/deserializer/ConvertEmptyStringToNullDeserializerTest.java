@@ -17,10 +17,10 @@
 
 package net.croz.nrich.jackson.deserializer;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.jackson.module.JacksonModuleUtil;
 import org.junit.jupiter.api.Test;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Map;
 
@@ -31,17 +31,17 @@ class ConvertEmptyStringToNullDeserializerTest {
     private static final TypeReference<Map<String, String>> MAP_TYPE_REFERENCE = new TypeReference<>() {
     };
 
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(JacksonModuleUtil.convertEmptyStringToNullModule());
+    private final JsonMapper jsonMapper = JsonMapper.builder().addModule(JacksonModuleUtil.convertEmptyStringToNullModule()).build();
 
     @Test
-    void shouldConvertEmptyStringsToNull() throws Exception {
+    void shouldConvertEmptyStringsToNull() {
         // given
         String emptyKey = "emptyKey";
         String nonEmptyKey = "nonEmptyKey";
         Map<String, String> testMap = Map.of(emptyKey, "", nonEmptyKey, "non empty");
 
         // when
-        Map<String, String> deserialized = objectMapper.readValue(objectMapper.writeValueAsString(testMap), MAP_TYPE_REFERENCE);
+        Map<String, String> deserialized = jsonMapper.readValue(jsonMapper.writeValueAsString(testMap), MAP_TYPE_REFERENCE);
 
         // then
         assertThat(deserialized.get(emptyKey)).isNull();

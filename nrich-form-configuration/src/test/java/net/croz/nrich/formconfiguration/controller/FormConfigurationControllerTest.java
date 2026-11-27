@@ -17,7 +17,6 @@
 
 package net.croz.nrich.formconfiguration.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.croz.nrich.formconfiguration.api.model.FormConfiguration;
 import net.croz.nrich.formconfiguration.api.request.FetchFormConfigurationRequest;
 import net.croz.nrich.formconfiguration.api.service.FormConfigurationService;
@@ -33,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class FormConfigurationControllerTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final JsonMapper jsonMapper = new JsonMapper();
 
     @Mock
     private FormConfigurationService formConfigurationService;
@@ -55,7 +55,7 @@ class FormConfigurationControllerTest {
     @InjectMocks
     private FormConfigurationController formConfigurationController;
 
-    @CsvSource({ ",/nrich/form/configuration/fetch-all", "/api/form/configuration,/api/form/configuration/fetch-all",",/nrich/form/configuration/fetch", "/api/form/configuration,/api/form/configuration/fetch" })
+    @CsvSource({ ",/nrich/form/configuration/fetch-all", "/api/form/configuration,/api/form/configuration/fetch-all", ",/nrich/form/configuration/fetch", "/api/form/configuration,/api/form/configuration/fetch" })
     @ParameterizedTest
     void shouldReturnFormConfiguration(String endpointPath, String uri) throws Exception {
         // given
@@ -69,7 +69,7 @@ class FormConfigurationControllerTest {
 
         // when
         ResultActions result = mockMvc.perform(post(uri)
-            .content(objectMapper.writeValueAsString(request))
+            .content(jsonMapper.writeValueAsString(request))
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON));
 
